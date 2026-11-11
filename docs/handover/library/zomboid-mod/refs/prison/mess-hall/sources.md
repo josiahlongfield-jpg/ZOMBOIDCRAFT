@@ -1,0 +1,12 @@
+# prison/mess-hall
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-alcatraz-dining-hall-prisoners.jpg | [Alcatraz Dining Hall prisoners.jpg](https://commons.wikimedia.org/wiki/File:Alcatraz_Dining_Hall_prisoners.jpg) | Carl Sundstrom, a records clerk employee of Alcatraz Federal Penitentiary. | Public domain | Alcatraz dining hall interior. |
+| 02-empty-dining-hall-alcatraz-2018.jpg | [Empty Dining Hall Alcatraz 2018.jpg](https://commons.wikimedia.org/wiki/File:Empty_Dining_Hall_Alcatraz_2018.jpg) | Louise Norris | CC BY-SA 4.0 | Minimal sunbeams shining through the windows of the empty dining hall in Alcatraz prison over 50 after the last meal was served |
+| 03-dining-hall-and-gym-building-algoa-farms-msa-6060347366.jpg | [Dining Hall and Gym building, Algoa Farms (MSA) (6060347366).jpg](https://commons.wikimedia.org/wiki/File:Dining_Hall_and_Gym_building,_Algoa_Farms_(MSA)_(6060347366).jpg) | Missouri State Archives | No restrictions | Collection Name: Algoa Prison Farm Collection  Photographer/Studio: Murphy, George Leland Description: Stone building sits atop small hill,  |
+| 04-mess-hall-naval-prison-portsmouth-nh-1912-20956736595.jpg | [Mess Hall, Naval Prison, Portsmouth, NH, 1912 (20956736595).jpg](https://commons.wikimedia.org/wiki/File:Mess_Hall,_Naval_Prison,_Portsmouth,_NH,_1912_(20956736595).jpg) | USMC Archives from Quantico, USA | CC BY 2.0 | A caption on the back of the photograph reads "Mess Hall-Xmas, Naval Prison, Portsmouth, NH, 1912" From the Herbert S. Fitzgerald Collection |
+| 05-mess-hall-naval-prison-portsmouth-nh-1911-20335396654.jpg | [Mess Hall, Naval Prison, Portsmouth, NH, 1911 (20335396654).jpg](https://commons.wikimedia.org/wiki/File:Mess_Hall,_Naval_Prison,_Portsmouth,_NH,_1911_(20335396654).jpg) | USMC Archives from Quantico, USA | CC BY 2.0 | A caption on the back of the photograph reads "Marines Mess and view of Mess Hall, U.S. Naval Prison, Thanksgiving Day, 1911." From the Herb |
+| 06-mess-hall-naval-prison-portsmouth-nh-1912-20771223859.jpg | [Mess Hall, Naval Prison, Portsmouth, NH, 1912 (20771223859).jpg](https://commons.wikimedia.org/wiki/File:Mess_Hall,_Naval_Prison,_Portsmouth,_NH,_1912_(20771223859).jpg) | USMC Archives from Quantico, USA | CC BY 2.0 | From the Herbert S. Fitzgerald Collection (COLL/2292), Marine Corps Archives & Special Collections  OFFICIAL USMC PHOTOGRAPH |

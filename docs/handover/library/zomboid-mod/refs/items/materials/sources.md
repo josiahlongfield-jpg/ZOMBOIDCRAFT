@@ -1,0 +1,17 @@
+# items/materials
+
+Reference photos from Wikimedia Commons (1024 px thumbnails). Free licences only; CC BY / CC BY-SA need credit if ever redistributed. Photos are reference only, not shipped in the mod.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-duct-tape.jpg | [Duct-tape.jpg](https://commons.wikimedia.org/wiki/File:Duct-tape.jpg) | Evan-Amos | Public domain | A roll of silver, Scotch brand duct tape. |
+| 02-transparent-duct-tape-roll.png | [Transparent duct tape roll.png](https://commons.wikimedia.org/wiki/File:Transparent_duct_tape_roll.png) | BenFrantzDale at en.wikipedia | CC BY-SA 3.0 | A roll of transparent scotch duct tape. |
+| 03-coiled-rope-03235.jpg | [Coiled rope 03235.jpg](https://commons.wikimedia.org/wiki/File:Coiled_rope_03235.jpg) | Nevit Dilmen | CC BY-SA 3.0 | Coil Rope. |
+| 04-flemish-rope-coils-on-the-deck-of-the-dar-m-odzie-y-doca-de.jpg | [Flemish rope coils on the deck of the Dar Młodzieży, Doca de Alcântara](https://commons.wikimedia.org/wiki/File:Flemish_rope_coils_on_the_deck_of_the_Dar_M%C5%82odzie%C5%BCy,_Doca_de_Alc%C3%A2ntara,_Lisbon,_Portugal_julesvernex2.jpg) | Jules Verne Times Two | CC BY-SA 4.0 | Flemish rope coils on the deck of the Dar Młodzieży, Doca de Alcântara, Lisbon, Portugal |
+| 05-d-lmen-kirchspiel-erdbeerfeld-2015-6525.jpg | [Dülmen, Kirchspiel, Erdbeerfeld -- 2015 -- 6525.jpg](https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Kirchspiel,_Erdbeerfeld_--_2015_--_6525.jpg) | Dietmar Rabich | CC BY-SA 4.0 | Harvest at a strawberry field in the Dernekamp hamlet, Kirchspiel, Dülmen, North Rhine-Westphalia, Germany |
+| 06-harvest-20181206-fs-apache-sitgreaves-lsc-0353.jpg | [Harvest (20181206-FS-APACHE-SITGREAVES-LSC-0353).jpg](https://commons.wikimedia.org/wiki/File:Harvest_(20181206-FS-APACHE-SITGREAVES-LSC-0353).jpg) | USDAgov | Public domain | A harvester processes trees and stacks the logs, at the U.S. Department of Agriculture (USDA) Forest Service (FS) Apache-Sitgreaves National |
+| 07-machu-picchu-per-2015-07-30-dd-47.jpg | [Machu Picchu, Perú, 2015-07-30, DD 47.JPG](https://commons.wikimedia.org/wiki/File:Machu_Picchu,_Per%C3%BA,_2015-07-30,_DD_47.JPG) | Diego Delso | CC BY-SA 4.0 | View of the ancient houses of Machu Picchu houses, Urubamba Province, Cusco Region, today Peru. The 15th-century Inca citadel, abandoned one |
+| 08-fabrication-briques-madagascar.jpg | [Fabrication Briques Madagascar.jpg](https://commons.wikimedia.org/wiki/File:Fabrication_Briques_Madagascar.jpg) | NY onja Christian | CC BY-SA 4.0 | Fabrication artisanale de briques à Madagascar. |
+| 09-portland-cement-cem-i-42-5-r-bag.jpg | [Portland cement CEM I 42,5 R (bag).jpg](https://commons.wikimedia.org/wiki/File:Portland_cement_CEM_I_42,5_R_(bag).jpg) | Krugerr | CC BY-SA 4.0 | Portland cement CEM I 42,5 R in bag produced by Grupa Ozarow SA, Poland Worek cementu CEM I 42,5 R producent Grupa Ożarów SA |
+| 10-modern-cement-bag-seal-findid-516828.jpg | [Modern cement bag seal (FindID 516828).jpg](https://commons.wikimedia.org/wiki/File:Modern_cement_bag_seal_(FindID_516828).jpg) | West Yorkshire Archaeology Advisory Service, Amy Downes, 2012-08-17 11:19:44 | CC BY-SA 4.0 | A lead alloy bag seal dating from the early 20th century. The seal is a single disc which is unusual in ot have any hole horizontally throug |
+| 11-barbed-wire-roll.jpg | [Barbed Wire Roll.jpg](https://commons.wikimedia.org/wiki/File:Barbed_Wire_Roll.jpg) | Logan King | CC BY-SA 3.0 | Roll of barbed wire on a farm |

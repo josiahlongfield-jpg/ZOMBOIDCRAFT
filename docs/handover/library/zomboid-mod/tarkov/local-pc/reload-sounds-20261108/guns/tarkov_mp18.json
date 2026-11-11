@@ -1,0 +1,203 @@
+{
+ "id": "tarkov_mp18",
+ "name": "MP-18 7.62x54R (kitted)",
+ "anchor": "double_barrel",
+ "anchorMesh": "pbr_double_barrel",
+ "calibre": "7.62x54R",
+ "ammo": "hunting_rifle_ammo",
+ "fp": "operator_tarkov_mp18",
+ "sight": "scope_30mm_leupold_mark4_lr_6,5_20x50_LOD0",
+ "zoom": 6.5,
+ "tube": [
+  2.483,
+  1.133,
+  1.65
+ ],
+ "stats": {
+  "pellets": 1,
+  "damage": 30.0,
+  "hipSpread": 4.0,
+  "aimSpread": 0.06,
+  "recoil": 2.0,
+  "range": 240.0,
+  "magazineSize": 1
+ },
+ "kit": [
+  "sight",
+  "stock"
+ ],
+ "zooms": [
+  6.5,
+  20
+ ],
+ "tarkov": {
+  "base": "61f7c9e189e6fb1a5e3ea78d",
+  "aimPath": "/mod_barrel/mod_scope/mod_scope/mod_scope",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "61f7c9e189e6fb1a5e3ea78d",
+    "bone": "weapon_izhmash_mp18_multi_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ],
+    "bones": [
+     "mp18_arm_pin_LOD0",
+     "mp18_internals_LOD0",
+     "mp18_locking_lever_LOD0",
+     "mp18_trigger_LOD0",
+     "weapon_izhmash_mp18_multi_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "61f4012adfc9f01a816adda1",
+    "bone": "barrel_mp18_600mm_762x54r_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "barrel_mp18_600mm_762x54r_LOD0",
+     "mp18_ejector_762x54r_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_handguard",
+    "item": "61f8024263dc1250e26eb029",
+    "bone": "handguard_mp18_izhmash_plastic_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "handguard_mp18_izhmash_plastic_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_scope",
+    "item": "61f804acfcba9556ea304cb8",
+    "bone": "mount_mp18_izhmash_ris_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_mp18_izhmash_ris_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_scope/mod_scope",
+    "item": "618b9643526131765025ab35",
+    "bone": "mount_all_geissele_super_precision_30mm_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_all_geissele_super_precision_30mm_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_scope/mod_scope/mod_scope",
+    "item": "5a37cb10c4a282329a73b4e7",
+    "bone": "scope_30mm_leupold_mark4_lr_6,5_20x50_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "backLens",
+     "linza",
+     "scope_30mm_leupold_mark4_lr_6,5_20x50_glass_LOD0",
+     "scope_30mm_leupold_mark4_lr_6,5_20x50_LOD0",
+     "scope_30mm_leupold_mark4_lr_6,5_20x50_switch_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_scope/mod_scope/mod_mount",
+    "item": "618b9671d14d6d5ab879c5ea",
+    "bone": "mount_geissele_geissele_super_precision_top_ring_cap_30mm_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_geissele_geissele_super_precision_top_ring_cap_30mm_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "61f803b8ced75b2e852e35f8",
+    "bone": "stock_mp18_izhmash_plastic_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "stock_mp18_izhmash_plastic_LOD0"
+    ]
+   }
+  ]
+ },
+ "shown": {
+  "zc_case": {
+   "load_start": [
+    0.0,
+    2.716
+   ]
+  },
+  "zc_round": {
+   "load_shell": [
+    0.056,
+    9.0
+   ],
+   "load_end": [
+    0.0,
+    9.0
+   ]
+  }
+ }
+}

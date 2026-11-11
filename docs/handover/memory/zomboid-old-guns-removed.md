@@ -1,0 +1,29 @@
+---
+name: zomboid-old-guns-removed
+description: Josiah 2026-11-02 07:16: remove ALL our pre-Brita guns, their audio and our attachments; keep only the Intervention-style Heavy Sniper and everything Brita
+metadata:
+  type: project
+  modified: 2026-11-02T07:19:50.451Z
+---
+
+Josiah 2026-11-02 07:16 (Brita weapons thread): "get rid of all the guns (including their audio) and attachments we added prior to the brita pack? except for the intervention style sniper ... do not remove any of the brita guns, attachments or audios".
+
+- Intervention-style = our HEAVY_SNIPER (item heavy_sniper, mesh heavy_sniper_mesh, "Heavy Sniper Rifle"). It stays with its own scope/bipod/suppressor and sounds (my reading, told him).
+- Brita guns ride on our gun items as anchors (pistol, magnum, smg, assault_rifle, battle_rifle, heavy_sniper, shotgun, lever_action, rimfire, grenade_launcher, crossbow): those item types stay registered as hidden engines; plain (non-local_gun) copies are removed everywhere.
+- Plan sent 07:2x: retire 19 guns + 25 attachments from loot (shop/car tables, Sheriff/CampBlackPine/SuburbSite/Interior, soldier zombies, NpcEntity trades, CaseItem, Turret), creative tab, /zc give; purge existing stacks; drop gun oggs from the jar but keep shared bullet-impact/casing sounds. Brita audio gaps (dry fire, some reload clicks) go silent until filled from his PC.
+- Decision card posted: how Brita guns get into loot (take over anchors' loot spots [recommended] / none for now / Arsenal-places loot now).
+**Why:** the bought Brita pack replaces our guns. **How to apply:** no thread re-adds our old guns/attachments; new loot/NPC/turret code uses Brita (local_gun) stacks or the Heavy Sniper. Related: [[zomboid-brita-loader-tech]], [[zomboid-brita-weapons]].
+
+2026-11-02 07:21 Josiah picked "Build Arsenal-places loot now" + "need to do it the right way first time". Check page https://claude.ai/artifact/ULgu4oKzaDqFKrZXbwEomg (source /mnt/project-files/zomboid-mod/brita/loot/: gun-loot-check.html, pagedata.json, parse.py/data.py parse Arsenal's Brita_06Multi_Distro.lua staged at /mnt/user-data/uploads/108600/2297098490/.../media/lua/server/Items/). Awaiting his Copy review.
+- Exact counts: 18 guns retired (GunType has 19; Heavy Sniper stays), 24 of 27 attachment items retired (keep long_range_scope, sniper_suppressor, bipod). Leave loot: plain mags, lever_ammo (.30-30), grenade_round. Anchor item types stay registered (hidden). Warthog minigun sounds kept (asked).
+- Arsenal model: 6 sources CIV/LEO/MIL/SEC/HNT/SUR lists (GunStoreGuns, PawnShopGuns, PoliceGuns, ArmyGuns, SecurityGuns, HuntGuns, SurplusGuns) + FirearmWeapons (storage units), Case_* per calibre, CCW purse/fannypack on zombies, AttachedWeaponDefinitions (holster/sling), A26SWAT_Trunk (LEO), A26Military_Trunk (MIL). Each gun = calibre slider x source mult; crossover terms (CIVxLEO etc.) mark non-home places; MIL region term removes foreign military guns. Defaults live in the mod's sandbox-options.txt (not staged; read from his PC).
+- Our side today: army armouries use store_gun_rack (gun-shop loot!), no army/security tables, swat van = Rolls MILITARY, military cars use plain trunk. Plan: new shop/army + shop/security (+ car/military), SWAT -> police, Heavy Sniper takes Arsenal CheyTac50 places; Brita loot injected at runtime from a local loot file on his PC (never in jar).
+- 07:44 REVIEW IN (Josiah): rarity all as proposed (pagedata.json RAR); crossover = Arsenal's own default (read sandbox-options.txt from his PC when on); military region USA; container gun counts = Arsenal full-set counts, picked from guns we have; old copies in worlds vanish on load; Warthog minigun keeps its sounds. Building now.
+
+2026-11-02 08:20 BUILT on claude/project-thread-5nbhdi (not yet in playtest; awaiting his OK on preview video zomboid-mod/brita/previews/gun-loot-preview.mp4):
+- combat/Retired (purge on load + fitted parts), combat/GunLoot (engine, registered before LootSettings/Rolls), CaseItem uses GunLoot.caseGun, new tables shop/army, shop/security, car/military (tools/items/loot/army_tables.py), sounds via retire_gun_sounds.py, Fittings.Contents.unpackLootTable redirects gun tables on army bases to shop/army; CarProp boots on bases -> car/military.
+- Local data file: <profile>/config/zomboidcraft/guns/loot/places.json, written by /mnt/project-files/zomboid-mod/brita/loot/make_places.py (run on his PC with --arsenal <mod dir> --guns <guns dir>; needs media/sandbox-options.txt for Arsenal's defaults, not yet staged). Without it only the Heavy Sniper spawns (HEAVY_ALONE chances).
+- No guns from shop/storage (generic crate default; county has no storage units) or shop/farm. Worn guns on uniformed zombies wait for Arsenal's AttachedWeaponDefinitions file from his PC.
+- 2026-11-03 03:48 (arms thread): Honey Badger, AR-57, Big Boar now carry the pack flip-up irons meshes (att_irons_front_up/rear_up) baked into their local-pc/guns zmesh (brita/tools/irons/packirons.py). These are baked meshes, not the retired attachment items. The next PC copy of local-pc/guns carries them.
+- HOLD (Josiah 2026-11-03 04:13, arms thread): "Don't load any saved weapons yet, I'm going to need to work through them all again." Do not copy local-pc/guns (Brita gun files/poses) to his PC or into the game until he says they're ready. The scope PiP test and loot generator must use only what is already on his PC.
+- 2026-11-03 05:20: places.json written to his PC (config/zomboidcraft/guns/loot/places.json) from REAL Arsenal sandbox-options.txt (staged from workshop 2297098490) + his 14 guns jsons. make_places.py fixed: glob.escape (the "[MOD 2.0]" folder name broke glob, 0 items). Result: ~1 gun per gunshop/pawn/surplus container, 0.27 army, 0.69 police, SWAT 0 (Arsenal's default crossovers remove our guns there), cases pistol=Colt only. Copy also at /mnt/project-files/zomboid-mod/brita/loot/places.json (local-only data, never commit).

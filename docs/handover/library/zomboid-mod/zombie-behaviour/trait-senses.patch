@@ -1,0 +1,95 @@
+diff --git a/src/client/java/com/zomboidcraft/mixin/client/SoundEngineMixin.java b/src/client/java/com/zomboidcraft/mixin/client/SoundEngineMixin.java
+index 193c989a6..e74900049 100644
+--- a/src/client/java/com/zomboidcraft/mixin/client/SoundEngineMixin.java
++++ b/src/client/java/com/zomboidcraft/mixin/client/SoundEngineMixin.java
+@@ -18,6 +18,15 @@ public abstract class SoundEngineMixin {
+     private void zomboidcraft$groupVolume(SoundInstance sound, CallbackInfoReturnable<Float> cir) {
+         // near a Harvestman the animals and the night's insects fall quiet
+         float factor = SoundVolumes.factor(sound.getIdentifier()) * com.zomboidcraft.client.creature.HarvestmanPresence.hush(sound);
++        // your character's ears: Keen Hearing, Hard of Hearing, Deaf
++        var player = net.minecraft.client.Minecraft.getInstance().player;
++        if (player != null && sound.getSource() != net.minecraft.sounds.SoundSource.MUSIC
++                && sound.getSource() != net.minecraft.sounds.SoundSource.MASTER && !sound.isRelative()) {
++            SoundVolumes.Group group = SoundVolumes.groupOf(sound.getIdentifier());
++            boolean dead = group == SoundVolumes.Group.ZOMBIE_VOICES || group == SoundVolumes.Group.HORDES
++                    || group == SoundVolumes.Group.ZOMBIE_STEPS || group == SoundVolumes.Group.DOOR_BASHING;
++            factor *= dead ? com.zomboidcraft.zombie.TraitSenses.zombieSounds(player) : com.zomboidcraft.zombie.TraitSenses.world(player);
++        }
+         if (factor != 1f) {
+             cir.setReturnValue(cir.getReturnValueF() * factor);
+         }
+diff --git a/src/main/java/com/zomboidcraft/zombie/Sight.java b/src/main/java/com/zomboidcraft/zombie/Sight.java
+index fb5458f77..6f18ce6c1 100644
+--- a/src/main/java/com/zomboidcraft/zombie/Sight.java
++++ b/src/main/java/com/zomboidcraft/zombie/Sight.java
+@@ -108,7 +108,7 @@ public final class Sight {
+         if (player.isCrouching()) {
+             range *= config.crouchSight;
+         }
+-        return range * (1 - 0.03 * Skills.level(player, Skill.SNEAKING));
++        return range * (1 - 0.03 * Skills.level(player, Skill.SNEAKING)) * TraitSenses.sight(player);
+     }
+ 
+     private static boolean inCone(Mob zombie, Player player, double coneDegrees) {
+diff --git a/src/main/java/com/zomboidcraft/zombie/TraitSenses.java b/src/main/java/com/zomboidcraft/zombie/TraitSenses.java
+new file mode 100644
+index 000000000..50009ed6b
+--- /dev/null
++++ b/src/main/java/com/zomboidcraft/zombie/TraitSenses.java
+@@ -0,0 +1,44 @@
++package com.zomboidcraft.zombie;
++
++import com.zomboidcraft.survival.character.Traits;
++import net.minecraft.world.entity.player.Player;
++
++/**
++ * The character traits that touch the dead's senses and your own, as Zomboid has them. Inconspicuous and Conspicuous
++ * change how far zombies pick you out; Graceful and Clumsy how far your footsteps carry; Keen Hearing, Hard of Hearing
++ * and Deaf how well you hear (the player's ears, not the zombies'). Traits are synced to their own client, so the
++ * hearing side runs there. The numbers stand in until SURVIVAL has the B42 ones.
++ */
++public final class TraitSenses {
++    /** Zombies see you this much as far. */
++    public static double sight(Player player) {
++        if (Traits.has(player, "inconspicuous")) {
++            return 0.5;
++        }
++        return Traits.has(player, "conspicuous") ? 2.0 : 1.0;
++    }
++
++    /** Your footsteps carry this much as far. */
++    public static double footsteps(Player player) {
++        if (Traits.has(player, "graceful")) {
++            return 0.6;
++        }
++        return Traits.has(player, "clumsy") ? 1.2 : 1.0;
++    }
++
++    /** The dead's sounds (voices, hordes, steps, bashing) play this loud for you. */
++    public static float zombieSounds(Player player) {
++        return Traits.has(player, "keen_hearing") ? 1.35f : world(player);
++    }
++
++    /** Every world sound (not music or the menus) plays this loud for you. */
++    public static float world(Player player) {
++        if (Traits.has(player, "deaf")) {
++            return 0.1f;
++        }
++        return Traits.has(player, "hard_of_hearing") ? 0.5f : 1f;
++    }
++
++    private TraitSenses() {
++    }
++}
+diff --git a/src/main/java/com/zomboidcraft/zombie/ZombieEvents.java b/src/main/java/com/zomboidcraft/zombie/ZombieEvents.java
+index ccf4eca5d..e5b0aa6e3 100644
+--- a/src/main/java/com/zomboidcraft/zombie/ZombieEvents.java
++++ b/src/main/java/com/zomboidcraft/zombie/ZombieEvents.java
+@@ -161,6 +161,7 @@ public final class ZombieEvents {
+             boolean moved = before != null && before.distanceToSqr(now) > 0.04;
+             double walk = Noise.WALK - 0.3 * Skills.level(player, Skill.SNEAKING);
+             double radius = !moved || player.isShiftKeyDown() ? 0 : player.isSprinting() ? Noise.SPRINT : walk;
++            radius *= TraitSenses.footsteps(player);
+             Noise.emit((ServerLevel) player.level(), now, radius);
+         }
+     }

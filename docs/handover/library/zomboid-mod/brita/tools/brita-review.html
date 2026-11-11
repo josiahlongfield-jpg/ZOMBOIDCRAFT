@@ -1,0 +1,338 @@
+<title>Brita Pilot Review</title>
+<meta charset="utf-8">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: the same gun bench as the look test. Rack of 14 guns; per gun a 3D bench with an attachment rack beside it,
+   then the first-person stats sheet, the sounds, and a note box. A tally bar copies the review back. */
+:root{
+  --bg:#eceeea; --panel:#f8f9f6; --fg:#1b1f1a; --muted:#5d6559; --line:#cfd4ca;
+  --olive:#4b5a33; --brass:#9a6b16; --brass-soft:#f1e3c4; --bench:#c9cdc4; --good:#2f6b3a; --bad:#9a3a22;
+  --display:"Chakra Petch","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151815; --panel:#1d211c; --fg:#e4e8df; --muted:#9aa393; --line:#323a30;
+  --olive:#a9bb84; --brass:#e0ae52; --brass-soft:#3a2f18; --bench:#2a2f29; --good:#7fc48a; --bad:#e08a6e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151815; --panel:#1d211c; --fg:#e4e8df; --muted:#9aa393; --line:#323a30;
+  --olive:#a9bb84; --brass:#e0ae52; --brass-soft:#3a2f18; --bench:#2a2f29; --good:#7fc48a; --bad:#e08a6e; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 120px}
+h1{font-family:var(--display);font-weight:700;font-size:2rem;letter-spacing:.02em;margin:0;text-transform:uppercase;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;margin:28px 0 8px;color:var(--olive)}
+.lede{color:var(--muted);max-width:70ch;margin:.5rem 0 0}
+.rackbar{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 12px}
+.rackbar button{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;color:var(--olive);background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:5px 9px;cursor:pointer}
+.rackbar button.on{color:var(--fg);border-color:var(--brass);background:var(--brass-soft)}
+.rackbar button .p{font-family:var(--mono);font-weight:400;font-size:.7rem;color:var(--good);margin-left:6px;text-transform:none;letter-spacing:0}
+.top{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;align-items:start}
+.view{position:relative;background:var(--bench);aspect-ratio:4/3;border:1px solid var(--line);border-radius:4px;overflow:hidden;touch-action:none;cursor:grab}
+.view canvas{display:block;width:100%;height:100%}
+.vctl{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+button.s{font-family:var(--display);font-weight:600;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:6px 10px;cursor:pointer}
+button.s.on{border-color:var(--brass);background:var(--brass-soft)}
+.gname{font-family:var(--display);font-weight:600;font-size:1.25rem;letter-spacing:.04em;text-transform:uppercase;margin:12px 0 0}
+.gname small{font-family:var(--mono);font-weight:400;font-size:.8rem;color:var(--muted);text-transform:none;letter-spacing:0;margin-left:8px}
+.rack{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px 12px}
+.slot{padding:8px 0;border-bottom:1px solid var(--line)}
+.slot:last-child{border-bottom:0}
+.slot label{display:block;font-family:var(--display);font-weight:600;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.slot select{width:100%;font-family:var(--body);font-size:.9rem;padding:6px 8px;border:1px solid var(--line);border-radius:4px;background:var(--bg);color:var(--fg)}
+.slot .fx{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-top:4px;min-height:1em}
+.fx .up{color:var(--good)} .fx .dn{color:var(--bad)}
+.none{color:var(--muted);font-size:.9rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem;background:var(--panel);border:1px solid var(--line);border-radius:4px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td .z{display:block;font-family:var(--mono);font-size:.72rem;color:var(--muted);white-space:normal}
+td.b{font-weight:600}
+.tw{overflow-x:auto}
+.sounds{display:flex;flex-wrap:wrap;gap:8px}
+.snd{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:6px 10px}
+.snd b{font-family:var(--display);font-weight:600;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.snd span{font-family:var(--mono);font-size:.78rem}
+.snd button{font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:3px;padding:3px 7px;cursor:pointer}
+.notes{background:var(--brass-soft);border:1px solid var(--brass);border-radius:4px;padding:10px 14px;font-size:.92rem}
+.notes ul{margin:4px 0 0;padding-left:18px}
+.verdict{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+textarea{width:100%;min-height:80px;font-family:var(--body);font-size:.9rem;padding:8px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--fg)}
+.method{color:var(--muted);font-size:.88rem;max-width:80ch}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--fg);color:var(--bg);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+.bar .in{max-width:1180px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px))}
+.bar .sum{font-family:var(--mono);font-size:.85rem;min-width:0}
+.bar button{font-family:var(--display);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.9rem;background:var(--brass);color:#1b1f1a;border:0;border-radius:4px;padding:10px 16px;cursor:pointer;white-space:nowrap}
+#out[hidden]{display:none}
+#out{display:block;width:100%;margin-top:18px;min-height:140px;font-family:var(--mono);font-size:.8rem}
+#loading{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+@media (max-width:760px){.top{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+  <h1>Brita pilot review</h1>
+  <p class="lede">The first gun of each class, toon-painted, with every attachment Arsenal lets it take, its first-person numbers and the sounds you picked. Fit parts in the rack to see them on the gun and what they change. Mark each gun as good or needing changes, add notes, then Copy review and paste it back to me. Once this is right, it goes into the game.</p>
+  <div class="rackbar" id="rackbar"></div>
+
+  <div class="top">
+    <div>
+      <div class="view" id="view"><div id="loading">Loading models…</div></div>
+      <div class="vctl">
+        <button class="s" type="button" id="spin">Pause turning</button>
+        <button class="s" type="button" id="side">Side view</button>
+        <button class="s" type="button" id="top">From above</button>
+        <button class="s" type="button" id="clear">Take all parts off</button>
+      </div>
+      <div class="gname" id="gname"></div>
+    </div>
+    <div class="rack" id="rack"></div>
+  </div>
+
+  <h2>First-person numbers</h2>
+  <p class="method" id="method"></p>
+  <div class="tw"><table id="stats"></table></div>
+
+  <h2>Sounds</h2>
+  <div class="sounds" id="sounds"></div>
+
+  <h2>To check</h2>
+  <div class="notes" id="notes"></div>
+
+  <h2>Your verdict</h2>
+  <div class="verdict">
+    <button class="s" type="button" data-v="good">Good to go in game</button>
+    <button class="s" type="button" data-v="change">Needs changes</button>
+  </div>
+  <textarea id="note" placeholder="Anything to change on this gun: numbers, parts, sounds, look"></textarea>
+  <textarea id="out" readonly hidden aria-label="Your review"></textarea>
+</div>
+<div class="bar"><div class="in"><span class="sum" id="sum"></span><button id="copy" type="button">Copy review</button></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const KEY='brita-pilot-review';
+let state={}; try{state=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const SHORT={Colt1911:'M1911',SW_M500:'M500',AR57_PDW:'AR-57',M2Carbine:'M2 Carbine',AAC_Honey:'Honey Badger',AssaultRifle2:'M14',BOAR:'BOAR',M870_CQB:'870 CQB',Winchester1866:'1866',American180:'American-180',L86:'L86',RPG_7:'RPG-7',TenPointTurbo_XLT:'Crossbow',DSHK:'DShK'};
+const NOTES={
+  Colt1911:['Seven rounds, like Zomboid, against fifteen in our 9mm pistol: it hits a little harder (8.2 against 7) and is heard a little further.','Fifteen grip panels from Arsenal: they only change the look.'],
+  SW_M500:['Zomboid makes it the least accurate handgun in the pack (hit chance 2). I capped the spread at 1.8 times our magnum, so it is wild from the hip (5.4°) but still usable aimed (0.8°).','33 damage, so a body hit drops a zombie. Five rounds.'],
+  AR57_PDW:['Zomboid makes 5.7mm weaker than 9mm, so it hits for 5.0 against our SMG\'s 7 (the old bump to 6.7 for a one-shot head kill is gone with the calibre rules). Two headshots or five torso shots on a normal zombie.','Fifty-round top magazine. Zomboid lists burst too; we have no burst, so it keeps semi and full auto.'],
+  M2Carbine:['Arsenal fires 9mm from it, so it is set against our SMG. Fifteen rounds, full auto at 950 a minute.'],
+  AAC_Honey:['Set against our assault rifle; it comes out nearly the same, a touch less accurate and slower to fire on auto.'],
+  AssaultRifle2:['Zomboid gives the M14 the same numbers as the FAL, so it matches our battle rifle exactly. Only the weight differs (3.8 kg).'],
+  BOAR:['Single shot: one round, loaded by hand after each shot. Same damage as our heavy sniper (80).'],
+  M870_CQB:['Five pellets in Zomboid against eight in ours; I kept our eight so it matches our shotgun, with the shorter barrel\'s range (37 blocks).'],
+  Winchester1866:['Thirteen rounds in the tube, the same hit as our lever gun (21).'],
+  American180:['Zomboid makes .22 very weak (0.1 to 0.3), weaker than its own .22 rifle. I gave it the same hit as our .22 rifle (7), since it fires the same round: two headshots on a normal zombie, as you set for .22. 100-round pan, full auto at about 1,050 a minute.','The pan is part of Brita\'s gun model (the disc on top), so there is no separate magazine part to fit. My earlier extra pan is removed.'],
+  L86:['Set against our assault rifle: same hit, more accurate (long heavy barrel), less kick, 5.8 kg. No LMG class of our own yet, so it uses the rifle\'s reload.'],
+  RPG_7:['Bigger blast than the 40mm, as you asked. My numbers: blast radius 7 blocks (40mm: 4), 90 damage at the centre (40mm: 45), 12 shrapnel (40mm: 8). The rocket flies flatter and faster (3.5 blocks a tick against 2.4) and arms after 2 ticks, so about 7 blocks out, like a real RPG\'s arming distance.','Blasts still break no blocks and start contained fires, as with every blast.','No attachments in Arsenal apart from a sling.'],
+  TenPointTurbo_XLT:['Bolts like our crossbow, a little harder hitting (33). 43 optics fit it.'],
+  DSHK:['Zomboid has no recoil delay for it (the tripod takes it), so I gave it its real 600 rounds a minute.','Set down, as you asked: use it on a block to stand the tripod there, then fire it from behind, swinging it round on the tripod. G picks it back up. It can only be fired while it is set down.','Carried it is heavy and slow (34 kg with its tripod folded), so you will walk slowly while carrying it.','Arsenal gives it no attachments.']
+};
+const ROWS=[
+  ['Damage per hit','damage',v=>v.toFixed(1),p=>`${p.MinDamage}–${p.MaxDamage}`],
+  ['Headshot ×, by calibre','headshotMultiplier',v=>'×'+v,null],
+  ['Range (blocks)','range',v=>Math.round(v),p=>p.MaxRange],
+  ['Aimed spread (°)','aimSpread',v=>v.toFixed(2),p=>'hit chance '+p.HitChance],
+  ['Hip spread (°)','hipSpread',v=>v.toFixed(2),p=>'hit chance '+p.HitChance],
+  ['Kick','recoil',v=>v.toFixed(2),p=>'recoil delay '+p.RecoilDelay],
+  ['Ticks between shots','fireDelayTicks',v=>v,p=>'recoil delay '+p.RecoilDelay],
+  ['Full auto (rounds a minute)','autoRpm',v=>v?Math.round(v):'none',null],
+  ['Aim settles (° a second)','bloomRecover',v=>v.toFixed(1),p=>'aiming time '+p.AimingTime],
+  ['Heard from (blocks)','shotNoise',v=>Math.round(v),p=>'sound radius '+p.SoundRadius],
+  ['Rounds','magazineSize',v=>v,p=>p.MaxAmmo],
+  ['Pellets','pellets',v=>v,p=>p.ProjectileCount],
+  ['Weight (kg)','weight',v=>(+v).toFixed(2),p=>p.Weight],
+  ['Durability','durability',v=>v,p=>'condition '+p.ConditionMax],
+  ['Jam chance','jamX',v=>'×'+(+v).toFixed(2),p=>p.JamGunChance],
+  ['Reload time','reloadX',v=>'×'+(+v).toFixed(2),p=>p.ReloadTime],
+];
+let D=null, MESH=null, cur=null, spin=true, yaw=0.6, pitch=0.18;
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true}); renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+const viewEl=document.getElementById('view'); viewEl.appendChild(renderer.domElement);
+const scene=new THREE.Scene(), cam=new THREE.PerspectiveCamera(26,4/3,0.005,50);
+scene.add(new THREE.HemisphereLight(0xffffff,0x5a5a50,0.8)); const dl=new THREE.DirectionalLight(0xffffff,0.7); dl.position.set(0.6,1,0.8); scene.add(dl);
+const holder=new THREE.Group(); scene.add(holder);
+const tl=new THREE.TextureLoader(); const gcache={}, tcache={};
+function geo(key){
+  if(gcache[key]) return gcache[key];
+  const buf=Uint8Array.from(atob(MESH[key]),c=>c.charCodeAt(0)).buffer, n=new Uint32Array(buf,0,1)[0];
+  const pos=new Float32Array(buf,4,n*3).slice(), uv=new Float32Array(buf,4+n*12,n*2).slice();
+  // Zomboid reads these files with height (z) the other way up: flip it, and swap two corners of each triangle so faces still point out
+  for(let i=0;i<n;i++) pos[i*3+2]=-pos[i*3+2];
+  for(let t=0;t<n;t+=3){for(let k=0;k<3;k++){const a=pos[(t+1)*3+k];pos[(t+1)*3+k]=pos[(t+2)*3+k];pos[(t+2)*3+k]=a}for(let k=0;k<2;k++){const a=uv[(t+1)*2+k];uv[(t+1)*2+k]=uv[(t+2)*2+k];uv[(t+2)*2+k]=a}}
+  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3)); g.setAttribute('uv',new THREE.BufferAttribute(uv,2)); g.computeVertexNormals();
+  const fn=g.attributes.normal.array, map=new Map(), sm=new Float32Array(n*3);
+  for(let i=0;i<n;i++){const k=Math.round(pos[i*3]*2e4)+','+Math.round(pos[i*3+1]*2e4)+','+Math.round(pos[i*3+2]*2e4);let a=map.get(k);if(!a){a=[0,0,0,[]];map.set(k,a)}a[0]+=fn[i*3];a[1]+=fn[i*3+1];a[2]+=fn[i*3+2];a[3].push(i)}
+  map.forEach(a=>{const l=Math.hypot(a[0],a[1],a[2])||1;a[3].forEach(i=>{sm[i*3]=a[0]/l;sm[i*3+1]=a[1]/l;sm[i*3+2]=a[2]/l})});
+  const ink=new THREE.BufferGeometry(); ink.setAttribute('position',g.attributes.position); ink.setAttribute('inkn',new THREE.BufferAttribute(sm,3));
+  return gcache[key]={g,ink};
+}
+function tex(url){if(tcache[url])return tcache[url];const t=tl.load(url);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return tcache[url]=t}
+let inkW=0.0005;
+const inkMat=()=>new THREE.ShaderMaterial({side:THREE.BackSide,uniforms:{w:{value:inkW}},
+  vertexShader:'attribute vec3 inkn; uniform float w; void main(){ gl_Position=projectionMatrix*modelViewMatrix*vec4(position+inkn*w,1.0); }',
+  fragmentShader:'void main(){ gl_FragColor=vec4(0.078,0.078,0.078,1.0); }'});
+function toonMesh(key,texUrl){
+  const {g,ink}=geo(key), grp=new THREE.Group();
+  grp.add(new THREE.Mesh(g,new THREE.MeshLambertMaterial(texUrl?{map:tex(texUrl)}:{color:0x3a3d38})));
+  grp.add(new THREE.Mesh(ink,inkMat())); return grp;
+}
+function attM(a){const m=new THREE.Matrix4();if(!a)return m;const r=a.rotate.map(x=>x*Math.PI/180);
+  m.compose(new THREE.Vector3(...a.offset),new THREE.Quaternion().setFromEuler(new THREE.Euler(r[0],r[1],r[2],'XYZ')),new THREE.Vector3(1,1,1));return m}
+let gunGroup=null, partsGroup=null;
+function fitted(g){
+  const st=state[g.id]=state[g.id]||{};
+  if(!st.parts){st.parts={};const m=g.slots.find(s=>s.slot==='Magazine');const std=m&&m.opts.find(o=>o.item==='Standard_Mag');if(std)st.parts.Magazine=std.item}
+  return st.parts}
+function buildGun(g){
+  while(holder.children.length) holder.remove(holder.children[0]);
+  const size=Math.max(...g.hi.map((h,k)=>h-g.lo[k])); inkW=size*0.006;
+  const ctr=g.hi.map((h,k)=>-(h+g.lo[k])/2); ctr[2]=-ctr[2];
+  const piv=new THREE.Group(); piv.rotation.x=-Math.PI/2; if(g.upright) piv.rotation.y=Math.PI;
+  const inner=new THREE.Group(); inner.position.set(...ctr); piv.add(inner);
+  gunGroup=toonMesh('g:'+g.id,'gt/'+g.id+'_toon.png'); inner.add(gunGroup);
+  partsGroup=new THREE.Group(); inner.add(partsGroup); holder.add(piv); holder.userData.size=size; holder.userData.gsize=size;
+  buildParts(g);
+}
+function buildParts(g){
+  while(partsGroup.children.length) partsGroup.remove(partsGroup.children[0]);
+  const f=fitted(g);
+  g.slots.forEach(s=>{const it=f[s.slot]; if(!it) return; const o=s.opts.find(x=>x.item===it); if(!o||!o.model) return;
+    const md=D.models[o.model]; if(!md||!MESH['p:'+o.model]) return;
+    if(o.xform){const pm=toonMesh('p:'+o.model,md.tex?'pt/'+md.tex+'.png':null);pm.matrixAutoUpdate=false;pm.matrix.fromArray(o.xform);partsGroup.add(pm);return}
+    const ga=o.gunAtt?g.att[o.gunAtt]:null; if(o.gunAtt&&!ga) return;
+    const pa=md.att[o.partAtt]||null;
+    const m=attM(ga).multiply(new THREE.Matrix4().copy(attM(pa)).invert());
+    if(md.scale) m.multiply(new THREE.Matrix4().makeScale(md.scale,md.scale,md.scale));
+    if(s.slot==='Optic') seat(g,o.model,m);
+    const pm=toonMesh('p:'+o.model,md.tex?'pt/'+md.tex+'.png':null); pm.matrixAutoUpdate=false; pm.matrix.copy(m); partsGroup.add(pm);
+  });
+  // frame the gun with what's fitted: a long mag or a tall scope must stay in view
+  holder.updateMatrixWorld(true); const b=new THREE.Box3().setFromObject(holder), gs=holder.userData.gsize||holder.userData.size;
+  holder.userData.size=Math.max(gs, 2.5*Math.max(Math.abs(b.min.y),Math.abs(b.max.y)), 0.8*Math.max(Math.abs(b.min.x),Math.abs(b.max.x),Math.abs(b.min.z),Math.abs(b.max.z))*2);
+}
+// Arsenal mounts every sight at one rifle rail height, so on low guns they float (unseen from Zomboid's top-down camera).
+// In first person they're seated: dropped straight down until the sight's base meets the top of the gun under it.
+function seat(g,model,m){
+  const up=g.upright?-1:1, gp=geo('g:'+g.id).g.attributes.position.array, pp=geo('p:'+model).g.attributes.position.array, v=new THREE.Vector3();
+  let y0=1e9,y1=-1e9,base=up>0?1e9:-1e9;
+  for(let i=0;i<pp.length;i+=3){v.set(pp[i],pp[i+1],pp[i+2]).applyMatrix4(m);y0=Math.min(y0,v.y);y1=Math.max(y1,v.y);base=up>0?Math.min(base,v.z):Math.max(base,v.z)}
+  let top=null;
+  for(let i=0;i<gp.length;i+=3){const x=gp[i],y=gp[i+1],z=gp[i+2];if(Math.abs(x)>0.012||y<y0||y>y1)continue;top=top===null?z:(up>0?Math.max(top,z):Math.min(top,z))}
+  if(top===null) return;
+  const drop=(base-top)*up; // >0: the sight's base is above the gun, floating
+  if(drop>0.0005) m.premultiply(new THREE.Matrix4().makeTranslation(0,0,-drop*up));
+}
+function frame(){
+  const w=viewEl.clientWidth,h=viewEl.clientHeight; if(!w) return;
+  if(renderer.domElement.width!==Math.round(w*renderer.getPixelRatio())){renderer.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+  renderer.setClearColor(css('--bench')||'#c9cdc4');
+  const dist=(holder.userData.size||0.5)*2.4;
+  cam.position.set(Math.sin(yaw)*Math.cos(pitch)*dist,Math.sin(pitch)*dist,Math.cos(yaw)*Math.cos(pitch)*dist); cam.lookAt(0,0,0); renderer.render(scene,cam);
+}
+let last=performance.now(), drag=null;
+function loop(t){const dt=(t-last)/1000;last=t;if(spin&&!drag)yaw+=dt*0.35;frame();requestAnimationFrame(loop)}
+viewEl.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,yaw,pitch};viewEl.setPointerCapture(e.pointerId)});
+viewEl.addEventListener('pointermove',e=>{if(!drag)return;yaw=drag.yaw-(e.clientX-drag.x)*0.01;pitch=Math.max(-1.4,Math.min(1.4,drag.pitch+(e.clientY-drag.y)*0.01))});
+viewEl.addEventListener('pointerup',()=>drag=null);viewEl.addEventListener('pointercancel',()=>drag=null);
+const spinB=document.getElementById('spin');
+const stopSpin=()=>{spin=false;spinB.textContent='Start turning'};
+spinB.onclick=()=>{spin=!spin;spinB.textContent=spin?'Pause turning':'Start turning'};
+document.getElementById('side').onclick=()=>{yaw=Math.PI/2;pitch=0;stopSpin()};
+document.getElementById('top').onclick=()=>{yaw=Math.PI/2;pitch=1.3;stopSpin()};
+document.getElementById('clear').onclick=()=>{const g=D.guns[cur];(state[g.id]=state[g.id]||{}).parts={};save();buildParts(g);renderRack(g);renderStats(g)};
+if(matchMedia('(prefers-reduced-motion: reduce)').matches) stopSpin();
+
+function el(t,c,txt){const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
+function fxText(o){
+  const s=o.effects.map(e=>{const pct=Math.round((e.x-1)*100);const good=(e.what==='Range'||e.what==='Aim settle'||e.what==='Damage')?pct>0:pct<0;return `<span class="${good?'up':'dn'}">${e.what} ${pct>0?'+':''}${pct}%</span>`});
+  if(o.weight) s.push(`+${o.weight} kg`);
+  if(o.optic) s.unshift(`${o.optic.kind}, ${o.optic.zoomRange?o.optic.zoomRange[0]+'–'+o.optic.zoomRange[1]+'x':o.optic.zoom+'x'}, ${o.optic.reticle}`);
+  if(!o.model) s.push('no model (not seen on the gun)');
+  return s.join(' · ');
+}
+function renderRack(g){
+  const r=document.getElementById('rack'); r.innerHTML='';
+  if(!g.slots.length){r.appendChild(el('p','none','Arsenal gives this gun no attachments.'));return}
+  const f=fitted(g);
+  g.slots.forEach(s=>{
+    const d=el('div','slot'); const id='sl_'+s.slot.replace(/\W/g,'');
+    const lb=el('label',null,`${s.slot} (${s.opts.length})`); lb.htmlFor=id; d.appendChild(lb);
+    const sel=el('select'); sel.id=id; sel.appendChild(new Option('None',''));
+    s.opts.forEach(o=>sel.appendChild(new Option(o.name+(o.toggle?' (switches on/off)':''),o.item)));
+    sel.value=f[s.slot]||''; const fx=el('div','fx');
+    const upd=()=>{const o=s.opts.find(x=>x.item===sel.value);fx.innerHTML=o?fxText(o):''};upd();
+    sel.onchange=()=>{const st=state[g.id]=state[g.id]||{};st.parts=st.parts||{};if(sel.value)st.parts[s.slot]=sel.value;else delete st.parts[s.slot];save();upd();buildParts(g);renderStats(g)};
+    d.appendChild(sel);d.appendChild(fx);r.appendChild(d)});
+}
+function partMult(g){
+  const f=fitted(g), m={damage:1,range:1,aimSpread:1,hipSpread:1,recoil:1,bloomRecover:1,reloadX:1,weight:0};
+  g.slots.forEach(s=>{const o=s.opts.find(x=>x.item===f[s.slot]);if(!o)return;
+    o.effects.forEach(e=>{if(e.what==='Spread'){m.aimSpread*=e.x;m.hipSpread*=e.x}else if(e.what==='Kick')m.recoil*=e.x;else if(e.what==='Aim settle')m.bloomRecover*=e.x;else if(e.what==='Range')m.range*=e.x;else if(e.what==='Reload time')m.reloadX*=e.x;else if(e.what==='Damage')m.damage*=e.x});
+    m.weight+=o.weight||0});
+  return m;
+}
+function renderStats(g){
+  const st=g.stats, t=document.getElementById('stats'); t.innerHTML='';
+  document.getElementById('method').textContent=st.ref?`Set against our ${st.anchor} through Zomboid's ${st.ref}: wherever Zomboid makes this gun stronger, faster or louder than the ${st.ref}, it is that much more so than our ${st.anchor}. Crit chance is dropped. Kills go by calibre: the head takes the calibre's multiplier, the torso counts in full, arms and legs 30%. Small grey text is Zomboid's own number for this gun.`:`Uses our ${st.anchor}'s numbers: Zomboid gives it no stats of its own to compare.`;
+  const anyParts=Object.keys(fitted(g)).length>0, pm=partMult(g);
+  const hr=el('tr');['',`Our ${st.anchor}`,'This gun',anyParts?'With your parts':null].forEach(h=>{if(h!==null)hr.appendChild(el('th',null,h))});t.appendChild(hr);
+  ROWS.forEach(([lab,k,fmt,z])=>{
+    let v=st.out[k], a=st.anc[k];
+    if(k==='autoRpm'){if(!st.out.selectFire&&!st.anc.selectFire)return; v=st.out.selectFire?v:0; a=st.anc.selectFire?a:0}
+    if(k==='pellets'&&v==null) return;
+    if(k==='jamX'||k==='reloadX') a=1;
+    const tr=el('tr'); tr.appendChild(el('td',null,lab));
+    tr.appendChild(el('td','n',a==null?'–':String(fmt(a))));
+    const td=el('td','n b',v==null?'–':String(fmt(v))); if(z&&st.pz) td.appendChild(el('span','z','Zomboid '+z(st.pz))); tr.appendChild(td);
+    if(anyParts){let w=v; if(k in pm&&v!=null&&typeof v==='number'){w=k==='weight'?v+pm.weight:v*pm[k]} tr.appendChild(el('td','n',w==null?'–':String(fmt(w))))}
+    t.appendChild(tr)});
+  // shots to kill under the calibre rules: head = damage x calibre, torso in full; normal zombie 20, tough 30
+  const kills=(s,mult)=>{const d=(s.damage||0)*(mult||1)*(s.pellets||1);if(!d)return null;
+    const n=(hp,x)=>Math.ceil(hp/(d*x));return [n(20,s.headshotMultiplier),n(30,s.headshotMultiplier),n(20,1),n(30,1)]};
+  const pd=('damage' in pm)?pm.damage:1, A=kills(st.anc,1), B=kills(st.out,1), C=anyParts?kills(st.out,pd):null;
+  if(B){const sg=st.out.pellets?' (every pellet hitting, close in)':'';
+    [['Shots to kill, head'+sg,0],['Shots to kill, torso'+sg,2]].forEach(([lab,i])=>{
+      const tr=el('tr');tr.appendChild(el('td',null,lab));const f=k=>k?`${k[i]} normal · ${k[i+1]} tough`:'–';
+      tr.appendChild(el('td','n',f(A)));tr.appendChild(el('td','n b',f(B)));if(anyParts)tr.appendChild(el('td','n',f(C)));t.appendChild(tr)})}
+}
+let audio=null;
+function renderSounds(g){
+  const s=document.getElementById('sounds'); s.innerHTML='';
+  g.sounds.forEach(x=>{const d=el('div','snd');d.appendChild(el('b',null,x.slot));d.appendChild(el('span',null,x.name));
+    const b=el('button',null,'Play');b.type='button';b.onclick=()=>{if(audio)audio.pause();audio=new Audio(x.src);audio.play()};d.appendChild(b);
+    if(x.single){const b2=el('button',null,'Single version');b2.type='button';b2.onclick=()=>{if(audio)audio.pause();audio=new Audio(x.single);audio.play()};d.appendChild(b2)}
+    s.appendChild(d)});
+}
+function renderNotes(g){const n=document.getElementById('notes');n.innerHTML='';const ul=el('ul');(NOTES[g.id]||[]).forEach(t=>ul.appendChild(el('li',null,t)));n.appendChild(ul)}
+function syncVerdict(){const g=D.guns[cur],v=(state[g.id]||{}).verdict;document.querySelectorAll('.verdict button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.querySelectorAll('#rackbar button').forEach((b,i)=>{const s=state[D.guns[i].id]||{};b.querySelector('.p').textContent=s.verdict==='good'?'ok':s.verdict==='change'?'edit':''});
+  const n=D.guns.filter(x=>(state[x.id]||{}).verdict).length, ok=D.guns.filter(x=>(state[x.id]||{}).verdict==='good').length;
+  document.getElementById('sum').textContent=`${n} of ${D.guns.length} reviewed · ${ok} good · ${n-ok} need changes`}
+document.querySelectorAll('.verdict button').forEach(b=>b.onclick=()=>{const g=D.guns[cur];(state[g.id]=state[g.id]||{}).verdict=b.dataset.v;save();syncVerdict()});
+const noteEl=document.getElementById('note');
+noteEl.oninput=()=>{const g=D.guns[cur];(state[g.id]=state[g.id]||{}).note=noteEl.value;save()};
+function show(i){cur=i;const g=D.guns[i];
+  document.querySelectorAll('#rackbar button').forEach((b,j)=>b.classList.toggle('on',j===i));
+  const gn=document.getElementById('gname');gn.textContent=g.name;gn.appendChild(el('small',null,`${g.tris.toLocaleString()} triangles · ${g.stats.ammo}`));
+  buildGun(g);renderRack(g);renderStats(g);renderSounds(g);renderNotes(g);noteEl.value=(state[g.id]||{}).note||'';syncVerdict()}
+document.getElementById('copy').onclick=()=>{
+  const lines=['Brita pilot review:'];
+  D.guns.forEach(g=>{const s=state[g.id]||{};const f=s.parts||{};
+    const parts=g.slots.map(x=>f[x.slot]?x.slot+'='+(x.opts.find(o=>o.item===f[x.slot])||{}).name:null).filter(Boolean).join('; ');
+    lines.push(`${g.name}: ${s.verdict==='good'?'GOOD':s.verdict==='change'?'NEEDS CHANGES':'not reviewed'}${s.note?' | note: '+s.note.replace(/\n/g,' '):''}${parts?' | tried: '+parts:''}`)});
+  const t=lines.join('\n'),out=document.getElementById('out'),b=document.getElementById('copy');out.value=t;out.hidden=false;
+  const showT=()=>{out.focus();out.select();b.textContent='Select and copy below'};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy review',1600)}).catch(showT)}else showT()};
+Promise.all([fetch('data.json').then(r=>r.json()),fetch('meshes.json').then(r=>r.json())]).then(([d,m])=>{D=d;MESH=m;
+  document.getElementById('loading').remove();
+  const rb=document.getElementById('rackbar');
+  D.guns.forEach((g,i)=>{const b=el('button',null,SHORT[g.id]||g.name);b.type='button';b.appendChild(el('span','p'));b.onclick=()=>show(i);rb.appendChild(b)});
+  show(0);requestAnimationFrame(loop)}).catch(e=>{document.getElementById('loading').textContent='Could not load the models: '+e});
+</script>

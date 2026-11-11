@@ -1,0 +1,398 @@
+<!doctype html><html><body style="margin:0;background:#000">
+<script type="importmap">{"imports":{"three":"./three.module.js","three/addons/":"./jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const P=new URLSearchParams(location.search);
+const W=+P.get('w')||960,H=+P.get('h')||540, MODE=P.get('mode')||'holo';
+const ren=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+ren.setSize(W,H); ren.setPixelRatio(1); document.body.appendChild(ren.domElement);
+ren.outputColorSpace=THREE.SRGBColorSpace;
+const scene=new THREE.Scene(); scene.background=new THREE.Color(P.get('bg')?('#'+P.get('bg')):'#05070a');
+const cam=new THREE.PerspectiveCamera(30,W/H,0.05,100);
+const TL=new THREE.TextureLoader();
+const tx=(n,srgb=true)=>{const t=TL.load('tex/'+n+'.png');t.wrapS=t.wrapT=THREE.RepeatWrapping;t.flipY=false;if(srgb)t.colorSpace=THREE.SRGBColorSpace;return t};
+const T={
+ bodyDiff:tx('storm_cortana_default_body_diff',false), bodyN:tx('storm_cortana_default_body_normal_fixed',false), headN:tx('storm_cortana_default_head_normal_fixed',false), hairN:tx('storm_cortana_default_hair_normal_fixed',false),
+ bodyCtl:tx('storm_cortana_default_body_control',false),
+ flow:tx('storm_cortana_default_code_flow_v2_diff',false), ramp:tx('storm_cortana_default_ramp_diff'),
+ rampHair:tx('storm_cortana_default_ramp_hair_diff'), mask:tx('storm_cortana_default_body_mask_diff',false),
+ headDiff:tx('storm_cortana_default_head_diff'), headCtl:tx('storm_cortana_default_head_control',false),
+ hair:tx('storm_cortana_default_hair_diff',false), eye:tx('storm_cortana_default_eye_diff'),
+ scan:tx('storm_cortana_scanlines_diff',false), noise:tx('storm_cortana_noise_diff',false)};
+for (const k of ['ramp','rampHair']){T[k].wrapS=T[k].wrapT=THREE.ClampToEdgeWrapping;}
+const U={f_browUL:{value:0},f_browUR:{value:0},f_browIn:{value:0},f_browDn:{value:0},f_smile:{value:0},f_frown:{value:0},f_wide:{value:0},f_round:{value:0},f_blinkL:{value:0},f_blinkR:{value:0},f_squint:{value:0},f_lipIn:{value:0},time:{value:0},rez:{value:1.5},minY:{value:0},maxY:{value:1.8},glow:{value:1.0}};
+const common=`
+uniform float time,rez,minY,maxY,glow; varying vec2 vUv; varying vec3 vN,vV,vW;
+uniform sampler2D ramp,scan,noise;
+float rezMask(out float edge){
+  float h=(vW.y-minY)/(maxY-minY);
+  float n=texture2D(noise,vW.xz*3.0+vec2(0.0,time*0.2)).r*0.08;
+  float d=rez-(h+n);           // >0 visible
+  edge=smoothstep(0.06,0.0,abs(d))*step(-0.06,d);
+  return step(0.0,d);
+}
+float scanl(){ return 0.75+0.25*texture2D(scan,vec2(0.5,vW.y*55.0-time*0.6)).r; }
+float fres(){ return pow(1.0-abs(dot(normalize(vN),normalize(vV))),2.2); }
+`;
+const vs=`varying vec2 vUv; varying vec3 vN,vV,vW;
+uniform float faceK,f_browUL,f_browUR,f_browIn,f_browDn,f_smile,f_frown,f_wide,f_round,f_blinkL,f_blinkR,f_squint,f_lipIn;
+#include <common>
+#include <skinning_pars_vertex>
+float gg(vec3 p,vec3 c,float r){ vec3 d=p-c; return exp(-dot(d,d)/(r*r)); }
+vec3 lid(vec3 p,vec3 e,float bl,float sq){
+  vec3 q=p-e; float dist=length(q); float w=smoothstep(0.024,0.013,dist)*smoothstep(0.0,0.03,q.z+0.01);
+  float up=smoothstep(-0.001,0.005,q.y), dn=smoothstep(0.001,-0.005,q.y);
+  float a=(bl*0.95+sq*0.22)*w*up - sq*0.12*w*dn;
+  float c=cos(a), s=sin(a); return e+vec3(q.x, q.y*c-q.z*s, q.y*s+q.z*c); }
+vec3 face(vec3 p){
+  float fr=smoothstep(0.03,0.075,p.z)*faceK; if(fr<=0.0) return p;
+  float sx=sign(p.x); vec3 d=vec3(0.0);
+  vec3 B=vec3(sx*0.034,1.662,0.104), Bi=vec3(sx*0.015,1.657,0.112), C=vec3(sx*0.025,1.5655,0.108), M=vec3(0.0,1.566,0.122), K=vec3(sx*0.034,1.59,0.10);
+  float bu=p.x>0.0?f_browUL:f_browUR;
+  d.y+=0.008*bu*gg(p,B,0.026)+0.007*f_browIn*gg(p,Bi,0.016)-0.005*f_browDn*gg(p,Bi,0.018);
+  d.x-=sx*0.003*f_browDn*gg(p,Bi,0.017);
+  float gc=gg(p,C,0.012)*smoothstep(0.007,0.017,abs(p.x));
+  d+=vec3(sx*0.004,0.0058,-0.003)*f_smile*gc; d.y+=0.003*f_smile*gg(p,K,0.02);
+  d.y-=0.0045*f_frown*gc;
+  d.x+=sx*0.0035*f_wide*gc;
+  d.x-=sx*0.006*f_round*gc; d.z+=0.0045*f_round*gg(p,M,0.016);
+  d.z-=0.0022*f_lipIn*gg(p,M+vec3(0.0,-0.006,0.0),0.008);
+  p+=d*fr;
+  if(p.y>1.60&&p.y<1.67){ p=mix(p,lid(p,vec3(0.0316,1.6335,0.0993),f_blinkL,f_squint),step(0.0,p.x)*faceK);
+                          p=mix(p,lid(p,vec3(-0.0317,1.6335,0.0993),f_blinkR,f_squint),step(p.x,0.0)*faceK); }
+  return p; }
+void main(){ vUv=uv;
+ #include <skinbase_vertex>
+ #include <begin_vertex>
+ transformed=face(transformed);
+ #include <beginnormal_vertex>
+ #include <skinnormal_vertex>
+ #include <skinning_vertex>
+ vec4 wp=modelMatrix*vec4(transformed,1.0); vW=wp.xyz;
+ vN=normalize(mat3(modelMatrix)*objectNormal); vV=cameraPosition-wp.xyz;
+ gl_Position=projectionMatrix*viewMatrix*wp; }`;
+function holo(kind){
+  let body;
+  const LIT=`
+   vec3 Ld=normalize(vec3(0.25,0.85,0.75));
+   uniform sampler2D nrm; uniform float nrmK;
+   vec3 NN;
+   vec3 perturb(vec3 N, vec3 p, vec2 uv, vec3 t){ vec3 dp1=dFdx(p), dp2=dFdy(p); vec2 du1=dFdx(uv), du2=dFdy(uv);
+     vec3 a=cross(dp2,N), b=cross(N,dp1); vec3 T=a*du1.x+b*du2.x; vec3 B=a*du1.y+b*du2.y;
+     float iv=inversesqrt(max(max(dot(T,T),dot(B,B)),1e-12)); return normalize(mat3(T*iv,B*iv,N)*t); }
+   float seamF(){ return 1.0-smoothstep(1.30,1.40,vW.y)*(1.0-smoothstep(1.52,1.60,vW.y)); }
+   void setN(){ vec3 n=normalize(vN); if(!gl_FrontFacing) n=-n; vec3 t=texture2D(nrm,vUv,${P.has('real')?'1.5':'0.0'}).xyz*2.0-1.0; ${P.has('real')?'t.z=sqrt(clamp(1.0-dot(t.xy,t.xy),0.0,1.0));':''} t.xy*=nrmK*seamF(); NN=perturb(n,vW,vUv,normalize(t)); }
+   float lit(){ return 0.38+0.62*max(dot(NN,Ld),0.0); }
+   float spec(){ vec3 h=normalize(Ld+normalize(vV)); return pow(max(dot(NN,h),0.0),18.0); }
+   float hgt(){ return clamp((vW.y-minY)/(maxY-minY),0.0,1.0); }
+   float scanS(){ return 0.93+0.07*texture2D(scan,vec2(0.5,vW.y*70.0-time*0.4)).r; }`;
+  if(kind==='body'||kind==='head') body=LIT+`
+   uniform sampler2D diff,ctl,flow,mask;
+   void main(){ float e; if(rezMask(e)<0.5) discard; setN();
+    float l=dot(texture2D(diff,vUv,0.5).rgb,vec3(0.3,0.59,0.11));
+    float lb=dot(texture2D(diff,vUv,5.0).rgb,vec3(0.3,0.59,0.11));
+    float det=clamp(l-lb,-0.3,0.3);
+    // dark circuit bands (grey in the texture) -> deep navy, open areas -> pale blue
+    vec4 cm=texture2D(ctl,vUv); float lipM=0.0;
+    // bands: body = grey in diffuse, head = black in control B (same bands); A = her fine circuit lines on both meshes
+    float t=${kind==='head'?'smoothstep(0.25,0.75,cm.b)':'max(smoothstep(0.40,0.80,l),0.5*(1.0-smoothstep(0.75,1.0,vW.y)))'};
+    float fine=cm.a;
+    vec3 navy=vec3(0.035,0.075,0.20), pale=vec3(0.50,0.68,0.95);
+    vec3 col=mix(navy,pale,t);
+    col=mix(col,vec3(0.72,0.88,1.0),fine*0.45*t);
+    col*=1.0+det*0.8*seamF();
+    ${kind==='head'?'vec3 dc=texture2D(diff,vUv,0.5).rgb; float lf=dot(texture2D(diff,vUv,4.0).rgb,vec3(0.3,0.59,0.11)); float dk=smoothstep(0.10,0.32,lf-l)*smoothstep(1.50,1.56,vW.y); col=mix(col,vec3(0.05,0.08,0.20),dk); float mk=smoothstep(0.04,0.16,dc.b-max(dc.r,dc.g))*smoothstep(1.50,1.56,vW.y); col=mix(col,col*vec3(0.62,0.62,0.95),mk*0.6); vec3 dl=texture2D(diff,vUv,1.0).rgb; lipM=smoothstep(0.13,0.26,dl.b-max(dl.r,dl.g))*smoothstep(1.55,1.58,vW.y); col=mix(col,vec3(0.26,0.36,0.64),lipM*0.75);':''}
+    float h=hgt();
+    col*=(0.30+0.70*lit())*mix(0.6,1.08,smoothstep(0.1,0.8,h));
+    col+=vec3(0.6,0.75,1.0)*spec()*0.22*(1.0-0.95*lipM);
+    col+=vec3(0.35,0.55,0.95)*fres()*0.35;
+    col*=scanS();
+    col+=vec3(0.6,0.9,1.0)*e*3.0;
+    gl_FragColor=vec4(col,glow); }`;
+  else if(kind==='hair') body=LIT+`
+   uniform sampler2D diff; uniform sampler2D rampHair;
+   void main(){ float e; if(rezMask(e)<0.5) discard;
+    vec4 h=texture2D(diff,vUv); if(h.a<0.3) discard; setN();
+    vec3 col=vec3(0.03,0.04,0.09)+vec3(0.18,0.26,0.5)*h.r*1.6*lit()+vec3(0.4,0.55,0.9)*spec()*0.5*h.r;
+    col*=scanS(); col+=vec3(0.6,0.9,1.0)*e*3.0;
+    gl_FragColor=vec4(col,glow); }`;
+  else body=`uniform sampler2D diff; void main(){ float e; if(rezMask(e)<0.5) discard; vec3 d=texture2D(diff,vUv).rgb; float Y=dot(d,vec3(0.3,0.59,0.11)); vec3 col=mix(vec3(Y)*vec3(0.70,0.84,1.10),d*vec3(0.75,0.95,1.25),0.15)*1.35; if(${P.has('real')?1:0}>0) col=mix(vec3(0.62,0.74,0.95),col,0.8); gl_FragColor=vec4(col,glow);}`;
+
+  const REAL=P.has('real');
+  if(REAL&&(kind==='head'||(P.has('realall')&&(kind==='body'||kind==='hair')))) body=LIT+`
+   uniform sampler2D diff,ctl,rampHair; uniform float isHair;
+   uniform vec3 L1,L2,L3; uniform vec3 Lk;
+   vec3 rampD(float x){ return isHair>0.5? texture2D(rampHair,vec2(clamp(x,0.0,1.0),0.25)).rgb : texture2D(ramp,vec2(clamp(x,0.0,1.0),0.25)).rgb; }
+   vec3 rampS(float x){ return texture2D(ramp,vec2(clamp(x,0.0,1.0),0.5)).rgb; }
+   void main(){ float e; if(rezMask(e)<0.5) discard; setN();
+    vec4 cm=isHair>0.5? vec4(0.0,0.0,1.0,0.0) : texture2D(ctl,vUv);
+    vec4 cmap=texture2D(diff,vUv); vec4 cmb=isHair>0.5?vec4(0.0,0.0,1.0,0.0):texture2D(ctl,vUv,2.5);
+    if(isHair>0.5){ cm=vec4(0.0,0.0,cmap.a,0.0); cmb=cm; cmap.rgb=vec3(cmap.r); }
+    vec3 N=NN; vec3 V=normalize(vV);
+    vec3 a=rampD(clamp(dot(N,L1),0.0,1.0)*Lk.x), b=rampD(clamp(dot(N,L2),0.0,1.0)*Lk.y), c=rampD(clamp(dot(N,L3),0.0,1.0)*Lk.z);
+    vec3 D=1.0-(1.0-a*a)*(1.0-b*b)*(1.0-c*c);
+    float P=20.0, sp=0.0;
+    sp+=exp2(log2(max(dot(N,normalize(L1+V)),1e-4))*P-1.6515)*Lk.x;
+    sp+=exp2(log2(max(dot(N,normalize(L2+V)),1e-4))*P-1.6515)*Lk.y;
+    sp+=exp2(log2(max(dot(N,normalize(L3+V)),1e-4))*P-1.6515)*Lk.z;
+    sp*=cm.a;
+    vec3 S=(1.0-(1.0-D)*(1.0-rampS(sp)))*sp;
+    float al=clamp(dot(cmb.zywx,vec4(1.1,0.25,1.1,1.0)),0.0,1.0)+S.x*(1.0-cm.y);
+    al=clamp(al,0.0,1.0);
+    vec3 col=mix(D,vec3(1.0),D*cmb.a);
+    col*=mix(vec3(1.0),vec3(0.2388,0.3112,0.4591),cmb.y);
+    col=col*cmap.rgb + S*(1.0-cm.y);
+    float lum=dot(col,vec3(0.2125,0.7154,0.0721)); col=mix(col,lum*vec3(0.50,0.88,1.75),${P.has('gw')?(+P.get('gw')).toFixed(3):'0.55'});
+    vec3 pm=col*mix(1.0,al,0.5);
+    pm=pow(max(pm,0.0),vec3(1.0/2.2))*${P.has('ex')?(+P.get('ex')).toFixed(3):'1.0'};
+    pm*=scanS(); pm+=vec3(0.6,0.9,1.0)*e*3.0;
+    gl_FragColor=vec4(pm,glow); }`;
+  const u={...U,faceK:{value:0},ramp:{value:T.ramp},scan:{value:T.scan},noise:{value:T.noise}};
+  if(kind==='body'){u.nrm={value:T.bodyN};u.nrmK={value:P.has('nk')?+P.get('nk'):1.0};u.diff={value:T.bodyDiff};u.ctl={value:T.bodyCtl};u.flow={value:T.flow};u.mask={value:T.mask};}
+  if(kind==='head'){u.nrm={value:T.headN};u.nrmK={value:P.has('hk')?+P.get('hk'):0.5};u.diff={value:T.headDiff};u.ctl={value:T.headCtl};u.flow={value:T.flow};u.mask={value:T.mask};}
+  if(kind==='hair'){u.nrm={value:T.hairN};u.nrmK={value:1.0};u.diff={value:T.hair};u.rampHair={value:T.rampHair};}
+  if(REAL){u.isHair={value:kind==='hair'?1:0}; if(!u.rampHair)u.rampHair={value:T.rampHair}; if(!u.ctl)u.ctl={value:T.headCtl};
+   const lp=(P.get('lights')||'0.3,0.6,0.75;-0.8,0.3,0.2;0.6,0.2,-0.8').split(';').map(t=>new THREE.Vector3(...t.split(',').map(Number)).normalize());
+   u.L1={value:lp[0]};u.L2={value:lp[1]};u.L3={value:lp[2]};u.Lk={value:new THREE.Vector3(...(P.get('lk')||'1,0.6,0.8').split(',').map(Number))};}
+  if(kind==='eye'){u.diff={value:T.eye};}
+  return new THREE.ShaderMaterial({uniforms:u,vertexShader:vs,fragmentShader:common+body,transparent:true,
+    blending:THREE.NormalBlending,depthWrite:true,alphaTest:0.0,side:kind==='hair'?THREE.DoubleSide:THREE.FrontSide});
+}
+// ===== FULL HALO 4 RECIPE (?full=1) : ported from the decompiled storm_cortana shaders =====
+const FULL=P.has('full');
+const T2={ bodyDiffS:tx('storm_cortana_default_body_diff'), bodyAmb:tx('storm_cortana_default_body_mask_diff',false),
+  headW:tx('storm_cortana_default_head_wrinkle_normal_snorm',false), headNs:tx('storm_cortana_default_head_normal_snorm',false), bodyNs:tx('storm_cortana_default_body_normal_snorm',false), hairNs:tx('storm_cortana_default_hair_normal_snorm',false), hairCtl:tx('storm_cortana_default_hair_control',false),
+  eyeCtl:tx('storm_cortana_default_eye_control',false), irisN:tx('storm_cortana_default_eye_iris_normal_snorm',false),
+  corneaN:tx('storm_cortana_default_eye_cornea_normal_snorm',false), hairS:tx('storm_cortana_default_hair_diff'),
+  longhorz:tx('longhorz_sparse_noise512',false) };
+const LP=(P.get('lights')||'0.05,0.55,1;-0.9,0.2,0.3;0.7,0.4,-0.6').split(';').map(t=>new THREE.Vector3(...t.split(',').map(Number)).normalize());
+const LU={L1:{value:LP[0].clone()},L2:{value:LP[1].clone()},L3:{value:LP[2].clone()},Lk:{value:new THREE.Vector3(...(P.get('lk')||'1.5,0.65,0.85').split(',').map(Number))},
+  wrinkleK:{value:0}, flowSpeed:{value:+(P.get('fs')||0.35)}, expo:{value:+(P.get('ex')||1.0)}, neckK:{value:P.has('noneck')?0:1}, hueK:{value:+(P.get('hue')||0)}, gradK:{value:+(P.get('grad')??0)}, faceSmooth:{value:+(P.get('fsm')??0)}, satK:{value:+(P.get('sat')||1)}};
+const vsFull=vs.replace('varying vec2 vUv;','attribute vec2 uv2x; varying vec2 vUv,vUv2; varying vec4 vTg;').replace('void main(){ vUv=uv;','void main(){ vUv=uv; vUv2=uv2x;').replace(' vN=normalize(mat3(modelMatrix)*objectNormal);',' vN=normalize(mat3(modelMatrix)*objectNormal); vTg=vec4(normalize(mat3(modelMatrix)*objectTangent),tangent.w);');
+const FCOM=`
+precision highp float;
+uniform float time,rez,minY,maxY,glow; varying vec2 vUv,vUv2; varying vec3 vN,vV,vW; varying vec4 vTg; uniform float hueK,satK,faceSmooth,gradK;
+uniform sampler2D ramp,noise; uniform vec3 L1,L2,L3,Lk; uniform float wrinkleK,flowSpeed,expo,neckK;
+float sat(float x){return clamp(x,0.0,1.0);}
+float rezMask(out float edge){ float h=(vW.y-minY)/(maxY-minY); float n=texture2D(noise,vW.xz*3.0+vec2(0.0,time*0.2)).r*0.08;
+  float d=rez-(h+n); edge=smoothstep(0.06,0.0,abs(d))*step(-0.06,d); return step(0.0,d); }
+// tangent frame from derivatives: Tu (v4 in the game = follows U), Tv (v3 = follows V)
+mat3 tbn(vec3 N){ ${P.has('dtbn')?'':'vec3 sTu=normalize(vTg.xyz-N*dot(N,vTg.xyz)); vec3 sTv=cross(N,sTu)*vTg.w; return mat3(sTu,sTv,N); '} vec3 dp1=dFdx(vW), dp2=dFdy(vW); vec2 du1=dFdx(vUv), du2=dFdy(vUv);
+  vec3 a=cross(dp2,N), b=cross(N,dp1); vec3 Tu=a*du1.x+b*du2.x; vec3 Tv=a*du1.y+b*du2.y;
+  float iv=inversesqrt(max(max(dot(Tu,Tu),dot(Tv,Tv)),1e-12)); return mat3(Tu*iv,Tv*iv,N); }
+vec3 geoN(){ vec3 n=normalize(vN); return gl_FrontFacing?n:-n; }
+// game: n = x*Tu + y*Tv + sqrt(1-x^2-y^2)*N
+vec3 nmap(mat3 F, vec2 xy){ return normalize(F[0]*xy.x+F[1]*xy.y+F[2]*sqrt(sat(1.0-dot(xy,xy)))); }
+vec2 nxy(sampler2D s, vec2 uv){ return texture2D(s,uv).xy*2.0-1.0; }
+vec3 rampAt(sampler2D r, float x, float row){ return textureLod(r,vec2(sat(x),row),0.0).rgb; }
+float blinn(vec3 N, vec3 L, vec3 V, float pw){ return exp2(log2(max(sat(dot(N,normalize(L+V))),1e-6))*pw-1.6514962); }
+vec3 hue(vec3 c){ float a=radians(hueK); float cs=cos(a), sn=sin(a); vec3 k=vec3(0.57735);
+  c=c*cs+cross(k,c)*sn+k*dot(k,c)*(1.0-cs); float l=dot(c,vec3(0.2126,0.7152,0.0722)); return max(mix(vec3(l),c,satK),0.0); }
+vec3 gmap(float l){ vec3 a=vec3(0.01,0.025,0.09), b=vec3(0.20,0.40,0.86), c=vec3(0.80,0.92,1.0);
+  return l<0.5? mix(a,b,smoothstep(0.0,0.5,l)) : mix(b,c,smoothstep(0.5,1.0,l)); }
+vec3 outc(vec3 c){ c=pow(hue(max(c,0.0)),vec3(1.0/2.2))*expo; float l=dot(min(c,1.0),vec3(0.2126,0.7152,0.0722));
+  vec3 g=gmap(l)*(1.0+max(dot(c,vec3(0.333))-1.0,0.0)); return mix(c,g,gradK); }
+// neck: head and body meshes overlap from y~1.43 to 1.49; fade the normal-map detail of BOTH across the overlap so both meshes
+// shade from the same smooth geometric normal there (the game hides this under the collar line; we cannot)
+float neckF(){ return 1.0-neckK*smoothstep(1.36,1.43,vW.y)*(1.0-smoothstep(1.50,1.57,vW.y)); }
+`;
+// skin: body + head (+hands) share this exact recipe; body adds ambient-wrap and edge fresnel, head adds wrinkle normals
+function skinFS(isHead){ return FCOM+`
+uniform sampler2D diff,ctl,nrm,flow,amb,wrk;
+void main(){ float e; if(rezMask(e)<0.5) discard;
+  vec3 Ng=geoN(); mat3 F=tbn(Ng); vec3 V=normalize(vV);
+  vec2 xy=${isHead?'(nxy(nrm,vUv)*(1.0-smoothstep(1.49,1.53,vW.y)*faceSmooth)) + wrinkleK*nxy(wrk,vUv)':'nxy(nrm,vUv)'}; xy*=neckF();
+  vec3 N=nmap(F,xy);
+  vec4 cm=texture2D(ctl,vUv);
+  ${isHead?'float neckOnly=1.0-smoothstep(1.49,1.53,vW.y); cm.a*=neckOnly;':'float neckOnly=1.0;'}
+  ${isHead?'':'float ambM=texture2D(amb,vUv).x*0.4;'}
+  // three lights through the lighting ramp (row 0), squared and screen-blended
+  vec3 D=vec3(1.0);
+  for(int i=0;i<3;i++){ vec3 L=i==0?L1:(i==1?L2:L3); float k=i==0?Lk.x:(i==1?Lk.y:Lk.z);
+    float nl=sat(dot(L,N)); float x=nl*k ${isHead?'':'+ sat(1.0-nl*k)*ambM'};
+    vec3 r=rampAt(ramp,x,0.0); D*=1.0-r*r; }
+  D=1.0-D;
+  // specular, masked by the circuit channel (control A), coloured through the ramp's mid row
+  float sp=(blinn(N,L1,V,20.0)*Lk.x+blinn(N,L2,V,20.0)*Lk.y+blinn(N,L3,V,20.0)*Lk.z)*cm.a;
+  vec3 S=(1.0-(1.0-D)*(1.0-rampAt(ramp,sp,0.5)))*sp;
+  // opacity: control map + spec ${isHead?'':'+ edge fresnel on the G areas'}
+  float al=sat(dot(cm.zywx,vec4(1.1,0.25,1.1,1.0)));
+  ${isHead?'':'float fr=1.0-exp2(log2(max(sat(dot(V,N)),1e-6))*0.5)-0.025; al+=sat(sat(fr/(1.0-0.025))*2.0*cm.y);'}
+  al=sat(al+S.x*(1.0-cm.y));
+  vec3 c=D+D*cm.a*(vec3(1.0)-D);                 // circuit lines lift toward white
+  c*=mix(vec3(1.0),vec3(0.2388,0.3112,0.4591),cm.y); // G mask: deep navy bands
+  // dataflow pulses running along the circuit paths (second UV set)
+  vec4 fl=texture2D(flow,vUv2); float fm=sat((fl.x-0.98)*255.0);
+  float ph=fract(fl.y+fl.w-time*flowSpeed); float pulse=min(exp2(-1500.0*ph*ph),1.0);
+  vec3 em=neckOnly*vec3(0.2271,0.4479,0.8513)*(5.0-2.5*cm.y)*fm*pulse*${P.has('noflow')?'0.0':'1.0'};
+  vec3 col=c*texture2D(diff,vUv).rgb+em+S*(1.0-cm.y);
+  col*=al; if(al<=0.996) col/=3.0;
+  ${P.has('dbg')?'if(true){ vec4 q=texture2D(ctl,vUv); gl_FragColor=vec4(vec3(q['+P.get('dbg')+']),1.0); return; }':''}
+  ${P.has('dbg2')?'if(true){ vec3 q='+P.get('dbg2')+'; gl_FragColor=vec4(outc(q),1.0); return; }':''}
+  gl_FragColor=vec4((outc(col)+vec3(0.6,0.9,1.0)*e*3.0)*glow, al*glow); }`; }
+const hairFS=FCOM+`
+uniform sampler2D diff,nrm,hctl,rampH;
+void main(){ float e; if(rezMask(e)<0.5) discard;
+  vec4 cmap=texture2D(diff,vUv); if(cmap.a<0.3) discard;
+  vec3 Ng=geoN(); mat3 F=tbn(Ng); vec3 V=normalize(vV);
+  vec3 N=nmap(F,nxy(nrm,vUv));
+  // strand direction = V-tangent made orthogonal to N, shifted along N by the hair control map (Kajiya-Kay)
+  vec3 Tv=F[1]; vec3 t=normalize(cross(cross(N,Tv),N)); t*=sign(dot(t,Tv)+1e-6);
+  vec2 hc=texture2D(hctl,vUv).xy; vec3 Ts=normalize(t+N*(hc.y+0.75));
+  float s1=pow(sqrt(sat(1.0-pow(dot(normalize(L1+V),Ts),2.0))),170.0), s2=pow(sqrt(sat(1.0-pow(dot(normalize(L2+V),Ts),2.0))),170.0), s3=pow(sqrt(sat(1.0-pow(dot(normalize(L3+V),Ts),2.0))),170.0);
+  float sp=hc.x*2.0*(s1*Lk.x+s2*Lk.y+s3*Lk.z);
+  vec3 D=vec3(1.0); for(int i=0;i<3;i++){ vec3 L=i==0?L1:(i==1?L2:L3); float k=i==0?Lk.x:(i==1?Lk.y:Lk.z); vec3 r=rampAt(rampH,sat(dot(L,N))*k,0.0); D*=1.0-r*r; } D=1.0-D;
+  vec3 c=cmap.rgb*D; c+=sp*c;
+  gl_FragColor=vec4(outc(c)+vec3(0.6,0.9,1.0)*e*3.0, glow); }`;
+const eyeFS=FCOM+`
+uniform sampler2D diff,ectl,irisN,corneaN;
+void main(){ float e; if(rezMask(e)<0.5) discard;
+  vec3 Ng=geoN(); mat3 F=tbn(Ng); vec3 V=normalize(vV);
+  vec3 Nc=nmap(F,nxy(corneaN,vUv)), Ni=nmap(F,nxy(irisN,vUv));
+  vec4 cmap=texture2D(diff,vUv); vec3 ec=texture2D(ectl,vUv).xyz;
+  float cs=blinn(Nc,L1,V,10.0)*Lk.x+blinn(Nc,L2,V,10.0)*Lk.y+blinn(Nc,L3,V,10.0)*Lk.z;
+  float ipw=1.0/max(mix(0.025,0.05,sat(1.0-ec.z)),1e-5);
+  float is=blinn(Ni,L1,V,ipw)*Lk.x+blinn(Ni,L2,V,ipw)*Lk.y+blinn(Ni,L3,V,ipw)*Lk.z;
+  vec3 D=vec3(1.0); for(int i=0;i<3;i++){ vec3 L=i==0?L1:(i==1?L2:L3); float k=i==0?Lk.x:(i==1?Lk.y:Lk.z); vec3 r=rampAt(ramp,sat(dot(L,Ng))*k,0.0); D*=1.0-r*r; } D=1.0-D;
+  vec3 spc=mix(vec3(1.0),cmap.rgb,0.0)*10.0*ec.x*cs + mix(vec3(1.0),cmap.rgb,0.9)*20.0*ec.y*is;
+  float fres=pow(1.0-sat(dot(Nc,V)),5.0)*ec.y;
+  vec3 col=D*cmap.rgb+spc*0.1+D*fres*0.35;
+  gl_FragColor=vec4(outc(col), glow); }`;
+function fullMat(kind){
+  const u={...U,...LU,faceK:{value:0},ramp:{value:T.ramp},noise:{value:T.noise}};
+  let fs;
+  if(kind==='body'||kind==='head'){ const h=kind==='head'; fs=skinFS(h);
+    Object.assign(u,{diff:{value:h?T.headDiff:T2.bodyDiffS},ctl:{value:h?T.headCtl:T.bodyCtl},nrm:{value:h?T2.headNs:T2.bodyNs},flow:{value:T.flow},amb:{value:T2.bodyAmb},wrk:{value:T2.headW}}); }
+  else if(kind==='hair'){ fs=hairFS; Object.assign(u,{diff:{value:T2.hairS},nrm:{value:T2.hairNs},hctl:{value:T2.hairCtl},rampH:{value:T.rampHair}}); }
+  else { fs=eyeFS; Object.assign(u,{diff:{value:T.eye},ectl:{value:T2.eyeCtl},irisN:{value:T2.irisN},corneaN:{value:T2.corneaN}}); }
+  const po=(kind==='head'||kind==='eye')&&!P.has('nopo');
+  return new THREE.ShaderMaterial({defines:{USE_TANGENT:''},uniforms:u,vertexShader:vsFull,fragmentShader:fs,transparent:true,polygonOffset:po,polygonOffsetFactor:po?-2:0,polygonOffsetUnits:po?-8:0,
+    blending:(kind==='body'||kind==='head')?THREE.CustomBlending:THREE.NormalBlending,blendSrc:THREE.OneFactor,blendDst:THREE.OneMinusSrcAlphaFactor,blendSrcAlpha:THREE.OneFactor,blendDstAlpha:THREE.OneMinusSrcAlphaFactor,depthWrite:true,side:kind==='hair'?THREE.DoubleSide:THREE.FrontSide,extensions:{derivatives:true}});
+}
+// ---- final_combine_hologram: screen pass (glitch tears, 400-line scanlines, coarse scan brightness, colour noise) ----
+let RT=null, postScene=null, postCam=null, postMat=null;
+function setupPost(){
+  RT=new THREE.WebGLRenderTarget(W,H,{samples:4}); RT.texture.colorSpace=THREE.SRGBColorSpace;
+  postCam=new THREE.OrthographicCamera(-1,1,1,-1,0,1); postScene=new THREE.Scene();
+  postMat=new THREE.ShaderMaterial({uniforms:{src:{value:RT.texture},scan:{value:T.scan},nz:{value:T.noise},lh:{value:T2.longhorz},time:U.time,res:{value:new THREE.Vector2(W,H)},bg:{value:new THREE.Color(scene.background)},on:{value:P.has('post')?1:0}},
+    vertexShader:'varying vec2 v; void main(){ v=uv; gl_Position=vec4(position.xy,0.0,1.0); }',
+    fragmentShader:`uniform sampler2D src,scan,nz,lh; uniform float time,on; uniform vec2 res; uniform vec3 bg; varying vec2 v;
+    void main(){ vec2 uv=v;
+      // glitch tears: sparse long-horizontal noise picks rows to shift sideways (consts 0.0073/0.0145)
+      float t1=texture2D(lh,vec2(uv.x*1.225,uv.y*0.9+time*0.11)).r, t2=texture2D(lh,vec2(uv.x,uv.y*2.902+time*0.07)).r;
+      vec2 off=vec2(0.0073*t1+0.0145*t2*(t1),0.0)*on;
+      vec4 c=texture2D(src,uv+off);
+      float m=smoothstep(0.0,4.0/255.0,c.a); // hologram pixels only
+      float fine=1.0+0.2*(texture2D(scan,vec2(0.5,uv.y*400.0)).r-1.0); // 400 fine lines
+      float coarse=0.5+0.15*(texture2D(scan,vec2(0.5,uv.y-time*0.05)).r-0.5);
+      float n=texture2D(nz,uv*vec2(220.0,200.0)/64.0+vec2(0.8627,-2.104)*time).r; n=n*(n-0.5)+0.5;
+      vec3 tint=1.0+0.065*(vec3(0.8751,0.8592,0.9406)*n*2.0-1.0);
+      vec3 h=c.rgb*mix(1.0,fine,on)*mix(vec3(1.0),tint,on)*mix(1.0,coarse*2.0,on*0.6);
+      gl_FragColor=vec4(mix(bg,h,1.0)*m+bg*(1.0-m)*(1.0-c.a)+c.rgb*(1.0-m)*c.a,1.0); }`});
+  postScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),postMat));
+}
+// ===== END FULL =====
+
+// plinth: projector disc + light cone
+const plinth=new THREE.Group();
+const disc=new THREE.Mesh(new THREE.CylinderGeometry(0.32,0.36,0.06,48),new THREE.MeshBasicMaterial({color:0x10161c}));
+disc.position.y=-0.03; plinth.add(disc);
+const ringMat=new THREE.ShaderMaterial({uniforms:U,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,
+ vertexShader:'varying vec2 vUv; void main(){vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+ fragmentShader:'uniform float time,glow; varying vec2 vUv; void main(){ float r=length(vUv-0.5)*2.0; float a=smoothstep(1.0,0.85,r)*(0.25+0.75*smoothstep(0.6,0.95,r)); a*=0.8+0.2*sin(time*6.0+r*20.0); gl_FragColor=vec4(vec3(0.3,0.7,1.0)*a*1.5*glow,1.0);}'});
+const ring=new THREE.Mesh(new THREE.PlaneGeometry(0.62,0.62),ringMat); ring.rotation.x=-Math.PI/2; ring.position.y=0.002; plinth.add(ring);
+const coneMat=new THREE.ShaderMaterial({uniforms:U,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide,
+ vertexShader:'varying vec2 vUv; void main(){vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
+ fragmentShader:'uniform float time,glow; varying vec2 vUv; void main(){ float a=pow(1.0-vUv.y,2.0)*0.22*(0.85+0.15*sin(vUv.x*60.0+time*3.0)); gl_FragColor=vec4(vec3(0.3,0.65,1.0)*a*glow,1.0);}'});
+const cone=new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.28,1.9,48,1,true),coneMat); cone.position.y=0.95; plinth.add(cone);
+scene.add(plinth);
+const grid=new THREE.GridHelper(8,32,0x1b2a36,0x0f1820); scene.add(grid);
+let model=null;
+new GLTFLoader().load('cortana.glb',async g=>{
+  model=g.scene;
+  model.traverse(o=>{ if(o.isMesh){ const n=o.material.name;
+     let k='body'; if(n.includes('head'))k='head'; else if(n.includes('hair'))k='hair'; else if(n.includes('eyes'))k='eye';
+     if(MODE==='raw'){ o.material=new THREE.MeshBasicMaterial({map:o.material.map,side:THREE.DoubleSide}); }
+     else if(FULL){ o.material=fullMat(k); o.renderOrder=k==='hair'?3:(k==='head'||k==='eye'?2:1); o.material.uniforms.faceK.value=(k==='head'||o.name.includes('eyelash')||n.includes('eyelash'))?1:0; }
+     else { o.material=holo(k); o.renderOrder=k==='hair'?2:1; o.material.uniforms.faceK.value=(k==='head'||o.name.includes('eyelash')||n.includes('eyelash'))?1:0; }
+     o.frustumCulled=false; }});
+  const box=new THREE.Box3().setFromObject(model); U.minY.value=box.min.y; U.maxY.value=box.max.y;
+  model.position.y=0.02-box.min.y; U.minY.value=0.02; U.maxY.value=box.max.y-box.min.y+0.02;
+  if(FULL){ const nm={body__default:'body',eyelashes__default:'eyelashes',hands__default:'hands',head__default:'head'};
+    const jobs=[]; model.traverse(o=>{ if(o.isMesh){ let mn=null; for(let x=o;x;x=x.parent){ if(nm[x.name]){mn=nm[x.name];break;} }
+      const cnt=o.geometry.attributes.position.count;
+      if(mn&&!(mn==='head'&&cnt!==3505)) jobs.push(fetch('uv2_'+mn+'.bin').then(r=>r.arrayBuffer()).then(b=>{ const a=new Float32Array(b); if(a.length===cnt*2) o.geometry.setAttribute('uv2x',new THREE.BufferAttribute(a,2)); else console.log('uv2 mismatch',mn,a.length,cnt); }));
+      if(!o.geometry.attributes.uv2x) o.geometry.setAttribute('uv2x',new THREE.BufferAttribute(new Float32Array(cnt*2),2));
+      if(!o.geometry.attributes.tangent){ try{ o.geometry.computeTangents(); }catch(e){ console.log('tangent fail',o.name,e.message); o.geometry.setAttribute('tangent',new THREE.BufferAttribute(new Float32Array(cnt*4).fill(1),4)); } } } });
+    await Promise.all(jobs); setupPost(); }
+  scene.add(model); window.READY=true; window.MODEL=model; window.BOX=[box.min.toArray(),box.max.toArray()];
+});
+const PCA={ready:false};
+(async()=>{ try{
+  const [map,coef,b5,b1]=await Promise.all([fetch('pca_map.json').then(r=>r.json()),fetch('pca_m093.json').then(r=>r.json()),
+    fetch('pca_mesh5.bin').then(r=>r.arrayBuffer()),fetch('pca_mesh1.bin').then(r=>r.arrayBuffer())]);
+  PCA.map=map; PCA.coef=coef; PCA.basis={5:new Float32Array(b5),1:new Float32Array(b1)}; PCA.ready=true; }catch(e){console.log('pca load fail',e);} })();
+function applyPCA(o){
+  if(!PCA.ready||!model) return;
+  if(!PCA.meshes){ PCA.meshes=[]; model.traverse(x=>{ if(x.isMesh){ const mn=x.parent&&x.parent.name&&PCA.map[x.parent.name]?x.parent.name:(PCA.map[x.name]?x.name:null);
+      if(mn){ PCA.meshes.push({obj:x,mn,base:x.geometry.attributes.position.array.slice()}); } } });
+    // assign primitive index in order of appearance per mesh name
+    const cnt={}; for(const m of PCA.meshes){ cnt[m.mn]=(cnt[m.mn]||0); m.pi=cnt[m.mn]++; } }
+  for(const m of PCA.meshes){
+    const info=PCA.map[m.mn], mesh=info.mesh, idx=info.prims[m.pi]; if(!idx) continue;
+    const pos=m.obj.geometry.attributes.position.array; pos.set(m.base);
+    if(o&&o.shot){ const C=PCA.coef[mesh].coef[o.shot]; if(!C) continue; const f=Math.min(C.length-1,Math.max(0,o.frame|0)); const c=C[f];
+      const B=PCA.basis[mesh], nv=PCA.coef[mesh].nv, nc=PCA.coef[mesh].ncomp, s=o.scale??0.84;
+      for(let v=0;v<idx.length;v++){ const j=idx[v]; if(j<0) continue; let dx=0,dy=0,dz=0;
+        for(let k=0;k<nc;k++){ const w=c[k]; if(w===0) continue; const b=(k*nv+j)*3; dx+=w*B[b]; dy+=w*B[b+1]; dz+=w*B[b+2]; }
+        pos[v*3]+=dx*s; pos[v*3+1]+=dy*s; pos[v*3+2]+=dz*s; } }
+    m.obj.geometry.attributes.position.needsUpdate=true; }
+}
+const BONES={}; let REST=null;
+function rotW(b,axis,ang){ b.parent.updateWorldMatrix(true,false);
+  const pq=new THREE.Quaternion(); b.parent.getWorldQuaternion(pq);
+  const q=new THREE.Quaternion().setFromAxisAngle(axis,ang);
+  const l=pq.clone().invert().multiply(q).multiply(pq); b.quaternion.premultiply(l); }
+const ANIM={};
+fetch('bone_names.json').then(r=>r.json()).then(n=>ANIM.names=n);
+function loadAnim(f){ return fetch(f).then(r=>r.json()).then(j=>{ANIM.data=j;}); }
+window.loadAnim=loadAnim;
+function applyAnim(a){
+  const A=ANIM.data&&ANIM.data[a.shot]; if(!A||!ANIM.names) return false;
+  const f=Math.min(A.frames-1,Math.max(0,a.frame|0));
+  for(const k in REST) BONES[k].quaternion.copy(REST[k]);
+  for(const n in A.rot){ const b=BONES[ANIM.names[n]]; if(!b) continue; const q=A.rot[n][f]; b.quaternion.set(q[0],q[1],q[2],q[3]).normalize(); }
+  for(const n in A.trans){ const b=BONES[ANIM.names[n]]; if(!b) continue; const t=A.trans[n][f];
+    if(+n===0){ b.position.set(0,0,0); continue; } b.position.set(t[0],t[1],t[2]); }
+  return true; }
+function pose(t,o){
+  if(!REST){ REST={}; model.traverse(x=>{ if(x.isBone){BONES[x.name]=x; REST[x.name]=x.quaternion.clone();} }); }
+  if(o.anim && applyAnim(o.anim)) { if(o.look) rotW(BONES.b_head,new THREE.Vector3(0,1,0),o.look); return; }
+  for(const k in REST) BONES[k].quaternion.copy(REST[k]);
+  const Z=new THREE.Vector3(0,0,1),Y=new THREE.Vector3(0,1,0),X=new THREE.Vector3(1,0,0);
+  const br=Math.sin(t*1.6)*0.5+0.5, sw=Math.sin(t*0.55);
+  const arm=o.arm??0.62;
+  rotW(BONES.b_l_upperarm,Z,-arm-0.03*br); rotW(BONES.b_r_upperarm,Z,arm+0.03*br);
+  rotW(BONES.b_l_forearm,Y,0.25); rotW(BONES.b_r_forearm,Y,-0.25);
+  rotW(BONES.b_spine2,X,0.02*br); rotW(BONES.b_spine3,X,0.015*br);
+  rotW(BONES.b_pelvis,Z,0.035*sw); rotW(BONES.b_spine1,Z,-0.03*sw);
+  rotW(BONES.b_head,Y,(o.look??0)+0.12*Math.sin(t*0.4)); rotW(BONES.b_head,X,0.04*Math.sin(t*0.7));
+  rotW(BONES.b_l_thigh,Z,-0.02*sw); rotW(BONES.b_r_thigh,Z,-0.02*sw);
+  if(o.nod) rotW(BONES.b_head,X,o.nod); if(o.tilt) rotW(BONES.b_head,Z,o.tilt);
+  if(o.jaw) rotW(BONES.b_jaw,X,o.jaw);
+  if(o.eyeX||o.eyeY){ for(const e of [BONES.b_l_eye,BONES.b_r_eye]){ rotW(e,Y,o.eyeX||0); rotW(e,X,o.eyeY||0);} }
+}
+window.frame=(t,o={})=>{ if(model && (o.pose??true)) pose(t,o); applyPCA(o.pca);
+  for(const k in U) if(k.startsWith('f_')) U[k].value=(o.face&&o.face[k.slice(2)])||0;
+  U.time.value=t; U.rez.value=o.rez??1.5; U.glow.value=o.glow??1.0;
+  const a=o.yaw??0, dist=o.dist??3.2, ty=o.ty??0.95, cy=o.cy??1.05;
+  cam.position.set(Math.sin(a)*dist,cy,Math.cos(a)*dist); cam.lookAt(0,ty,0);
+  if(model){ model.position.y=(o.bob??0)+0.02-(window.BOX?window.BOX[0][1]:0); model.rotation.y=o.rot??0; }
+  if(o.wrinkle!==undefined) LU.wrinkleK.value=o.wrinkle;
+  if(FULL&&!P.has('worldlights')){ cam.updateMatrixWorld(); const q=cam.quaternion; // self-lit hologram: lights ride with the viewer
+    LU.L1.value.copy(LP[0]).applyQuaternion(q); LU.L2.value.copy(LP[1]).applyQuaternion(q); LU.L3.value.copy(LP[2]).applyQuaternion(q); }
+  if(FULL&&RT){ const bg=scene.background; scene.background=null; ren.setRenderTarget(RT); ren.setClearColor(0x000000,0); ren.clear(); ren.render(scene,cam); ren.setRenderTarget(null); scene.background=bg; ren.render(postScene,postCam); }
+  else ren.render(scene,cam); return ren.domElement.toDataURL('image/png');
+};
+</script></body></html>

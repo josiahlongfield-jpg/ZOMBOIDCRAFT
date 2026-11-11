@@ -1,0 +1,219 @@
+{
+ "id": "tarkov_pl15",
+ "name": "PL-15 9x19 (kitted)",
+ "anchor": "pistol",
+ "anchorMesh": "pbr_pistol",
+ "calibre": "9x19mm",
+ "suppressed": true,
+ "fp": "operator_tarkov_pl15",
+ "reload": [
+  2.7,
+  3.733
+ ],
+ "stats": {
+  "damage": 7.0,
+  "hipSpread": 1.4,
+  "aimSpread": 0.45,
+  "recoil": 0.7,
+  "range": 60.0,
+  "magazineSize": 16
+ },
+ "kit": [
+  "suppressor",
+  "laser",
+  "light"
+ ],
+ "rail": {
+  "laser": {
+   "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+   "at": [
+    -0.0001,
+    -0.0056,
+    0.0326
+   ],
+   "dir": [
+    0,
+    -0.9998,
+    -0.018
+   ],
+   "third": [
+    -0.1326,
+    -0.1095,
+    0.5869
+   ]
+  },
+  "light": {
+   "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+   "at": [
+    -0.0001,
+    -0.0351,
+    0.0131
+   ],
+   "dir": [
+    0,
+    -0.9998,
+    -0.018
+   ],
+   "third": [
+    -0.1326,
+    -0.0901,
+    0.6165
+   ]
+  }
+ },
+ "grip": null,
+ "guard": null,
+ "tarkov": {
+  "base": "602a9740da11d6478d5a06dc",
+  "kit": [
+   {
+    "path": "",
+    "item": "602a9740da11d6478d5a06dc",
+    "bones": [
+     "spring_rod_LOD0",
+     "catch_LOD0",
+     "weapon_izhmash_pl15_9x19_internals_LOD0",
+     "weapon_izhmash_pl15_9x19_LOD0",
+     "release_LOD0",
+     "spring_LOD0",
+     "trigger_LOD0",
+     "trigger_bar_LOD0"
+    ],
+    "bone": "weapon_izhmash_pl15_9x19_LOD0",
+    "at": [
+     -0.156825,
+     1.372693,
+     0.533959,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "602a95fe4e02ce1eaa358729",
+    "bones": [
+     "barrel_pl15_izhmash_112mm_threaded_9x19_LOD0"
+    ],
+    "bone": "barrel_pl15_izhmash_112mm_threaded_9x19_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "602a97060ddce744014caf6f",
+    "bones": [
+     "silencer_all_izhmash_pl15_std_9x19_LOD0"
+    ],
+    "bone": "silencer_all_izhmash_pl15_std_9x19_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "60228924961b8d75ee233c32",
+    "bones": [
+     "reciever_pl15_izhmash_pl15_std_LOD0"
+    ],
+    "bone": "reciever_pl15_izhmash_pl15_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "60229948cacb6b0506369e27",
+    "bones": [
+     "sight_rear_pl15_izhmash_pl15_std_LOD0"
+    ],
+    "bone": "sight_rear_pl15_izhmash_pl15_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_front",
+    "item": "60228a76d62c9b14ed777a66",
+    "bones": [
+     "sight_front_pl15_izhmash_pl15_std_LOD0"
+    ],
+    "bone": "sight_front_pl15_izhmash_pl15_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "602286df23506e50807090c6",
+    "bones": [
+     "mag_pl15_izhmash_pl15_std_9x19_16_LOD0"
+    ],
+    "bone": "mag_pl15_izhmash_pl15_std_9x19_16_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_tactical",
+    "item": "56def37dd2720bec348b456a",
+    "bones": [
+     "flashlight_glass_LOD0",
+     "switch_000_LOD0",
+     "switch_type_000_LOD0",
+     "tactical_all_surefire_x400_vis_laser_LOD0"
+    ],
+    "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_reciever/mod_sight_rear",
+  "aimIndex": 0
+ }
+}

@@ -1,0 +1,1194 @@
+ZomboidCraft profile, 2026-11-04T16:46:23.8131391
+Sampled 30.0 s, 8544 rounds (about every 3.5 ms; 50 ran late)
+Memory: 6050 MB used now, 7441 MB peak seen, 10240 MB max allowed (-Xmx), 16 cores
+Garbage collector G1 Young Generation: 10 runs, 458 ms
+Garbage collector G1 Concurrent GC: 6 runs, 19 ms
+Garbage collector G1 Old Generation: 0 runs, 0 ms
+Garbage collection took 1.6% of the time
+Flickering lamps changed 0 times (0 a second), traffic signals 0 times
+Sent to your client: 205 single block changes, 18 section block changes, 0 light updates, 194 chunks loaded
+NVIDIA buffer storage fix: ran at start-up (card NVIDIA Corporation, Minecraft wanted it off, now on)
+Sodium chunk uploads: mapped staging buffer
+
+==================== Freezes (frames of 150 ms or more) ====================
+9 freezes, 4.7 s frozen in all
+-- Across all freezes, what the render thread was doing
+ 50.49%    <- top: GL32C.nglClientWaitSync <- GL32C.glClientWaitSync <- GlStateManager._glClientWaitSync
+ 36.57%    <- top: GL32C.nglDrawElementsInstancedBaseVertex <- GL32C.glDrawElementsInstancedBaseVertex <- GlCommandEncoder.executeDraw
+  1.72%  Iris HandRenderer.renderSolid  <- top: GL32C.nglDrawElementsInstancedBaseVertex <- GL32C.glDrawElementsInstancedBaseVertex <- GlCommandEncoder.executeDraw
+  1.35%  Particle Rain ParticleSpawner.tickBlockFX  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+  0.82%  Iris IrisRenderSystem$DSAARB.bindTextureToUnit  <- top: GL45C.glBindTextureUnit <- ARBDirectStateAccess.glBindTextureUnit <- IrisRenderSystem$DSAARB.bindTextureToUnit
+  0.82%    <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getBlockState
+  0.52%  Particle Rain CustomParticle.onPositionUpdate  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+  0.37%  Particle Rain WindManager.tick  <- top: WindManager.tick <- ParticleRain.onTick <- ClientTickEvents.lambda$static$3
+  0.30%    <- top: GL45C.glCopyNamedBufferSubData <- ARBDirectStateAccess.glCopyNamedBufferSubData <- DirectStateAccess$Core.copyBufferSubData
+  0.30%  Iris GlFramebuffer.bind  <- top: GL30C.glBindFramebuffer <- GlStateManager._glBindFramebuffer <- GlFramebuffer.bind
+  0.30%  Particle Rain ParticleSpawner.tickBlockFX  <- top: ParticleSpawner.tickBlockFX <- ClientLevel.handler$boe000$particlerain$hookDoAnimateTick <- ClientLevel.doAnimateTick
+  0.30%    <- top: Shapes.create <- BlockCollisions.<init> <- CollisionGetter.lambda$getBlockCollisionsFromContext$0
+  0.22%  Particle Rain CustomParticle.tickCollisions  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getBlockState
+  0.22%  BodyJob.emit (line 123)  <- top: BodyJob.emit
+  0.22%  Particle Rain WeatherParticle.tick  <- top: Particle.tick <- WeatherParticle.tick <- CustomParticle.tick
+-- Freeze of about 893 ms (frame 21436)
+  93.7%    <- top: GL32C.nglClientWaitSync <- GL32C.glClientWaitSync <- GlStateManager._glClientWaitSync
+   0.8%  Particle Rain ParticleSpawner.tickBlockFX  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   0.8%    <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getBlockState
+   0.4%  Particle Rain CustomParticle.tickCollisions  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getBlockState
+   0.4%  LiftCar.tick (line 181)  <- top: EntityFluidInteraction.hasFluidAndLoaded
+-- Freeze of about 776 ms (frame 21469)
+  92.0%    <- top: GL32C.nglClientWaitSync <- GL32C.glClientWaitSync <- GlStateManager._glClientWaitSync
+   1.5%    <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getBlockState
+   1.5%  Particle Rain CustomParticle.onPositionUpdate  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   0.5%  WalkerRenderer.extractRenderState (line 81)  <- top: LivingEntity.getItemBySlot
+   0.5%    <- top: ParticleGroup.tickParticles <- ParticleEngine.lambda$tick$0 <- IdentityHashMap.forEach
+-- Freeze of about 679 ms (frame 21445)
+  85.0%    <- top: GL32C.nglDrawElementsInstancedBaseVertex <- GL32C.glDrawElementsInstancedBaseVertex <- GlCommandEncoder.executeDraw
+   6.5%  Iris HandRenderer.renderSolid  <- top: GL32C.nglDrawElementsInstancedBaseVertex <- GL32C.glDrawElementsInstancedBaseVertex <- GlCommandEncoder.executeDraw
+   1.0%  Particle Rain ParticleSpawner.tickBlockFX  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   1.0%    <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getBlockState
+   1.0%  Particle Rain ParticleSpawner.tickBlockFX  <- top: ParticleSpawner.tickBlockFX <- ClientLevel.handler$boe000$particlerain$hookDoAnimateTick <- ClientLevel.doAnimateTick
+-- Freeze of about 562 ms (frame 21525)
+  82.1%    <- top: GL32C.nglDrawElementsInstancedBaseVertex <- GL32C.glDrawElementsInstancedBaseVertex <- GlCommandEncoder.executeDraw
+   6.2%  Iris HandRenderer.renderSolid  <- top: GL32C.nglDrawElementsInstancedBaseVertex <- GL32C.glDrawElementsInstancedBaseVertex <- GlCommandEncoder.executeDraw
+   2.5%  Particle Rain ParticleSpawner.tickBlockFX  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   1.9%    <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getBlockState
+   1.2%    <- top: Shapes.create <- BlockCollisions.<init> <- CollisionGetter.lambda$getBlockCollisionsFromContext$0
+-- Freeze of about 552 ms (frame 21490)
+  89.8%    <- top: GL32C.nglClientWaitSync <- GL32C.glClientWaitSync <- GlStateManager._glClientWaitSync
+   1.2%  Particle Rain ParticleSpawner.tickBlockFX  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   1.2%  Particle Rain CustomParticle.onPositionUpdate  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   0.6%    <- top: StagedVertexBuffer.uploadDrawsToBuffers <- StagedVertexBuffer.upload <- FeatureRenderDispatcher.prepareFrameWithContext
+   0.6%    <- top: ParticleGroup.tickParticles <- ParticleEngine.lambda$tick$0 <- IdentityHashMap.forEach
+-- Freeze of about 496 ms (frame 21419)
+  88.1%    <- top: GL32C.nglDrawElementsInstancedBaseVertex <- GL32C.glDrawElementsInstancedBaseVertex <- GlCommandEncoder.executeDraw
+   2.1%    <- top: GL45C.glCopyNamedBufferSubData <- ARBDirectStateAccess.glCopyNamedBufferSubData <- DirectStateAccess$Core.copyBufferSubData
+   1.4%  Particle Rain ParticleSpawner.tickBlockFX  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   1.4%  Particle Rain WindManager.tick  <- top: WindManager.tick <- ParticleRain.onTick <- ClientTickEvents.lambda$static$3
+   0.7%    <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getFluidState
+-- Freeze of about 297 ms (frame 21492)
+  70.6%    <- top: GL32C.nglDrawElementsInstancedBaseVertex <- GL32C.glDrawElementsInstancedBaseVertex <- GlCommandEncoder.executeDraw
+  12.9%  Iris IrisRenderSystem$DSAARB.bindTextureToUnit  <- top: GL45C.glBindTextureUnit <- ARBDirectStateAccess.glBindTextureUnit <- IrisRenderSystem$DSAARB.bindTextureToUnit
+   3.5%  Particle Rain ParticleSpawner.tickBlockFX  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   1.2%  Sodium GLDrawBatch.draw  <- top: FrontendRenderPass.multiDrawIndexed <- GLDrawBatch.draw <- DefaultChunkRenderer.render
+   1.2%    <- top: Shapes.create <- BlockCollisions.<init> <- CollisionGetter.lambda$getBlockCollisionsFromContext$0
+-- Freeze of about 231 ms (frame 21790)
+  83.8%    <- top: GL32C.nglClientWaitSync <- GL32C.glClientWaitSync <- GlStateManager._glClientWaitSync
+   1.5%  Particle Rain ParticleSpawner.tickBlockFX  <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getNoiseBiome
+   1.5%    <- top: PalettedContainer.get <- PalettedContainer.get <- LevelChunkSection.getFluidState
+   1.5%    <- top: LevelRenderer.wrapOperation$big000$iris$beginTranslucents <- LevelRenderer.lambda$addMainPass$0 <- FrameGraphBuilder.execute
+   1.5%  Sodium SodiumChunkSection.handler$zzp000$distanthorizons$renderDeferredLayerHead  <- top: Collections$SynchronizedMap.get <- ClientLevelWrapper.getWrapper <- ClientLevelWrapper.getWrapper
+
+==================== Graphics card time per frame (GPU timers) ====================
+Graphics card memory: 12282 MB on the card, 250 MB free at the end, 220 MB free at the lowest; 593 evictions during the profile (12020 MB pushed out to normal RAM)  <- THE CARD IS FULL: things are being swapped out, which freezes frames
+Zomboid body textures: 251 made since start, 251 kept, 72 MB on the card (cap 512 MB) (18 made during the profile)
+463 frames timed. Milliseconds on the card per frame, averaged; parts overlap (the shadow and lighting lines are inside World, World inside Whole frame).
+  Whole frame (world, hand, HUD)                               57.46 ms    99%  (1.0 calls a frame)
+  World (everything but the HUD)                               57.20 ms    99%  (1.0 calls a frame)
+  Photon shadow pass (all of it)                               12.60 ms    22%  (1.0 calls a frame)
+    shadow pass: blocks and buildings                          10.20 ms    18%  (3.0 calls a frame)
+  Solid pass, blocks and objects together (main view)          23.01 ms    40%  (1.0 calls a frame)
+  Blocks and buildings, solid (main view)                      19.42 ms    34%  (2.0 calls a frame)
+  Photon lighting before glass and water (deferred)             4.83 ms     8%  (1.0 calls a frame)
+  Glass, water and see-through blocks                           3.28 ms     6%  (1.0 calls a frame)
+  Photon after-effects and final pass (composite)               1.79 ms     3%  (1.0 calls a frame)
+    shadow pass: objects and the rest (shadow minus blocks)     2.40 ms
+-- The slowest frames on the card (100 ms or more), part by part
+  frame 21435: 935 ms: World 935; Photon shadow pass 7; shadow pass: blocks and buildings 6; Solid pass, blocks and objects together 49; Blocks and buildings, solid 41; Photon lighting before glass and water 8; Glass, water and see-through blocks 6; Photon after-effects and final pass 2;
+  frame 21468: 763 ms: World 763; Photon shadow pass 120; shadow pass: blocks and buildings 15; Solid pass, blocks and objects together 12; Blocks and buildings, solid 11; Photon lighting before glass and water 9; Glass, water and see-through blocks 3; Photon after-effects and final pass 2;
+  frame 21445: 594 ms: World 593; Photon shadow pass 9; shadow pass: blocks and buildings 9; Solid pass, blocks and objects together 76; Blocks and buildings, solid 26; Photon lighting before glass and water 6; Glass, water and see-through blocks 5; Photon after-effects and final pass 2;
+  frame 21489: 531 ms: World 531; Photon shadow pass 143; shadow pass: blocks and buildings 16; Solid pass, blocks and objects together 13; Blocks and buildings, solid 12; Photon lighting before glass and water 5; Glass, water and see-through blocks 3; Photon after-effects and final pass 2;
+  frame 21525: 491 ms: World 490; Photon shadow pass 11; shadow pass: blocks and buildings 11; Solid pass, blocks and objects together 25; Blocks and buildings, solid 15; Photon lighting before glass and water 5; Glass, water and see-through blocks 2; Photon after-effects and final pass 2;
+  frame 21418: 475 ms: World 475; Photon shadow pass 5; shadow pass: blocks and buildings 5; Solid pass, blocks and objects together 42; Blocks and buildings, solid 26; Photon lighting before glass and water 5; Glass, water and see-through blocks 6; Photon after-effects and final pass 3;
+  frame 21492: 257 ms: World 255; Photon shadow pass 156; shadow pass: blocks and buildings 18; Solid pass, blocks and objects together 19; Blocks and buildings, solid 15; Photon lighting before glass and water 5; Glass, water and see-through blocks 2; Photon after-effects and final pass 2;
+  frame 21789: 221 ms: World 221; Photon shadow pass 17; shadow pass: blocks and buildings 17; Solid pass, blocks and objects together 15; Blocks and buildings, solid 13; Photon lighting before glass and water 5; Glass, water and see-through blocks 2; Photon after-effects and final pass 3;
+    objects: cars, people, props, guns (solid pass minus blocks)    3.59 ms
+JVM: OpenJDK 64-Bit Server VM 25.0.5, args [-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump, -XX:StackShadowPages=32, --enable-native-access=ALL-UNNAMED, --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED, -Djava.library.path=C:\Users\josia\AppData\Roaming\ModrinthApp\meta\natives\26.3-0.20.1/java, -Djna.tmpdir=C:\Users\josia\AppData\Roaming\ModrinthApp\meta\natives\26.3-0.20.1/jna, -Dorg.lwjgl.system.SharedLibraryExtractPath=C:\Users\josia\AppData\Roaming\ModrinthApp\meta\natives\26.3-0.20.1/lwjgl, -Dio.netty.native.workdir=C:\Users\josia\AppData\Roaming\ModrinthApp\meta\natives\26.3-0.20.1/netty, -Dminecraft.launcher.brand=theseus, -Dminecraft.launcher.version=0.22.1, -DFabricMcEmu=net.minecraft.client.main.Main, -Xmx10240M, -Dlog4j.configurationFile=C:\Users\josia\AppData\Roaming\ModrinthApp\meta\log_configs\client-1.21.2.xml, -javaagent:C:\Users\josia\AppData\Local\Temp\.tmpQx5EV1\theseus.jar, -Dmodrinth.internal.ipc.host=127.0.0.1, -Dmodrinth.internal.ipc.port=54390, -Dmodrinth.internal.quickPlay.serverVersion=BUILTIN, --add-opens=java.base/java.lang.reflect=ALL-UNNAMED, --add-opens=jdk.internal/jdk.internal.misc=ALL-UNNAMED]
+Reading it: on the render thread, time in LWJGL/blaze3d swap or draw calls is mostly waiting on the graphics card (or the shader pack); time in mods or Minecraft code is the CPU.
+
+==================== ZomboidCraft background threads (all together) ====================
+93984 samples, 2315 busy (2%), 91669 waiting (2543 of them on a lock)
+
+-- Waiting on a lock, where (share of the lock waits)
+100.00%    2543  PlaceCache.get  (line 78)
+
+-- Busy time by mod (the deepest frame that names a mod)
+ 99.09%    2294  ZomboidCraft
+  0.91%      21  Java
+
+-- Busy time inside our classes (anywhere on the stack)
+ 87.86%    2034  client.map.CountyAtlas
+ 87.30%    2021  world.county.CountyGen
+ 87.26%    2020  world.county.PlaceCache
+ 87.13%    2017  world.county.Builders
+ 55.25%    1279  world.county.DowntownSite
+ 25.53%     591  world.county.Voxels
+ 21.08%     488  world.city.Tower
+ 20.86%     483  world.city.Decay
+ 18.06%     418  world.city.Floors
+ 18.06%     418  world.city.Floorplan
+ 14.25%     330  world.county.RoomLights
+ 11.23%     260  client.npc.BodyJob
+ 10.15%     235  world.city.Placer
+  9.59%     222  client.npc.FastVerts
+  5.53%     128  world.city.PackTower
+  3.76%      87  world.county.Flats
+  3.63%      84  world.city.Walkup
+  3.41%      79  world.county.Interior
+  3.02%      70  world.county.Kit
+  1.56%      36  world.county.Trees
+  1.51%      35  world.city.Penthouse
+  1.04%      24  client.npc.NpcSkinDraw
+  0.95%      22  world.city.Doors
+  0.56%      13  world.county.Garage
+  0.48%      11  world.county.CarSpacing
+  0.30%       7  world.city.Stairwell
+  0.30%       7  world.city.Shops
+  0.22%       5  world.county.CityCivic
+  0.17%       4  world.city.LiftBuild
+  0.13%       3  world.county.Bunker
+  0.09%       2  world.county.County
+  0.09%       2  world.county.Terrain
+  0.09%       2  world.county.Plan
+  0.04%       1  world.cars.CarModels
+  0.04%       1  world.county.Church
+  0.04%       1  world.gen.ChunkWriter
+  0.04%       1  world.county.Site
+  0.04%       1  world.county.RoofHut
+  0.04%       1  world.county.Bldg
+  0.04%       1  world.county.Civic
+
+-- Our deepest frame (the line of ours closest to the work)
+ 11.36%     263  Voxels.forEach  (line 174)
+  9.55%     221  FastVerts.fill  (line 313)
+  8.86%     205  Floorplan.stillConnected  (line 769)
+  4.36%     101  Placer.set  (line 64)
+  3.80%      88  Builders.lambda$clearTrees$0  (line 400)
+  3.71%      86  RoomLights.door  (line 114)
+  2.85%      66  Decay.air  (line 136)
+  2.29%      53  Decay.material  (line 120)
+  2.25%      52  Voxels.get  (line 85)
+  1.94%      45  Decay.run  (line 77)
+  1.73%      40  RoomLights.room  (line 200)
+  1.60%      37  RoomLights.light  (line 143)
+  1.47%      34  Builders.lambda$clearTrees$0  (line 401)
+  1.30%      30  Placer.rotate  (line 171)
+  1.21%      28  Builders.lambda$clearGrass$0  (line 481)
+  1.12%      26  Decay.weather  (line 316)
+  1.08%      25  Floorplan.biggestZone  (line 632)
+  1.04%      24  NpcSkinDraw.skin  (line 210)
+  1.04%      24  Trees.place  (line 225)
+  0.91%      21  Voxels.get  (line 87)
+  0.86%      20  Decay.has  (line 295)
+  0.86%      20  RoomLights.base  (line 243)
+  0.82%      19  Decay.weather  (line 349)
+  0.82%      19  RoomLights.room  (line 206)
+  0.82%      19  Voxels.set  (line 59)
+  0.78%      18  Decay.nearScar  (line 309)
+  0.78%      18  Placer.rotate  (line 169)
+  0.73%      17  Decay.run  (line 81)
+  0.69%      16  Floorplan.connect  (line 255)
+  0.69%      16  Decay.base  (line 114)
+  0.69%      16  Decay.weather  (line 321)
+  0.69%      16  Placer.rotate  (line 168)
+  0.65%      15  Floorplan.flood  (line 312)
+  0.60%      14  Decay.wallish  (line 141)
+  0.60%      14  Decay.run  (line 76)
+  0.60%      14  Decay.dress  (line 378)
+  0.60%      14  Voxels.set  (line 65)
+  0.56%      13  Builders.clearDoorways  (line 323)
+  0.56%      13  BodyJob.run  (line 94)
+  0.56%      13  Floorplan.<init>  (line 93)
+
+-- Busy time by method on top (self)
+ 11.45%     265  Voxels.forEach
+  9.59%     222  FastVerts.fill
+  8.86%     205  Floorplan.stillConnected
+  4.36%     101  Placer.set
+  3.93%      91  HashMap.getNode
+  3.07%      71  HashMap.hash
+  2.89%      67  Decay.run
+  2.85%      66  Decay.air
+  2.81%      65  Decay.weather
+  2.81%      65  ImmutableCollections$SetN.probe
+  2.51%      58  HashMap$TreeNode.find
+  2.16%      50  HashMap.merge
+  2.12%      49  ConcurrentHashMap.computeIfAbsent
+  2.07%      48  HashMap.putVal
+  1.81%      42  RoomLights.light
+  1.77%      41  HashMap.resize
+  1.56%      36  Placer.rotate
+  1.43%      33  ArrayList.add
+  1.25%      29  String.split
+  1.21%      28  Trees.place
+  1.17%      27  Floorplan.biggestZone
+  1.08%      25  Decay.window
+  1.04%      24  NpcSkinDraw.skin
+  0.91%      21  Floorplan.connect
+  0.91%      21  Floorplan.<init>
+  0.86%      20  Decay.has
+  0.86%      20  RoomLights.base
+  0.78%      18  Decay.nearScar
+  0.78%      18  Floorplan.flood
+  0.73%      17  Pattern$Branch.match
+  0.73%      17  StringBuilder.append
+  0.69%      16  RoomLights.room
+  0.69%      16  Decay.base
+  0.65%      15  HashMap$TreeNode.getTreeNode
+  0.60%      14  Decay.wallish
+  0.60%      14  Decay.ivy
+  0.56%      13  StringConcatHelper$Concat1.concat0
+  0.56%      13  JNI.invokePP
+  0.52%      12  RoomLights.covered
+  0.52%      12  Tower.facade
+  0.48%      11  Decay.material
+  0.48%      11  RoomLights.door
+  0.43%      10  ForkJoinPool.deactivate
+  0.43%      10  Floorplan.spokes
+  0.43%      10  Penthouse.deckPieces
+  0.43%      10  Decay.put
+  0.39%       9  HashMap$TreeNode.balanceInsertion
+  0.39%       9  Builders.lambda$clearTrees$0
+  0.39%       9  CountyAtlas.draw
+  0.35%       8  Interior.putAll
+
+-- Busy time by method anywhere on the stack (inclusive)
+ 87.86%    2034  CountyAtlas.draw
+ 87.86%    2034  Thread.run
+ 87.86%    2034  CountyAtlas.lambda$open$3
+ 87.86%    2034  CountyAtlas.work
+ 87.30%    2021  CountyGen.voxels
+ 87.26%    2020  PlaceCache.get
+ 87.13%    2017  Builders.build
+ 55.25%    1279  DowntownSite.build
+ 31.02%     718  DowntownSite.fill
+ 21.08%     488  Tower.build
+ 20.86%     483  Decay.run
+ 19.96%     462  Voxels.forEach
+ 18.70%     433  DowntownSite.tower
+ 17.58%     407  Floors$Fitter.run
+ 17.58%     407  Floors.fit
+ 16.11%     373  Tower.officeFloor
+ 15.29%     354  DowntownSite.mixed
+ 14.25%     330  RoomLights.run
+ 14.25%     330  RoomLights.fit
+ 12.48%     289  DowntownSite.towers
+ 12.14%     281  ForkJoinPool.runWorker
+ 12.14%     281  ForkJoinWorkerThread.run
+ 11.23%     260  BodyJob.run
+ 11.23%     260  ForkJoinTask$InterruptibleTask.exec
+ 11.23%     260  ForkJoinTask.doExec
+ 11.23%     260  ForkJoinTask$AdaptedInterruptibleRunnable.compute
+ 11.23%     260  ForkJoinPool$WorkQueue.topLevelExec
+ 10.67%     247  Floorplan.place
+ 10.45%     242  RoomLights.door
+  9.59%     222  Placer.set
+  9.59%     222  FastVerts.fill
+  9.42%     218  Floors$Fitter.furnish
+  9.20%     213  Floorplan.stillConnected
+  7.82%     181  Floors$Fitter.room
+  7.13%     165  HashMap.getNode
+  7.08%     164  Decay.weather
+  6.31%     146  Builders.clearTrees
+  5.75%     133  DowntownSite.frontage
+  5.62%     130  Floors$Fitter$Fit.wall
+  5.57%     129  Builders.lambda$clearTrees$0
+  5.49%     127  PackTower.build
+  5.27%     122  HashMap.get
+  5.18%     120  HashMap.merge
+  5.05%     117  Floors$Fitter.hotelRooms
+  4.92%     114  HashMap.put
+  4.62%     107  HashMap.putVal
+  4.28%      99  Placer.rotate
+  3.89%      90  Floors$Fitter.openOffice
+  3.67%      85  RoomLights.room
+  3.63%      84  Walkup.build
+  3.54%      82  Flats.floor
+  3.46%      80  Floors$Fitter$Fit.hotelRoom
+  3.46%      80  Floors$Fitter.cellular
+  3.41%      79  DowntownSite.packTower
+  3.24%      75  Interior.build
+  3.15%      73  Voxels.get
+  3.15%      73  Floors$Fitter$Fit.several
+  3.15%      73  HashMap$TreeNode.getTreeNode
+  3.11%      72  Decay.air
+  3.07%      71  HashMap.hash
+  2.85%      66  Decay.dress
+  2.85%      66  Flats.stairwell
+  2.81%      65  ImmutableCollections$SetN.probe
+  2.72%      63  ImmutableCollections$SetN.contains
+  2.72%      63  PackTower.fitFloor
+  2.68%      62  DowntownSite.walkups
+  2.63%      61  Decay.ivy
+  2.63%      61  Flats.lambda$stairwell$0
+  2.59%      60  Builders.clearDoorways
+  2.55%      59  Decay.window
+  2.51%      58  HashMap$TreeNode.find
+  2.42%      56  DowntownSite.streetLife
+  2.42%      56  Tower.facade
+  2.38%      55  Builders.clearHeadroom
+  2.38%      55  Interior.furnish
+  2.33%      54  RoomLights.light
+  2.29%      53  Decay.material
+  2.29%      53  Builders.clearGrass
+  2.20%      51  HashMap.resize
+  2.16%      50  Builders.finishFlights
+
+==================== Sodium chunk builders (all together) ====================
+93984 samples, 1760 busy (2%), 92224 waiting (0 of them on a lock)
+
+-- Busy time by mod (the deepest frame that names a mod)
+ 92.16%    1622  Sodium
+  7.84%     138  Iris
+
+-- Busy time inside our classes (anywhere on the stack)
+
+-- Our deepest frame (the line of ours closest to the work)
+
+-- Busy time by method on top (self)
+ 12.84%     226  ChunkMeshBufferBuilder.push
+ 10.11%     178  SmoothLightPipeline.applyParallelFace
+  8.58%     151  OcclusionCuller.processQueue
+  8.47%     149  ImmutableCollections$MapN.probe
+  7.90%     139  ChunkBuildBuffers.createMesh
+  5.45%      96  SmoothLightPipeline.getCachedFaceData
+  5.06%      89  VanillaBlockModelPartEncoder.emitQuads
+  4.38%      77  DirectionalVisGraph.search
+  4.32%      76  XHFPTerrainVertex.write
+  3.52%      62  XHFPTerrainVertex.computeTangentForQuad
+  3.24%      57  BlockBehaviour$BlockStateBase.getShadeBrightness
+  2.78%      49  SmoothLightPipeline.applyAmbientLighting
+  1.76%      31  BlockBehaviour$BlockStateBase.skipRendering
+  1.70%      30  MutableQuadViewWrapper.fromBakedQuad
+  1.70%      30  JNI.invokePPP
+  1.48%      26  OcclusionCuller.joinVisibilityData
+  1.19%      21  BaseBiForest.add
+  1.14%      20  PalettedContainer.sodium$unpack
+  0.97%      17  Arrays.fill
+  0.97%      17  BlockBehaviour$BlockStateBase.getRenderShape
+  0.91%      16  AbstractBlockRenderContext.shouldDrawSide
+  0.91%      16  JNI.invokePV
+  0.68%      12  SmoothLightPipeline.applyAlignedPartialFace
+  0.51%       9  SmoothLightPipeline.updateCachedData
+  0.51%       9  ChunkBuilderMeshingTask.execute
+  0.51%       9  RayOcclusionSectionTree.visitTestVisible
+  0.51%       9  JNI.invokePP
+  0.45%       8  SimpleBitStorage.sodium$unpack
+  0.40%       7  TranslucentGeometryCollector.finishRendering
+  0.34%       6  BlockRenderer.bufferQuad
+  0.34%       6  DirectionalVisGraph.resolveWithDirections
+  0.34%       6  Shapes.lambda$joinIsNotEmpty$2
+  0.34%       6  LevelBiomeSlice.copySectionBiomeData
+  0.34%       6  SmoothLightPipeline.applyAlignedFullFace
+  0.34%       6  InnerPartitionBSPNode.build
+  0.28%       5  Object2IntLinkedOpenCustomHashMap.shiftKeys
+  0.28%       5  SmoothLightPipeline.applyNonParallelFace
+  0.28%       5  LevelBiomeSlice.hasUniformNeighbors
+  0.28%       5  QuadViewImpl.getFaceNormal
+  0.23%       4  MutableQuadViewImpl.setItemRenderType
+  0.23%       4  Object2IntLinkedOpenHashMap.getOrDefault
+  0.23%       4  BlockRenderer.processQuad
+  0.23%       4  FullTQuad.fromVertices
+  0.23%       4  BlockBehaviour$BlockStateBase.getSeed
+  0.17%       3  DualPivotQuicksort.partitionDualPivot
+  0.17%       3  Object2IntLinkedOpenCustomHashMap.getAndMoveToFirst
+  0.17%       3  LongArrays.forceCapacity
+  0.17%       3  BSPSortState.writeIndexes
+  0.11%       2  Shapes.joinIsNotEmpty
+  0.11%       2  IndirectMerger.<init>
+
+-- Busy time by method anywhere on the stack (inclusive)
+100.00%    1760  Thread.run
+ 88.07%    1550  ChunkBuilder$WorkerRunnable.run
+ 87.10%    1533  ChunkJobTyped.execute
+ 86.99%    1531  ChunkBuilderMeshingTask.execute
+ 65.23%    1148  BlockRenderer.renderModel
+ 64.94%    1143  FRAPIEmitter.emitModel
+ 64.89%    1142  SingleVariant.emitQuads
+ 64.83%    1141  SimpleModelWrapper.emitQuads
+ 64.83%    1141  FabricBlockStateModelPart.emitQuads
+ 64.83%    1141  VanillaBlockModelPartEncoder.emitQuads
+ 45.45%     800  MutableQuadViewWrapper.transformAndEmit
+ 45.45%     800  AbstractBlockRenderContext$BlockEmitter.emitDirectly
+ 45.45%     800  MutableQuadViewWrapper.emit
+ 45.45%     800  AbstractBlockRenderContext.renderQuad
+ 45.40%     799  BlockRenderer.processQuad
+ 23.52%     414  AbstractBlockRenderContext.shadeQuad
+ 23.47%     413  SmoothLightPipeline.calculate
+ 21.53%     379  BlockRenderer.bufferQuad
+ 20.68%     364  ChunkMeshBufferBuilder.push
+ 16.31%     287  SmoothLightPipeline.applyParallelFace
+ 11.93%     210  ThreadPoolExecutor$Worker.run
+ 11.93%     210  ThreadPoolExecutor.runWorker
+ 11.93%     210  FutureTask.run
+ 11.93%     210  CullTask.runTask
+ 11.93%     210  AsyncRenderTask.call
+ 11.88%     209  OcclusionCuller.findVisible
+ 11.65%     205  OcclusionCuller.processQueue
+ 10.51%     185  MutableQuadViewWrapper.fromBakedQuad
+  8.81%     155  MutableQuadViewImpl.fromBakedQuad
+  8.75%     154  SmoothLightPipeline.getCachedFaceData
+  8.69%     153  MutableQuadViewImpl.setItemRenderType
+  8.47%     149  ImmutableCollections$MapN.probe
+  8.47%     149  ImmutableCollections$MapN.get
+  8.24%     145  ChunkBuildBuffers.createMesh
+  7.84%     138  XHFPTerrainVertex.write
+  4.72%      83  DirectionalVisGraph.resolveWithDirections
+  4.72%      83  DirectionalVisGraph.resolve
+  4.38%      77  DirectionalVisGraph.search
+  3.98%      70  SmoothLightPipeline.applyInsetPartialFaceVertex
+  3.92%      69  SmoothLightPipeline.applyAlignedFullFace
+  3.81%      67  AbstractBlockRenderContext.isFaceCulled
+  3.81%      67  AbstractBlockRenderContext.shouldDrawSide
+  3.52%      62  XHFPTerrainVertex.computeTangentForQuad
+  3.30%      58  AoFaceData.initLightData
+  3.30%      58  ArrayLightDataCache.get
+  3.24%      57  BlockRenderCache.init
+  3.24%      57  BlockBehaviour$BlockStateBase.getShadeBrightness
+  3.24%      57  LightDataAccess.get
+  3.24%      57  LightDataAccess.compute
+  3.18%      56  LevelSlice.copyData
+  2.78%      49  SmoothLightPipeline.applyAmbientLighting
+  2.44%      43  LevelSlice.unpackBlockData
+  2.44%      43  SmoothLightPipeline.applyAlignedPartialFace
+  2.44%      43  LevelSlice.copySectionData
+  1.76%      31  ChunkBuildBuffers.init
+  1.76%      31  BlockBehaviour$BlockStateBase.skipRendering
+  1.70%      30  MemoryUtil.nmemRealloc
+  1.70%      30  JEmalloc$Allocator.realloc
+  1.70%      30  JNI.invokePPP
+  1.70%      30  BakedChunkModelBuilder.begin
+  1.70%      30  ChunkMeshBufferBuilder.start
+  1.70%      30  ChunkMeshBufferBuilder.reallocate
+  1.70%      30  JEmalloc.nje_realloc
+  1.59%      28  PalettedContainer.sodium$unpack
+  1.48%      26  OcclusionCuller.joinVisibilityData
+  1.42%      25  SmoothLightPipeline.applyAlignedPartialFaceVertex
+  1.42%      25  WeightedVariants.emitQuads
+  1.31%      23  MultiPartModel.emitQuads
+  1.19%      21  BaseBiForest.add
+  1.19%      21  Forest.add
+  1.14%      20  ShapeComparisonCache.lookup
+  1.14%      20  TranslucentGeometryCollector.getTranslucentData
+  1.02%      18  TranslucentGeometryCollector.makeNewTranslucentData
+  1.02%      18  DynamicBSPData.fromMesh
+  0.97%      17  BSPNode.buildBSP
+  0.97%      17  BlockBehaviour$BlockStateBase.getRenderShape
+  0.97%      17  BSPNode.build
+  0.97%      17  Arrays.fill
+  0.97%      17  ShapeComparisonCache.calculate
+  0.97%      17  InnerPartitionBSPNode.build
+
+==================== Worldgen and chunk workers (all together) ====================
+128160 samples, 3436 busy (3%), 124724 waiting (3453 of them on a lock)
+
+-- Waiting on a lock, where (share of the lock waits)
+100.00%    3453  PlaceCache.get  (line 78)
+
+-- Busy time by mod (the deepest frame that names a mod)
+ 93.13%    3200  ZomboidCraft
+  2.27%      78  Minecraft chunks
+  2.12%      73  Minecraft other
+  1.78%      61  Mojang libraries
+  0.44%      15  Java
+  0.15%       5  Minecraft chunk loading
+  0.06%       2  it.unimi.dsi.fastutil.longs
+  0.03%       1  Minecraft worldgen
+  0.03%       1  com.google.common.collect
+
+-- Busy time inside our classes (anywhere on the stack)
+ 92.55%    3180  world.gen.CountyChunkGenerator
+ 92.35%    3173  world.county.CountyGen
+ 91.39%    3140  world.county.Builders
+ 91.39%    3140  world.county.PlaceCache
+ 50.00%    1718  world.county.DowntownSite
+ 26.40%     907  world.city.Tower
+ 24.91%     856  world.county.Voxels
+ 21.54%     740  world.city.Floors
+ 21.51%     739  world.city.Floorplan
+ 18.74%     644  world.city.Decay
+ 16.39%     563  world.county.RoomLights
+  9.46%     325  world.city.Placer
+  2.47%      85  world.city.PackTower
+  1.43%      49  world.county.Kit
+  1.08%      37  world.city.Penthouse
+  1.05%      36  world.gen.ChunkWriter
+  0.79%      27  world.county.Terrain
+  0.70%      24  world.county.Cover
+  0.64%      22  world.county.Trees
+  0.61%      21  world.county.LandmarkSite
+  0.58%      20  world.gen.CountyBiomeSource
+  0.55%      19  world.city.Doors
+  0.44%      15  world.county.CityCivic
+  0.35%      12  world.county.CarSpacing
+  0.35%      12  world.county.Garage
+  0.35%      12  world.county.Plan
+  0.32%      11  world.county.Grounds
+  0.32%      11  world.county.Arena
+  0.29%      10  world.county.Waterfront
+  0.20%       7  world.city.LiftBuild
+  0.17%       6  world.cars.CarModels
+  0.17%       6  world.city.Walkup
+  0.15%       5  world.city.Stairwell
+  0.15%       5  world.county.Bunker
+  0.12%       4  world.county.Flats
+  0.12%       4  world.county.ArenaRooms
+  0.12%       4  world.county.Interior
+  0.09%       3  world.county.County
+  0.09%       3  world.county.WaterfrontTerminal
+  0.06%       2  world.county.Bldg
+
+-- Our deepest frame (the line of ours closest to the work)
+ 12.17%     418  Voxels.forEach  (line 174)
+ 10.16%     349  Floorplan.stillConnected  (line 769)
+  6.11%     210  Builders.clearFrontage  (line 124)
+  4.71%     162  RoomLights.door  (line 114)
+  4.48%     154  Builders.lambda$clearTrees$0  (line 400)
+  3.84%     132  Placer.set  (line 64)
+  2.56%      88  Decay.air  (line 136)
+  2.50%      86  RoomLights.room  (line 200)
+  1.89%      65  Placer.rotate  (line 171)
+  1.78%      61  RoomLights.light  (line 143)
+  1.75%      60  Decay.material  (line 120)
+  1.63%      56  Decay.weather  (line 316)
+  1.57%      54  Voxels.get  (line 85)
+  1.43%      49  Decay.run  (line 77)
+  1.28%      44  Builders.lambda$clearTrees$0  (line 401)
+  1.22%      42  Floorplan.biggestZone  (line 632)
+  1.19%      41  Builders.lambda$clearGrass$0  (line 481)
+  1.02%      35  RoomLights.covered  (line 216)
+  1.02%      35  Floorplan.flood  (line 312)
+  0.93%      32  RoomLights.room  (line 206)
+  0.90%      31  Decay.nearScar  (line 309)
+  0.84%      29  Decay.has  (line 295)
+  0.81%      28  Decay.dress  (line 378)
+  0.81%      28  Placer.rotate  (line 169)
+  0.81%      28  RoomLights.base  (line 243)
+  0.70%      24  Decay.ivy  (line 485)
+  0.70%      24  Decay.base  (line 114)
+  0.67%      23  RoomLights.door  (line 115)
+  0.64%      22  Decay.window  (line 203)
+  0.64%      22  Decay.weather  (line 349)
+  0.64%      22  Placer.rotate  (line 168)
+  0.61%      21  Floorplan.connect  (line 255)
+  0.61%      21  Floorplan.stillConnected  (line 740)
+  0.58%      20  Floorplan.spokes  (line 162)
+  0.55%      19  Voxels.set  (line 59)
+  0.55%      19  Decay.weather  (line 321)
+  0.52%      18  Placer.rotate  (line 183)
+  0.49%      17  Floorplan.<init>  (line 93)
+  0.47%      16  Decay.wallish  (line 141)
+  0.47%      16  Decay.run  (line 76)
+
+-- Busy time by method on top (self)
+ 12.46%     428  Voxels.forEach
+ 10.22%     351  Floorplan.stillConnected
+  6.17%     212  Builders.clearFrontage
+  4.13%     142  HashMap.getNode
+  4.02%     138  HashMap.hash
+  3.84%     132  Placer.set
+  2.91%     100  Decay.weather
+  2.88%      99  HashMap.putVal
+  2.62%      90  ArrayList.add
+  2.56%      88  Decay.air
+  2.33%      80  ImmutableCollections$SetN.probe
+  2.30%      79  Decay.run
+  2.04%      70  RoomLights.light
+  1.83%      63  HashMap.merge
+  1.72%      59  HashMap.resize
+  1.69%      58  String.split
+  1.54%      53  ConcurrentHashMap.computeIfAbsent
+  1.37%      47  Floorplan.biggestZone
+  1.11%      38  Floorplan.flood
+  1.08%      37  Decay.window
+  1.05%      36  RoomLights.room
+  1.02%      35  RoomLights.covered
+  1.02%      35  PalettedContainer.reencodeContents
+  0.99%      34  Floorplan.<init>
+  0.90%      31  Placer.rotate
+  0.90%      31  Decay.nearScar
+  0.90%      31  Decay.ivy
+  0.87%      30  HashMap$TreeNode.find
+  0.84%      29  Decay.has
+  0.84%      29  RoomLights.door
+  0.81%      28  RoomLights.base
+  0.79%      27  StringBuilder.append
+  0.76%      26  StringConcatHelper$Concat1.concat0
+  0.70%      24  Floorplan.connect
+  0.70%      24  Decay.base
+  0.64%      22  PalettedContainer.get
+  0.61%      21  Floorplan.spokes
+  0.49%      17  Tower.facade
+  0.47%      16  Decay.wallish
+  0.47%      16  Decay.put
+  0.44%      15  HashMap$TreeNode.split
+  0.44%      15  Decay.material
+  0.41%      14  Builders.lambda$clearTrees$0
+  0.38%      13  Trees.place
+  0.38%      13  ArrayDeque.grow
+  0.38%      13  Unsafe.unpark
+  0.35%      12  Floorplan.door
+  0.35%      12  ChunkWriter.column
+  0.35%      12  Encoder$1.encode
+  0.32%      11  ImmutableCollections$MapN.probe
+
+-- Busy time by method anywhere on the stack (inclusive)
+100.00%    3436  ForkJoinPool.runWorker
+100.00%    3436  ForkJoinWorkerThread.run
+ 99.62%    3423  ForkJoinPool$WorkQueue.topLevelExec
+ 99.59%    3422  ForkJoinTask.doExec
+ 93.74%    3221  ForkJoinTask$InterruptibleTask.exec
+ 93.74%    3221  ForkJoinTask$RunnableExecuteAction.compute
+ 93.74%    3221  AbstractConsecutiveExecutor.run
+ 93.51%    3213  Util.runNamed
+ 93.51%    3213  AbstractConsecutiveExecutor.pollTask
+ 92.87%    3191  TaskScheduler.lambda$scheduleWithResult$0
+ 92.87%    3191  ChunkTaskDispatcher.lambda$scheduleForExecution$1
+ 92.84%    3190  ChunkGenerationTask.scheduleNextLayer
+ 92.84%    3190  ChunkGenerationTask.scheduleLayer
+ 92.84%    3190  ChunkGenerationTask.runUntilWait
+ 92.84%    3190  ChunkMap.lambda$runGenerationTask$0
+ 92.69%    3185  GenerationChunkHolder.applyStep
+ 92.69%    3185  ChunkGenerationTask.scheduleChunkInLayer
+ 92.69%    3185  ChunkStep.apply
+ 92.69%    3185  ChunkMap.applyStep
+ 92.64%    3183  ChunkStatusTasks.buildTerrain
+ 92.55%    3180  CountyChunkGenerator.buildTerrain
+ 92.35%    3173  CountyGen.generate
+ 91.79%    3154  CountyGen.copyPlace
+ 91.39%    3140  PlaceCache.get
+ 91.39%    3140  Builders.build
+ 50.00%    1718  DowntownSite.build
+ 29.74%    1022  DowntownSite.fill
+ 27.79%     955  DowntownSite.towers
+ 26.40%     907  Tower.build
+ 21.30%     732  Floors.fit
+ 21.27%     731  Floors$Fitter.run
+ 21.04%     723  Tower.officeFloor
+ 21.01%     722  Voxels.forEach
+ 18.74%     644  Decay.run
+ 18.34%     630  DowntownSite.tower
+ 16.39%     563  RoomLights.run
+ 16.39%     563  RoomLights.fit
+ 12.95%     445  Floorplan.place
+ 12.89%     443  RoomLights.door
+ 11.03%     379  Floorplan.stillConnected
+ 10.97%     377  Floors$Fitter.furnish
+  8.85%     304  Placer.set
+  8.56%     294  Floors$Fitter.room
+  7.33%     252  Builders.clearFrontage
+  6.34%     218  Decay.weather
+  6.23%     214  Builders.clearTrees
+  6.14%     211  HashMap.put
+  6.00%     206  Floors$Fitter$Fit.wall
+  5.88%     202  Floors$Fitter.openOffice
+  5.88%     202  Builders.lambda$clearTrees$0
+  5.76%     198  Floors$Fitter.hotelRooms
+  5.76%     198  HashMap.putVal
+  5.56%     191  CompletableFuture$AsyncSupply.exec
+  5.56%     191  CompletableFuture$AsyncSupply.run
+  5.47%     188  HashMap.merge
+  5.30%     182  HashMap.getNode
+  5.01%     172  Floors$Fitter.cellular
+  4.92%     169  SerializableChunkData.write
+  4.77%     164  RoomLights.room
+  4.71%     162  CompoundTag.store
+  4.69%     161  Encoder.encodeStart
+  4.69%     161  Encoder$1.encode
+  4.69%     161  Codec$2.encode
+  4.37%     150  Placer.rotate
+  4.02%     138  HashMap.hash
+  3.93%     135  Floors$Fitter.deskPods
+  3.78%     130  Floors$Fitter$Fit.hotelRoom
+  3.29%     113  Tower.facade
+  3.06%     105  HashMap.get
+  2.91%     100  Floors$Fitter$Fit.several
+  2.79%      96  String.split
+  2.79%      96  Decay.dress
+  2.65%      91  ArrayList.add
+  2.65%      91  Decay.air
+  2.56%      88  Decay.window
+  2.56%      88  Floorplan.set
+  2.50%      86  Decay.ivy
+  2.47%      85  PackTower.build
+  2.47%      85  RoomLights.light
+  2.44%      84  DowntownSite.packTower
+
+==================== Server thread (ticks: zombies, chunks, world) ====================
+8544 samples, 832 busy (10%), 7712 waiting (0 of them on a lock)
+
+-- Busy time by mod (the deepest frame that names a mod)
+ 30.05%     250  Minecraft chunks
+ 24.52%     204  Minecraft chunk loading
+ 17.79%     148  Minecraft other
+ 13.82%     115  ZomboidCraft
+  5.05%      42  Minecraft entities
+  2.64%      22  it.unimi.dsi.fastutil.objects
+  2.28%      19  it.unimi.dsi.fastutil.longs
+  1.32%      11  Mojang libraries
+  0.72%       6  com.google.common.collect
+  0.60%       5  Minecraft worldgen
+  0.48%       4  Fabric API
+  0.36%       3  Networking
+  0.12%       1  it.unimi.dsi.fastutil.ints
+  0.12%       1  com.google.common.cache
+  0.12%       1  it.unimi.dsi.fastutil.doubles
+
+-- Busy time inside our classes (anywhere on the stack)
+  2.04%      17  world.cars.CarProp
+  2.04%      17  world.lifts.LiftCar
+  2.04%      17  combat.Guns
+  1.68%      14  combat.CombatNet
+  1.56%      13  zombie.population.Population
+  1.44%      12  world.lifts.LiftMachine
+  1.44%      12  world.lifts.LiftMachineBlock
+  0.84%       7  world.lifts.LiftShaft
+  0.84%       7  world.lifts.LiftPhysics
+  0.72%       6  combat.BodyTrack
+  0.72%       6  combat.Dismember
+  0.60%       5  world.cars.CarModels
+  0.60%       5  world.trains.TrainRun
+  0.60%       5  world.trains.Trains
+  0.48%       4  world.weather.WeatherDirector
+  0.48%       4  world.blocks.Fittings
+  0.36%       3  world.trains.Route
+  0.36%       3  zombie.RallyGoal
+  0.36%       3  world.trains.TrainPhysics
+  0.36%       3  combat.GunState
+  0.24%       2  carry.Carry
+  0.24%       2  gear.Radios
+  0.24%       2  combat.LocalGuns
+  0.24%       2  combat.GunRaise
+  0.12%       1  zombie.population.Herds
+  0.12%       1  zombie.ZedSounds
+  0.12%       1  world.cars.CarParts
+  0.12%       1  zombie.Noise
+  0.12%       1  combat.Attachments
+  0.12%       1  world.weather.WeatherView
+  0.12%       1  combat.GlassShots
+  0.12%       1  world.events.WorldEvents
+  0.12%       1  world.weather.WeatherLayers
+  0.12%       1  skills.Skills
+  0.12%       1  world.SporeHaze
+  0.12%       1  zombie.LyingInWait
+  0.12%       1  gear.Headgear
+  0.12%       1  zombie.ZombieTypes
+  0.12%       1  combat.RifleItem
+  0.12%       1  world.events.MetaEvents
+
+-- Our deepest frame (the line of ours closest to the work)
+  1.08%       9  CarProp.tick  (line 1802)
+  0.84%       7  LiftCar.tick  (line 181)
+  0.72%       6  LiftShaft.landingsString  (line 130)
+  0.60%       5  Population.survey  (line 730)
+  0.60%       5  LiftMachine.follow  (line 465)
+  0.60%       5  Guns.fire  (line 154)
+  0.60%       5  CarModels.all  (line 255)
+  0.60%       5  BodyTrack.record  (line 151)
+  0.48%       4  Fittings$Contents.saveAdditional  (line 151)
+  0.36%       3  LiftPhysics.carry  (line 51)
+  0.36%       3  GunState.equals  (line 16)
+  0.36%       3  Route.slowest  (line 103)
+  0.36%       3  Population.crowd  (line 557)
+  0.36%       3  TrainPhysics.carry  (line 144)
+  0.24%       2  Population.survey  (line 734)
+  0.24%       2  LiftPhysics.carry  (line 52)
+  0.24%       2  LiftCar.tick  (line 185)
+  0.24%       2  GunRaise.shot  (line 42)
+  0.12%       1  Guns.tick  (line 902)
+  0.12%       1  RallyGoal.canContinueToUse  (line 109)
+  0.12%       1  ZombieTypes.isWalker  (line 14)
+  0.12%       1  LocalGuns.sound  (line 230)
+  0.12%       1  LiftPhysics.escalator  (line 147)
+  0.12%       1  WeatherDirector.tick  (line 119)
+  0.12%       1  Spots.roofed  (line 80)
+  0.12%       1  ZedSounds.swap  (line 221)
+  0.12%       1  MetaEvents.tick  (line 65)
+  0.12%       1  WeatherDirector.tick  (line 154)
+  0.12%       1  GlassShots.shot  (line 84)
+  0.12%       1  RallyGoal.groupSize  (line 44)
+  0.12%       1  WorldEvents.tick  (line 226)
+  0.12%       1  Radios.tick  (line 352)
+  0.12%       1  WeatherDirector.sync  (line 297)
+  0.12%       1  LocalGuns.sound  (line 225)
+  0.12%       1  Population.survey  (line 738)
+  0.12%       1  LiftPhysics.escalator  (line 151)
+  0.12%       1  CarParts.kind  (line 126)
+  0.12%       1  Herds.noise  (line 358)
+  0.12%       1  SearchHeli.tick  (line 103)
+  0.12%       1  TrainCar.pose  (line 96)
+
+-- Busy time by method on top (self)
+ 26.80%     223  PalettedContainer.get
+  7.21%      60  ServerChunkCache.lambda$tickChunks$0
+  5.41%      45  ServerChunkCache.getChunk
+  2.88%      24  ChunkTracker.getComputedLevel
+  1.68%      14  ImmutableCollections$Set12.contains
+  1.68%      14  DynamicGraphMinFixedPoint.checkEdge
+  1.56%      13  ChunkMap.anyPlayerCloseEnoughForSpawningInternal
+  1.44%      12  AbstractPipeline.isShortCircuitingPipeline
+  1.32%      11  TicketStorage.removeTicketIf
+  1.08%       9  ChunkMap.saveChunkIfNeeded
+  1.08%       9  LevelChunk.getBlockEntity
+  0.96%       8  SavedDataStorage.computeIfAbsent
+  0.96%       8  ServerEntity.sendChanges
+  0.84%       7  Collections$SetFromMap.add
+  0.72%       6  IndirectMerger.<init>
+  0.72%       6  StringBuilder.append
+  0.72%       6  VoxelShape.get
+  0.60%       5  BodyTrack.record
+  0.60%       5  LiftPhysics.carry
+  0.60%       5  PalettedContainer$Data.copy
+  0.60%       5  AttributeMap.getValue
+  0.60%       5  LiftMachine.follow
+  0.60%       5  Entity.isOnFire
+  0.60%       5  CarModels.all
+  0.60%       5  Population.survey
+  0.60%       5  ImmutableCollections$ListItr.next
+  0.60%       5  BlockCollisions.computeNext
+  0.48%       4  Object2ObjectOpenHashMap.get
+  0.48%       4  ReferencePipeline$7$1FlatMap.cancellationRequested
+  0.48%       4  Collections$UnmodifiableMap.entrySet
+  0.48%       4  Reference2ObjectArrayMap$ValuesCollection.forEach
+  0.48%       4  BitRandomSource.nextInt
+  0.48%       4  ChunkMap.tick
+  0.48%       4  Collections$SetFromMap.remove
+  0.48%       4  Encoder$1.encode
+  0.48%       4  LongAVLTreeSet.locateKey
+  0.36%       3  TrainPhysics.carry
+  0.36%       3  EntityFluidInteraction.hasFluidAndLoaded
+  0.36%       3  Route.slowest
+  0.36%       3  InsideBlockEffectApplier$StepBasedCollector.applyAndClear
+  0.36%       3  ServerTickEvents.lambda$static$3
+  0.36%       3  ChunkAccess.getAttached
+  0.36%       3  TypedInstance.is
+  0.36%       3  Objects.equals
+  0.36%       3  AttributeTrackSampler.applyTimeBased
+  0.36%       3  NaturalSpawner.spawnCategoryForChunk
+  0.36%       3  Reference2ObjectArrayMap.get
+  0.36%       3  DispatchedMapCodec.encode
+  0.36%       3  Entity.baseTick
+  0.36%       3  Long2ByteOpenHashMap.get
+
+-- Busy time by method anywhere on the stack (inclusive)
+100.00%     832  Thread.run
+100.00%     832  MinecraftServer.runServer
+100.00%     832  MinecraftServer.lambda$spin$0
+ 98.32%     818  IntegratedServer.processPacketsAndTick
+ 98.20%     817  MinecraftServer.processPacketsAndTick
+ 90.87%     756  MinecraftServer.tickServer
+ 90.87%     756  IntegratedServer.tickServer
+ 85.58%     712  MinecraftServer.tickChildren
+ 82.69%     688  ServerLevel.tick
+ 59.74%     497  ServerChunkCache.tick
+ 44.59%     371  ServerChunkCache.tickChunks
+ 32.81%     273  ServerChunkCache.tickSpawningChunk
+ 32.09%     267  NaturalSpawner.spawnForChunk
+ 31.37%     261  NaturalSpawner.spawnCategoryForChunk
+ 30.53%     254  NaturalSpawner.spawnCategoryForPosition
+ 26.80%     223  PalettedContainer.get
+ 19.11%     159  ServerLevel.lambda$tick$0
+ 19.11%     159  EntityTickList.forEach
+ 18.99%     158  ServerLevel.tickNonPassenger
+ 18.99%     158  Level.guardEntityTick
+ 18.63%     155  LevelChunk.getBlockState
+ 18.63%     155  LevelChunkSection.getBlockState
+ 14.42%     120  NaturalSpawner.getRandomSpawnMobAt
+ 11.66%      97  LevelReader.getNoiseBiome
+ 11.66%      97  BiomeManager.getBiome
+ 11.30%      94  LivingEntity.tick
+  9.62%      80  ChunkMap.forEachBlockTickingChunk
+  9.62%      80  DistanceManager.forEachEntityTickingChunk
+  9.62%      80  Zombie.tick
+  9.62%      80  Mob.tick
+  9.50%      79  ChunkMap.lambda$forEachBlockTickingChunk$0
+  9.50%      79  ServerChunkCache.lambda$tickChunks$0
+  8.89%      74  LivingEntity.aiStep
+  8.53%      71  LevelReader.getBiome
+  8.41%      70  ChunkMap.tick
+  8.29%      69  ImposterProtoChunk.getNoiseBiome
+  8.17%      68  LevelChunkSection.getNoiseBiome
+  8.17%      68  ChunkAccess.getNoiseBiome
+  7.81%      65  Monster.aiStep
+  7.69%      64  Mob.aiStep
+  7.33%      61  PacketProcessor$ListenerAndPacket.handle
+  7.33%      61  PacketProcessor.processQueuedPackets
+  6.73%      56  NaturalSpawner.mobsAt
+  6.49%      54  ChunkMap.processUnloads
+  6.25%      52  ChunkMap.saveChunksEagerly
+  6.13%      51  ChunkGenerator.getMobsAt
+  6.13%      51  Entity.move
+  6.01%      50  ChunkMap.saveChunkIfNeeded
+  5.89%      49  TicketStorage.removeTicketIf
+  5.89%      49  TicketStorage.purgeStaleTickets
+  5.77%      48  Level.getChunk
+  5.77%      48  ServerChunkCache.getChunk
+  5.53%      46  ServerGamePacketListenerImpl.handleMovePlayer
+  5.53%      46  ServerGamePacketListenerImpl.handlePlayerPositionChange
+  5.53%      46  ServerboundMovePlayerPacket.handle
+  5.17%      43  LivingEntity.travelInAir
+  5.17%      43  LivingEntity.travel
+  5.05%      42  LivingEntity.handleRelativeFrictionAndCalculateMovement
+  5.05%      42  ChunkMap.save
+  4.93%      41  SerializableChunkData.copyOf
+  4.69%      39  ServerTickEvents.lambda$static$3
+  4.69%      39  MinecraftServer.handler$zkc000$fabric-lifecycle-events-v1$onEndTick
+  4.69%      39  DynamicGraphMinFixedPoint.checkEdge
+  4.33%      36  Entity.tick
+  4.21%      35  ServerChunkCache.move
+  4.21%      35  ChunkTracker.update
+  4.09%      34  EnvironmentAttributeSystem.getValue
+  4.09%      34  ChunkMap.move
+  4.09%      34  EnvironmentAttributeReader.getValue
+  3.73%      31  EnvironmentAttributeSystem$ValueSampler.getValue
+  3.73%      31  EnvironmentAttributeSystem$ValueSampler.computeValuePositional
+  3.73%      31  ChunkMap$TrackedEntity.updatePlayer
+  3.37%      28  ServerPlayer.tick
+  3.37%      28  EnvironmentAttributeSystem.lambda$addBiomeLayerForAttribute$0
+  3.25%      27  AbstractIterator.hasNext
+  3.25%      27  AbstractIterator.tryToComputeNext
+  3.25%      27  AbstractContainerMenu.broadcastChanges
+  3.13%      26  ServerboundMovePlayerPacket$PosRot.handle
+  3.00%      25  AbstractContainerMenu.triggerSlotListeners
+  3.00%      25  Entity.collide
+
+==================== Render thread (your frame rate) ====================
+8544 samples, 8520 busy (100%), 24 waiting (0 of them on a lock)
+
+-- Busy time by mod (the deepest frame that names a mod)
+ 61.82%    5267  Mojang libraries
+ 10.05%     856  Iris
+  9.14%     779  ZomboidCraft
+  5.82%     496  Particle Rain
+  5.58%     475  Sodium
+  2.35%     200  Minecraft rendering
+  1.22%     104  Minecraft other
+  1.20%     102  Minecraft chunks
+  0.96%      82  Minecraft client
+  0.50%      43  com.google.common.collect
+  0.36%      31  Minecraft render system
+  0.26%      22  it.unimi.dsi.fastutil.objects
+  0.26%      22  Minecraft entities
+  0.14%      12  Minecraft worldgen
+  0.09%       8  Fabric API
+  0.09%       8  it.unimi.dsi.fastutil.longs
+  0.06%       5  Networking
+  0.05%       4  com.ibm.icu.text
+  0.02%       2  org.joml
+  0.02%       2  de.maxhenkel.voicechat.voice.client
+
+-- Busy time inside our classes (anywhere on the stack)
+  2.86%     244  client.npc.NpcSkinDraw
+  2.59%     221  client.survivor.ZedBodies
+  2.09%     178  client.zombie.body.CrowdFx
+  1.69%     144  client.npc.BodyJob
+  1.36%     116  client.combat.MeshGuns
+  1.04%      89  client.lifts.LiftRenderer
+  0.55%      47  client.survivor.SurvivorTextures
+  0.55%      47  client.camera.CinematicView
+  0.34%      29  client.combat.RifleView
+  0.33%      28  client.zombie.ZedLayer
+  0.32%      27  client.cars.CarRenderer
+  0.31%      26  client.perf.GpuTimer
+  0.31%      26  client.zombie.WalkerRenderer
+  0.25%      21  client.hud.Hud
+  0.23%      20  client.combat.Crosshair
+  0.16%      14  client.cars.CarAssets
+  0.15%      13  client.weather.WeatherFx
+  0.15%      13  world.cars.CarProp
+  0.13%      11  world.lifts.LiftCar
+  0.12%      10  client.npc.FastVerts
+  0.11%       9  client.hud.SensesHud
+  0.09%       8  client.survivor.SurvivorArms
+  0.08%       7  client.combat.RailLights
+  0.08%       7  client.weather.Glints
+  0.08%       7  combat.Attachments
+  0.08%       7  client.combat.ImpactFx
+  0.08%       7  client.survivor.SurvivorAnimator
+  0.08%       7  client.hud.MoodleHud
+  0.08%       7  client.weather.GlintParticle
+  0.07%       6  world.cars.CarModels
+  0.07%       6  client.cars.AirLights
+  0.06%       5  client.interact.Interactables
+  0.06%       5  client.trains.TrackRenderer
+  0.05%       4  client.combat.CombatClient
+  0.05%       4  client.weather.Water
+  0.04%       3  client.combat.LocalGunProperty
+  0.04%       3  combat.LocalParts
+  0.04%       3  client.survivor.SurvivorPack
+  0.04%       3  client.hud.WeaponHud
+  0.04%       3  client.zombie.WalkerModel
+
+-- Our deepest frame (the line of ours closest to the work)
+  1.14%      97  BodyJob.emit  (line 123)
+  0.74%      63  MeshGuns.ink  (line 231)
+  0.72%      61  LiftRenderer$Painter.piece  (line 453)
+  0.62%      53  NpcSkinDraw.skin  (line 210)
+  0.53%      45  NpcSkinDraw.submitGroups  (line 112)
+  0.41%      35  MeshGuns.solid  (line 207)
+  0.28%      24  SurvivorTextures.sized  (line 113)
+  0.21%      18  ZedBodies.submitCrowd  (line 657)
+  0.19%      16  MeshGuns.solid  (line 210)
+  0.16%      14  ZedBodies.submitCrowd  (line 655)
+  0.16%      14  LiftRenderer$Painter.quad  (line 421)
+  0.13%      11  BodyJob.start  (line 77)
+  0.13%      11  SurvivorTextures.get  (line 134)
+  0.12%      10  Crosshair.circle  (line 139)
+  0.12%      10  FastVerts.copy  (line 258)
+  0.11%       9  BodyJob.free  (line 195)
+  0.09%       8  Crosshair.circle  (line 140)
+  0.09%       8  LiftCar.tick  (line 181)
+  0.08%       7  WalkerRenderer.extractRenderState  (line 81)
+  0.08%       7  NpcSkinDraw.lambda$submitGroups$0  (line 128)
+  0.08%       7  NpcSkinDraw.lambda$submitGroups$0  (line 129)
+  0.07%       6  CinematicView.lambda$hide$1  (line 67)
+  0.07%       6  Hud.caps  (line 166)
+  0.07%       6  SurvivorTextures$Layer.tag  (line 87)
+  0.07%       6  CarRenderer.draw  (line 683)
+  0.07%       6  CarModels.all  (line 255)
+  0.06%       5  GlintParticle.tick  (line 34)
+  0.06%       5  Glints.find  (line 68)
+  0.06%       5  LiftRenderer$Painter.quad  (line 416)
+  0.06%       5  GpuTimer.begin  (line 130)
+  0.06%       5  TrackRenderer.draw  (line 51)
+  0.05%       4  GpuTimer.end  (line 151)
+  0.05%       4  CarAssets.readMesh  (line 328)
+  0.05%       4  CarProp.tick  (line 1802)
+  0.05%       4  CarAssets.read  (line 223)
+  0.04%       3  LiftRenderer.extractRenderState  (line 84)
+  0.04%       3  Water.findSpouts  (line 81)
+  0.04%       3  SurvivorAnimator.local  (line 167)
+  0.04%       3  LocalGunProperty.get  (line 29)
+  0.04%       3  GpuTimer.collect  (line 169)
+
+-- Busy time by method on top (self)
+ 45.27%    3857  GL32C.nglDrawElementsInstancedBaseVertex
+ 16.85%    1436  GL32C.nglClientWaitSync
+  5.07%     432  PalettedContainer.get
+  1.92%     164  GL30C.glBindFramebuffer
+  1.61%     137  StagedVertexBuffer.uploadDrawsToBuffers
+  1.60%     136  BufferBuilder.fillExtendedData
+  1.35%     115  GL45C.glCopyNamedBufferSubData
+  1.14%      97  BodyJob.emit
+  0.89%      76  JNI.invokePZ
+  0.87%      74  GL11C.nglDrawElements
+  0.62%      53  NpcSkinDraw.skin
+  0.60%      51  GL20C.glUseProgram
+  0.58%      49  Objects.equals
+  0.55%      47  GL44C.nglBufferStorage
+  0.53%      45  NpcSkinDraw.submitGroups
+  0.43%      37  ParticleSpawner.tickBlockFX
+  0.42%      36  GL15C.glBindBuffer
+  0.41%      35  MeshGuns.solid
+  0.40%      34  ZedBodies.submitCrowd
+  0.39%      33  Particle.tick
+  0.36%      31  GL32C.nglMultiDrawElementsBaseVertex
+  0.36%      31  Lists.equalsImpl
+  0.32%      27  GL30C.glBindVertexArray
+  0.29%      25  Shapes.create
+  0.28%      24  Collection.removeIf
+  0.27%      23  JNI.callPV
+  0.25%      21  GL45C.nglNamedBufferSubData
+  0.25%      21  GL43C.glBindVertexBuffer
+  0.22%      19  LiftRenderer$Painter.quad
+  0.22%      19  GuiRenderState.hasIntersection
+  0.22%      19  SurvivorTextures.sized
+  0.22%      19  GL30C.glBindBufferRange
+  0.22%      19  GL11C.glClear
+  0.21%      18  VoxelShape.get
+  0.20%      17  GL45C.glGenerateTextureMipmap
+  0.20%      17  BlockCollisions.computeNext
+  0.19%      16  StrictMath.acos
+  0.19%      16  GL15C.nglDeleteBuffers
+  0.19%      16  GL11C.glCopyTexSubImage2D
+  0.19%      16  GL45C.glBindTextureUnit
+  0.19%      16  CustomParticle.tick
+  0.19%      16  WindManager.tick
+  0.16%      14  ParticleGroup.tickParticles
+  0.16%      14  BitRandomSource.nextInt
+  0.15%      13  DefaultChunkRenderer.fillCommandBuffer
+  0.15%      13  ArrayList.hashCodeRange
+  0.15%      13  GL11C.glTexParameteri
+  0.15%      13  Unsafe.unpark
+  0.15%      13  GL20C.glUniform3f
+  0.14%      12  EntityFluidInteraction.hasFluidAndLoaded
+
+-- Busy time by method anywhere on the stack (inclusive)
+100.00%    8520  KnotClient.main
+100.00%    8520  Main.main
+100.00%    8520  DirectMethodHandleAccessor.invoke
+100.00%    8520  Minecraft.run
+100.00%    8520  Knot.launch
+100.00%    8520  MinecraftLaunch.main
+100.00%    8520  MinecraftLaunch.relaunch
+100.00%    8520  MinecraftGameProvider.launch
+100.00%    8520  Method.invoke
+ 99.74%    8498  Minecraft.runTick
+ 89.82%    7653  Minecraft.renderFrame
+ 68.38%    5826  GameRenderer.render
+ 58.76%    5006  GameRenderer.renderLevel
+ 58.54%    4988  GameRenderer.mixinextras$bridge$render$97
+ 58.54%    4988  GameRenderer.wrapOperation$bin000$iris$renderLevel
+ 58.54%    4988  LevelRenderer.render
+ 46.90%    3996  GlCommandEncoder.executeDraw
+ 46.69%    3978  GlRenderPass.drawIndexed
+ 46.69%    3978  FrontendRenderPass.drawIndexed
+ 45.29%    3859  FrameGraphBuilder.execute
+ 45.27%    3857  GL32C.nglDrawElementsInstancedBaseVertex
+ 45.27%    3857  GL32C.glDrawElementsInstancedBaseVertex
+ 45.04%    3837  LevelRenderer.lambda$addMainPass$0
+ 39.13%    3334  FeatureRenderDispatcher$PreparedFrame.executePhase
+ 39.13%    3334  FeatureRenderDispatcher$PreparedGroup.execute
+ 39.01%    3324  PreparedRenderType.wrapMethod$bjb000$iris$wrapBuffer
+ 39.01%    3324  PreparedRenderType.drawFromBuffer
+ 39.01%    3324  PreparedRenderType.draw
+ 39.01%    3324  PreparedRenderType.draw$mixinextras$wrapped$16
+ 39.01%    3324  RenderTypeFeatureRenderer.executeGroup
+ 39.01%    3324  PreparedRenderType.mixinextras$bridge$draw$mixinextras$wrapped$16$17
+ 35.73%    3044  LevelRenderer.executeSolid
+ 35.60%    3033  FeatureRenderDispatcher$PreparedFrame.executeSolid
+ 16.89%    1439  FrontendCommandEncoder.submit
+ 16.89%    1439  GlCommandEncoder.submit
+ 16.85%    1436  GL32C.glClientWaitSync
+ 16.85%    1436  GL32C.nglClientWaitSync
+ 16.85%    1436  GlStateManager._glClientWaitSync
+ 16.85%    1436  GlCommandEncoder.awaitSubmit
+  9.27%     790  LevelRenderer.wrapOperation$big000$iris$beginTranslucents
+  9.15%     780  Minecraft.tick
+  9.07%     773  GuiRenderer.render
+  9.07%     773  GuiRenderer.mixinextras$bridge$render$mixinextras$wrapped$40$41
+  9.07%     773  GuiRenderer.render$mixinextras$wrapped$40
+  9.07%     773  GuiRenderer.wrapMethod$bid000$iris$bypassWorldRenderingState
+  8.05%     686  FeatureRenderDispatcher.prepareFrame
+  8.05%     686  FeatureRenderDispatcher.prepareFrameWithContext
+  7.99%     681  GuiRenderer.draw
+  7.99%     681  GuiRenderer.executeDrawRange
+  7.92%     675  GuiRenderer.executeDraw
+  6.83%     582  HandRenderer.renderSolid
+  5.07%     432  PalettedContainer.get
+  5.00%     426  FeatureRenderDispatcher$PreparedGroup.prepare
+  4.93%     420  RenderTypeFeatureRenderer.prepareGroup
+  4.89%     417  FeatureRenderDispatcher.renderAllFeatures
+  4.88%     416  CustomFeatureRenderer.buildGroup
+  4.54%     387  SodiumChunkSection.renderGroup
+  3.91%     333  IdentityHashMap.forEach
+  3.91%     333  ParticleEngine.lambda$tick$0
+  3.91%     333  ParticleGroup.tickParticles
+  3.91%     333  ParticleEngine.tick
+  3.74%     319  ParticleGroup.tickParticle
+  3.54%     302  GameRenderer.extract
+  3.50%     298  ClientLevel.animateTick
+  3.50%     298  ClientLevel.doAnimateTick
+  3.47%     296  FeatureRenderDispatcher$PreparedFrame.executeTranslucent
+  3.15%     268  SodiumChunkSection.handler$zzp000$distanthorizons$renderDeferredLayerHead
+  3.15%     268  ClientApi.renderLodLayer
+  2.99%     255  StagedVertexBuffer.upload
+  2.95%     251  ParticleSpawner.tickBlockFX
+  2.95%     251  ClientLevel.handler$boe000$particlerain$hookDoAnimateTick
+  2.88%     245  StagedVertexBuffer.uploadDrawsToBuffers
+  2.85%     243  LevelRenderer.submitFeatures
+  2.77%     236  LevelReader.getNoiseBiome
+  2.76%     235  LevelChunkSection.getNoiseBiome
+  2.76%     235  ChunkAccess.getNoiseBiome
+  2.71%     231  BiomeManager.getBiome
+  2.71%     231  LevelReader.getBiome
+  2.57%     219  LevelRenderer.handler$big000$iris$renderTerrainShadows
+  2.55%     217  IrisRenderingPipeline.renderShadows

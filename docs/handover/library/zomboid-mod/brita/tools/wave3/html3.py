@@ -1,0 +1,28 @@
+import re
+S='/tmp/claude-0/-home-user-zomboidcraft/7dc1898d-1e2b-5f6e-821d-93dc18f2b5c4/scratchpad/review/'
+h=open(S+"out2/brita-review.html").read()
+h=h.replace('<title>Brita Wave 2 Review</title>','<title>Brita Wave 3 Review</title>')
+h=h.replace('<h1>Brita wave 2 review</h1>','<h1>Brita wave 3 review</h1>')
+h=re.sub(r'<p class="lede">.*?</p>','<p class="lede">The 88 new guns from your refined list, toon-painted, grouped as on your list, with every attachment Arsenal lets each one take and its first-person numbers. Fit parts in the rack to see them on the gun and what they change. Iron sights, sounds, hold poses and reloads come after this, so the guns are shown without irons. Mark each gun as good or needing changes, add notes, then press Copy review and paste it back to me. Nothing goes in the game until you say so.</p>',h,count=1,flags=re.S)
+h=h.replace("const KEY='brita-wave2-review';","const KEY='brita-wave3-review';")
+h=re.sub(r"const SHORT=\{.*?\};\n","const SHORT={};\n",h,count=1,flags=re.S)
+h=re.sub(r"const NOTES=\{.*?\n\};\n","let NOTES={};\n",h,count=1,flags=re.S)
+h=h.replace("<p class=\"method\">Sounds are picked next, on their own board, the same way as the first 14.</p>","<p class=\"method\">Sounds are picked next, on their own board, the same way as the earlier guns.</p>")
+# lazy gun meshes
+h=h.replace("function show(i){cur=i;const g=D.guns[i];","const chunks={};\nfunction need(g){const c=g.chunk;if(!chunks[c])chunks[c]=fetch('m/c'+c+'.json').then(r=>r.json()).then(m=>Object.assign(MESH,m));return chunks[c]}\nasync function show(i){cur=i;const g=D.guns[i];\n  document.querySelectorAll('#rackbar button').forEach((b,j)=>b.classList.toggle('on',j===i));\n  try{await need(g)}catch(e){document.getElementById('gname').textContent='Could not load this gun: '+e;return}\n  if(cur!==i)return;")
+h=h.replace("Promise.all([fetch('data.json').then(r=>r.json()),fetch('meshes.json').then(r=>r.json())]).then(([d,m])=>{D=d;MESH=m;","Promise.all([fetch('data.json').then(r=>r.json()),fetch('parts.json').then(r=>r.json())]).then(([d,m])=>{D=d;MESH=m;NOTES=d.notes;")
+h=h.replace("D.guns.forEach((g,i)=>{const b=el('button',null,SHORT[g.id]||g.name);b.type='button';b.appendChild(el('span','p'));b.onclick=()=>show(i);rb.appendChild(b)});",
+ "let lastCat=null;D.guns.forEach((g,i)=>{if(g.cat!==lastCat){lastCat=g.cat;rb.appendChild(el('div','cat',g.cat))}const b=el('button',null,SHORT[g.id]||g.name.replace(/ (Pistol|Assault Rifle|Rifle|Shotgun|Machine-Gun|Grenade Launcher|Sniper Rifle)$/,''));b.type='button';b.appendChild(el('span','p'));b.onclick=()=>show(i);rb.appendChild(b)});")
+h=h.replace("document.querySelectorAll('#rackbar button').forEach((b,i)=>{const s=state[D.guns[i].id]","document.querySelectorAll('#rackbar button').forEach((b,i)=>{const s=state[D.guns[i].id]")
+h=h.replace("const lines=['Brita wave 2 review:'];","const lines=['Brita wave 3 review:'];")
+h=h.replace(".rackbar button.on{",".rackbar .cat{width:100%;font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.06em}\n.rackbar button.on{")
+# stats method text guard for M2A1 (no ref)
+open(S+'out3/brita-review.html','w').write(h)
+print('ok', 'need(g)' in h, "NOTES=d.notes" in h, "el('div','cat'" in h)
+h=open(S+'out3/brita-review.html').read()
+h=h.replace('<div class="rackbar" id="rackbar"></div>','<div class="gnav"><button class="s" type="button" id="prev">Previous</button><select id="pick" aria-label="Pick a gun"></select><button class="s" type="button" id="next">Next</button></div>\n  <details class="all"><summary>All 88 guns by group (ok = good, edit = needs changes)</summary><div class="rackbar" id="rackbar"></div></details>')
+h=h.replace(".rackbar .cat{",".gnav{display:flex;gap:8px;align-items:center;margin:18px 0 8px;flex-wrap:wrap}.gnav select{flex:1 1 240px;min-width:0;font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--fg)}\n.all{margin:0 0 12px}.all summary{cursor:pointer;font-family:var(--mono);font-size:.8rem;color:var(--muted)}\n.rackbar .cat{")
+h=h.replace("let lastCat=null;D.guns.forEach","const pk=document.getElementById('pick');let og=null;D.guns.forEach((g,i)=>{if(!og||og.label!==g.cat){og=document.createElement('optgroup');og.label=g.cat;pk.appendChild(og)}og.appendChild(new Option(g.name,i))});pk.onchange=()=>show(+pk.value);document.getElementById('prev').onclick=()=>show((cur+D.guns.length-1)%D.guns.length);document.getElementById('next').onclick=()=>show((cur+1)%D.guns.length);\n  let lastCat=null;D.guns.forEach")
+h=h.replace("async function show(i){cur=i;const g=D.guns[i];","async function show(i){cur=i;const g=D.guns[i];document.getElementById('pick').value=i;")
+open(S+'out3/brita-review.html','w').write(h)
+print('patched')

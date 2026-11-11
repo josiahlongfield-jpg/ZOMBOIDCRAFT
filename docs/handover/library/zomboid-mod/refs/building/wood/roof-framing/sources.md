@@ -1,0 +1,10 @@
+# building/wood/roof-framing
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 03-october-1969-inner-roof-framing-showing-typical-king-post-ra.jpg | [October 1969 INNER ROOF FRAMING SHOWING TYPICAL KING POST, RAFTER and ](https://commons.wikimedia.org/wiki/File:October_1969_INNER_ROOF_FRAMING_SHOWING_TYPICAL_KING_POST,_RAFTER_and_IRON_STRAP_-_Centre_Street_United_Methodist_Church,_Centre_and_Main_Streets,_Nantucket,_Nantucket_County,_HABS_MASS,10-NANT,74-14.tif) | Jack Boucher | Public domain | Lee, Jesse; Snelling, Joseph |
+| 04-brickendon-chapel-of-the-holy-cross-and-st-alban-truss-roof.jpg | [Brickendon Chapel of the Holy Cross and St Alban truss roof ceiling He](https://commons.wikimedia.org/wiki/File:Brickendon_Chapel_of_the_Holy_Cross_and_St_Alban_truss_roof_ceiling_Hertfordshire_England_02.jpg) | Acabashi | CC BY-SA 4.0 | Truss roof ceiling of the Arts and Crafts style, 1932-built Chapel of the Holy Cross and St Alban, by architect W F Haslip, with timber fell |
+| 05-brickendon-chapel-of-the-holy-cross-and-st-alban-truss-roof.jpg | [Brickendon Chapel of the Holy Cross and St Alban truss roof ceiling He](https://commons.wikimedia.org/wiki/File:Brickendon_Chapel_of_the_Holy_Cross_and_St_Alban_truss_roof_ceiling_Hertfordshire_England_01.jpg) | Acabashi | CC BY-SA 4.0 | Truss roof ceiling of the Arts and Crafts style, 1932-built Chapel of the Holy Cross and St Alban, by architect W F Haslip, with timber fell |
+| 06-detail-of-wooden-roof-trusses-at-crossing-of-transepts-and-n.jpg | [DETAIL OF WOODEN ROOF TRUSSES AT CROSSING OF TRANSEPTS AND NAVE - Chur](https://commons.wikimedia.org/wiki/File:DETAIL_OF_WOODEN_ROOF_TRUSSES_AT_CROSSING_OF_TRANSEPTS_AND_NAVE_-_Church_of_the_Holy_Cross,_State_Route_261,_Stateburg,_Sumter_County,_SC_HABS_SC,43-STATBU.V,1-50.tif) | Boucher, Jack E. | Public domain | Jones, Edward C; Lee, Francis D; Anderson, William Wallace; Cary, Brian, transmitter |

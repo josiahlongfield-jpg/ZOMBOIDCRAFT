@@ -1,0 +1,1286 @@
+{
+ "helmet": [
+  {
+   "key": "HELMET_01_BASE",
+   "family": "MARK V [B]",
+   "variant": "BASE",
+   "name": "MARK V [B]",
+   "perm": "default",
+   "desc": "Entered service in 2551; UNICOM/ SPECWAR/ GroupTHREE has been the sole adopter."
+  },
+  {
+   "key": "HELMET_01_A",
+   "family": "MARK V [B]",
+   "variant": "UA",
+   "name": "MARK V [B] UA",
+   "perm": "default_a",
+   "desc": "Up-armored variant of the base Mk. V [B] pattern helmet."
+  },
+  {
+   "key": "HELMET_01_B",
+   "family": "MARK V [B]",
+   "variant": "UA/HUL",
+   "name": "MARK V [B] UA/HUL",
+   "perm": "default_b",
+   "desc": "Up-armored variant with hardened uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_02_BASE",
+   "family": "CQC",
+   "variant": "BASE",
+   "name": "CQC",
+   "perm": "rosenda",
+   "desc": "Entered service in 2548; standard equipment for boarding actions and MOUT."
+  },
+  {
+   "key": "HELMET_02_A",
+   "family": "CQC",
+   "variant": "CBRN",
+   "name": "CQC CBRN",
+   "perm": "rosenda_a",
+   "desc": "For operations in hazard zones."
+  },
+  {
+   "key": "HELMET_02_B",
+   "family": "CQC",
+   "variant": "UA/HUL",
+   "name": "CQC UA/HUL",
+   "perm": "rosenda_b",
+   "desc": "Up-armored variant with hardened uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_03_BASE",
+   "family": "ODST",
+   "variant": "BASE",
+   "name": "ODST",
+   "perm": "malcolm",
+   "desc": "Many technologies initially developed for MJOLNIR have gained widespread adoption."
+  },
+  {
+   "key": "HELMET_03_A",
+   "family": "ODST",
+   "variant": "UA/CNM",
+   "name": "ODST UA/CNM",
+   "perm": "malcolm_a",
+   "desc": "Up-armored variant with Command network module."
+  },
+  {
+   "key": "HELMET_03_B",
+   "family": "ODST",
+   "variant": "CBRN/HUL",
+   "name": "ODST CBRN/HUL",
+   "perm": "malcolm_b",
+   "desc": "For operations in hazard zones; hardened uplink module."
+  },
+  {
+   "key": "HELMET_04_BASE",
+   "family": "HAZOP",
+   "variant": "BASE",
+   "name": "HAZOP",
+   "perm": "skull",
+   "desc": "Mk. V helmet variant for use in hazardous environments."
+  },
+  {
+   "key": "HELMET_04_A",
+   "family": "HAZOP",
+   "variant": "CBRN/HUL",
+   "name": "HAZOP CBRN/HUL",
+   "perm": "skull_a",
+   "desc": "For operations in extremely hazardous environments; hardened uplink module."
+  },
+  {
+   "key": "HELMET_04_B",
+   "family": "HAZOP",
+   "variant": "CNM-I",
+   "name": "HAZOP CNM-I",
+   "perm": "skull_b",
+   "desc": "Command network module-Improved; upgraded variant of the standard issue CNM unit."
+  },
+  {
+   "key": "HELMET_05_BASE",
+   "family": "EOD",
+   "variant": "BASE",
+   "name": "EOD",
+   "perm": "vinh",
+   "desc": "Designed specifically to reduce likelihood of decapitation."
+  },
+  {
+   "key": "HELMET_05_A",
+   "family": "EOD",
+   "variant": "CNM",
+   "name": "EOD CNM",
+   "perm": "vinh_a",
+   "desc": "Command network module; standard issue to UNSC Special Forces unit commanders."
+  },
+  {
+   "key": "HELMET_05_B",
+   "family": "EOD",
+   "variant": "UA/HUL",
+   "name": "EOD UA/HUL",
+   "perm": "vinh_b",
+   "desc": "Up-armored variant with hardened uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_06_BASE",
+   "family": "OPERATOR",
+   "variant": "BASE",
+   "name": "OPERATOR",
+   "perm": "isaac",
+   "desc": "The B5D Facility has been the site of many unique development programs."
+  },
+  {
+   "key": "HELMET_06_A",
+   "family": "OPERATOR",
+   "variant": "UA/HUL",
+   "name": "OPERATOR UA/HUL",
+   "perm": "isaac_a",
+   "desc": "Up-armored variant with hardened uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_06_B",
+   "family": "OPERATOR",
+   "variant": "CNM",
+   "name": "OPERATOR CNM",
+   "perm": "isaac_b",
+   "desc": "Command network module; standard issue to UNSC Special Forces unit commanders."
+  },
+  {
+   "key": "HELMET_07_BASE",
+   "family": "GRENADIER",
+   "variant": "BASE",
+   "name": "GRENADIER",
+   "perm": "joshua",
+   "desc": "The Mk. IV [G] variant is an up-armored prototype based on the basic Mk. IV helmet."
+  },
+  {
+   "key": "HELMET_07_A",
+   "family": "GRENADIER",
+   "variant": "UA",
+   "name": "GRENADIER UA",
+   "perm": "joshua_a",
+   "desc": "Up-armored variant of the [G] prototype helmet."
+  },
+  {
+   "key": "HELMET_07_B",
+   "family": "GRENADIER",
+   "variant": "UA/FC",
+   "name": "GRENADIER UA/FC",
+   "perm": "joshua_b",
+   "desc": "Up-armored variant with command network and external hardened uplink modules."
+  },
+  {
+   "key": "HELMET_08_BASE",
+   "family": "AIR ASSAULT",
+   "variant": "BASE",
+   "name": "AIR ASSAULT",
+   "perm": "?80163",
+   "desc": "Entered service in 2535; the MJOLNIR/AA variant is exclusive to Army airborne units."
+  },
+  {
+   "key": "HELMET_08_A",
+   "family": "AIR ASSAULT",
+   "variant": "UA/CNM",
+   "name": "AIR ASSAULT UA/CNM",
+   "perm": "female_a",
+   "desc": "Up-armored variant with command network module."
+  },
+  {
+   "key": "HELMET_08_B",
+   "family": "AIR ASSAULT",
+   "variant": "FC-I",
+   "name": "AIR ASSAULT FC-I",
+   "perm": "female_b",
+   "desc": "CBRN/Command network module-Improved; external hardened uplink. A favorite of Pathfinder units."
+  },
+  {
+   "key": "HELMET_09_BASE",
+   "family": "SCOUT",
+   "variant": "BASE",
+   "name": "SCOUT",
+   "perm": "jun",
+   "desc": "The SCOUT and RECON projects were part of the secret MJOLNIR PAA/RS program."
+  },
+  {
+   "key": "HELMET_09_A",
+   "family": "SCOUT",
+   "variant": "HU/RS",
+   "name": "SCOUT HU/RS",
+   "perm": "jun_a",
+   "desc": "Hardened uplink / remote sensor package; A favorite of Sniper units."
+  },
+  {
+   "key": "HELMET_09_B",
+   "family": "SCOUT",
+   "variant": "CBRN/CNM",
+   "name": "SCOUT CBRN/CNM",
+   "perm": "jun_b",
+   "desc": "For operations in hazard zones; command network module."
+  },
+  {
+   "key": "HELMET_10_BASE",
+   "family": "EVA",
+   "variant": "BASE",
+   "name": "EVA",
+   "perm": "player_li",
+   "desc": "The EVA helmet was developed using data gathered from the Summa Deep Space Incident."
+  },
+  {
+   "key": "HELMET_10_A",
+   "family": "EVA",
+   "variant": "CNM",
+   "name": "EVA CNM",
+   "perm": "player_li_a",
+   "desc": "Command network module; standard issue to UNSC Special Forces unit commanders."
+  },
+  {
+   "key": "HELMET_10_B",
+   "family": "EVA",
+   "variant": "UA/HUL[3]",
+   "name": "EVA UA/HUL[3]",
+   "perm": "player_li_b",
+   "desc": "Up-armored variant with hardened 3rd generation uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_11_BASE",
+   "family": "JFO",
+   "variant": "BASE",
+   "name": "JFO",
+   "perm": "nicole",
+   "desc": "Beweglichr\u00fcstungsysteme was home to many projects attached to the MJOLNIR program."
+  },
+  {
+   "key": "HELMET_11_A",
+   "family": "JFO",
+   "variant": "HUL-I",
+   "name": "JFO HUL-I",
+   "perm": "nicole_a",
+   "desc": "External hardened uplink-improved; upgraded variant of the standard issue HUL unit."
+  },
+  {
+   "key": "HELMET_11_B",
+   "family": "JFO",
+   "variant": "UA",
+   "name": "JFO UA",
+   "perm": "nicole_b",
+   "desc": "Up-armored variant of the base Mk. V [J] pattern helmet."
+  },
+  {
+   "key": "HELMET_12_BASE",
+   "family": "COMMANDO",
+   "variant": "BASE",
+   "name": "COMMANDO",
+   "perm": "carter",
+   "desc": "The Mk. V/K helmet was developed at the Special Warfare Center in Songnam, Hanguk."
+  },
+  {
+   "key": "HELMET_12_A",
+   "family": "COMMANDO",
+   "variant": "CBRN/CNM",
+   "name": "COMMANDO CBRN/CNM",
+   "perm": "carter_a",
+   "desc": "For operations in hazard zones; command network module."
+  },
+  {
+   "key": "HELMET_12_B",
+   "family": "COMMANDO",
+   "variant": "UA/FC-I[2]",
+   "name": "COMMANDO UA/FC-I[2]",
+   "perm": "carter_b",
+   "desc": "Up-armored variant with external command network and hardened 3rd generation uplink modules."
+  },
+  {
+   "key": "HELMET_13_BASE",
+   "family": "MJOLNIR Mk. V",
+   "variant": "BASE",
+   "name": "MJOLNIR Mk. V",
+   "perm": "john117",
+   "desc": "The Mk. V helmet is essentially the Mk. IV upgraded to function with MJOLNIR\u2019s new shield system."
+  },
+  {
+   "key": "HELMET_13_A",
+   "family": "MJOLNIR Mk. V",
+   "variant": "CNM",
+   "name": "MJOLNIR Mk. V CNM",
+   "perm": "john117_a",
+   "desc": "Command network module; standard issue to UNSC Special Forces unit commanders."
+  },
+  {
+   "key": "HELMET_13_B",
+   "family": "MJOLNIR Mk. V",
+   "variant": "UA",
+   "name": "MJOLNIR Mk. V UA",
+   "perm": "john117_b",
+   "desc": "Up-armored variant of the base Mk. V pattern helmet."
+  },
+  {
+   "key": "HELMET_14_BASE",
+   "family": "PILOT",
+   "variant": "BASE",
+   "name": "PILOT",
+   "perm": "sam",
+   "desc": "Although it bears some similarities to the SPI helmet, they are purely cosmetic in nature."
+  },
+  {
+   "key": "HELMET_14_A",
+   "family": "PILOT",
+   "variant": "HUL[3]",
+   "name": "PILOT HUL[3]",
+   "perm": "sam_a",
+   "desc": "Third-generation external hardened uplink for MILINT acquisition; required for sensitive OPs."
+  },
+  {
+   "key": "HELMET_14_B",
+   "family": "PILOT",
+   "variant": "UA/HUL[3]",
+   "name": "PILOT UA/HUL[3]",
+   "perm": "sam_b",
+   "desc": "Up-armored variant with hardened 3rd-generation uplink module."
+  },
+  {
+   "key": "HELMET_14_C",
+   "family": "PILOT",
+   "variant": "HAUNTED",
+   "name": "PILOT HAUNTED",
+   "perm": "sam_c",
+   "desc": "Happy friggin' Halloween!"
+  },
+  {
+   "key": "HELMET_15_BASE",
+   "family": "SECURITY",
+   "variant": "BASE",
+   "name": "SECURITY",
+   "perm": "linda",
+   "desc": "All (M) variant helmets have been upgraded to be compatible with all current issue armor systems."
+  },
+  {
+   "key": "HELMET_15_A",
+   "family": "SECURITY",
+   "variant": "UA/HUL",
+   "name": "SECURITY UA/HUL",
+   "perm": "linda_a",
+   "desc": "Up-armored variant with hardened uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_15_B",
+   "family": "SECURITY",
+   "variant": "CBRN/CNM",
+   "name": "SECURITY CBRN/CNM",
+   "perm": "linda_b",
+   "desc": "For operations in hazard zones; command network module."
+  },
+  {
+   "key": "HELMET_16_BASE",
+   "family": "MJOLNIR Mk. VI",
+   "variant": "BASE",
+   "name": "MJOLNIR Mk. VI",
+   "perm": "will",
+   "desc": "Data gathered from these field tests will be used to improve the final production model."
+  },
+  {
+   "key": "HELMET_16_A",
+   "family": "MJOLNIR Mk. VI",
+   "variant": "FC-I[2]",
+   "name": "MJOLNIR Mk. VI FC-I[2]",
+   "perm": "will_a",
+   "desc": "External command network and hardened 3rd-generation uplink modules."
+  },
+  {
+   "key": "HELMET_16_B",
+   "family": "MJOLNIR Mk. VI",
+   "variant": "UA/HUL-I",
+   "name": "MJOLNIR Mk. VI UA/HUL-I",
+   "perm": "will_b",
+   "desc": "Up-armored variant with hardened 2nd-generation uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_17_BASE",
+   "family": "MILITARY POLICE",
+   "variant": "BASE",
+   "name": "MILITARY POLICE",
+   "perm": "adrianna",
+   "desc": "The Mk. V [MP] variant is one of just a handful of assets shared between branches of the armed forces."
+  },
+  {
+   "key": "HELMET_17_A",
+   "family": "MILITARY POLICE",
+   "variant": "CBRN/HU/RS",
+   "name": "MILITARY POLICE CBRN/HU/RS",
+   "perm": "adrianna_a",
+   "desc": "For operations in hazard zones; hardened uplink/remote sensor package."
+  },
+  {
+   "key": "HELMET_17_B",
+   "family": "MILITARY POLICE",
+   "variant": "HU/RS/CNM",
+   "name": "MILITARY POLICE HU/RS/CNM",
+   "perm": "adrianna_b",
+   "desc": "Hardened uplink/remote sensor package with command network module."
+  },
+  {
+   "key": "HELMET_18_BASE",
+   "family": "CQB",
+   "variant": "BASE",
+   "name": "CQB",
+   "perm": "kurt",
+   "desc": "Developed at Beweglichr\u00fcstungsysteme and tested at the UNSC\u2019s Special Warfare Center."
+  },
+  {
+   "key": "HELMET_18_A",
+   "family": "CQB",
+   "variant": "HU/RS/CNM",
+   "name": "CQB HU/RS/CNM",
+   "perm": "kurt_a",
+   "desc": "Hardened uplink/remote sensor package with command network module."
+  },
+  {
+   "key": "HELMET_18_B",
+   "family": "CQB",
+   "variant": "UA/HUL",
+   "name": "CQB UA/HUL",
+   "perm": "kurt_b",
+   "desc": "Up-armored variant with hardened uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_19_BASE",
+   "family": "GUNGNIR",
+   "variant": "BASE",
+   "name": "GUNGNIR",
+   "perm": "kelly",
+   "desc": "The GUNGNIR Program involved the development of the many supplementary armor systems."
+  },
+  {
+   "key": "HELMET_19_A",
+   "family": "GUNGNIR",
+   "variant": "HU/RS",
+   "name": "GUNGNIR HU/RS",
+   "perm": "kelly_a",
+   "desc": "Hardened uplink/remote sensor package. A favorite of sniper units."
+  },
+  {
+   "key": "HELMET_19_B",
+   "family": "GUNGNIR",
+   "variant": "CBRN",
+   "name": "GUNGNIR CBRN",
+   "perm": "kelly_b",
+   "desc": "For operations in hazard zones."
+  },
+  {
+   "key": "HELMET_20_BASE",
+   "family": "RECON",
+   "variant": "BASE",
+   "name": "RECON",
+   "perm": "jai",
+   "desc": "Data gathered from these field tests will be used to improve the final production model."
+  },
+  {
+   "key": "HELMET_20_A",
+   "family": "RECON",
+   "variant": "HUL",
+   "name": "RECON HUL",
+   "perm": "jai_a",
+   "desc": "External hardened uplink for MILINT acquisition; required for sensitive OPs."
+  },
+  {
+   "key": "HELMET_20_B",
+   "family": "RECON",
+   "variant": "UA/HUL[3]",
+   "name": "RECON UA/HUL[3]",
+   "perm": "jai_b",
+   "desc": "Up-armored variant with hardened 3rd-generation uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_21_BASE",
+   "family": "EVA [C]",
+   "variant": "BASE",
+   "name": "EVA [C]",
+   "perm": "emile",
+   "desc": "The EVA helmet was developed using data gathered from the Summa Deep Space Incident."
+  },
+  {
+   "key": "HELMET_21_A",
+   "family": "EVA [C]",
+   "variant": "CNM",
+   "name": "EVA [C] CNM",
+   "perm": "emile_a",
+   "desc": "Command network module; standard issue to UNSC Special Forces unit commanders."
+  },
+  {
+   "key": "HELMET_21_B",
+   "family": "EVA [C]",
+   "variant": "UA/HUL[3]",
+   "name": "EVA [C] UA/HUL[3]",
+   "perm": "emile_b",
+   "desc": "Up-armored variant with hardened 3rd-generation uplink module for MILINT acquisition."
+  },
+  {
+   "key": "HELMET_22_BASE",
+   "family": "MARINER",
+   "variant": "BASE",
+   "name": "MARINER",
+   "perm": "cndmnd",
+   "desc": "Standard MARINER suite is optimized for Sabre, Baselard, and Nandao flight systems."
+  },
+  {
+   "key": "HELMET_22_A",
+   "family": "MARINER",
+   "variant": "DEFIANT",
+   "name": "MARINER DEFIANT",
+   "perm": "cndmnd_a",
+   "desc": "Even in the violent and chaotic rigors of space warfare, MARINER remains unbowed."
+  },
+  {
+   "key": "HELMET_22_B",
+   "family": "MARINER",
+   "variant": "MISTER CHIEF",
+   "name": "MARINER MISTER CHIEF",
+   "perm": "cndmnd_b",
+   "desc": "The absolute zenith of human endeavor and a perfect encapsulation of human talent."
+  },
+  {
+   "key": "HELMET_22_C",
+   "family": "MARINER",
+   "variant": "OPTREX",
+   "name": "MARINER OPTREX",
+   "perm": "cndmnd_c",
+   "desc": "An enhanced optical suite for detecting polyband thermal and chemical signatures."
+  },
+  {
+   "key": "HELMET_23_BASE",
+   "family": "AKIS",
+   "variant": "BASE",
+   "name": "AKIS",
+   "perm": "hilands",
+   "desc": "The AKIS helmet and associated components were highly classified, leading some operatives to question its very existence."
+  },
+  {
+   "key": "HELMET_23_OPTREX",
+   "family": "AKIS",
+   "variant": "GRD",
+   "name": "AKIS GRD",
+   "perm": "hilands_a",
+   "desc": "Project SCLERA's exclusive P237-THEIATEK optical suite."
+  },
+  {
+   "key": "HELMET_23_CBRN",
+   "family": "AKIS",
+   "variant": "CBRN",
+   "name": "AKIS CBRN",
+   "perm": "hilands_b",
+   "desc": "For operations in hazardous zones."
+  },
+  {
+   "key": "HELMET_23_OPTREX_CBRN",
+   "family": "AKIS",
+   "variant": "GRD/CBRN",
+   "name": "AKIS GRD/CBRN",
+   "perm": "hilands_c",
+   "desc": "Project SCLERA's exclusive P237-THEIATEK optical suite; for operations in hazardous zones."
+  },
+  {
+   "key": "HR_HELMET_BELOS_CORINTHIAN",
+   "family": "BELOS",
+   "variant": "BELOS HERAN",
+   "name": "BELOS HERAN",
+   "perm": "s8_helmet_belos_corinthian",
+   "desc": "Straight and true, the Chosen are honed and sharpened into a weapon thrust straight into the heart of Lacedaemon's enemies."
+  },
+  {
+   "key": "HR_HELMET_BELOS_TRANSVERSE",
+   "family": "BELOS",
+   "variant": "BELOS SYNTROFOS",
+   "name": "BELOS SYNTROFOS",
+   "perm": "s8_helmet_belos_transverse",
+   "desc": "Chosen generals of Lacedaemon's mortal armies bear distinctive crests."
+  },
+  {
+   "key": "HR_HELMET_BELOS_KERATA",
+   "family": "BELOS",
+   "variant": "BELOS KERATA",
+   "name": "BELOS KERATA",
+   "perm": "s8_helmet_belos_kerata",
+   "desc": "Goring horns are worn by Chosen who abandon reason and the assistance of others."
+  },
+  {
+   "key": "HR_HELMET_BELOS_LEONTOKARDOS",
+   "family": "BELOS",
+   "variant": "BELOS LEONTOKARDOS",
+   "name": "BELOS LEONTOKARDOS",
+   "perm": "s8_helmet_belos_leontokardos",
+   "desc": "A rare few Chosen live long enough to become transfigured, their bodies recast into forms more suitable for eternal war."
+  },
+  {
+   "key": "HR_HELMET_BELOS_STHENO",
+   "family": "BELOS",
+   "variant": "BELOS STHENO",
+   "name": "BELOS STHENO",
+   "perm": "s8_helmet_belos_stheno",
+   "desc": "Chosen who succumb to bitterness are blessed and cursed to never walk a path of peace."
+  },
+  {
+   "key": "HR_HELMET_BELOS_CERBERUS",
+   "family": "BELOS",
+   "variant": "BELOS CERBERUS",
+   "name": "BELOS CERBERUS",
+   "perm": "s8_helmet_belos_cerberus",
+   "desc": "The Chosen who guard the chthonic slipgates and initiated into their mysteries have no mortal ties, no binding vows, and no doubts."
+  },
+  {
+   "key": "HR_HELMET_BLACKGUARD_BASE",
+   "family": "BLACKGUARD",
+   "variant": "BLACKGUARD WARFEAST",
+   "name": "BLACKGUARD WARFEAST",
+   "perm": "s8_helmet_blackguard_base",
+   "desc": "Bitterness and pride alloyed into frozen iron."
+  },
+  {
+   "key": "HR_HELMET_BLACKGUARD_BISHOP",
+   "family": "BLACKGUARD",
+   "variant": "BLACKGUARD FALLEN EQUERRY",
+   "name": "BLACKGUARD FALLEN EQUERRY",
+   "perm": "s8_helmet_blackguard_bishop",
+   "desc": "Those who were closest to the light can learn to appreciate the dark."
+  },
+  {
+   "key": "HR_HELMET_BLACKGUARD_DRAGON",
+   "family": "BLACKGUARD",
+   "variant": "BLACKGUARD FORSAKEN DRAGON",
+   "name": "BLACKGUARD FORSAKEN DRAGON",
+   "perm": "s8_helmet_blackguard_dragon",
+   "desc": "There is no fall from grace, only an awakening to reality."
+  },
+  {
+   "key": "HR_HELMET_BLACKGUARD_WIND",
+   "family": "BLACKGUARD",
+   "variant": "BLACKGUARD CARRION CROW",
+   "name": "BLACKGUARD CARRION CROW",
+   "perm": "s8_helmet_blackguard_wind",
+   "desc": "Some are born to taste ill winds."
+  },
+  {
+   "key": "HR_HELMET_BLACKGUARD_VISAGE",
+   "family": "BLACKGUARD",
+   "variant": "BLACKGUARD SORROWFUL VISAGE",
+   "name": "BLACKGUARD SORROWFUL VISAGE",
+   "perm": "s8_helmet_blackguard_visage",
+   "desc": "Fear can be honed to a sharpness keener than any blade."
+  },
+  {
+   "key": "HR_HELMET_BLACKGUARD_CROWN",
+   "family": "BLACKGUARD",
+   "variant": "BLACKGUARD ASHEN CROWN",
+   "name": "BLACKGUARD ASHEN CROWN",
+   "perm": "s8_helmet_blackguard_crown",
+   "desc": "It is better to rule in the shadows than serve in the light."
+  },
+  {
+   "key": "HR_HELMET_DRENGR_BASE",
+   "family": "DRENGR",
+   "variant": "DRENGR SKALD",
+   "name": "DRENGR SKALD",
+   "perm": "s8_helmet_drengr_base",
+   "desc": "The Shapeless Horrors strike at the mind just as viciously as they do the body."
+  },
+  {
+   "key": "HR_HELMET_DRENGR_VALDEMAR",
+   "family": "DRENGR",
+   "variant": "DRENGR VALDEMAR",
+   "name": "DRENGR VALDEMAR",
+   "perm": "s8_helmet_drengr_valdemar",
+   "desc": "War demands sacrifice of treasure and blood. The trick is to make sure that it's not yours."
+  },
+  {
+   "key": "HR_HELMET_DRENGR_DVALINN",
+   "family": "DRENGR",
+   "variant": "DRENGR DVALINN",
+   "name": "DRENGR DVALINN",
+   "perm": "s8_helmet_drengr_dvalinn",
+   "desc": "The great beasts who browse among the limbs of the world tree inspire art and song."
+  },
+  {
+   "key": "HR_HELMET_DRENGR_NARI",
+   "family": "DRENGR",
+   "variant": "DRENGR NARI",
+   "name": "DRENGR NARI",
+   "perm": "s8_helmet_drengr_nari",
+   "desc": "Some tricks and jests are worth any price."
+  },
+  {
+   "key": "HR_HELMET_DRENGR_THYRA",
+   "family": "DRENGR",
+   "variant": "DRENGR THYRA",
+   "name": "DRENGR THYRA",
+   "perm": "s8_helmet_drengr_thyra",
+   "desc": "It is the highest of honors for a lorespinner to spark hope in the darkest of nights."
+  },
+  {
+   "key": "HR_HELMET_DRENGR_TYR",
+   "family": "DRENGR",
+   "variant": "DRENGR TYR",
+   "name": "DRENGR TYR",
+   "perm": "s8_helmet_drengr_tyr",
+   "desc": "Loss and sorrow are fuel for the teller of tales."
+  }
+ ],
+ "left_shoulder": [
+  {
+   "key": "LEFT_SHOULDER_01_BLANK",
+   "name": "DEFAULT",
+   "perm": "left_shoulder_blank",
+   "desc": "Restore your equipment to its default state."
+  },
+  {
+   "key": "LEFT_SHOULDER_01",
+   "name": "FJ/PARA",
+   "perm": "left_shoulder_1",
+   "desc": "Designed specifically for airborne units; maximum protection, minimum weight."
+  },
+  {
+   "key": "LEFT_SHOULDER_02",
+   "name": "HAZOP",
+   "perm": "left_shoulder_2",
+   "desc": "Some operations are considered hazardous even for a fully armored Spartan."
+  },
+  {
+   "key": "LEFT_SHOULDER_03",
+   "name": "JFO",
+   "perm": "left_shoulder_3",
+   "desc": "Designed and tested at Beweglichr\u00fcstungsysteme of Essen, Deutschland."
+  },
+  {
+   "key": "LEFT_SHOULDER_04",
+   "name": "RECON",
+   "perm": "left_shoulder_4",
+   "desc": "The MJOLNIR [R] prototype reduces armor silhouette without decreasing survivability."
+  },
+  {
+   "key": "LEFT_SHOULDER_05",
+   "name": "UA/MULTI-THREAT",
+   "perm": "left_shoulder_5",
+   "desc": "A trade-off between increased protection and additional mass."
+  },
+  {
+   "key": "LEFT_SHOULDER_06",
+   "name": "JUMP JET",
+   "perm": "left_shoulder_6",
+   "desc": "Early prototype safety restraints for use with extant Jump Jet equipment."
+  },
+  {
+   "key": "LEFT_SHOULDER_07",
+   "name": "EVA",
+   "perm": "left_shoulder_7",
+   "desc": "Developed at the UNSC\u2019s Low/Zero Gravity Testing Facility on Ganymede."
+  },
+  {
+   "key": "LEFT_SHOULDER_08",
+   "name": "GUNGNIR",
+   "perm": "left_shoulder_8",
+   "desc": "The Supplemental Armor, Pauldron, MJOLNIR Mk. V [G] was developed as part of the GUNGNIR Program."
+  },
+  {
+   "key": "LEFT_SHOULDER_09",
+   "name": "UA/BASE SECURITY",
+   "perm": "left_shoulder_9",
+   "desc": "Lightweight supplemental shoulder armor."
+  },
+  {
+   "key": "LEFT_SHOULDER_10",
+   "name": "CQC",
+   "perm": "left_shoulder_10",
+   "desc": "Developed and tested at UNSC facilities in Essen and Songnam, respectively."
+  },
+  {
+   "key": "LEFT_SHOULDER_11",
+   "name": "OPERATOR",
+   "perm": "left_shoulder_11",
+   "desc": "Developed for the Beta-5 Asymmetrical Action Group at ONI\u2019s Ordnance Testing Facility."
+  },
+  {
+   "key": "LEFT_SHOULDER_12",
+   "name": "COMMANDO",
+   "perm": "left_shoulder_12",
+   "desc": "The MJOLNIR Mk. V/K variant was developed at the UNSC\u2019s Special Warfare Center."
+  },
+  {
+   "key": "LEFT_SHOULDER_13",
+   "name": "GRENADIER",
+   "perm": "left_shoulder_13",
+   "desc": "The MJOLNIR [G] prototype informed all subsequent supplemental armor development programs."
+  },
+  {
+   "key": "LEFT_SHOULDER_14",
+   "name": "SNIPER",
+   "perm": "left_shoulder_14",
+   "desc": "Supplementary bandoleer, Semi-rigid, Special Applications Rifle (Anti-materiel)."
+  },
+  {
+   "key": "LEFT_SHOULDER_15",
+   "name": "MJOLNIR Mk. V",
+   "perm": "left_shoulder_15",
+   "desc": "Issued in November 2551, it is compatible with all powered and semi-powered armor systems."
+  },
+  {
+   "key": "LEFT_SHOULDER_16",
+   "name": "SECURITY",
+   "perm": "left_shoulder_16",
+   "desc": "The Supplemental Armor, Pauldron, MJOLNIR (M) variant was originally manufactured in 2528."
+  },
+  {
+   "key": "LEFT_SHOULDER_KURT",
+   "name": "ODST",
+   "perm": "left_shoulder_kurt",
+   "desc": "Many technologies initially developed for MJOLNIR have seen widespread adoption."
+  }
+ ],
+ "right_shoulder": [
+  {
+   "key": "RIGHT_SHOULDER_01_BLANK",
+   "name": "DEFAULT",
+   "perm": "right_shoulder_blank",
+   "desc": "Restore your equipment to its default state."
+  },
+  {
+   "key": "RIGHT_SHOULDER_01",
+   "name": "FJ/PARA",
+   "perm": "right_shoulder_1",
+   "desc": "Designed specifically for airborne units; maximum protection, minimum weight."
+  },
+  {
+   "key": "RIGHT_SHOULDER_02",
+   "name": "HAZOP",
+   "perm": "right_shoulder_2",
+   "desc": "Some operations are considered hazardous even for a fully armored Spartan."
+  },
+  {
+   "key": "RIGHT_SHOULDER_03",
+   "name": "JFO",
+   "perm": "right_shoulder_3",
+   "desc": "Designed and tested at Beweglichr\u00fcstungsysteme of Essen, Deutschland."
+  },
+  {
+   "key": "RIGHT_SHOULDER_04",
+   "name": "RECON",
+   "perm": "right_shoulder_4",
+   "desc": "The MJOLNIR [R] prototype reduces armor silhouette without decreasing survivability."
+  },
+  {
+   "key": "RIGHT_SHOULDER_05",
+   "name": "UA/MULTI-THREAT",
+   "perm": "right_shoulder_5",
+   "desc": "A trade-off between increased protection and additional mass."
+  },
+  {
+   "key": "RIGHT_SHOULDER_06",
+   "name": "JUMP JET",
+   "perm": "right_shoulder_6",
+   "desc": "Early prototype safety restraints for use with extant Jump Jet equipment."
+  },
+  {
+   "key": "RIGHT_SHOULDER_07",
+   "name": "EVA",
+   "perm": "right_shoulder_7",
+   "desc": "Developed at the UNSC\u2019s Low/Zero Gravity Testing Facility on Ganymede."
+  },
+  {
+   "key": "RIGHT_SHOULDER_08",
+   "name": "GUNGNIR",
+   "perm": "right_shoulder_8",
+   "desc": "The Supplemental Armor, Pauldron, MJOLNIR Mk. V [G] was developed as part of the GUNGNIR Program."
+  },
+  {
+   "key": "RIGHT_SHOULDER_09",
+   "name": "UA/BASE SECURITY",
+   "perm": "right_shoulder_9",
+   "desc": "Lightweight supplemental shoulder armor."
+  },
+  {
+   "key": "RIGHT_SHOULDER_10",
+   "name": "CQC",
+   "perm": "right_shoulder_10",
+   "desc": "Developed and tested at UNSC facilities in Essen and Songnam, respectively."
+  },
+  {
+   "key": "RIGHT_SHOULDER_11",
+   "name": "OPERATOR",
+   "perm": "right_shoulder_11",
+   "desc": "Developed for the Beta-5 Asymmetrical Action Group at ONI\u2019s Ordnance Testing Facility."
+  },
+  {
+   "key": "RIGHT_SHOULDER_12",
+   "name": "COMMANDO",
+   "perm": "right_shoulder_12",
+   "desc": "The MJOLNIR Mk. V/K variant was developed at the UNSC\u2019s Special Warfare Center."
+  },
+  {
+   "key": "RIGHT_SHOULDER_13",
+   "name": "GRENADIER",
+   "perm": "right_shoulder_13",
+   "desc": "The MJOLNIR [G] prototype informed all subsequent supplemental armor development programs."
+  },
+  {
+   "key": "RIGHT_SHOULDER_14",
+   "name": "SNIPER",
+   "perm": "right_shoulder_14",
+   "desc": "Supplementary bandoleer, Semi-rigid, Special Applications Rifle (Anti-materiel)."
+  },
+  {
+   "key": "RIGHT_SHOULDER_15",
+   "name": "MJOLNIR Mk. V",
+   "perm": "right_shoulder_15",
+   "desc": "Issued in November 2551, it is compatible with all powered and semi-powered armor systems."
+  },
+  {
+   "key": "RIGHT_SHOULDER_16",
+   "name": "SECURITY",
+   "perm": "right_shoulder_16",
+   "desc": "The Supplemental Armor, Pauldron, MJOLNIR (M) variant was originally manufactured in 2528."
+  },
+  {
+   "key": "RIGHT_SHOULDER_KURT",
+   "name": "ODST",
+   "perm": "right_shoulder_kurt",
+   "desc": "Many technologies initially developed for MJOLNIR have seen widespread adoption."
+  }
+ ],
+ "chest": [
+  {
+   "key": "CHEST_BLANK",
+   "name": "DEFAULT",
+   "perm": "chest_blank",
+   "desc": "Restore your equipment to its default state."
+  },
+  {
+   "key": "CHEST_01",
+   "name": "UA/BASE SECURITY",
+   "perm": "chest_1",
+   "desc": "Keep it simple; leave everything you don't absolutely need at the CP."
+  },
+  {
+   "key": "CHEST_02",
+   "name": "UA/MULTI-THREAT",
+   "perm": "chest_2",
+   "desc": "Supplemental Armor, Torso, MJOLNIR Mk. V."
+  },
+  {
+   "key": "CHEST_03",
+   "name": "HP/HALO",
+   "perm": "chest_3",
+   "desc": "Supplemental armor with hard points for High-Altitude Low-Opening gear."
+  },
+  {
+   "key": "CHEST_04",
+   "name": "UA/COUNTERASSAULT",
+   "perm": "chest_4",
+   "desc": "Supplemental Armor, Torso, MJOLNIR Mk. V; with increased storage capacity."
+  },
+  {
+   "key": "CHEST_05",
+   "name": "TACTICAL/LRP",
+   "perm": "chest_5",
+   "desc": "If you are going to be out there for a long time, you might as well take everything."
+  },
+  {
+   "key": "CHEST_06",
+   "name": "TACTICAL/RECON",
+   "perm": "chest_6",
+   "desc": "Everything you need to find everything you need to find out."
+  },
+  {
+   "key": "CHEST_07",
+   "name": "COLLAR/GRENADIER",
+   "perm": "chest_7",
+   "desc": "The [G] prototype was the test bed for incorporating shield technology with MJOLNIR PAA."
+  },
+  {
+   "key": "CHEST_08",
+   "name": "TACTICAL/PATROL",
+   "perm": "chest_8",
+   "desc": "Don't take anything you don't need; you're going to want to stay light on your feet."
+  },
+  {
+   "key": "CHEST_09",
+   "name": "COLLAR/BREACHER",
+   "perm": "chest_9",
+   "desc": "Kick it in; section it off; lay them out."
+  },
+  {
+   "key": "CHEST_10",
+   "name": "ASSAULT/SAPPER",
+   "perm": "chest_10",
+   "desc": "Broadly speaking, sappers are equally at home building great things as they are blowing them up."
+  },
+  {
+   "key": "CHEST_11",
+   "name": "ASSAULT/COMMANDO",
+   "perm": "chest_11",
+   "desc": "Anything you don\u2019t have, you can find in the field. Anything you can\u2019t find, you didn\u2019t need anyway."
+  },
+  {
+   "key": "CHEST_12",
+   "name": "HP/PARAFOIL",
+   "perm": "chest_12",
+   "desc": "Compatible with the G-25 PAS Airfoil Carapace."
+  },
+  {
+   "key": "CHEST_13",
+   "name": "COLLAR/GRENADIER [UA]",
+   "perm": "chest_13",
+   "desc": "Up-armored variant of the MJOLNIR [G] prototype."
+  },
+  {
+   "key": "CHEST_14",
+   "name": "UA/MULTI-THREAT [W]",
+   "perm": "chest_wp_1",
+   "desc": "Let's blow some stuff up."
+  },
+  {
+   "key": "CHEST_15",
+   "name": "UA/BASE SECURITY [W]",
+   "perm": "chest_wp_2",
+   "desc": "Bringing grenades to a gunfight."
+  },
+  {
+   "key": "CHEST_16",
+   "name": "COLLAR/BREACHER [R]",
+   "perm": "chest_robo_1",
+   "desc": "Unfortunately they don\u2019t make prosthetic situational awareness."
+  },
+  {
+   "key": "CHEST_17",
+   "name": "HP/PARAFOIL [R]",
+   "perm": "chest_robo_2",
+   "desc": "Try to remember on your next jump that it\u2019s FEET first into hell."
+  },
+  {
+   "key": "CHEST_18",
+   "name": "ASSAULT/SAPPER [R]",
+   "perm": "chest_robo_3",
+   "desc": "Next time don\u2019t cut your fuses so short."
+  },
+  {
+   "key": "CHEST_KURT",
+   "name": "UA/ODST",
+   "perm": "chest_kurt",
+   "desc": "Many technologies initially developed for MJOLNIR have seen widespread adoption."
+  },
+  {
+   "key": "CHEST_BLANK_ROBO",
+   "name": "DEFAULT [R]",
+   "perm": "chest_default_roboarm",
+   "desc": "Mil-spec prosthetic limb and standard-issue chestplate."
+  },
+  {
+   "key": "CHEST_08_ROBO",
+   "name": "TACTICAL/PATROL [R]",
+   "perm": "chest_tacticalpatrol_roboarm",
+   "desc": "Limitless potential."
+  },
+  {
+   "key": "CHEST_06_ROBO",
+   "name": "TACTICAL/RECON [R]",
+   "perm": "chest_tacticalrecon_roboarm",
+   "desc": "Spartans get all the best tech."
+  },
+  {
+   "key": "CHEST_13_ROBO",
+   "name": "COLLAR/GRENADIER [UA] [R]",
+   "perm": "chest_collargrenadierua_roboarm",
+   "desc": "Mil-spec prosthetic limb and shield test bed platform."
+  },
+  {
+   "key": "CHEST_04_ROBO",
+   "name": "UA/COUNTERASSAULT [R]",
+   "perm": "chest_uacounterassault_roboarm",
+   "desc": "The enemy paid a higher price."
+  },
+  {
+   "key": "CHEST_21",
+   "name": "EXO/TSCS",
+   "perm": "chest_cndmnd",
+   "desc": "Modified for exo-atmospheric engagements, with onboard Tactical Signals Intelligence Collection System."
+  }
+ ],
+ "wrist": [
+  {
+   "key": "WRIST_BLANK",
+   "name": "DEFAULT",
+   "perm": "wrist_blank",
+   "desc": "Restore your equipment to its default state."
+  },
+  {
+   "key": "WRIST_1",
+   "name": "UA/BUCKLER",
+   "perm": "wrist_1",
+   "desc": "Supplementary wrist protection."
+  },
+  {
+   "key": "WRIST_2",
+   "name": "UA/BRACER",
+   "perm": "wrist_2",
+   "desc": "Supplementary forearm protection."
+  },
+  {
+   "key": "WRIST_3",
+   "name": "TACTICAL/TACPAD",
+   "perm": "wrist_3",
+   "desc": "Dock for the MC5 Individual Data/Net Terminal."
+  },
+  {
+   "key": "WRIST_4",
+   "name": "ASSAULT/BREACHER",
+   "perm": "wrist_4",
+   "desc": "Supplementary bandoleer, Rigid, 8 Gauge."
+  },
+  {
+   "key": "WRIST_5",
+   "name": "TACTICAL/UGPS",
+   "perm": "wrist_5",
+   "desc": "Dock for the SRT Universal Global Positioning System Device."
+  }
+ ],
+ "utility": [
+  {
+   "key": "UTILITY_BLANK",
+   "name": "DEFAULT",
+   "perm": "utility_blank",
+   "desc": "Restore your equipment to its default state."
+  },
+  {
+   "key": "UTILITY_1",
+   "name": "TACTICAL/SOFT CASE",
+   "perm": "utility_1",
+   "desc": "For all the stuff you couldn\u2019t fit anywhere else."
+  },
+  {
+   "key": "UTILITY_2",
+   "name": "UA/CHOBHAM",
+   "perm": "utility_2",
+   "desc": "Supplemental armor, composite."
+  },
+  {
+   "key": "UTILITY_3",
+   "name": "UA/NxRA",
+   "perm": "utility_3",
+   "desc": "Supplemental armor, reactive, non-explosive."
+  },
+  {
+   "key": "UTILITY_4",
+   "name": "TACTICAL/TRAUMA KIT",
+   "perm": "utility_4",
+   "desc": "REMEMBER: this is YOURS, for when YOU get hit."
+  },
+  {
+   "key": "UTILITY_5",
+   "name": "TACTICAL/HARD CASE",
+   "perm": "utility_5",
+   "desc": "For those things you don\u2019t want to lose or break."
+  },
+  {
+   "key": "HR_UTILITY_VACUUMFLASK",
+   "name": "HYDRATION CONTAINER",
+   "perm": "utility_6",
+   "desc": "H2O fit for a king."
+  }
+ ],
+ "knees": [
+  {
+   "key": "KNEES_DEFAULT",
+   "name": "DEFAULT",
+   "perm": "knees_default",
+   "desc": "Restore your equipment to its default state."
+  },
+  {
+   "key": "KNEES_1",
+   "name": "FJ/PARA",
+   "perm": "knees_1",
+   "desc": "Designed specifically for airborne units; maximum protection, minimum weight."
+  },
+  {
+   "key": "KNEES_2",
+   "name": "GUNGNIR",
+   "perm": "knees_2",
+   "desc": "The GUNGNIR Program also produced many supplementary armor systems."
+  },
+  {
+   "key": "KNEES_3",
+   "name": "GRENADIER",
+   "perm": "knees_3",
+   "desc": "The MJOLNIR [G] prototype informed all subsequent supplemental armor development programs."
+  }
+ ],
+ "visor": [
+  {
+   "key": "VISOR_DEFAULT",
+   "name": "DEFAULT",
+   "perm": "default",
+   "desc": "Restore your equipment to its default state."
+  },
+  {
+   "key": "VISOR_1",
+   "name": "SILVER",
+   "perm": "1",
+   "desc": "Jumping feet first into hell isn\u2019t your job; making sure it\u2019s crowded when you get there is."
+  },
+  {
+   "key": "VISOR_2",
+   "name": "BLUE",
+   "perm": "2",
+   "desc": "It's already like they are looking at the sky, just put 'em on the ground."
+  },
+  {
+   "key": "VISOR_3",
+   "name": "BLACK",
+   "perm": "3",
+   "desc": "You can have it in any color you want\u2026 as long as it\u2019s black."
+  },
+  {
+   "key": "VISOR_4",
+   "name": "GOLD",
+   "perm": "4",
+   "desc": "Put your money where your mouth is."
+  }
+ ],
+ "armor_effect": [
+  {
+   "key": "ARMOR_FX_BLANK",
+   "name": "DEFAULT",
+   "perm": "default_armor",
+   "desc": "Restore your equipment to its default state."
+  },
+  {
+   "key": "ARMOR_FX_LEGENDARY",
+   "name": "LEGENDARY",
+   "perm": "legendary_flame",
+   "desc": "Flames ensconce the skulls of the loyal."
+  },
+  {
+   "key": "ARMOR_FX_BLUE",
+   "name": "ETERNAL",
+   "perm": "eternal_flame",
+   "desc": "Burn bright; burn blue."
+  },
+  {
+   "key": "ARMOR_FX_HEARTS",
+   "name": "HEART ATTACK",
+   "perm": "heart_attack",
+   "desc": "Upon expiry, flying hearts mark your demise."
+  },
+  {
+   "key": "ARMOR_FX_STINK",
+   "name": "PESTILENCE",
+   "perm": "pestilence",
+   "desc": "Foul brown clouds stink and swirl around steel."
+  },
+  {
+   "key": "ARMOR_FX_WEATHER",
+   "name": "INCLEMENT WEATHER",
+   "perm": "storm",
+   "desc": "High voltage, indeed."
+  },
+  {
+   "key": "ARMOR_FX_BDAY",
+   "name": "BIRTHDAY PARTY",
+   "perm": "halo_bday",
+   "desc": "Your death is softened by a joyful noise. And confetti."
+  }
+ ]
+}

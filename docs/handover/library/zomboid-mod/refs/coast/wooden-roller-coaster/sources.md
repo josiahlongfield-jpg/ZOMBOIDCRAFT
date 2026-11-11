@@ -1,0 +1,14 @@
+# coast/wooden-roller-coaster
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-gemini-cedar-point.jpg | [Gemini Cedar Point.JPG](https://commons.wikimedia.org/wiki/File:Gemini_Cedar_Point.JPG) | No machine-readable author provided. Stratosphere assumed (based on copyright cl | CC BY-SA 2.5 | Photo of the Gemini roller coaster taken at Cedar Point in Sandusky, Ohio on August 8, 2004 by me, Nick Nolte |
+| 02-wooden-roller-coaster-2.jpg | [Wooden roller coaster 2.jpg](https://commons.wikimedia.org/wiki/File:Wooden_roller_coaster_2.jpg) | Unknown authorUnknown author | Public domain | Луна-парк на Офицерской. «Павильон чудес» |
+| 03-wooden-roller-coaster.jpg | [Wooden roller coaster.jpg](https://commons.wikimedia.org/wiki/File:Wooden_roller_coaster.jpg) | Unknown authorUnknown author | Public domain | Луна-парк на Офицерской. «Павильон чудес» |
+| 04-wooden-coaster-lift-hill-and-drop-beside-lamppost-twisted-tw.jpg | [Wooden coaster lift hill and drop beside lamppost, Twisted Twins, July](https://commons.wikimedia.org/wiki/File:Wooden_coaster_lift_hill_and_drop_beside_lamppost,_Twisted_Twins,_July_2002_-_ThrillZing.jpg) | ThrillZing | CC BY 4.0 | Twisted Twins' track cresting an airtime hill beside a lamppost at Six Flags Kentucky Kingdom, July 2, 2002. Twisted Twins is a roller coast |
+| 05-white-wooden-coaster-lift-hill-with-cupola-station-blue-stre.jpg | [White wooden coaster lift hill with cupola station, Blue Streak, July ](https://commons.wikimedia.org/wiki/File:White_wooden_coaster_lift_hill_with_cupola_station,_Blue_Streak,_July_2003_-_ThrillZing.jpg) | ThrillZing | CC BY 4.0 | White wooden coaster lift hill with cupola station, Blue Streak, July 2003. White wooden coaster lift hill with cupola station, July 16, 200 |
+| 06-close-up-of-wooden-coaster-lift-hill-and-trestle-thunder-run.jpg | [Close-up of wooden coaster lift hill and trestle, Thunder Run, July 20](https://commons.wikimedia.org/wiki/File:Close-up_of_wooden_coaster_lift_hill_and_trestle,_Thunder_Run,_July_2002_-_ThrillZing.jpg) | ThrillZing | CC BY 4.0 | Thunder Run's track crossing beneath the flag-topped turnaround at Six Flags Kentucky Kingdom, July 2, 2002. Thunder Run is a roller coaster |
+| 07-coney-island-cyclone-new-york-september-2016-003.jpg | [Coney Island Cyclone New York September 2016 003.jpg](https://commons.wikimedia.org/wiki/File:Coney_Island_Cyclone_New_York_September_2016_003.jpg) | King of Hearts | CC BY-SA 4.0 | Coney Island Cyclone, Brooklyn, New York City. |
+| 08-coney-island-cyclone-new-york-september-2016-002.jpg | [Coney Island Cyclone New York September 2016 002.jpg](https://commons.wikimedia.org/wiki/File:Coney_Island_Cyclone_New_York_September_2016_002.jpg) | King of Hearts | CC BY-SA 4.0 | Ticket booth, Coney Island Cyclone, Brooklyn, New York City. |

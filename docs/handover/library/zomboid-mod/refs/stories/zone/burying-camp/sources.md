@@ -1,0 +1,11 @@
+# stories/zone/burying-camp
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-012-freshly-dug-grave-in-a-cemetery-in-poland.jpg | [012 Freshly dug grave in a cemetery in Poland.jpg](https://commons.wikimedia.org/wiki/File:012_Freshly_dug_grave_in_a_cemetery_in_Poland.jpg) | Marek Ślusarczyk (Tupungato) Photo portfolio | CC BY 3.0 | Freshly dug grave in a cemetery in Poland. Empty grave hole. |
+| 02-012-layers-of-soil-in-freshly-dug-grave-in-poland-soil-profi.jpg | [012 Layers of soil in freshly dug grave in Poland, soil profile.jpg](https://commons.wikimedia.org/wiki/File:012_Layers_of_soil_in_freshly_dug_grave_in_Poland,_soil_profile.jpg) | Marek Ślusarczyk (Tupungato) Photo portfolio | CC BY 3.0 | Freshly dug grave in a cemetery in Poland. Empty grave hole. Soil profile in Poland. |
+| 03-view-of-an-american-cemetery-on-a-battlefield-near-toul-fran.jpg | [View of an American cemetery on a battlefield near Toul, France, durin](https://commons.wikimedia.org/wiki/File:View_of_an_American_cemetery_on_a_battlefield_near_Toul,_France,_during_World_War_I,_featuring_wooden_crosses_as_grave_markers._At_right_in_the_image_are_freshly-dug_graves,_with_filled-in_graves_see_(29248786093).jpg) | State Archives of North Carolina | No restrictions | View of an American cemetery on a battlefield near Toul, France, during World War I, featuring wooden crosses as grave markers. At right in  |
+| 06-soldiers-working-with-shovels-in-an-area-at-the-end-of-a-row.jpg | [Soldiers Working with Shovels in an Area at the End of a Row of Tents.](https://commons.wikimedia.org/wiki/File:Soldiers_Working_with_Shovels_in_an_Area_at_the_End_of_a_Row_of_Tents.jpg) | Michel, Carl | Public domain | Horizontal, sepia photograph showing uniformed men using shovels to dig a hole in a camp setting. Next to the men is a mound of dirt, as wel |
+| 08-mass-grave-1997-excavations-2020-09-15.jpg | [Mass grave 1997 excavations (2020-09-15).jpg](https://commons.wikimedia.org/wiki/File:Mass_grave_1997_excavations_(2020-09-15).jpg) | Vyacheslav Kirillin | CC BY-SA 4.0 | Братская могила останков, найденных при земляных работах в Казанском кремле в сентябре 1997 года. Братское кладбище, Казань. |

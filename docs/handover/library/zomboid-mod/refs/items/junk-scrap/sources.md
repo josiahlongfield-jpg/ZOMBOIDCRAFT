@@ -1,0 +1,27 @@
+# items/junk-scrap
+
+Per-item reference photos from Wikimedia Commons (1024 px thumbnails), free licences only. File = <item id>.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| bone_scrap.jpg | [Nyamata Memorial Site 13.jpg](https://commons.wikimedia.org/wiki/File:Nyamata_Memorial_Site_13.jpg) | Fanny Schertzer | CC BY-SA 3.0 | Nyamata Memorial Site, skulls. Nyamata, Rwanda. |
+| broken_glass.jpg | [Shattered light fixture 3.jpg](https://commons.wikimedia.org/wiki/File:Shattered_light_fixture_3.jpg) | W.carter | CC0 | A shattered ceiling light fixture on a bamboo floor mat. The lamp was a semi flush mounted light fixture with a shallow glass dome (resembli |
+| broken_radio.jpg | [Radio 2BH studios Broken Hill.jpg](https://commons.wikimedia.org/wiki/File:Radio_2BH_studios_Broken_Hill.jpg) | Blueturtle01 | CC BY-SA 3.0 | Radio 2BH studios in Broken Hill |
+| broken_toy.jpg | [Broken Toy Gun.jpg](https://commons.wikimedia.org/wiki/File:Broken_Toy_Gun.jpg) | Gaurav Dhwaj Khadka | CC BY-SA 4.0 | Broken Toy Gun. |
+| cardboard.jpg | [Jerusalem Khaim Valero square flattened cardboard boxes.jpg](https://commons.wikimedia.org/wiki/File:Jerusalem_Khaim_Valero_square_flattened_cardboard_boxes.jpg) | Utilisateur:Djampa | CC BY-SA 4.0 | Jerusalem, Khaim Valero square (near Mahane Yehuda Market), flattened cardboard boxes |
+| cigarette_butts.jpg | [Jerzy Jenkner ashtray.jpg](https://commons.wikimedia.org/wiki/File:Jerzy_Jenkner_ashtray.jpg) | Adrian Tync | CC BY-SA 4.0 | szklana popielniczka reklamująca fabrykę wódek i likierów Jerzy Jenkner i Ska z Bielska; napis na popielniczce: w centrum: JERZY JENKNER I S |
+| coat_hanger.png | [Wire clothes hanger.png](https://commons.wikimedia.org/wiki/File:Wire_clothes_hanger.png) | Stilfehler | CC BY-SA 4.0 | Cheap clothes hanger, coated metal wire. |
+| empty_jar.jpg | [Empty Clear Jar (51330638811).jpg](https://commons.wikimedia.org/wiki/File:Empty_Clear_Jar_(51330638811).jpg) | Alabama Extension | CC0 | ACES / Devontae Lindsey |
+| empty_soda_can.jpg | [Crushed Coke Can (3921080513).jpg](https://commons.wikimedia.org/wiki/File:Crushed_Coke_Can_(3921080513).jpg) | Ian Muttoo from Mississauga, Canada | CC BY-SA 2.0 | This photo was used here: <a href="https://www.theatlantic.com/food/archive/2010/03/only-you-can-encourage-soda-taxes/37156/" rel="nofollow" |
+| fast_food_wrapper.jpg | [Burger King logo on wrapper (34500051842).jpg](https://commons.wikimedia.org/wiki/File:Burger_King_logo_on_wrapper_(34500051842).jpg) | Willis Lam | CC BY-SA 2.0 | The flip side on the wrapper |
+| light_tube.jpg | [Neon.JPG](https://commons.wikimedia.org/wiki/File:Neon.JPG) | Lestat (Jan Mehlich) | CC BY-SA 3.0 | Neon sign. |
+| lost_property_box.jpg | [Parable of the Lost Drachma by Fetti.jpg](https://commons.wikimedia.org/wiki/File:Parable_of_the_Lost_Drachma_by_Fetti.jpg) | Domenico Fetti | Public domain | Parable of the Lost Coin |
+| newspaper_bundle.jpg | [Heavy Bundle of Sticks, Hamer, Ethiopia (15153663299).jpg](https://commons.wikimedia.org/wiki/File:Heavy_Bundle_of_Sticks,_Hamer,_Ethiopia_(15153663299).jpg) | Rod Waddington from Kergunyah, Australia | CC BY-SA 2.0 | Heavy Bundle of Sticks, Hamer, Ethiopia |
+| old_shoe.jpg | [Cobbler repairing shoes in old workshop (Bazaar in Bitola, Macedonia, ](https://commons.wikimedia.org/wiki/File:Cobbler_repairing_shoes_in_old_workshop_(Bazaar_in_Bitola,_Macedonia,_2025).jpg) | Petar Milošević | CC BY-SA 4.0 | Cobbler repairing shoes in his old workshop (Bazaar in Bitola, North Macedonia, 2025). Winning photo 2025 Wiki Loves Folklore: Central & Eas |
+| paperclips.jpg | [Surface Tension 01.jpg](https://commons.wikimedia.org/wiki/File:Surface_Tension_01.jpg) | Kuebi Armin Kübelbeck | CC BY-SA 3.0 | Floating paper clip made of steel with copper plating. The high surface tension helps the paper clip - with much higher density - float on t |
+| pipe_offcut.jpg | [Offcut of Lead Pipe from Belton (FindID 467203).jpg](https://commons.wikimedia.org/wiki/File:Offcut_of_Lead_Pipe_from_Belton_(FindID_467203).jpg) | North Lincolnshire Museum, Martin Foreman, 2011-10-18 11:09:55 | CC BY-SA 2.0 | Lead Pipe fragment. Short offcut from a cast lead pipe with seam. Suggested date: Modern, 1800-1950. This object was kindly identified by S. |
+| rubber_band_ball.jpg | [3000 rubber band ball.jpg](https://commons.wikimedia.org/wiki/File:3000_rubber_band_ball.jpg) | Whoisjohngalt | CC BY-SA 4.0 | A rubber band ball made from over 3,000 individual rubber bands. |
+| sheet_of_tin.jpg | [20190917 San Tin PTI road sign (1).jpg](https://commons.wikimedia.org/wiki/File:20190917_San_Tin_PTI_road_sign_(1).jpg) | Shenzybaby | CC BY-SA 4.0 | Road sign outside San Tin PTI to Huanggang border checkpoint in Shenzhen |
+| spoiled_food.jpg | [Rotten piece of ham.jpg](https://commons.wikimedia.org/wiki/File:Rotten_piece_of_ham.jpg) | Whit Andrews | CC BY 2.0 | A spoiled piece of ham which has been cut, poorly re-wrapped, and left to rot. |
+| stapler.jpg | [2017 Zszywacz biurowy.jpg](https://commons.wikimedia.org/wiki/File:2017_Zszywacz_biurowy.jpg) | Jacek Halicki | CC BY-SA 4.0 | Office stapler |
+| wood_scraps.jpg | [Workshop filled with wood scraps and tools in a rustic environment.jpg](https://commons.wikimedia.org/wiki/File:Workshop_filled_with_wood_scraps_and_tools_in_a_rustic_environment.jpg) | Shixart1985 | CC BY 2.0 | Workshop filled with wood scraps and tools in a rustic environment |

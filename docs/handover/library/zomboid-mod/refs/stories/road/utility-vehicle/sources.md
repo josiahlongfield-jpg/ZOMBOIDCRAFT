@@ -1,0 +1,12 @@
+# stories/road/utility-vehicle
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-international-4800-lineman-repair-truck-1.jpg | [International 4800 Lineman Repair Truck (1).jpg](https://commons.wikimedia.org/wiki/File:International_4800_Lineman_Repair_Truck_(1).jpg) | Captainmorlypogi1959 | CC BY-SA 4.0 | International 4800 Lineman and Repair Truck was parked. Photo locationː Salazar Street, Barangay Bantug Bulalo, Cabanatuan City, Nueva Ecija |
+| 02-international-4800-lineman-repair-truck-3.jpg | [International 4800 Lineman Repair Truck (3).jpg](https://commons.wikimedia.org/wiki/File:International_4800_Lineman_Repair_Truck_(3).jpg) | Captainmorlypogi1959 | CC BY-SA 4.0 | International 4800 Lineman and Repair Truck was parked. Photo locationː Salazar Street, Barangay Bantug Bulalo, Cabanatuan City, Nueva Ecija |
+| 03-international-4800-lineman-repair-truck-2.jpg | [International 4800 Lineman Repair Truck (2).jpg](https://commons.wikimedia.org/wiki/File:International_4800_Lineman_Repair_Truck_(2).jpg) | Captainmorlypogi1959 | CC BY-SA 4.0 | International 4800 Lineman and Repair Truck was parked. Photo locationː Salazar Street, Barangay Bantug Bulalo, Cabanatuan City, Nueva Ecija |
+| 04-hino-700-profia-lineman-and-repair-truck-2015.jpg | [Hino 700 Profia Lineman and Repair Truck 2015.jpg](https://commons.wikimedia.org/wiki/File:Hino_700_Profia_Lineman_and_Repair_Truck_2015.jpg) | Captainmorlypogi1959 | CC BY-SA 4.0 | Hino 700 Profia Lineman and Repair Truck was parked. Photo locationː Toma Cruz Street, Barangay Magsaysay District (Santa Cruz), Cabanatuan  |
+| 05-hino-500-ranger-lineman-and-repair-truck-2019-1.jpg | [Hino 500 Ranger Lineman and Repair Truck 2019 (1).jpg](https://commons.wikimedia.org/wiki/File:Hino_500_Ranger_Lineman_and_Repair_Truck_2019_(1).jpg) | Captainmorlypogi1959 | CC BY-SA 4.0 | Hino 500 Ranger Lineman and Repair Truck was parked. Photo locationː De Guzman corner Tombo Street, Barangay Magsaysay District (Santa Cruz) |
+| 06-hino-500-ranger-lineman-and-repair-truck-2019-8.jpg | [Hino 500 Ranger Lineman and Repair Truck 2019 (8).jpg](https://commons.wikimedia.org/wiki/File:Hino_500_Ranger_Lineman_and_Repair_Truck_2019_(8).jpg) | Captainmorlypogi1959 | CC BY-SA 4.0 | Hino 500 Ranger Lineman and Repair Truck was parked. Photo locationː Salazar Street, Barangay Bantug Bulalo, Cabanatuan City, Nueva Ecija 🇵🇭 |

@@ -1,0 +1,2246 @@
+{
+ "pm": {
+  "base": "5448bd6b4bdc2dfc2f8b4569",
+  "kit": [
+   {
+    "path": "",
+    "item": "5448bd6b4bdc2dfc2f8b4569",
+    "bones": [
+     "pm_catch_LOD0",
+     "pm_hammer_LOD0",
+     "pm_trigger_LOD0",
+     "pm_internals_LOD0",
+     "weapon_izhmeh_pm_9x18pm_LOD0",
+     "pm_release_LOD0",
+     "pm_spring_LOD0",
+     "pm_spring_forward_LOD0"
+    ],
+    "bone": "weapon_izhmeh_pm_9x18pm_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5448c12b4bdc2d02308b456f",
+    "bones": [
+     "mag_pm_izhmeh_9x18pm_8_LOD0"
+    ],
+    "bone": "mag_pm_izhmeh_9x18pm_8_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "6374a822e629013b9c0645c8",
+    "bones": [
+     "reciever_pm_izhmeh_pm_std_LOD0"
+    ],
+    "bone": "reciever_pm_izhmeh_pm_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "63c6adcfb4ba094317063742",
+    "bones": [
+     "sight_rear_pm_izhmeh_pm_std_LOD0"
+    ],
+    "bone": "sight_rear_pm_izhmeh_pm_std_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistolgrip",
+    "item": "637b6d610aef6cfc5e02dd14",
+    "bones": [
+     "pistolgrip_pm_gct_pm_tactic_kit_LOD0"
+    ],
+    "bone": "pistolgrip_pm_gct_pm_tactic_kit_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistolgrip/mod_tactical",
+    "item": "5a7b4900e899ef197b331a2a",
+    "bones": [
+     "mount_glock_um_tactical_um3_sight_mount_LOD0"
+    ],
+    "bone": "mount_glock_um_tactical_um3_sight_mount_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistolgrip/mod_tactical/mod_scope",
+    "item": "57ae0171245977343c27bfcf",
+    "bones": [
+     "linza_mode_000",
+     "scope_all_belomo_pk_06_LOD0"
+    ],
+    "bone": "scope_all_belomo_pk_06_LOD0",
+    "at": [
+     0.000265,
+     -0.000518,
+     -5.9e-05,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistolgrip/mod_tactical/mod_tactical",
+    "item": "5a7b483fe899ef0016170d15",
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_surefire_xc1_LOD0"
+    ],
+    "bone": "tactical_all_surefire_xc1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     -0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_pistolgrip/mod_tactical/mod_scope",
+  "aimIndex": 0
+ },
+ "glock17": {
+  "base": "5a7ae0c351dfba0017554310",
+  "kit": [
+   {
+    "path": "",
+    "item": "5a7ae0c351dfba0017554310",
+    "bones": [
+     "catch_17_LOD0",
+     "weapon_glock_glock_17_gen3_9x19_LOD0",
+     "release_17_LOD0",
+     "spring_17_LOD0",
+     "trigger_17_LOD0"
+    ],
+    "bone": "weapon_glock_glock_17_gen3_9x19_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5a6b5e468dc32e001207faf5",
+    "bones": [
+     "barrel_glock_double_diamond_114mm_threaded_9x19_LOD0"
+    ],
+    "bone": "barrel_glock_double_diamond_114mm_threaded_9x19_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "5a32a064c4a28200741e22de",
+    "bones": [
+     "silencer_all_silencerco_osprey_9_9x19_LOD0"
+    ],
+    "bone": "silencer_all_silencerco_osprey_9_9x19_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5a7b4960e899ef197b331a2d",
+    "bones": [
+     "pistolgrip_glock_pachmayr_tactical_rubber_grip_LOD0"
+    ],
+    "bone": "pistolgrip_glock_pachmayr_tactical_rubber_grip_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5a71e22f8dc32e00094b97f4",
+    "bones": [
+     "reciever_glock_zev_tech_hex_rmr_cut_gen_3_LOD0"
+    ],
+    "bone": "reciever_glock_zev_tech_hex_rmr_cut_gen_3_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "5a71e0fb8dc32e00094b97f2",
+    "bones": [
+     "sight_rear_glock_zev_tech_LOD0"
+    ],
+    "bone": "sight_rear_glock_zev_tech_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_front",
+    "item": "5a71e0048dc32e000c52ecc8",
+    "bones": [
+     "sight_front_glock_zev_tech_LOD0"
+    ],
+    "bone": "sight_front_glock_zev_tech_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_scope",
+    "item": "5a32aa8bc4a2826c6e06d737",
+    "bones": [
+     "linza",
+     "scope_base_trijicon_rmr_LOD0"
+    ],
+    "bone": "scope_base_trijicon_rmr_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5a718da68dc32e000d46d264",
+    "bones": [
+     "mag_glock_magpul_pmag_21_gl9_9x19_21_LOD0"
+    ],
+    "bone": "mag_glock_magpul_pmag_21_gl9_9x19_21_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_tactical",
+    "item": "56def37dd2720bec348b456a",
+    "bones": [
+     "flashlight_glass_LOD0",
+     "switch_000_LOD0",
+     "switch_type_000_LOD0",
+     "tactical_all_surefire_x400_vis_laser_LOD0"
+    ],
+    "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_reciever/mod_scope",
+  "aimIndex": 0
+ },
+ "mp5k": {
+  "base": "5d2f0d8048f0356c925bc3b0",
+  "kit": [
+   {
+    "path": "",
+    "item": "5d2f0d8048f0356c925bc3b0",
+    "bones": [
+     "kurtz_bolt_LOD0",
+     "kurtz_hammer_LOD0",
+     "weapon_hk_mp5_kurtz_9x19_LOD0",
+     "kurtz_release_LOD0",
+     "kurtz_selector_LOD0",
+     "kurtz_trigger_LOD0"
+    ],
+    "bone": "weapon_hk_mp5_kurtz_9x19_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5926c3b286f774640d189b6b",
+    "bones": [
+     "mag_mp5_hk_std_curved_9x19_30_LOD0"
+    ],
+    "bone": "mag_mp5_hk_std_curved_9x19_30_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     2e-06,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5d2f261548f03576f500e7b7",
+    "bones": [
+     "reciever_mp5k_hk_kurtz_std_LOD0"
+    ],
+    "bone": "reciever_mp5k_hk_kurtz_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_handguard",
+    "item": "5d2f259b48f0355a844acd74",
+    "bones": [
+     "handguard_mp5k_hk_kurtz_grip_std_LOD0"
+    ],
+    "bone": "handguard_mp5k_hk_kurtz_grip_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "5926d2be86f774134d668e4e",
+    "bones": [
+     "sight_rear_mp5_hk_drum_LOD0"
+    ],
+    "bone": "sight_rear_mp5_hk_drum_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     2e-06,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_stock",
+    "item": "5d2f25bc48f03502573e5d85",
+    "bones": [
+     "stock_mp5k_hk_kurtz_end_cap_LOD0"
+    ],
+    "bone": "stock_mp5k_hk_kurtz_end_cap_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_mount",
+    "item": "5926dad986f7741f82604363",
+    "bones": [
+     "mount_hk_mfi_universal_LOD0"
+    ],
+    "bone": "mount_hk_mfi_universal_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     2e-06,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_mount/mod_scope",
+    "item": "58491f3324597764bc48fa02",
+    "bones": [
+     "linza",
+     "scope_all_eotech_xps3_LOD0"
+    ],
+    "bone": "scope_all_eotech_xps3_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "5d2f2d5748f03572ec0c0139",
+    "bones": [
+     "charge_mp5k_hk_kurtz_std_LOD0"
+    ],
+    "bone": "charge_mp5k_hk_kurtz_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_reciever/mod_mount/mod_scope",
+  "aimIndex": 0
+ },
+ "ak102": {
+  "base": "5ac66d015acfc400180ae6e4",
+  "kit": [
+   {
+    "path": "",
+    "item": "5ac66d015acfc400180ae6e4",
+    "bones": [
+     "ak102_stock_release_LO0",
+     "ak102_bolt_LOD0",
+     "ak102_hammer_LOD0",
+     "weapon_izhmash_ak74m_dovetail_LOD0",
+     "weapon_izhmash_ak74m_kolodka_LOD0",
+     "weapon_izhmash_ak102_556x45_LOD0",
+     "ak102_release_LOD0",
+     "ak102_selector_LOD0",
+     "ak102_trigger_LOD0"
+    ],
+    "bone": "weapon_izhmash_ak102_556x45_LOD0",
+    "at": [
+     -0.156377,
+     1.412914,
+     0.397467,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_gas_block",
+    "item": "59c6633186f7740cf0493bb9",
+    "bones": [
+     "gas_block_ak_izhmash_ak74_std_LOD0"
+    ],
+    "bone": "gas_block_ak_izhmash_ak74_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_gas_block/mod_handguard",
+    "item": "5648b4534bdc2d3d1c8b4580",
+    "bones": [
+     "handguard_ak_zenit_b10m_b19_LOD0"
+    ],
+    "bone": "handguard_ak_zenit_b10m_b19_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_gas_block/mod_handguard/mod_foregrip",
+    "item": "5c1cd46f2e22164bef5cfedb",
+    "bones": [
+     "foregrip_all_zenit_b25u_rk_1_LOD0"
+    ],
+    "bone": "foregrip_all_zenit_b25u_rk_1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_gas_block/mod_handguard/mod_tactical_002",
+    "item": "560d657b4bdc2da74d8b4572",
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_zenit_2p_kleh_vis_laser_LOD0"
+    ],
+    "bone": "tactical_all_zenit_2p_kleh_vis_laser_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_muzzle",
+    "item": "5a9fbb84a2750c00137fa685",
+    "bones": [
+     "silencer_all_rotor_43_v2_LOD0"
+    ],
+    "bone": "silencer_all_rotor_43_v2_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5649ae4a4bdc2d1b2b8b4588",
+    "bones": [
+     "pistolgrip_ak_zenit_rk3_LOD0"
+    ],
+    "bone": "pistolgrip_ak_zenit_rk3_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5649af884bdc2d1b2b8b4589",
+    "bones": [
+     "reciever_ak_zenit_b33_LOD0"
+    ],
+    "bone": "reciever_ak_zenit_b33_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_scope",
+    "item": "5c0505e00db834001b735073",
+    "bones": [
+     "lenses_outside_LOD0",
+     "linza",
+     "scope_all_valday_1p87_LOD0"
+    ],
+    "bone": "scope_all_valday_1p87_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_sight_rear",
+    "item": "5ac72e475acfc400180ae6fe",
+    "bones": [
+     "sight_rear_ak_izhmash_ak74m_std_LOD0"
+    ],
+    "bone": "sight_rear_ak_izhmash_ak74m_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "5ac78eaf5acfc4001926317a",
+    "bones": [
+     "stock_ak_zenit_pt-3_lock_LOD0"
+    ],
+    "bone": "stock_ak_zenit_pt-3_lock_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock",
+    "item": "59ecc3dd86f7746dc827481c",
+    "bones": [
+     "stock_ak_zenit_pt-3_LOD0"
+    ],
+    "bone": "stock_ak_zenit_pt-3_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -1e-06,
+     0.0,
+     -1e-06,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5ac66c5d5acfc4001718d314",
+    "bones": [
+     "mag_ak_izhmash_6L29_556x45_30_LOD0"
+    ],
+    "bone": "mag_ak_izhmash_6L29_556x45_30_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "5648ac824bdc2ded0b8b457d",
+    "bones": [
+     "charge_ak_zenit_rp1_LOD0"
+    ],
+    "bone": "charge_ak_zenit_rp1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_reciever/mod_scope",
+  "aimIndex": 0
+ },
+ "val": {
+  "base": "57c44b372459772d2b39b8ce",
+  "kit": [
+   {
+    "path": "",
+    "item": "57c44b372459772d2b39b8ce",
+    "bones": [
+     "vss_gasblock_LOD0",
+     "vss_internals_LOD0",
+     "vss_bolt_LOD0",
+     "vss_bolt_rotate_LOD0",
+     "vss_hammer_LOD0",
+     "vss_bolt_spring_LOD0",
+     "vss_bolt_tube_LOD0",
+     "val_mag_release_LOD0",
+     "vss_selector_LOD0",
+     "weapon_tochmash_val_9x39_LOD0",
+     "vss_trigger_LOD0"
+    ],
+    "bone": "weapon_tochmash_val_9x39_LOD0",
+    "at": [
+     -0.156171,
+     1.400093,
+     0.018038,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_muzzle",
+    "item": "57c44dd02459772d2e0ae249",
+    "bones": [
+     "silencer_vss_tochmash_std_9x39_LOD0"
+    ],
+    "bone": "silencer_vss_tochmash_std_9x39_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     -2e-06,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_sight_rear",
+    "item": "57c44e7b2459772d28133248",
+    "bones": [
+     "sight_rear_vss_tochmash_vss_std_LOD0"
+    ],
+    "bone": "sight_rear_vss_tochmash_vss_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_mount_000",
+    "item": "5a9fc7e6a2750c0032157184",
+    "bones": [
+     "mount_vss_zenit_b3_2_LOD0",
+     "mount_vss_zenit_b3_LOD0"
+    ],
+    "bone": "mount_vss_zenit_b3_2_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_mount_000/mod_tactical",
+    "item": "560d657b4bdc2da74d8b4572",
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_zenit_2p_kleh_vis_laser_LOD0"
+    ],
+    "bone": "tactical_all_zenit_2p_kleh_vis_laser_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "57c44f4f2459772d2c627113",
+    "bones": [
+     "reciever_vss_tochmash_vss_std_LOD0"
+    ],
+    "bone": "reciever_vss_tochmash_vss_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5a9e81fba2750c00164f6b11",
+    "bones": [
+     "mag_vss_tochmash_sr3m130_9x39_30_LOD0"
+    ],
+    "bone": "mag_vss_tochmash_sr3m130_9x39_30_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     -0.0,
+     -2e-06,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5a69a2ed8dc32e000d46d1f1",
+    "bones": [
+     "pistolgrip_val_rotor_43_tube_adapter_LOD0"
+    ],
+    "bone": "pistolgrip_val_rotor_43_tube_adapter_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip/mod_stock_000",
+    "item": "5d135e83d7ad1a21b83f42d8",
+    "bones": [
+     "stock_ar15_magpul_ctr_carbine_LOD0",
+     "stock_ar15_magpul_ctr_rubber_butt_pad_LOD0"
+    ],
+    "bone": "stock_ar15_magpul_ctr_carbine_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "5648ac824bdc2ded0b8b457d",
+    "bones": [
+     "charge_ak_zenit_rp1_LOD0"
+    ],
+    "bone": "charge_ak_zenit_rp1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_004",
+    "item": "5c90c3622e221601da359851",
+    "bones": [
+     "mount_dovetail_zenit_b13v_LOD0"
+    ],
+    "bone": "mount_dovetail_zenit_b13v_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_004/mod_scope",
+    "item": "570fd6c2d2720bc6458b457f",
+    "bones": [
+     "linza",
+     "scope_all_eotech_553_LOD0"
+    ],
+    "bone": "scope_all_eotech_553_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard",
+    "item": "6565bb7eb4b12a56eb04b084",
+    "bones": [
+     "handguard_vss_tochmash_std_LOD0"
+    ],
+    "bone": "handguard_vss_tochmash_std_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_mount_004/mod_scope",
+  "aimIndex": 0
+ },
+ "svds": {
+  "base": "5c46fbd72e2216398b5a8c9c",
+  "kit": [
+   {
+    "path": "",
+    "item": "5c46fbd72e2216398b5a8c9c",
+    "bones": [
+     "weapon_svd_s_stock_lock_LOD0",
+     "weapon_svd_s_bolt_larva_LOD0",
+     "weapon_svd_s_bolt_LOD0",
+     "weapon_svd_s_hammer_LOD0",
+     "weapon_izhmash_svd_s_762x54_LOD0",
+     "weapon_svd_s_release_LOD0",
+     "weapon_svd_s_selector_LOD0",
+     "weapon_svd_s_trigger_LOD0"
+    ],
+    "bone": "weapon_izhmash_svd_s_762x54_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5c471be12e221602b66cd9ac",
+    "bones": [
+     "pistolgrip_svd_s_izhmash_svd_s_std_LOD0"
+    ],
+    "bone": "pistolgrip_svd_s_izhmash_svd_s_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5c471c442e221602b542a6f8",
+    "bones": [
+     "mag_svd_izhmash_svd_std_762x54_10_LOD0"
+    ],
+    "bone": "mag_svd_izhmash_svd_std_762x54_10_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "5c471b5d2e221602b21d4e14",
+    "bones": [
+     "stock_svd_s_izhmash_svd_s_std_LOD0"
+    ],
+    "bone": "stock_svd_s_izhmash_svd_s_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5c471cb32e221602b177afaa",
+    "bones": [
+     "barrel_svd_izhmash_565mm_762x54_LOD0",
+     "gasblock_svd_izhmash_svd_s_tube_std_LOD0"
+    ],
+    "bone": "barrel_svd_izhmash_565mm_762x54_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "5c471bfc2e221602b21d4e17",
+    "bones": [
+     "muzzle_svd_izhmash_svd_s_std_762x54_LOD0"
+    ],
+    "bone": "muzzle_svd_izhmash_svd_s_std_762x54_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_gas_block",
+    "item": "5c471c842e221615214259b5",
+    "bones": [
+     "gas_block_svd_izhmash_svd_s_std_LOD0"
+    ],
+    "bone": "gas_block_svd_izhmash_svd_s_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_001",
+    "item": "5dfcd0e547101c39625f66f9",
+    "bones": [
+     "handguard_svd_sag_chassis_mk_1_LOD0"
+    ],
+    "bone": "handguard_svd_sag_chassis_mk_1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_001/mod_tactical",
+    "item": "544909bb4bdc2d6f028b4577",
+    "bones": [
+     "switch_000_LOD0",
+     "tactical_all_morovision_anpeq15_LOD0"
+    ],
+    "bone": "tactical_all_morovision_anpeq15_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_001/mod_foregrip",
+    "item": "5fc0f9cbd6fa9c00c571bb90",
+    "bones": [
+     "foregrip_keymod_sig_vertical_grip_LOD0"
+    ],
+    "bone": "foregrip_keymod_sig_vertical_grip_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5c471bd12e221602b4129c3a",
+    "bones": [
+     "reciever_svd_izhmash_svd_s_std_LOD0"
+    ],
+    "bone": "reciever_svd_izhmash_svd_s_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_002",
+    "item": "5c82343a2e221644f31c0611",
+    "bones": [
+     "backLens",
+     "linza_mode_000",
+     "switch_000",
+     "scope_dovetail_belomo_pso_1m2_4x24_glass_LOD0",
+     "scope_dovetail_belomo_pso_1m2_4x24_LOD0"
+    ],
+    "bone": "scope_dovetail_belomo_pso_1m2_4x24_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_002/mod_tactical",
+    "item": "57f3a5ae2459772b0e0bf19e",
+    "bones": [
+     "tactical_pso_belomo_eyecup_LOD0"
+    ],
+    "bone": "tactical_pso_belomo_eyecup_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_mount_002",
+  "aimIndex": 0
+ },
+ "mdr762": {
+  "base": "5dcbd56fdbd3d91b3e5468d5",
+  "kit": [
+   {
+    "path": "",
+    "item": "5dcbd56fdbd3d91b3e5468d5",
+    "bones": [
+     "bolt_LOD0",
+     "bolt_release_LOD0",
+     "charge_000_LOD0",
+     "charge_001_LOD0",
+     "charge_002_LOD0",
+     "charge_011_LOD0",
+     "charge_012_LOD0",
+     "weapon_deflector 1",
+     "weapon_deflector_button",
+     "weapon_dt_mdr_556x45_LOD0",
+     "release_000_LOD0",
+     "release_001_LOD0",
+     "release_002_LOD0",
+     "release_switch_LOD0",
+     "selector_LOD0",
+     "trigger_LOD0"
+    ],
+    "bone": "weapon_dt_mdr_556x45_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.012645,
+     -0.707107,
+     -0.0,
+     -0.0,
+     0.707107
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5dcbd6dddbd3d91b3e5468de",
+    "bones": [
+     "pistolgrip_mdr_dt_mdr_std_LOD0"
+    ],
+    "bone": "pistolgrip_mdr_dt_mdr_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5a3501acc4a282000d72293a",
+    "bones": [
+     "mag_ar10_magpul_pmag_sr_gen_3_762x51_20_LOD0"
+    ],
+    "bone": "mag_ar10_magpul_pmag_sr_gen_3_762x51_20_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard",
+    "item": "5dcbd6b46ec07c0c4347a564",
+    "bones": [
+     "handguard_mdr_dt_mdr_std_LOD0"
+    ],
+    "bone": "handguard_mdr_dt_mdr_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_mount_000",
+    "item": "5b7be4895acfc400170e2dd5",
+    "bones": [
+     "mount_m_lok_magpul_4,1_inch_picatinny_rail_section_LOD0"
+    ],
+    "bone": "mount_m_lok_magpul_4,1_inch_picatinny_rail_section_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_mount_000/mod_foregrip",
+    "item": "558032614bdc2de7118b4585",
+    "bones": [
+     "foregrip_all_tango_down_stubby_bgv_mk46k_LOD0"
+    ],
+    "bone": "foregrip_all_tango_down_stubby_bgv_mk46k_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_tactical",
+    "item": "5c06595c0db834001a66af6c",
+    "bones": [
+     "switch_000_LOD0",
+     "tactical_all_insight_la5_LOD0"
+    ],
+    "bone": "tactical_all_insight_la5_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5dcbe9431e1f4616d354987e",
+    "bones": [
+     "barrel_mdr_dt_406mm_762x51_LOD0"
+    ],
+    "bone": "barrel_mdr_dt_406mm_762x51_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "612e0d3767085e45ef14057f",
+    "bones": [
+     "muzzle_all_awc_psr_muzzle_brake_762x51_LOD0"
+    ],
+    "bone": "muzzle_all_awc_psr_muzzle_brake_762x51_LOD0",
+    "at": [
+     0.0,
+     1e-06,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle/mod_muzzle",
+    "item": "63877c99e785640d436458ea",
+    "bones": [
+     "silencer_base_awc_thor_psr_xl_multi_LOD0"
+    ],
+    "bone": "silencer_base_awc_thor_psr_xl_multi_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_scope",
+    "item": "59db7eed86f77461f8380365",
+    "bones": [
+     "mount_all_trijicon_ta51_LOD0"
+    ],
+    "bone": "mount_all_trijicon_ta51_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.707107,
+     0.0,
+     0.0,
+     0.707107
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope",
+    "item": "5c05293e0db83400232fff80",
+    "bones": [
+     "backLens",
+     "linza",
+     "scope_base_trijicon_acog_ta01nsn_4x32_glass_LOD0",
+     "scope_base_trijicon_acog_ta01nsn_4x32_LOD0"
+    ],
+    "bone": "scope_base_trijicon_acog_ta01nsn_4x32_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope/mod_mount",
+    "item": "5a33bab6c4a28200741e22f8",
+    "bones": [
+     "mount_acog_trijicon_rm35_LOD0"
+    ],
+    "bone": "mount_acog_trijicon_rm35_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope/mod_mount/mod_scope",
+    "item": "5a32aa8bc4a2826c6e06d737",
+    "bones": [
+     "linza",
+     "scope_base_trijicon_rmr_LOD0"
+    ],
+    "bone": "scope_base_trijicon_rmr_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_sight_rear",
+    "item": "5dfa3d7ac41b2312ea33362a",
+    "bones": [
+     "sight_rear_all_kac_folding_micro_sight_base_LOD0",
+     "sight_rear_all_kac_folding_micro_sight_unfolded_LOD0"
+    ],
+    "bone": "sight_rear_all_kac_folding_micro_sight_base_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_scope/mod_scope",
+  "aimIndex": 0
+ },
+ "sv98": {
+  "base": "55801eed4bdc2d89578b4588",
+  "kit": [
+   {
+    "path": "",
+    "item": "55801eed4bdc2d89578b4588",
+    "bones": [
+     "sv-98_internals_LOD0",
+     "weapon_izhmash_sv-98_762x54r_LOD0",
+     "sv-98_bolt_1_LOD0",
+     "sv-98_bolt_2_LOD0",
+     "sv-98_hammer_LOD0",
+     "sv-98_trigger_LOD0"
+    ],
+    "bone": "weapon_izhmash_sv-98_762x54r_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     -0.707107,
+     0.0,
+     0.0,
+     0.707107
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "559ba5b34bdc2d1f1a8b4582",
+    "bones": [
+     "mag_sv-98_izhmash_sv-98_std_762x54r_10_LOD0"
+    ],
+    "bone": "mag_sv-98_izhmash_sv-98_std_762x54r_10_LOD0",
+    "at": [
+     -0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_scope",
+    "item": "5aa66c72e5b5b00016327c93",
+    "bones": [
+     "mount_all_nightforce_x_treme_duty_ultralite_one_piece_magmount_34mm_LOD0",
+     "mount_all_nightforce_x_treme_duty_ultralite_one_piece_magmount_multimount_34mm_LOD0"
+    ],
+    "bone": "mount_all_nightforce_x_treme_duty_ultralite_one_piece_magmount_multimount_34mm_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope_000",
+    "item": "62850c28da09541f43158cca",
+    "bones": [
+     "backLens",
+     "linza",
+     "scope_34mm_s&b_pm_ii_5_25x56_glass_LOD0",
+     "scope_34mm_s&b_pm_ii_5_25x56_LOD0",
+     "scope_34mm_s&b_pm_ii_5_25x56_switch_LOD0"
+    ],
+    "bone": "scope_34mm_s&b_pm_ii_5_25x56_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope_001",
+    "item": "5a33b2c9c4a282000c5a9511",
+    "bones": [
+     "mount_all_trijicon_rm33_LOD0"
+    ],
+    "bone": "mount_all_trijicon_rm33_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope_001/mod_scope",
+    "item": "5a32aa8bc4a2826c6e06d737",
+    "bones": [
+     "linza",
+     "scope_base_trijicon_rmr_LOD0"
+    ],
+    "bone": "scope_base_trijicon_rmr_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_sight_rear",
+    "item": "56083e1b4bdc2dc8488b4572",
+    "bones": [
+     "sight_rear_sv-98_izhmash_std_LOD0"
+    ],
+    "bone": "sight_rear_sv-98_izhmash_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_tactical",
+    "item": "56083eab4bdc2d26448b456a",
+    "bones": [
+     "tactical_sv-98_izhmash_heat_ribbon_LOD0"
+    ],
+    "bone": "tactical_sv-98_izhmash_heat_ribbon_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_muzzle",
+    "item": "5c4eec9b2e2216398b5aaba2",
+    "bones": [
+     "muzzle_sv98_izhmash_thread_muzzle_adapter_762x54_LOD0"
+    ],
+    "bone": "muzzle_sv98_izhmash_thread_muzzle_adapter_762x54_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_muzzle",
+    "item": "5c4eecc32e221602b412b440",
+    "bones": [
+     "silencer_sv98_izhmash_silencer_std_762x54_LOD0"
+    ],
+    "bone": "silencer_sv98_izhmash_silencer_std_762x54_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_muzzle/mod_tactical",
+    "item": "5c4eecde2e221602b3140418",
+    "bones": [
+     "tactical_sv98_izhmash_silencer_heat_shield_std_LOD0"
+    ],
+    "bone": "tactical_sv98_izhmash_silencer_heat_shield_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "623b2e9d11c3296b440d1638",
+    "bones": [
+     "stock_cnc_cnc_guns_m12b_adapter_LOD0",
+     "stock_sv-98_cnc_guns_ov_sv98_LOD0",
+     "stock_cnc_cnc_guns_m12b_button_LOD0"
+    ],
+    "bone": "stock_sv-98_cnc_guns_ov_sv98_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.707107,
+     0.0,
+     0.0,
+     0.707107
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard",
+    "item": "623c3c1f37b4b31470357737",
+    "bones": [
+     "handguard_sv-98_cnc_guns_ov_unif_keymod_LOD0"
+    ],
+    "bone": "handguard_sv-98_cnc_guns_ov_unif_keymod_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard/mod_mount_000",
+    "item": "623c2f4242aee3103f1c44b7",
+    "bones": [
+     "mount_keymod_cnc_guns_medium_rail_section_LOD0"
+    ],
+    "bone": "mount_keymod_cnc_guns_medium_rail_section_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard/mod_mount_000/mod_tactical",
+    "item": "5d2369418abbc306c62e0c80",
+    "bones": [
+     "flashlight_glass",
+     "ir_switch_000_LOD0",
+     "vs_switch_000_LOD0",
+     "tactical_all_steiner_9021_dbal_pl_LOD0"
+    ],
+    "bone": "tactical_all_steiner_9021_dbal_pl_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard/mod_mount_001",
+    "item": "623c2f652febb22c2777d8d7",
+    "bones": [
+     "mount_keymod_cnc_guns_short_rail_section_LOD0"
+    ],
+    "bone": "mount_keymod_cnc_guns_short_rail_section_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard/mod_mount_002",
+    "item": "623c2f652febb22c2777d8d7",
+    "bones": [
+     "mount_keymod_cnc_guns_short_rail_section_LOD0"
+    ],
+    "bone": "mount_keymod_cnc_guns_short_rail_section_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_pistol_grip",
+    "item": "623c3be0484b5003161840dc",
+    "bones": [
+     "pistolgrip_ak_fab_defence_agr_47_LOD0"
+    ],
+    "bone": "pistolgrip_ak_fab_defence_agr_47_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock_000",
+    "item": "624c29ce09cd027dff2f8cd7",
+    "bones": [
+     "stock_cnc_cnc_guns_m12b_LOD0"
+    ],
+    "bone": "stock_cnc_cnc_guns_m12b_LOD0",
+    "at": [
+     -0.0,
+     -0.0,
+     -0.0,
+     0.0,
+     -0.707106,
+     0.0,
+     0.707107
+    ]
+   }
+  ],
+  "aimPath": "/mod_scope/mod_scope_000",
+  "aimIndex": 0
+ },
+ "m870": {
+  "base": "5a7828548dc32e5a9c28b516",
+  "kit": [
+   {
+    "path": "",
+    "item": "5a7828548dc32e5a9c28b516",
+    "bones": [
+     "weapon_remington_model_870_12g_bolt_LOD0",
+     "feeder_LOD0",
+     "patron_12x70_full_LOD0",
+     "weapon_remington_model_870_12g_LOD0",
+     "trigger_LOD0"
+    ],
+    "bone": "weapon_remington_model_870_12g_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     -0.033768,
+     -0.707107,
+     0.0,
+     -0.0,
+     0.707107
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5a787fdfc5856700142fdd9a",
+    "bones": [
+     "barrel_870_vent_rib_barrel_cut_off_325mm_LOD0"
+    ],
+    "bone": "barrel_870_vent_rib_barrel_cut_off_325mm_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard",
+    "item": "5a788031c585673f2b5c1c79",
+    "bones": [
+     "handguard_870_fab_defence_pr870_LOD0"
+    ],
+    "bone": "handguard_870_fab_defence_pr870_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_foregrip",
+    "item": "59fc48e086f77463b1118392",
+    "bones": [
+     "foregrip_all_magpul_rvg_LOD0"
+    ],
+    "bone": "foregrip_all_magpul_rvg_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_tactical_000",
+    "item": "626becf9582c3e319310b837",
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_insight_wmx200_LOD0"
+    ],
+    "bone": "tactical_all_insight_wmx200_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5a7882dcc5856700177af662",
+    "bones": [
+     "mag_870_remington_magazie_cap_12g_4_LOD0"
+    ],
+    "bone": "mag_870_remington_magazie_cap_12g_4_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "5ae35b315acfc4001714e8b0",
+    "bones": [
+     "stock_870_mesa_leo_stock_adapter_LOD0"
+    ],
+    "bone": "stock_870_mesa_leo_stock_adapter_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock",
+    "item": "56eabf3bd2720b75698b4569",
+    "bones": [
+     "stock_ar15_magpul_moe_carbine_LOD0"
+    ],
+    "bone": "stock_ar15_magpul_moe_carbine_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock/mod_stock",
+    "item": "58d2912286f7744e27117493",
+    "bones": [
+     "stock_ar15_magpul_rubber_butt_pad_LOD0"
+    ],
+    "bone": "stock_ar15_magpul_rubber_butt_pad_LOD0",
+    "at": [
+     3.6e-05,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_pistol_grip",
+    "item": "55d4b9964bdc2d1d4e8b456e",
+    "bones": [
+     "pistolgrip_ar15_colt_a2_LOD0"
+    ],
+    "bone": "pistolgrip_ar15_colt_a2_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount",
+    "item": "5a78948ec5856700177b1124",
+    "bones": [
+     "mount_870_xs_shot_rail_ghost_ring_LOD0"
+    ],
+    "bone": "mount_870_xs_shot_rail_ghost_ring_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount/mod_scope",
+    "item": "584924ec24597768f12ae244",
+    "bones": [
+     "linza",
+     "scope_all_eotech_xps3_LOD0"
+    ],
+    "bone": "scope_all_eotech_xps3_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_mount/mod_scope",
+  "aimIndex": 0
+ },
+ "mp18": {
+  "base": "61f7c9e189e6fb1a5e3ea78d",
+  "kit": [
+   {
+    "path": "",
+    "item": "61f7c9e189e6fb1a5e3ea78d",
+    "bones": [
+     "mp18_arm_pin_LOD0",
+     "mp18_internals_LOD0",
+     "mp18_locking_lever_LOD0",
+     "mp18_trigger_LOD0",
+     "weapon_izhmash_mp18_multi_LOD0"
+    ],
+    "bone": "weapon_izhmash_mp18_multi_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "61f4012adfc9f01a816adda1",
+    "bones": [
+     "barrel_mp18_600mm_762x54r_LOD0",
+     "mp18_ejector_762x54r_LOD0"
+    ],
+    "bone": "barrel_mp18_600mm_762x54r_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_handguard",
+    "item": "61f8024263dc1250e26eb029",
+    "bones": [
+     "handguard_mp18_izhmash_plastic_LOD0"
+    ],
+    "bone": "handguard_mp18_izhmash_plastic_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_scope",
+    "item": "61f804acfcba9556ea304cb8",
+    "bones": [
+     "mount_mp18_izhmash_ris_LOD0"
+    ],
+    "bone": "mount_mp18_izhmash_ris_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_scope/mod_scope",
+    "item": "618b9643526131765025ab35",
+    "bones": [
+     "mount_all_geissele_super_precision_30mm_LOD0"
+    ],
+    "bone": "mount_all_geissele_super_precision_30mm_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_scope/mod_scope/mod_scope",
+    "item": "5a37cb10c4a282329a73b4e7",
+    "bones": [
+     "backLens",
+     "linza",
+     "scope_30mm_leupold_mark4_lr_6,5_20x50_glass_LOD0",
+     "scope_30mm_leupold_mark4_lr_6,5_20x50_LOD0",
+     "scope_30mm_leupold_mark4_lr_6,5_20x50_switch_LOD0"
+    ],
+    "bone": "scope_30mm_leupold_mark4_lr_6,5_20x50_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_scope/mod_scope/mod_mount",
+    "item": "618b9671d14d6d5ab879c5ea",
+    "bones": [
+     "mount_geissele_geissele_super_precision_top_ring_cap_30mm_LOD0"
+    ],
+    "bone": "mount_geissele_geissele_super_precision_top_ring_cap_30mm_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "61f803b8ced75b2e852e35f8",
+    "bones": [
+     "stock_mp18_izhmash_plastic_LOD0"
+    ],
+    "bone": "stock_mp18_izhmash_plastic_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_barrel/mod_scope/mod_scope/mod_scope",
+  "aimIndex": 0
+ }
+}

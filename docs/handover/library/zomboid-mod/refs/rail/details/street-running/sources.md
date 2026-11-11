@@ -1,0 +1,11 @@
+# rail/details/street-running
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-the-street-railway-journal-1907-14573590969.jpg | [The Street railway journal (1907) (14573590969).jpg](https://commons.wikimedia.org/wiki/File:The_Street_railway_journal_(1907)_(14573590969).jpg) | Internet Archive Book Images | No restrictions | Identifier: streetrailwayjo301907newy (find matches) Title: The Street railway journal Year: 1884 (1880s) Authors:  Subjects:  Street-railro |
+| 02-the-street-railway-journal-1901-14572397348.jpg | [The Street railway journal (1901) (14572397348).jpg](https://commons.wikimedia.org/wiki/File:The_Street_railway_journal_(1901)_(14572397348).jpg) | Internet Archive Book Images | No restrictions | Identifier: streetrailwayjo181901newy (find matches) Title: The Street railway journal Year: 1884 (1880s) Authors:  Subjects:  Street-railro |
+| 03-the-street-railway-review-1891-14573048579.jpg | [The street railway review (1891) (14573048579).jpg](https://commons.wikimedia.org/wiki/File:The_street_railway_review_(1891)_(14573048579).jpg) | Internet Archive Book Images | No restrictions | Identifier: streetrailwayrev161amer (find matches) Title: The street railway review Year: 1891 (1890s) Authors:  American Street Railway Ass |
+| 04-carson-street-under-construction-showing-streetcar-tracks-an.jpg | [Carson Street under construction, showing streetcar tracks and Belgian](https://commons.wikimedia.org/wiki/File:Carson_Street_under_construction,_showing_streetcar_tracks_and_Belgian_block,_2022-07-18.jpg) | Cbaile19 | CC0 | Carson Street (South Side, Pittsburgh) under construction, showing streetcar tracks and Belgian block under the asphalt |
+| 05-heleneborgsgatan-s-dermalm-stockholm-sommaren-1930.jpg | [Heleneborgsgatan, Södermalm, Stockholm. Sommaren 1930.jpg](https://commons.wikimedia.org/wiki/File:Heleneborgsgatan,_S%C3%B6dermalm,_Stockholm._Sommaren_1930.jpg) | Sven Gustaf Hellström | Public domain | Södermalm, Stockholm. Heleneborgsgatan looking west on a summer evening in 1930. The house on the right is No. 54, and No. 27 is partially v |

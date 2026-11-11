@@ -1,0 +1,22 @@
+---
+name: zomboid-harvestman-web-room
+description: Web page copy of the Harvestman test room (3D Spider 7 acting out all 14 actions), artifact 4dSFQRP3JCkfLJz2ajhpsr, source in project files
+metadata:
+  type: reference
+  modified: 2026-10-30T01:41:48.285Z
+---
+
+2026-10-30 01:45. Josiah asked for "a webpage preview that does the same" as `/zc harvestman room` ([[zomboid-harvestman-goals-tech]]). It's published at https://claude.ai/artifact/4dSFQRP3JCkfLJz2ajhpsr.
+
+- Source: /mnt/project-files/zomboid-mod/assets/spider-7/room/index.html (one file, three.js 0.160 from jsdelivr). The model halves spider-1/2.txt and tex/*_2_*, *_red_e and *_blue_e were copied server side from the old viewer 24Wcae3iy7hC3DSSiZQfpP ([[zomboid-spider7-model]]). To republish from another session, pass the url and copy those files the same way.
+- The room uses game block coordinates (31x22x7, partition at x20, den beyond, pillars, lit end at x3, ledge). The doorway is 4 wide (z 9-13) and 3.5 high so the 3.7 m creature fits on screen. The ledge is 2 deep.
+- The GLB is in cm (scaled 0.01), head +z, no root motion. Walk is 0.8 m/s native and run 3.03 m/s (from SpiderAnimator).
+- Each step is an async script on a pausable clock that is cancelled when the step changes. Actors use yaw and pitch (-90 is up a wall, -180 is on the ceiling). Pillars and the partition fade when they block the view. A side panel shows its goal, plan, choice about you, memory, hunger and health.
+- To test headless: serve a copy with the importmap pointed at a local npm three@0.160.0 and use Playwright with SwiftShader. Clamp dt higher, because the frame rate is low.
+- v2 (2026-10-30 02:40): port of SpiderIk flow in JS: rigUp() finds leg tips, shape() runs after mixer (unshape() restores touched bones first). It does ahead-reach (raycast vs `solids`), spin lead/lag on def_spine_1/def_tail_1, tuck (feet in 0.5, sink 0.7, torso 0.9, tail -0.8) and CCD leg IK. glow('off') and tuck(v) are used by the steps. Test harness: scratchpad climb3.js (shots when tuck > threshold).
+- v5 (2026-10-30 03:20): Josiah said the attack/walk-back clips don't work, then (03:07) "the drag needs to be more dragging it along the ground and the feed needs to be pulling it up to its mouth". Now procedural in web and game. Drag: Attack_6 lunge, then it walks FORWARD, bowed 0.5 and sunk 0.25, the zombie on its back with feet on the floor at body z -0.65 (HELD_FEET), yaw +180, tipped DRAG_LEAN 1.22 rad so its head is up at the hands. Feed: feedLean() hauls it to FEED_UP 0.45 rad, holds, lowers to FEED_LOW 1.12 (4.5 s cycle); neck dips 0.45*up to meet it. Arms on shoulders, scythes round sides crossing the chest, claws at waist: clutch() + reachChain() CCD on 6 chains, targets on the body via top/down/out. Game: SpiderIk sets e.heldLean, HarvestmanEntity.HELD sync + holderOf(), WalkerRenderer.held() tips the zombie about its feet. A held player still hangs upright at GRIP. Test: scratchpad feed.js (NOGRAB=1, three angles).
+- v6 (03:25): Josiah: "dragging is good"; feed must bring the victim "to the edge of its skull, not through its body". Feed now draws the body's feet up ahead (FEED_FEET 0.6, linear FEET_SPEED 1.2 m/s, server heldFeet and SpiderIk feetZ both), FEED_LOW 1.0 / FEED_UP 0.44, so the head rises in front to the skull's front edge (skull front measured at z~1.03 y~1.22 while feeding). Rage scream (04:12): Josiah picked two takes; AUDIO owns creature.harvestman.rage (16297dc04). rage() plays HarvestmanSounds.RAGE via playTake(), alternating takes strictly by seeding the packet (RandomSource.create(seed).nextInt(2) == take).
+
+Lesson (2026-10-30 11:18, fix in playtest fde3624): body vanished (legs only) whenever it stood still. SpiderIk's spin used AxisAngle4f on conj(last)*now; with no axis part and |q| a hair under 1 it returned a zero axis with angle ~7e-4, normalize() gave NaN and spin stayed NaN, killing every bone the spine/tail lead. Now axis/angle via atan2(|v|,w), skip |v|<1e-6, zero a non-finite spin. Never normalize an AxisAngle4f axis unchecked.
+
+OFF FOR FRAME RATE (Josiah 2026-11-01 06:59, "get rid of it for now"): config performance.harvestman (default false) gates it; director returns early, entities discard themselves, spawn command says it's off, save data kept (playtest 0ef0cb27e). Keep that gate in any later Harvestman work. When it returns: SpiderDraw.submit has no shadow-pass path (draws 18k tris + both glow passes in Photon's shadow pass); use ZDetail.shadowPass() to skip glow and draw a cheap version there.

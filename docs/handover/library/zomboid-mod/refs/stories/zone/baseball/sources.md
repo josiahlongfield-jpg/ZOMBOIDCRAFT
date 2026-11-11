@@ -1,0 +1,14 @@
+# stories/zone/baseball
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-sandlot-baseball-loc-27855926953.jpg | [Sandlot baseball LOC 27855926953.jpg](https://commons.wikimedia.org/wiki/File:Sandlot_baseball_LOC_27855926953.jpg) | The Library of Congress | Public domain | Bain News Service,, publisher. Sandlot baseball [1918] 1 negative : glass ; 5 x 7 in. or smaller. Notes:  Title from unverified data provide |
+| 02-imageedit-1-7469423736.jpg | [Imageedit 1 7469423736.jpg](https://commons.wikimedia.org/wiki/File:Imageedit_1_7469423736.jpg) | New York Journal American Daily News | Public domain | annual hearst classic baseball 1951 Caption: far left John Malangone J.A. All Stars, center Al Kaline accepting MVP award |
+| 03-sandlot-baseball-lccn2014707485.jpg | [Sandlot baseball LCCN2014707485.tif](https://commons.wikimedia.org/wiki/File:Sandlot_baseball_LCCN2014707485.tif) | Bain News Service, publisher | Public domain | Title: Sandlot baseball Abstract/medium: 1 negative : glass ; 5 x 7 in. or smaller. |
+| 04-joseph-j-o-donnell-baseball-field-at-harvard-university.jpg | [Joseph J. O'Donnell baseball field at Harvard University.jpg](https://commons.wikimedia.org/wiki/File:Joseph_J._O%27Donnell_baseball_field_at_Harvard_University.jpg) | Kenneth C. Zirkel | CC BY-SA 4.0 | Joseph J. O'Donnell baseball field at Harvard University |
+| 05-red-hook-park-td-2024-09-14-084-baseball-field-9.jpg | [Red Hook Park td (2024-09-14) 084 - Baseball Field 9.jpg](https://commons.wikimedia.org/wiki/File:Red_Hook_Park_td_(2024-09-14)_084_-_Baseball_Field_9.jpg) | Tdorante10 | CC BY-SA 4.0 | Looking from the mound towards the backstop of Baseball Field 9 near the south end of Red Hook Park (Red Hook Recreation area), near Gowanus |
+| 06-lawnwood-sports-complex-fl-td-2022-02-20-019-baseball-field.jpg | [Lawnwood Sports Complex FL td (2022-02-20) 019 - Baseball Field 4.jpg](https://commons.wikimedia.org/wiki/File:Lawnwood_Sports_Complex_FL_td_(2022-02-20)_019_-_Baseball_Field_4.jpg) | Tdorante10 | CC BY-SA 4.0 | Inside Baseball Field 4 of the John B. Park Sports Complex, a.k.a. the Lawnwood Sports Complex, at Virginia Avenue and S 19th Street in Fort |
+| 07-the-player-s-bench-133226269.jpg | [The player's bench (133226269).jpg](https://commons.wikimedia.org/wiki/File:The_player%27s_bench_(133226269).jpg) | OiMax | CC BY 2.0 | Tokyo Dome, Japan |
+| 08-rays-staff-in-dugout-7183549374.jpg | [Rays staff in dugout (7183549374).jpg](https://commons.wikimedia.org/wiki/File:Rays_staff_in_dugout_(7183549374).jpg) | Keith Allison: Flickr, e-mail, Twitter, Instagram, website | CC BY-SA 2.0 | Tampa Bay Rays manager Joe Maddon (left), pitching coach Jim Hickey (center) and bench coach Dave Martinez (right) watch a game between the  |

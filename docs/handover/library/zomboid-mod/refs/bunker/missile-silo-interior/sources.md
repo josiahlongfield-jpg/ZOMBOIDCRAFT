@@ -1,0 +1,11 @@
+# bunker/missile-silo-interior
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-missile-transfer-building-interior-sscbm-open-bottom-of-miss.jpg | [Missile transfer building, interior, SSCBM open, bottom of missile vis](https://commons.wikimedia.org/wiki/File:Missile_transfer_building,_interior,_SSCBM_open,_bottom_of_missile_visible_-_Ellsworth_Air_Force_Base,_Delta_Flight,_Missile_Roll_Transfer_Building,_920_Kennedy_Road,_Interior,_Jackson_HAER_SD-50-D-4.tif) |  | Public domain | Wegman-French, Lysa, transmitter; Lyon, Robert, photographer |
+| 02-minuteman-silo-interior-march-1961-looking-down-a-silo-edwar.jpg | [MINUTEMAN SILO INTERIOR (MARCH 1961). Looking down a silo. - Edwards A](https://commons.wikimedia.org/wiki/File:MINUTEMAN_SILO_INTERIOR_(MARCH_1961)._Looking_down_a_silo._-_Edwards_Air_Force_Base,_Air_Force_Rocket_Propulsion_Laboratory,_Missile_Silo_Type,_Test_Area_1-100,_northeast_end_HAER_CAL,15-BORON.V,4A-1.tif) |  | Public domain |  |
+| 03-missile-label-ellsworth-air-force-base-delta-flight-launch-f.jpg | [Missile label - Ellsworth Air Force Base, Delta Flight, Launch Facilit](https://commons.wikimedia.org/wiki/File:Missile_label_-_Ellsworth_Air_Force_Base,_Delta_Flight,_Launch_Facility,_On_County_Road_T512,_south_of_Exit_116_off_I-90,_Interior,_Jackson_County,_SD_HAER_SD-50-C-12.tif) |  | Public domain | Hess, Roise and Company, contractor; Wegman-French, Lysa, transmitter; Lyon, Robert, photographer; Lauber, John F, historian |
+| 04-titan-ii-missile-silo.jpg | [Titan II Missile Silo.jpg](https://commons.wikimedia.org/wiki/File:Titan_II_Missile_Silo.jpg) | JoannaPoe | CC BY-SA 4.0 | The Titan Missile Museum, also known as Air Force Facility Missile Site 8 or Titan II ICBM Site 571-7, is a former ICBM site located about 4 |
+| 05-titan-missile-41980404201.jpg | [Titan Missile (41980404201).jpg](https://commons.wikimedia.org/wiki/File:Titan_Missile_(41980404201).jpg) | Mike McBey | CC BY 2.0 | Looking downwards into the silo of a (genuine) Titan II Missile.   Needless to say it's de-commissioned and part of the Titan Missile Museum |

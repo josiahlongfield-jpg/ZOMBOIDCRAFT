@@ -1,0 +1,14 @@
+# coast/boardwalk-arcade
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-ocean-city-boardwalk-31.jpg | [Ocean City Boardwalk 31.jpg](https://commons.wikimedia.org/wiki/File:Ocean_City_Boardwalk_31.jpg) | APK | CC BY-SA 4.0 | The Playland arcade on the boardwalk in Ocean City, Maryland. |
+| 02-ocean-city-boardwalk-26.jpg | [Ocean City Boardwalk 26.jpg](https://commons.wikimedia.org/wiki/File:Ocean_City_Boardwalk_26.jpg) | APK | CC BY-SA 4.0 | The Sportland arcade on the boardwalk in Ocean City, Maryland. |
+| 03-ocean-city-boardwalk-32.jpg | [Ocean City Boardwalk 32.jpg](https://commons.wikimedia.org/wiki/File:Ocean_City_Boardwalk_32.jpg) | APK | CC BY-SA 4.0 | The Playland arcade on the boardwalk in Ocean City, Maryland. |
+| 04-church-of-st-mary-swaffham-prior-cambridgeshire-219896987.jpg | [Church of St Mary Swaffham Prior Cambridgeshire (219896987).jpg](https://commons.wikimedia.org/wiki/File:Church_of_St_Mary_Swaffham_Prior_Cambridgeshire_(219896987).jpg) | David from Colorado Springs, United States | CC BY 2.0 | Of those Cambridgeshire villages that once had two churches standing within one churchyard to serve separate ecclesiastical parishes, only S |
+| 05-church-of-st-mary-swaffham-prior-cambridgeshire-219896437.jpg | [Church of St Mary Swaffham Prior Cambridgeshire (219896437).jpg](https://commons.wikimedia.org/wiki/File:Church_of_St_Mary_Swaffham_Prior_Cambridgeshire_(219896437).jpg) | David from Colorado Springs, United States | CC BY 2.0 | Of those Cambridgeshire villages that once had two churches standing within one churchyard to serve separate ecclesiastical parishes, only S |
+| 06-church-of-st-mary-swaffham-prior-cambridgeshire-219896609.jpg | [Church of St Mary Swaffham Prior Cambridgeshire (219896609).jpg](https://commons.wikimedia.org/wiki/File:Church_of_St_Mary_Swaffham_Prior_Cambridgeshire_(219896609).jpg) | David from Colorado Springs, United States | CC BY 2.0 | Of those Cambridgeshire villages that once had two churches standing within one churchyard to serve separate ecclesiastical parishes, only S |
+| 07-seaside-amusements-hornsea-geograph-org-uk-5545177.jpg | [Seaside Amusements, Hornsea - geograph.org.uk - 5545177.jpg](https://commons.wikimedia.org/wiki/File:Seaside_Amusements,_Hornsea_-_geograph.org.uk_-_5545177.jpg) | Graham Robson | CC BY-SA 2.0 | Seaside Amusements, Hornsea |
+| 08-arcade-seaside-park-new-jersey-lccn2017709053.jpg | [Arcade, Seaside Park, New Jersey LCCN2017709053.tif](https://commons.wikimedia.org/wiki/File:Arcade,_Seaside_Park,_New_Jersey_LCCN2017709053.tif) | John Margolies | Public domain | Title: Arcade, Seaside Park, New Jersey Physical description: 1 photograph : color transparency ;  35 mm (slide format).  Notes: Forms part  |

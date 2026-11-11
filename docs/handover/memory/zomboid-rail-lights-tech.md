@@ -1,0 +1,19 @@
+---
+name: zomboid-rail-lights-tech
+description: ZomboidCraft gun laser and torch (RailLights, Photon rules), full-auto fire mode, hip-aim solver, gunlook in-game screenshot branch
+metadata:
+  type: project
+---
+
+- Rail gear: laser has Slot.RIGHT_RAIL (last in enum so model keys hold), light on SIDE_RAIL. L = light (GunState.RAIL_ON), J = laser (GunState.LASER_ON). GunRig lens points laser, light, quietMuzzle.
+- RailLights draws laser and light in Fabric LevelRenderEvents.COLLECT_SUBMITS via submitCustomGeometry; lens points spread by tan(fov/2)/tan(hud/2). Light shines down held.bore() (never bent to the crosshair; RifleView points a light-only gun at guns.lightZero blocks).
+- Photon facts (read from its source, 2026-10-26): beacon-beam pipeline = solid emissive program that DISCARDS alpha<0.5; spidereyes (eyes) has blend off, and vanilla 26.3 eyes blends translucent, so glow keeps full RGB with alpha = strength. Under shaders the laser uses beaconBeam(GLOW,false): solid dot + 'dust' specks for the beam. Josiah 09:54: laser is "perfect".
+- Torch world light = client-only light blocks: middle one where it lands (lightLevel 13, -1 per 8 blocks, min 5), faint trail, plus RailLights.spread: lightRays 14 rays in two rings across lightSpread 22 deg, each a light where it lands (Josiah 09:00: it only lit one small patch). A true smooth cone needs a light-value hook, not attempted.
+- Full auto (Josiah 09:49): GunStats.selectFire (assault rifle true), autoRoundsPerMinute 800, autoRecoil 0.7; GunState.FULL_AUTO; key X; CombatNet.Action.FIRE_MODE=8. Guns.nextAuto gives a fractional-tick schedule; client fires when now >= next-0.5, server allows now >= next-1. Client stops a held burst after the rounds seen at trigger-down.
+- Hip aim (Josiah 09:33): weapons.py aim_hip() solves hip_turn pitch/yaw (roll kept) so the bore meets the view centre HIP_AIM = 2.7 blocks out, matching the rifle and pistol he likes. New guns: pass hip_aim=HIP_AIM in FirstPerson and call aimed() before write_gun.
+- Suppressed flash: kit.quiet_flash sizes from the can's radius; a flash past the -16 model limit gets <name>_loose.json shifted inside with display.fixed translation back out (RifleView draws loose pieces with FIXED).
+- In-game check: branch `gunlook` (test only, never merge): CI client gametest, shots to branch gunlook-shots.
+- 2026-10-26 23:30 (Josiah RULE): every automatic gun, present and future, has its OWN steady rate (ZcConfig autoRpm per GunStats; AR 700, SMG 950; SMGs faster than rifles). Client full auto now runs per frame on the wall clock (CombatClient.autoFire from COLLECT_SUBMITS, autoNextMs), server allows 2 ticks slack. Tick-based timing made 800 rpm uneven (1/2 tick gaps).
+- Impacts (same day): combat/Impacts S2C packet (HOLE/BLOOD/SPLASH) -> client/combat/ImpactFx: face decals trimmed to the block (textures/effect/impacts.png from tools/fx/impacts_tex.py), block dust/chips/metal sparks, flying blood-drop cubes that spot what they land on. Config guns.bulletHoles/bulletHoleSeconds/bloodSplatter/bloodSeconds/maxDecals.
+- Beams from OTHER players (and own shoulder cam), 2026-10-27 Josiah: used to start at a fixed LASER_OUTSIDE spot by the eyes (looked like it came out of the body). Now weapons.py writes HoldPoseData.LENS (laser+light lens per gun, ready/aim, gun-arm frame via poses.arm_local); HoldPoses.apply transforms them with the arm matrix and calls RailLights.seen(state,...) which stores a feet-relative world offset. RailLights.held uses it while < 250 ms old, else the old fallback. Beam still turns to what the player looks at.
+- Suppressors (Josiah 10-27 08:27, sneaking): guns.suppressedNoise 0.1 (was 0.3), suppressedVolume 0.7; hip spread at rest AR 1.8, SMG 1.3, crossbow 1.8, M9 1.5, lever 1.9 (40% tighter); ZcConfig step 4. Steps are shared by every thread: check playtest's DEFAULTS before picking a number (3 = zombie detail, 5 = shoulder cam).

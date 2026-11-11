@@ -1,0 +1,11 @@
+# building/wood/wooden-stairs
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 05-staircase-second-presbyterian-church-michigan-avenue-near-so.jpg | [Staircase, Second Presbyterian Church, Michigan Avenue, Near South Sid](https://commons.wikimedia.org/wiki/File:Staircase,_Second_Presbyterian_Church,_Michigan_Avenue,_Near_South_Side,_Chicago,_IL.jpg) | w_lemay | CC BY-SA 2.0 | Built in 1874, this Gothic Revival-style building was designed by James Renwick and Joseph Sands, and houses the congregation of Second Pres |
+| 06-steps-leading-to-the-front-porch-of-the-elige-hicks-family-t.jpg | [Steps leading to the front porch of the Elige Hicks family. These step](https://commons.wikimedia.org/wiki/File:Steps_leading_to_the_front_porch_of_the_Elige_Hicks_family._These_steps_are_in_such_bad_condition_that_the_carpenter..._-_NARA_-_541042.tif) | Russell Lee | Public domain |  |
+| 07-steps-leading-to-the-front-porch-of-the-elige-hicks-family-t.jpg | [Steps leading to the front porch of the Elige Hicks family. These step](https://commons.wikimedia.org/wiki/File:Steps_leading_to_the_front_porch_of_the_Elige_Hicks_family._These_steps_are_in_such_bad_condition_that_the_carpenter..._-_NARA_-_541042.jpg) | Russell Lee | Public domain |  |
+| 08-oppdalsmuseet-bygdemuseum-skj-rstad-stuggu-laft-t-mmerhus-17.jpg | [Oppdalsmuseet Bygdemuseum Skjørstad-stuggu Laft tømmerhus 17c.–19c. Lo](https://commons.wikimedia.org/wiki/File:Oppdalsmuseet_Bygdemuseum_Skj%C3%B8rstad-stuggu_Laft_t%C3%B8mmerhus_17c.%E2%80%9319c._Log_house_cottage_Tram_Inngangsparti_Porch_D%C3%B8r_Door_Solur_Sundial_Skifer_Slate_etc_Oppdal_Tr%C3%B8ndelag_Norway_2019-04-10_3415.jpg) | Wolfmann | CC BY-SA 4.0 | Skjørstadstuggu, a log house and farm cottage build in steps from the 17th to the 19th century, now re-erected at The Oppdal Museum (in Norw |
+| 09-sankt-ulrich-bei-steyr-dambergwarte-treppe-9659.jpg | [Sankt Ulrich bei Steyr Dambergwarte Treppe-9659.jpg](https://commons.wikimedia.org/wiki/File:Sankt_Ulrich_bei_Steyr_Dambergwarte_Treppe-9659.jpg) | Isiwal | CC BY-SA 4.0 | The Dambergwarte in St. Ulrich bei Steyr is a wooden structure from 1972. It is 36 m high. It consists of screwed round and square timbers.  |

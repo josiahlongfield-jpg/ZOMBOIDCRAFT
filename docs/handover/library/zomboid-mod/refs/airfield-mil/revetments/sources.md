@@ -1,0 +1,12 @@
+# airfield-mil/revetments
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-f-4s-in-revetments-at-ubon-rtafb.jpg | [F-4s in revetments at Ubon RTAFB.jpg](https://commons.wikimedia.org/wiki/File:F-4s_in_revetments_at_Ubon_RTAFB.jpg) | USAF | Public domain | U.S. Air Force McDonnell F-4D Phantom II fighters of the 8th Tactical Fighter Wing in their revetments Ubon Royal Thai Air Force Base, Thail |
+| 02-can-tho-revetment-september-1967.png | [Can Tho revetment, September 1967.png](https://commons.wikimedia.org/wiki/File:Can_Tho_revetment,_September_1967.png) | Office of History, Headquarters, U.S. Army Corps of Engineers USACE LNO trip sli | Public domain | The 69th Engineer Battalion has constructed revetments of the type shown in this photograph at the Can Tho airfield |
+| 03-sand-bag-aircraft-revetment-at-mcas-ewa-circa-in-october-194.jpg | [Sand-bag aircraft revetment at MCAS Ewa, circa in October 1941 (USMC 1](https://commons.wikimedia.org/wiki/File:Sand-bag_aircraft_revetment_at_MCAS_Ewa,_circa_in_October_1941_(USMC_145144).jpg) | U.S. Marine Corps | Public domain | View of a sand-bag aircraft revetment at the U.S. Marine Corps Air Station Ewa, Territory of Hawaii, circa in October 1941. These were the f |
+| 04-phu-hiep-helicopter-revetment-july-1968.png | [Phu Hiep helicopter revetment, July 1968.png](https://commons.wikimedia.org/wiki/File:Phu_Hiep_helicopter_revetment,_July_1968.png) | Office of History, Headquarters, U.S. Army Corps of Engineers USACE LNO trip sli | Public domain | Helicopter revetment at Phu Hiep constructed by the 577th Engineer Battalion |
+| 05-blackhorse-helicopter-revetment-july-1967.png | [Blackhorse helicopter revetment, July 1967.png](https://commons.wikimedia.org/wiki/File:Blackhorse_helicopter_revetment,_July_1967.png) | Office of History, Headquarters, U.S. Army Corps of Engineers USACE LNO trip sli | Public domain | Black Horse cantonment of the 11th Armored Cavalry Regiment. The 27th Engineer Battalion has completed some of the new aircraft revetment wh |
+| 06-dong-tam-helicopter-revetments-july-1968.png | [Dong Tam helicopter revetments, July 1968.png](https://commons.wikimedia.org/wiki/File:Dong_Tam_helicopter_revetments,_July_1968.png) | Office of History, Headquarters, U.S. Army Corps of Engineers USACE LNO trip sli | Public domain | Helicopter parking facilities at the north end of Dong Tam have been completed for the 9th Infantry Division |

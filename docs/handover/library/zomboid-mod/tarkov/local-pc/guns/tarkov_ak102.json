@@ -1,0 +1,468 @@
+{
+ "id": "tarkov_ak102",
+ "name": "AK-102 (kitted)",
+ "anchor": "assault_rifle",
+ "anchorMesh": "pbr_assault_rifle",
+ "calibre": "5.56mm",
+ "suppressed": true,
+ "fp": "operator_tarkov_ak102",
+ "sight": "scope_all_valday_1p87_LOD0",
+ "reticleMoa": 152.4,
+ "reload": [
+  3.2,
+  4.833
+ ],
+ "stats": {
+  "damage": 12.0,
+  "hipSpread": 3.0,
+  "aimSpread": 0.45,
+  "recoil": 0.95,
+  "range": 100.0,
+  "fireDelayTicks": 3,
+  "magazineSize": 30,
+  "selectFire": true,
+  "autoRpm": 600.0,
+  "bloomRecover": 3.0
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "laser",
+  "light",
+  "foregrip",
+  "stock"
+ ],
+ "rail": {
+  "light": {
+   "bone": "tactical_all_zenit_2p_kleh_vis_laser_LOD0",
+   "at": [
+    -0.0001,
+    -0.0235,
+    0.0215
+   ],
+   "dir": [
+    -0.0004,
+    -1,
+    0.0004
+   ],
+   "third": [
+    -0.1797,
+    -0.0573,
+    0.635
+   ]
+  },
+  "laser": {
+   "bone": "tactical_all_zenit_2p_kleh_vis_laser_LOD0",
+   "at": [
+    0.013,
+    -0.0247,
+    0.0032
+   ],
+   "dir": [
+    -0.0004,
+    -1,
+    0.0004
+   ],
+   "third": [
+    -0.1614,
+    -0.0442,
+    0.6362
+   ]
+  }
+ },
+ "grip": "foregrip_all_zenit_b25u_rk_1_LOD0",
+ "guard": "handguard_ak_zenit_b10m_b19_LOD0",
+ "holds": {
+  "handguard_ak_zenit_b10m_b19_LOD0": {
+   "palm": [
+    0.0566,
+    0.03751,
+    -0.07217,
+    -0.25325,
+    0.17751,
+    -0.75129,
+    0.58302
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.58594,
+     -0.1487,
+     0.00521,
+     0.79658
+    ],
+    "Base HumanLDigit12": [
+     -0.17234,
+     0.10737,
+     -0.12082,
+     0.97169
+    ],
+    "Base HumanLDigit13": [
+     0.17525,
+     0.04353,
+     0.03419,
+     0.98297
+    ],
+    "Base HumanLDigit21": [
+     0.06014,
+     0.34338,
+     -0.00932,
+     0.93722
+    ],
+    "Base HumanLDigit22": [
+     0.00321,
+     0.00523,
+     -0.26182,
+     0.9651
+    ],
+    "Base HumanLDigit23": [
+     0.00011,
+     0.00058,
+     -0.30514,
+     0.95231
+    ],
+    "Base HumanLDigit31 1": [
+     -0.01314,
+     0.3395,
+     -0.1844,
+     0.92226
+    ],
+    "Base HumanLDigit32 1": [
+     -0.00652,
+     -0.0139,
+     -0.52879,
+     0.84861
+    ],
+    "Base HumanLDigit33 1": [
+     0.00237,
+     -0.05402,
+     -0.45551,
+     0.88859
+    ],
+    "Base HumanLDigit41 1": [
+     -0.15886,
+     0.37825,
+     -0.34313,
+     0.84496
+    ],
+    "Base HumanLDigit42 1": [
+     -0.0286,
+     0.00275,
+     -0.56106,
+     0.82727
+    ],
+    "Base HumanLDigit43 1": [
+     -5e-05,
+     0.00058,
+     -0.36043,
+     0.93279
+    ],
+    "Base HumanLDigit51 1": [
+     -0.32509,
+     0.32255,
+     -0.54896,
+     0.69923
+    ],
+    "Base HumanLDigit52 1": [
+     -0.07385,
+     0.08954,
+     -0.41078,
+     0.90432
+    ],
+    "Base HumanLDigit53": [
+     -0.00031,
+     0,
+     -0.24791,
+     0.96878
+    ]
+   }
+  },
+  "foregrip_all_zenit_b25u_rk_1_LOD0": {
+   "palm": [
+    -0.08975,
+    0.1015,
+    0.06084,
+    -0.59569,
+    0.6472,
+    -0.12124,
+    0.45998
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.739,
+     -0.36051,
+     -0.12666,
+     0.55486
+    ],
+    "Base HumanLDigit12": [
+     0.11988,
+     0.0027,
+     -0.27804,
+     0.95306
+    ],
+    "Base HumanLDigit": [
+     -0.00031,
+     2e-05,
+     -0.29712,
+     0.95484
+    ]
+   }
+  }
+ },
+ "tarkov": {
+  "base": "5ac66d015acfc400180ae6e4",
+  "aimPath": "/mod_reciever/mod_scope",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "5ac66d015acfc400180ae6e4",
+    "bone": "weapon_izhmash_ak102_556x45_LOD0",
+    "at": [
+     -0.156377,
+     1.412914,
+     0.397467,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ],
+    "bones": [
+     "ak102_stock_release_LO0",
+     "ak102_bolt_LOD0",
+     "ak102_hammer_LOD0",
+     "weapon_izhmash_ak74m_dovetail_LOD0",
+     "weapon_izhmash_ak74m_kolodka_LOD0",
+     "weapon_izhmash_ak102_556x45_LOD0",
+     "ak102_release_LOD0",
+     "ak102_selector_LOD0",
+     "ak102_trigger_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_gas_block",
+    "item": "59c6633186f7740cf0493bb9",
+    "bone": "gas_block_ak_izhmash_ak74_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "gas_block_ak_izhmash_ak74_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_gas_block/mod_handguard",
+    "item": "5648b4534bdc2d3d1c8b4580",
+    "bone": "handguard_ak_zenit_b10m_b19_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "handguard_ak_zenit_b10m_b19_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_gas_block/mod_handguard/mod_foregrip",
+    "item": "5c1cd46f2e22164bef5cfedb",
+    "bone": "foregrip_all_zenit_b25u_rk_1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "foregrip_all_zenit_b25u_rk_1_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_gas_block/mod_handguard/mod_tactical_002",
+    "item": "560d657b4bdc2da74d8b4572",
+    "bone": "tactical_all_zenit_2p_kleh_vis_laser_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_zenit_2p_kleh_vis_laser_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_muzzle",
+    "item": "5a9fbb84a2750c00137fa685",
+    "bone": "silencer_all_rotor_43_v2_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "silencer_all_rotor_43_v2_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5649ae4a4bdc2d1b2b8b4588",
+    "bone": "pistolgrip_ak_zenit_rk3_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "pistolgrip_ak_zenit_rk3_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5649af884bdc2d1b2b8b4589",
+    "bone": "reciever_ak_zenit_b33_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "reciever_ak_zenit_b33_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_scope",
+    "item": "5c0505e00db834001b735073",
+    "bone": "scope_all_valday_1p87_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "lenses_outside_LOD0",
+     "linza",
+     "scope_all_valday_1p87_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_sight_rear",
+    "item": "5ac72e475acfc400180ae6fe",
+    "bone": "sight_rear_ak_izhmash_ak74m_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "sight_rear_ak_izhmash_ak74m_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "5ac78eaf5acfc4001926317a",
+    "bone": "stock_ak_zenit_pt-3_lock_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "stock_ak_zenit_pt-3_lock_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock",
+    "item": "59ecc3dd86f7746dc827481c",
+    "bone": "stock_ak_zenit_pt-3_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -1e-06,
+     0.0,
+     -1e-06,
+     1.0
+    ],
+    "bones": [
+     "stock_ak_zenit_pt-3_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5ac66c5d5acfc4001718d314",
+    "bone": "mag_ak_izhmash_6L29_556x45_30_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_ak_izhmash_6L29_556x45_30_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "5648ac824bdc2ded0b8b457d",
+    "bone": "charge_ak_zenit_rp1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "charge_ak_zenit_rp1_LOD0"
+    ]
+   }
+  ]
+ }
+}

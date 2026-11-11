@@ -1,0 +1,15 @@
+# items/weapons/irons/colt-1911
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-m1911-with-aimpoint-sight.jpg | [M1911 with Aimpoint sight.jpg](https://commons.wikimedia.org/wiki/File:M1911_with_Aimpoint_sight.jpg) | Joe Loong | CC BY-SA 2.0 | Two target 1911 pistols, one with a target grip, and one with a mounted Aimpoint sight. |
+| 03-colt-m1911-cross-section-diagram.jpg | [Colt M1911 cross-section diagram.jpg](https://commons.wikimedia.org/wiki/File:Colt_M1911_cross-section_diagram.jpg) | U.S. Army Ordnance Department | Public domain | Cross-section diagram of U.S. Army Colt Model 1911 semi-automatic pistol ("Automatic Pistol, Caliber .45, Model of 1911") as shown in offici |
+| 04-m1911a1-pistol-belt-holster-magazine-pocket-nhhc-1968-141-pi.jpg | [M1911A1 Pistol, Belt, Holster, Magazine Pocket (NHHC 1968-141) (Pistol](https://commons.wikimedia.org/wiki/File:M1911A1_Pistol,_Belt,_Holster,_Magazine_Pocket_(NHHC_1968-141)_(Pistol_only).jpg) | Unidentified US Naval History and Heritage Command photographer | Public domain | US Army-contract M1911A1 pistol as issued to US Navy Captain Victor Antoine Moitoret. The M1911A1 Pistol is recoil-operated and semi-automat |
+| 05-m1911a1.png | [M1911A1.png](https://commons.wikimedia.org/wiki/File:M1911A1.png) | M62 | CC BY-SA 3.0 | A Remington-made M1911A1 sidearm in August 2007. |
+| 06-pistol-colt-m1911-handgun-owned-by-elvis-presley-displayed-i.jpg | [Pistol Colt M1911, handgun owned by Elvis Presley displayed in Elvis c](https://commons.wikimedia.org/wiki/File:Pistol_Colt_M1911,_handgun_owned_by_Elvis_Presley_displayed_in_Elvis_collection_in_Graceland_(Memphis).jpg) | Bjoertvedt | CC BY-SA 4.0 | From the Collection of personal belongings at Elvis Presley Mansion, Graceland (Memphis). |
+| 07-m1911-and-m1911a1-pistols.jpg | [M1911 and M1911A1 pistols.JPG](https://commons.wikimedia.org/wiki/File:M1911_and_M1911A1_pistols.JPG) | Dkamm at English Wikipedia | Public domain | Comparison of government-issue M1911 and M1911A1 pistols. |
+| 08-jgsdf-m1911-colt-government-20120422.jpg | [JGSDF M1911 Colt Government 20120422.jpg](https://commons.wikimedia.org/wiki/File:JGSDF_M1911_Colt_Government_20120422.jpg) | Crescent moon at Japanese Wikipedia | CC BY 3.0 | ja:山形県ja:東根市ja:神町駐屯地の防衛館(史料館)で展示されている11.4mm拳銃 |
+| 09-colt-m1911-pistol-from-1912-army-manual.png | [Colt M1911 Pistol from 1912 Army manual.png](https://commons.wikimedia.org/wiki/File:Colt_M1911_Pistol_from_1912_Army_manual.png) | U.S. Army, Ordnance Department | Public domain | Side view of original Colt M1911 pistol ("Automatic Pistol, Caliber .45, Model of 1911") as shown in the U.S. Army's 1912 manual for the pis |
+| 10-jgsdf-m1911-colt-government-20100418.jpg | [JGSDF M1911 Colt Government 20100418.JPG](https://commons.wikimedia.org/wiki/File:JGSDF_M1911_Colt_Government_20100418.JPG) | Crescent moon | CC BY 3.0 | ja:山形県ja:東根市ja:神町駐屯地史料館で展示されている11.4mm拳銃 |

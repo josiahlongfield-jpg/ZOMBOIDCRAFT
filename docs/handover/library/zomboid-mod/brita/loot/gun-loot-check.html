@@ -1,0 +1,196 @@
+<title>Gun Loot Check</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one armoury ledger column; a wide gun-by-place matrix in its own scroller; decisions at the foot with a copyable review. */
+:root{
+  --bg:#eceae4; --panel:#f7f6f2; --ink:#1f2326; --soft:#5b6166; --line:#cfcbc1; --steel:#3c4a55; --brass:#9a7417;
+  --r-c:#8a826c; --r-s:#5f7330; --r-r:#2f6aa3; --r-p:#a3392f; --r-g:#a07a12;
+  --home:#2d5d3a; --cross:#9a7417; --foreign:#7a7f84;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#16191b; --panel:#1f2326; --ink:#e7e4dc; --soft:#a3a7aa; --line:#353a3e; --steel:#9db3c4; --brass:#d7ad47;
+  --r-c:#d8cfb6; --r-s:#a8bc6e; --r-r:#7faedb; --r-p:#d0675e; --r-g:#e2b84c; --home:#7cc28f; --cross:#d7ad47; --foreign:#8e959a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#16191b; --panel:#1f2326; --ink:#e7e4dc; --soft:#a3a7aa; --line:#353a3e; --steel:#9db3c4; --brass:#d7ad47;
+  --r-c:#d8cfb6; --r-s:#a8bc6e; --r-r:#7faedb; --r-p:#d0675e; --r-g:#e2b84c; --home:#7cc28f; --cross:#d7ad47; --foreign:#8e959a; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px}
+main{max-width:1060px;margin:0 auto;display:grid;gap:34px}
+h1,h2{font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;text-wrap:balance;margin:0}
+h1{font-size:2.6rem;line-height:1}
+h2{font-size:1.5rem;color:var(--steel);border-bottom:2px solid var(--line);padding-bottom:6px}
+p{margin:0;max-width:68ch}
+.lede{display:grid;gap:10px}
+.tag{font:500 .78rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--brass)}
+section{display:grid;gap:14px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:grid;gap:8px;min-width:0}
+.box h3{margin:0;font:600 1rem var(--body)}
+ul{margin:0;padding-left:18px;display:grid;gap:3px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:400 .8rem var(--mono);border:1px solid var(--line);border-radius:3px;padding:1px 7px;background:var(--bg)}
+.chip.out{text-decoration:line-through;color:var(--soft)}
+.chip.keep{border-color:var(--home);color:var(--home)}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+table{border-collapse:collapse;font-size:.86rem;width:100%}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+thead th{font:600 .72rem var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--soft);position:sticky;top:0;background:var(--panel)}
+th.pl{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;height:150px;padding:6px 4px;text-align:left}
+td.m{text-align:center;font-size:1.05rem;width:30px;padding:4px 2px}
+.home{color:var(--home)} .cross{color:var(--cross)} .foreign{color:var(--foreign)}
+tr.cat td{font:600 .78rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--steel);background:var(--bg)}
+.gname{font-weight:500} .gsub{font:400 .75rem var(--mono);color:var(--soft)}
+.built{font:500 .68rem var(--mono);color:var(--home);border:1px solid var(--home);border-radius:3px;padding:0 4px;margin-left:4px}
+select{font:500 .82rem var(--body);padding:3px 4px;border-radius:3px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+select[data-r="C"]{color:var(--r-c)} select[data-r="S"]{color:var(--r-s)} select[data-r="R"]{color:var(--r-r)} select[data-r="P"]{color:var(--r-p)} select[data-r="G"]{color:var(--r-g)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-size:.86rem;color:var(--soft)}
+.legend b{font-size:1rem}
+.q{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:grid;gap:8px}
+.q h3{margin:0;font:600 1rem var(--body)}
+.q label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.q input{margin-top:5px}
+.rec{font:500 .7rem var(--mono);color:var(--brass);margin-left:6px;text-transform:uppercase}
+textarea{width:100%;min-height:90px;font:14px/1.5 var(--body);padding:8px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--ink);box-sizing:border-box}
+button{font:600 1rem var(--display);letter-spacing:.06em;text-transform:uppercase;padding:10px 20px;border:0;border-radius:3px;background:var(--steel);color:var(--panel);cursor:pointer;justify-self:start}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+#out{font:13px/1.5 var(--mono);white-space:pre-wrap;background:var(--panel);border:1px dashed var(--line);padding:10px;border-radius:4px}
+.scale{display:flex;flex-wrap:wrap;gap:8px}
+.scale span{font:500 .85rem var(--mono);padding:3px 8px;border-radius:3px;border:1px solid var(--line);background:var(--panel)}
+</style>
+
+<main>
+  <header class="lede">
+    <div class="tag">Brita weapons · check before building</div>
+    <h1>Gun Loot Check</h1>
+    <p>Two jobs in one build: our old guns, their attachments and their sounds leave the game, and the Brita guns start turning up in the world where Arsenal’s own loot file puts them, with our Common to Grail rarity on top. Nothing is built yet. Check the lists, set any rarity you disagree with, answer the five questions at the bottom, then press Copy review and paste it to me.</p>
+  </header>
+
+  <section>
+    <h2>What leaves the game</h2>
+    <div class="cols">
+      <div class="box">
+        <h3>18 of our guns</h3>
+        <div class="chips" id="gunsOut"></div>
+        <p class="gsub">Stays: <span class="chip keep">Heavy Sniper Rifle</span> (the Intervention look) with its own long-range scope, sniper suppressor, bipod, magazine, .50 rounds and sounds. The Warthog’s mounted minigun is a car gun, so it stays too (question 5).</p>
+      </div>
+      <div class="box">
+        <h3>24 of our attachments</h3>
+        <div class="chips" id="attOut"></div>
+      </div>
+      <div class="box">
+        <h3>Magazines, rounds and sounds</h3>
+        <ul>
+          <li>Plain magazines for the 18 guns leave loot. Brita guns keep their own magazines.</li>
+          <li>Rounds stay where a Brita gun or the Heavy Sniper fires them (9mm, 5.56, .308, .38, .44, .380, .22, 12 gauge, .50, bolts, and the Brita rounds). <b>.30-30</b> and <b>40mm grenades</b> leave, since nothing fires them now.</li>
+          <li>Every gunshot, reload and handling sound of the 18 guns leaves the jar. Kept: the Heavy Sniper’s, the minigun’s, and the shared bullet-hit and casing sounds.</li>
+          <li>Where the Brita sound pack lacks a sound (dry fire, some reload clicks), the gun goes quiet for that action until I fill it from your PC.</li>
+          <li>Copies already in your worlds are taken away (question 4). Gun cases found from now on hold Brita guns, by Arsenal’s case lists.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Where Arsenal puts guns, and our places for each</h2>
+    <p>Arsenal sorts every container in Zomboid into six sources: civilian, police, military, security, hunting and surplus. Each gun has home sources where it drops at its full rate, and some where it only crosses over at a reduced rate (Arsenal’s “LEO in civilian”, “military in police” and similar settings). These are our places for each of its lists:</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Our places</th><th>Arsenal list</th><th>What changes in our world</th></tr></thead>
+      <tbody id="placeRows"></tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Each gun: where it drops and how rare</h2>
+    <div class="legend">
+      <span><b class="home">●</b> home: full rate</span>
+      <span><b class="cross">◐</b> crosses over: reduced rate</span>
+      <span><b class="foreign">○</b> army only if the military is set to its country</span>
+      <span>blank: never</span>
+    </div>
+    <div class="scale" id="scale"></div>
+    <div class="scroll"><table>
+      <thead><tr id="mhead"><th>Gun</th><th>Rarity</th></tr></thead>
+      <tbody id="mbody"></tbody>
+    </table></div>
+    <p class="gsub">14 guns are built and marked <span class="built">IN GAME</span>. The other 27 picks join these lists the moment each one is built; nothing here needs redoing. The marks come straight from Arsenal’s file. The Heavy Sniper takes the places of Arsenal’s CheyTac .50.</p>
+  </section>
+
+  <section>
+    <h2>Five questions</h2>
+    <div id="qs" style="display:grid;gap:12px"></div>
+    <div class="q">
+      <h3>Anything else</h3>
+      <textarea id="notes" placeholder="Corrections, places I missed, a gun that should never drop somewhere…"></textarea>
+    </div>
+    <button id="copy" type="button">Copy review</button>
+    <div id="out" hidden></div>
+  </section>
+</main>
+
+<script>
+const DATA = {"places": [["gunshop", "Gun shops"], ["pawn", "Pawn shops"], ["police", "Police, sheriff and prison armouries; police cars"], ["swat", "SWAT vans"], ["army", "Army armouries, military crates and trucks"], ["security", "Security offices"], ["hunting", "Hunting: farms, hunters\u2019 pickups"], ["surplus", "Survivalists: bunkers, prepper cellars, their cars"], ["storage", "Storage units (rare)"], ["case", "Gun cases in homes, garages, glove boxes"], ["ccw", "Civilian dead: handgun in a purse or bum bag"], ["worn", "Police and army dead: slung or holstered"]], "guns": [{"id": "Colt1911", "name": "Colt M1911", "cal": ".45 ACP", "cat": "Pistols", "built": true, "rar": "C", "places": {"gunshop": "home", "pawn": "home", "police": "home", "swat": "home", "army": "home", "security": "home", "hunting": "home", "surplus": "home", "storage": "home", "case": "home", "ccw": "home", "worn": "home"}}, {"id": "Automag", "name": ".44 Auto Mag Pistol", "cal": ".44 Mag", "cat": "Pistols", "built": false, "rar": "P", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "no", "security": "cross", "hunting": "home", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "G17", "name": "Glock 17 Pistol", "cal": "9mm", "cat": "Pistols", "built": false, "rar": "C", "places": {"gunshop": "home", "pawn": "home", "police": "home", "swat": "home", "army": "home", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "home", "worn": "home"}}, {"id": "HK_USP", "name": "H&K USP", "cal": ".45 ACP", "cat": "Pistols", "built": false, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "home", "swat": "home", "army": "no", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "home", "worn": "no"}}, {"id": "Colt1903", "name": "Colt 1903", "cal": ".380", "cat": "Pistols", "built": false, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "no", "army": "no", "security": "cross", "hunting": "cross", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "SW_M500", "name": "S&W Model 500 w/10\" bbl", "cal": ".50 AE", "cat": "Revolvers", "built": true, "rar": "R", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "no", "security": "cross", "hunting": "home", "surplus": "home", "storage": "home", "case": "no", "ccw": "no", "worn": "no"}}, {"id": "SW_327", "name": "S&W M327 (38 Spc)", "cal": ".38 Spl", "cat": "Revolvers", "built": false, "rar": "R", "places": {"gunshop": "home", "pawn": "home", "police": "home", "swat": "home", "army": "no", "security": "cross", "hunting": "home", "surplus": "cross", "storage": "home", "case": "no", "ccw": "no", "worn": "no"}}, {"id": "Colt_Service38", "name": "Colt New Service Revolver", "cal": ".38 Spl", "cat": "Revolvers", "built": false, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "home", "swat": "home", "army": "no", "security": "cross", "hunting": "cross", "surplus": "home", "storage": "home", "case": "no", "ccw": "no", "worn": "no"}}, {"id": "AR57_PDW", "name": "AR-57 PDW (16\"bbl)", "cal": "5.7x28", "cat": "SMGs and PDWs", "built": true, "rar": "R", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "no", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "no", "ccw": "no", "worn": "no"}}, {"id": "AUG9", "name": "Steryr AUG 9mm", "cal": "9mm", "cat": "SMGs and PDWs", "built": false, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "home", "swat": "home", "army": "foreign", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "CAR15SMG", "name": "Colt CAR-15 SMG", "cal": "5.56", "cat": "SMGs and PDWs", "built": false, "rar": "R", "places": {"gunshop": "cross", "pawn": "cross", "police": "home", "swat": "home", "army": "home", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "no", "ccw": "no", "worn": "home"}}, {"id": "MP7", "name": "H&K MP7", "cal": "9mm", "cat": "SMGs and PDWs", "built": false, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "home", "swat": "home", "army": "foreign", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "UZI", "name": "IMI UZI", "cal": "9mm", "cat": "SMGs and PDWs", "built": false, "rar": "R", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "foreign", "security": "home", "hunting": "cross", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "M2Carbine", "name": "M2 Carbine", "cal": "9mm", "cat": "Pistol-calibre carbines", "built": true, "rar": "S", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "no", "security": "cross", "hunting": "cross", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "AAC_Honey", "name": "AAC Honey Badger", "cal": "5.56", "cat": "Assault rifles and carbines", "built": true, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "home", "swat": "home", "army": "home", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "no", "ccw": "no", "worn": "no"}}, {"id": "Bush_AR15_MOE", "name": "BushMaster AR15 MOE", "cal": "5.56", "cat": "Assault rifles and carbines", "built": false, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "home", "swat": "home", "army": "no", "security": "home", "hunting": "cross", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "AK47", "name": "AK-47 Assault Rifle", "cal": "7.62x39", "cat": "Assault rifles and carbines", "built": false, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "foreign", "security": "home", "hunting": "cross", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "F2000", "name": "FN F2000 Tactical", "cal": "5.56", "cat": "Assault rifles and carbines", "built": false, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "no", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "G36C", "name": "H&K G36-C Rifle", "cal": "5.56", "cat": "Assault rifles and carbines", "built": false, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "home", "swat": "home", "army": "foreign", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "SCARL", "name": "FN SCAR-L", "cal": "5.56", "cat": "Assault rifles and carbines", "built": false, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "home", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "AssaultRifle2", "name": "M14 Rifle", "cal": ".308", "cat": "Battle rifles and marksman rifles", "built": true, "rar": "R", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "home", "security": "cross", "hunting": "cross", "surplus": "home", "storage": "home", "case": "no", "ccw": "no", "worn": "home"}}, {"id": "FAL", "name": "FN FAL 50.00", "cal": ".308", "cat": "Battle rifles and marksman rifles", "built": false, "rar": "R", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "foreign", "security": "home", "hunting": "cross", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "SCARH", "name": "FN SCAR-H", "cal": ".308", "cat": "Battle rifles and marksman rifles", "built": false, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "home", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "M1", "name": "M1 Garand Rifle", "cal": ".30-06", "cat": "Battle rifles and marksman rifles", "built": false, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "no", "security": "cross", "hunting": "home", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "BOAR", "name": "LAR Grizzly Big Boar .50 BMG Rifle", "cal": ".50 BMG", "cat": "Sniper and bolt-action rifles", "built": true, "rar": "P", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "no", "security": "cross", "hunting": "home", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "M82", "name": "Barrett M82 A1", "cal": ".50 BMG", "cat": "Sniper and bolt-action rifles", "built": false, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "home", "security": "cross", "hunting": "home", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "M40A3", "name": "Remington M40A3 Rifle", "cal": ".308", "cat": "Sniper and bolt-action rifles", "built": false, "rar": "R", "places": {"gunshop": "cross", "pawn": "cross", "police": "home", "swat": "home", "army": "home", "security": "home", "hunting": "home", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "SV_98", "name": "SV-98 Sniper Rifle", "cal": "7.62x54R", "cat": "Sniper and bolt-action rifles", "built": false, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "foreign", "security": "cross", "hunting": "home", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "M870_CQB", "name": "Model 870 MCS CQB:14\"BBL", "cal": "12 ga", "cat": "Shotguns", "built": true, "rar": "C", "places": {"gunshop": "cross", "pawn": "cross", "police": "home", "swat": "home", "army": "foreign", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "UTS15", "name": "UTS-15", "cal": "12 ga", "cat": "Shotguns", "built": false, "rar": "R", "places": {"gunshop": "home", "pawn": "home", "police": "home", "swat": "home", "army": "no", "security": "home", "hunting": "home", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "M1014_Wick", "name": "John Wick TTI Benelli M4", "cal": "12 ga", "cat": "Shotguns", "built": false, "rar": "R", "places": {"gunshop": "home", "pawn": "home", "police": "home", "swat": "home", "army": "no", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "SPAS12_Fixed", "name": "Franchi SPAS-12 w/Fixed Stock", "cal": "12 ga", "cat": "Shotguns", "built": false, "rar": "R", "places": {"gunshop": "cross", "pawn": "cross", "police": "home", "swat": "home", "army": "no", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "Winchester1866", "name": "Winchester Model 1866 (45-LC)", "cal": ".45 LC", "cat": "Lever-action and single-shot", "built": true, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "no", "security": "cross", "hunting": "home", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "Ruger_No1_308", "name": "Ruger No. 1 Single Shot Rifle (.308)", "cal": ".308", "cat": "Lever-action and single-shot", "built": false, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "cross", "army": "no", "security": "cross", "hunting": "home", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "home"}}, {"id": "American180", "name": "American-180", "cal": ".22 LR", "cat": "Rimfire", "built": true, "rar": "R", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "no", "army": "no", "security": "cross", "hunting": "cross", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "L86", "name": "L86A1", "cal": "5.56", "cat": "Machine guns", "built": true, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "foreign", "security": "home", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "M60", "name": "M60", "cal": ".308", "cat": "Machine guns", "built": false, "rar": "G", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "home", "security": "cross", "hunting": "cross", "surplus": "cross", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "PKM", "name": "PKM", "cal": "7.62x54R", "cat": "Machine guns", "built": false, "rar": "G", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "foreign", "security": "cross", "hunting": "cross", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "RPG_7", "name": "RPG-7", "cal": "rockets", "cat": "Launchers", "built": true, "rar": "G", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "foreign", "security": "cross", "hunting": "cross", "surplus": "home", "storage": "home", "case": "no", "ccw": "no", "worn": "no"}}, {"id": "TenPointTurbo_XLT", "name": "TenPoint Turbo XLT (180-lb) Crossbow", "cal": "bolts", "cat": "Bows and crossbows", "built": true, "rar": "S", "places": {"gunshop": "home", "pawn": "home", "police": "cross", "swat": "no", "army": "no", "security": "cross", "hunting": "home", "surplus": "home", "storage": "home", "case": "home", "ccw": "no", "worn": "no"}}, {"id": "DSHK", "name": "Fixed DSHK Machine-Gun (w/Tripod)", "cal": ".50 BMG", "cat": "Heavy and special", "built": true, "rar": "G", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "foreign", "security": "cross", "hunting": "cross", "surplus": "home", "storage": "home", "case": "no", "ccw": "no", "worn": "no"}}], "heavy": {"id": "HEAVY", "name": "Heavy Sniper Rifle (ours, kept)", "cal": ".50 BMG", "cat": "Kept from our set", "built": true, "rar": "P", "places": {"gunshop": "cross", "pawn": "cross", "police": "cross", "swat": "cross", "army": "home", "security": "cross", "hunting": "home", "surplus": "cross", "storage": "home", "case": "no", "ccw": "no", "worn": "no"}}};
+const PLACE_INFO = {
+  gunshop:["GunStoreGuns","Gun shop counters, display cases and racks. Unchanged places."],
+  pawn:["PawnShopGuns","Pawn shop walls and cases. Unchanged places."],
+  police:["PoliceGuns","Sheriff armoury, police lockers, evidence store, the prison armoury, police cars and police bags."],
+  swat:["A26SWAT_Trunk","The SWAT van. It counts as police from now on (it was military)."],
+  army:["ArmyGuns, A26Military_Trunk","NEW army list. Army camp armouries (now on gun-shop racks), Camp Black Pine, the carrier, military crates and army trucks."],
+  security:["SecurityGuns","NEW security list. Security offices in the mall, hospital, airport and arena."],
+  hunting:["HuntGuns","Farms, and hunters’ pickups."],
+  surplus:["SurplusGuns","Survivalist stock: bunkers, prepper cellar safes and racks, survivor cars."],
+  storage:["FirearmWeapons","Storage-unit crates, at a low chance."],
+  case:["Case_ lists","Gun cases in wardrobes, nightstands, garages, gun cabinets, glove boxes and boots. Each case is one calibre, as Arsenal packs them."],
+  ccw:["CCW_ purse and bum bag","Now and then an ordinary zombie carries a handgun in a purse or bum bag."],
+  worn:["Holster and sling lists","Police and army zombies with a pistol holstered or a long gun slung, dropped when they die."]
+};
+const RAR = {C:["Common","1"],S:["Scarce","½"],R:["Rare","¼"],P:["Prized","⅒"],G:["Grail","1⁄25"]};
+const GUNS_OUT = ["Assault Rifle","M9 Pistol","Pump Shotgun","Hunting Rifle","Double-Barrel Shotgun","Service Revolver",".22 Rifle","Submachine Gun","Sawn-Off Shotgun","Magnum Revolver","Lever-Action Carbine","Crossbow","Battle Rifle","Pocket Pistol","Machine Pistol","Suppressed Rifle","Precision Rifle","Grenade Launcher"];
+const ATT_OUT = ["Red dot","Holo sight","Mini red dot","Compact red dot","4x scope","Combat scope","Rifle scope","Pistol scope","Precision scope","Hunting scope","Crossbow scope","Magnifier","Foregrip","Angled grip","Stubby grip","Skeleton grip","Tactical grip","Underbarrel launcher","Weapon light","Compact light","Laser sight","Rifle suppressor","Pistol suppressor","Rifle stock"];
+const QS = [
+  {id:"cross",t:"How often should a gun turn up where it only crosses over (◐)?",o:[["arsenal","Arsenal’s own default. I read the number from the mod’s settings file on your PC next time it’s on.",1],["q","A quarter of its home rate"],["h","Half of its home rate"],["none","Never: home places only"]]},
+  {id:"region",t:"Whose army stocks the military armouries?",o:[["usa","The US army: M16 family, M60, M14, M82, SCARs. AKs, PKMs, RPGs and the DShK come only from survivalists and crossovers.",1],["mixed","Mixed: every country’s military guns can be in army armouries"]]},
+  {id:"count",t:"How many guns should a container hold?",o:[["full","As many as Arsenal’s full 400-gun set would give, picked from the guns we have, so shops aren’t bare while we have 41 of them",1],["scaled","Scaled down to our share of Arsenal’s set (gun shops would be very thin until more guns are built)"]]},
+  {id:"old",t:"What happens to our old guns already in your worlds?",o:[["remove","They vanish from inventories, chests and cars the next time each is loaded",1],["swap","Each turns into a Brita gun of the same kind, where one is built (otherwise it vanishes)"]]},
+  {id:"minigun",t:"The Warthog’s minigun: keep its sounds?",o:[["keep","Keep. It’s the car’s mounted gun, not one of our hand guns",1],["drop","Drop them; it fires silently until it gets Brita audio"]]}
+];
+const ORDER = DATA.places.map(p=>p[0]);
+let state = {rar:{}, q:{}};
+try{ state = Object.assign(state, JSON.parse(localStorage.getItem("gunloot-review")||"{}")); }catch(e){}
+function save(){ try{ localStorage.setItem("gunloot-review", JSON.stringify(state)); }catch(e){} }
+
+document.getElementById("gunsOut").innerHTML = GUNS_OUT.map(g=>`<span class="chip out">${g}</span>`).join("");
+document.getElementById("attOut").innerHTML = ATT_OUT.map(g=>`<span class="chip out">${g}</span>`).join("");
+document.getElementById("placeRows").innerHTML = DATA.places.map(([k,n])=>`<tr><td><b>${n}</b></td><td class="gsub">${PLACE_INFO[k][0]}</td><td>${PLACE_INFO[k][1]}</td></tr>`).join("");
+document.getElementById("scale").innerHTML = Object.values(RAR).map(([n,x])=>`<span>${n} × ${x}</span>`).join("") + `<span style="border:0;background:none;color:var(--soft)">rarity scales a gun’s Arsenal rate in every place</span>`;
+const mh = document.getElementById("mhead");
+DATA.places.forEach(([k,n])=>{ const th=document.createElement("th"); th.className="pl"; th.textContent=n; mh.appendChild(th); });
+const MARK = {home:'<span class="home">●</span>',cross:'<span class="cross">◐</span>',foreign:'<span class="foreign">○</span>',no:''};
+function row(g){
+  const r = state.rar[g.id] || g.rar;
+  const opts = Object.entries(RAR).map(([k,[n]])=>`<option value="${k}"${k===r?" selected":""}>${n}</option>`).join("");
+  return `<tr><td><div class="gname">${g.name}${g.built?'<span class="built">IN GAME</span>':''}</div><div class="gsub">${g.id} · ${g.cal}</div></td>
+  <td><select id="r-${g.id}" data-id="${g.id}" data-def="${g.rar}" data-r="${r}" aria-label="Rarity of ${g.name}">${opts}</select></td>
+  ${ORDER.map(k=>`<td class="m" title="${k}">${MARK[g.places[k]]}</td>`).join("")}</tr>`;
+}
+let html = "", last = null;
+DATA.guns.forEach(g=>{ if(g.cat!==last){ html += `<tr class="cat"><td colspan="${ORDER.length+2}">${g.cat}</td></tr>`; last=g.cat; } html += row(g); });
+html += `<tr class="cat"><td colspan="${ORDER.length+2}">${DATA.heavy.cat}</td></tr>` + row(DATA.heavy);
+document.getElementById("mbody").innerHTML = html;
+document.querySelectorAll("select[data-id]").forEach(s=>s.addEventListener("change",()=>{ s.dataset.r=s.value; if(s.value===s.dataset.def) delete state.rar[s.dataset.id]; else state.rar[s.dataset.id]=s.value; save(); }));
+document.getElementById("qs").innerHTML = QS.map(q=>`<div class="q"><h3>${q.t}</h3>${q.o.map(([v,l,rec])=>{ const on=(state.q[q.id]||q.o.find(o=>o[2])[0])===v;
+  return `<label><input type="radio" name="${q.id}" id="${q.id}-${v}" value="${v}"${on?" checked":""}><span>${l}${rec?'<span class="rec">recommended</span>':''}</span></label>`; }).join("")}</div>`).join("");
+document.querySelectorAll("#qs input").forEach(i=>i.addEventListener("change",()=>{ state.q[i.name]=i.value; save(); }));
+const notes = document.getElementById("notes"); notes.value = state.notes||""; notes.addEventListener("input",()=>{ state.notes=notes.value; save(); });
+document.getElementById("copy").addEventListener("click",()=>{
+  const lines = ["GUN LOOT CHECK review"];
+  const ch = Object.entries(state.rar).map(([id,r])=>{ const g=DATA.guns.concat([DATA.heavy]).find(x=>x.id===id); return `${g?g.name:id}: ${RAR[g.rar][0]} -> ${RAR[r][0]}`; });
+  lines.push(ch.length ? "Rarity changes: " + ch.join("; ") : "Rarity: all as proposed");
+  QS.forEach(q=>{ const v = state.q[q.id] || q.o.find(o=>o[2])[0]; const o=q.o.find(x=>x[0]===v); lines.push(`${q.t} ${o[1]}`); });
+  if((state.notes||"").trim()) lines.push("Notes: " + state.notes.trim());
+  const text = lines.join("\n"); const out = document.getElementById("out"); out.textContent = text; out.hidden = false;
+  const b = document.getElementById("copy");
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(()=>{ b.textContent="Copied"; setTimeout(()=>b.textContent="Copy review",1600); })
+    .catch(()=>{ const r=document.createRange(); r.selectNodeContents(out); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent="Selected: copy it"; });
+});
+</script>

@@ -1,0 +1,276 @@
+# Poly Haven props (CC0)
+
+Downloaded 2026-10-26 from https://polyhaven.com/models via api.polyhaven.com, glTF with 1K JPG textures.
+Licence: CC0 1.0 (public domain), https://polyhaven.com/license. No credit required, but we credit Poly Haven anyway.
+These are source models to restyle. Do not ship them as they are.
+
+Total: 253 models, 599 MB.
+Columns: folder, name, triangles (Poly Haven's polycount), size MB.
+
+## Street, yard and building details (62)
+
+- `fire_hydrant` Fire Hydrant, 86316 tris, 5.5 MB
+- `street_lamp_01` Street Lamp 01, 30610 tris, 2.2 MB
+- `street_lamp_02` Street Lamp 02, 20338 tris, 1.9 MB
+- `concrete_road_barrier` Concrete Road Barrier, 80776 tris, 3.8 MB
+- `concrete_road_barrier_02` Concrete Road Barrier 02, 42578 tris, 2.9 MB
+- `metal_trash_can` Metal Trash Can, 13960 tris, 5.0 MB
+- `trashbag` Trashbag, 4482 tris, 1.7 MB
+- `utility_box_01` Utility Box 01, 4404 tris, 2.0 MB
+- `utility_box_02` Utility Box 02, 6268 tris, 2.0 MB
+- `water_manhole_cover` Water Manhole Cover, 6301 tris, 2.3 MB
+- `modular_electricity_poles` Modular Electricity Poles, 200610 tris, 12.4 MB
+- `modular_electric_cables` Modular Electric Cables, 42078 tris, 6.0 MB
+- `modular_chainlink_fence` Modular Chainlink Fence, 89232 tris, 7.3 MB
+- `modular_street_seating` Modular Street Seating, 25156 tris, 7.6 MB
+- `modular_fire_escape` Modular Fire Escape, 11322 tris, 4.8 MB
+- `modular_metal_gutter` Modular Metal Gutter, 16490 tris, 2.2 MB
+- `modular_airduct_circular_01` Modular Airduct Circular 01, 14280 tris, 2.0 MB
+- `modular_airduct_rectangular_01` Modular Airduct Rectangular 01, 45090 tris, 2.8 MB
+- `exterior_aircon_unit` Exterior Aircon Unit, 18986 tris, 7.7 MB
+- `rollershutter_door` Rollershutter Door, 1104 tris, 2.3 MB
+- `rollershutter_window_01` Rollershutter Window 01, 1104 tris, 2.2 MB
+- `rollershutter_window_02` Rollershutter Window 02, 1120 tris, 2.1 MB
+- `rollershutter_window_03` Rollershutter Window 03, 1120 tris, 2.3 MB
+- `modular_urban_apartments_facade` Modular Urban Apartments Facade, 118215 tris, 16.5 MB
+- `modular_factory_facade` Modular Factory Facade, 175014 tris, 17.6 MB
+- `security_camera_01` Security Camera 01, 13571 tris, 1.8 MB
+- `security_camera_02` Security Camera 02, 12477 tris, 1.7 MB
+- `security_light` Security Light, 4668 tris, 2.4 MB
+- `power_box_01` Power Box 01, 21272 tris, 2.7 MB
+- `fire_alarm` Fire Alarm, 2705 tris, 1.9 MB
+- `gate_latch_01` Gate Latch 01, 5480 tris, 2.1 MB
+- `garden_hose_wall_mounted_01` Garden Hose Wall Mounted 01, 11684 tris, 2.6 MB
+- `modular_pipes` Modular Pipes, 47428 tris, 5.8 MB
+- `modular_industrial_pipes_01` Modular Industrial Pipes 01, 12340 tris, 4.8 MB
+- `modular_pipes_plastic_01` Modular Pipes Plastic 01, 49708 tris, 3.1 MB
+- `covered_car` Covered Car, 12592 tris, 2.3 MB
+- `old_tyre` Old Tyre, 2880 tris, 2.2 MB
+- `rusted_wheel_rim_01` Rusted Wheel Rim 01, 16440 tris, 2.6 MB
+- `rusted_wheel_rim_02` Rusted Wheel Rim 02, 15256 tris, 2.6 MB
+- `cardboard_box_01` Cardboard Box 01, 16952 tris, 2.2 MB
+- `wooden_crate_01` Wooden Crate 01, 6576 tris, 2.3 MB
+- `wooden_crate_02` Wooden Crate 02, 5176 tris, 2.2 MB
+- `plastic_crate_01` Plastic Crate 01, 18320 tris, 3.2 MB
+- `plastic_crate_02` Plastic Crate 02, 5840 tris, 1.8 MB
+- `plastic_crate_03` Plastic Crate 03, 21740 tris, 3.3 MB
+- `Barrel_01` Barrel_01, 2682 tris, 0.7 MB
+- `Barrel_02` Barrel 02, 2688 tris, 0.4 MB
+- `barrel_03` Barrel 03, 1473 tris, 0.6 MB
+- `propane_tank` Propane Tank, 5238 tris, 2.2 MB
+- `small_lpg_tank` Small Lpg Tank, 15042 tris, 2.8 MB
+- `metal_jerrycan` Metal Jerrycan, 20022 tris, 3.0 MB
+- `metal_jerrycan_green` Metal Jerrycan Green, 9636 tris, 2.7 MB
+- `plastic_jerrycan` Plastic Jerrycan, 7348 tris, 2.5 MB
+- `cement_bag` Cement Bag, 844 tris, 1.4 MB
+- `compost_bags` Compost Bags, 18708 tris, 2.6 MB
+- `hand_truck` Hand Truck, 13220 tris, 3.2 MB
+- `wooden_picnic_table` Wooden Picnic Table, 10210 tris, 4.3 MB
+- `outdoor_table_chair_set_01` Outdoor Table Chair Set 01, 9828 tris, 1.2 MB
+- `plastic_monobloc_chair_01` Plastic Monobloc Chair 01, 3356 tris, 2.0 MB
+- `painted_wooden_bench` Painted Wooden Bench, 630 tris, 2.0 MB
+- `planter_box_01` Planter Box 01, 8094 tris, 2.3 MB
+- `WetFloorSign_01` Wet Floor Sign 01, 228 tris, 0.3 MB
+
+## Homes (84)
+
+- `ArmChair_01` Arm Chair 01, 5626 tris, 0.8 MB
+- `Sofa_01` Sofa 01, 4101 tris, 0.5 MB
+- `sofa_02` Sofa 02, 2728 tris, 0.4 MB
+- `sofa_03` Sofa 03, 8004 tris, 0.7 MB
+- `GreenChair_01` Green Chair 01, 4213 tris, 0.6 MB
+- `Ottoman_01` Ottoman 01, 4240 tris, 0.7 MB
+- `Rockingchair_01` Rockingchair 01, 11866 tris, 0.8 MB
+- `CoffeeTable_01` Coffee Table 01, 10404 tris, 1.0 MB
+- `coffee_table_round_01` Coffee Table Round 01, 4044 tris, 1.6 MB
+- `side_table_01` Side Table 01, 2756 tris, 0.5 MB
+- `side_table_tall_01` Side Table Tall 01, 6408 tris, 1.6 MB
+- `ClassicNightstand_01` Classic Nightstand 01, 2002 tris, 0.4 MB
+- `ClassicConsole_01` Classic Console 01, 7566 tris, 0.7 MB
+- `dining_table` Dining Table, 1048 tris, 2.3 MB
+- `dining_chair_02` Dining Chair 02, 22013 tris, 0.9 MB
+- `WoodenChair_01` Wooden Chair 01, 19992 tris, 1.1 MB
+- `WoodenTable_01` Wooden Table 01, 952 tris, 0.6 MB
+- `WoodenTable_02` Wooden Table 02, 1514 tris, 0.5 MB
+- `WoodenTable_03` Wooden Table 03, 2298 tris, 0.6 MB
+- `round_wooden_table_01` Round Wooden Table 01, 8640 tris, 0.6 MB
+- `round_wooden_table_02` Round Wooden Table 02, 4254 tris, 1.9 MB
+- `small_wooden_table_01` Small Wooden Table 01, 3410 tris, 0.4 MB
+- `drawer_cabinet` Drawer Cabinet, 26406 tris, 1.1 MB
+- `vintage_wooden_drawer_01` Vintage Wooden Drawer 01, 5184 tris, 2.1 MB
+- `vintage_cabinet_01` Vintage Cabinet 01, 61096 tris, 2.9 MB
+- `wooden_bookshelf_worn` Wooden Bookshelf Worn, 10106 tris, 2.8 MB
+- `painted_wooden_cabinet` Painted Wooden Cabinet, 2227 tris, 1.9 MB
+- `painted_wooden_cabinet_02` Painted Wooden Cabinet 02, 966 tris, 1.6 MB
+- `painted_wooden_chair_01` Painted Wooden Chair 01, 724 tris, 0.5 MB
+- `painted_wooden_chair_02` Painted Wooden Chair 02, 1246 tris, 2.4 MB
+- `painted_wooden_nightstand` Painted Wooden Nightstand, 470 tris, 2.2 MB
+- `painted_wooden_shelves` Painted Wooden Shelves, 524 tris, 2.1 MB
+- `painted_wooden_sofa` Painted Wooden Sofa, 5826 tris, 2.1 MB
+- `painted_wooden_stool` Painted Wooden Stool, 676 tris, 1.9 MB
+- `painted_wooden_table` Painted Wooden Table, 600 tris, 1.8 MB
+- `old_bed_frame` Old Bed Frame, 49990 tris, 4.0 MB
+- `vintage_day_bed` Vintage Day Bed, 2715 tris, 2.4 MB
+- `Television_01` Television 01, 1918 tris, 0.5 MB
+- `television_02` Television 02, 2310 tris, 1.2 MB
+- `boombox` Boombox, 10168 tris, 3.1 MB
+- `cassette_player` Cassette Player, 4830 tris, 0.9 MB
+- `portable_cassette_player` Portable Cassette Player, 13307 tris, 2.6 MB
+- `electric_stove` Electric Stove, 13914 tris, 2.0 MB
+- `vintage_microwave` Vintage Microwave, 8120 tris, 1.6 MB
+- `vintage_electric_kettle` Vintage Electric Kettle, 14838 tris, 2.4 MB
+- `ceiling_fan` Ceiling Fan, 16356 tris, 1.9 MB
+- `wall_clock` Wall Clock, 3658 tris, 1.6 MB
+- `alarm_clock_01` Alarm Clock 01, 13006 tris, 1.7 MB
+- `vintage_telephone_wall_clock` Vintage Telephone Wall Clock, 15864 tris, 2.7 MB
+- `desk_lamp_arm_01` Desk Lamp Arm 01, 25710 tris, 2.9 MB
+- `modern_ceiling_lamp_01` Modern Ceiling Lamp 01, 5602 tris, 0.4 MB
+- `pull_chain_light_socket` Pull Chain Light Socket, 10902 tris, 2.0 MB
+- `lightbulb_01` Lightbulb 01, 4372 tris, 1.0 MB
+- `fancy_picture_frame_01` Fancy Picture Frame 01, 938 tris, 0.7 MB
+- `hanging_picture_frame_01` Hanging Picture Frame 01, 2586 tris, 0.4 MB
+- `hanging_picture_frame_02` Hanging Picture Frame 02, 3678 tris, 0.7 MB
+- `standing_picture_frame_01` Standing Picture Frame 01, 1634 tris, 0.4 MB
+- `standing_picture_frame_02` Standing Picture Frame 02, 2986 tris, 0.6 MB
+- `throw_pillows_01` Throw Pillows 01, 6362 tris, 1.2 MB
+- `potted_plant_04` Potted Plant 04, 6097 tris, 2.1 MB
+- `plunger` Plunger, 3278 tris, 1.8 MB
+- `bleach_bottle` Bleach Bottle, 4052 tris, 1.3 MB
+- `all_purpose_cleaner` All Purpose Cleaner, 4624 tris, 1.1 MB
+- `multi_cleaner_bottle` Multi Cleaner Bottle, 6792 tris, 1.4 MB
+- `multi_cleaner_5_litre` Multi Cleaner 5 Litre, 4332 tris, 1.4 MB
+- `drain_cleaner` Drain Cleaner, 4338 tris, 1.6 MB
+- `plastic_broom` Plastic Broom, 18736 tris, 1.5 MB
+- `wooden_broom` Wooden Broom, 14258 tris, 3.4 MB
+- `dustpan` Dustpan, 4332 tris, 2.3 MB
+- `rubber_duck_toy` Rubber Duck Toy, 4288 tris, 0.7 MB
+- `baseball_bat` Baseball Bat, 2672 tris, 1.7 MB
+- `baseball_01` Baseball 01, 2712 tris, 1.1 MB
+- `football` Football, 4296 tris, 2.8 MB
+- `american_football` American Football, 4480 tris, 2.7 MB
+- `gaming_console` Gaming Console, 31710 tris, 3.0 MB
+- `gamepad` Gamepad, 9546 tris, 1.3 MB
+- `wicker_basket_01` Wicker Basket 01, 22276 tris, 2.7 MB
+- `vintage_suitcase` Vintage Suitcase, 16474 tris, 4.3 MB
+- `mousetrap` Mousetrap, 5136 tris, 2.2 MB
+- `cigarette_pack` Cigarette Pack, 7582 tris, 1.4 MB
+- `long_life_food` Long Life Food, 4712 tris, 2.0 MB
+- `can_rusted` Can Rusted, 3520 tris, 2.1 MB
+- `plastic_bottle_gallon` Plastic Bottle Gallon, 13728 tris, 1.4 MB
+- `plastic_container` Plastic Container, 4070 tris, 1.3 MB
+
+## Offices, shops, school, clinic (32)
+
+- `metal_office_desk` Metal Office Desk, 6898 tris, 1.6 MB
+- `SchoolChair_01` School Chair 01, 5072 tris, 0.5 MB
+- `SchoolDesk_01` School Desk 01, 4162 tris, 0.4 MB
+- `standing_chalkboard_01` Standing Chalkboard 01, 2372 tris, 2.6 MB
+- `clipboard` Clipboard, 6176 tris, 1.8 MB
+- `office_notepads` Office Notepads, 666 tris, 1.3 MB
+- `stationery_supplies` Stationery Supplies, 4412 tris, 2.0 MB
+- `binder_notebook` Binder Notebook, 18077 tris, 1.9 MB
+- `vintage_stapler` Vintage Stapler, 4370 tris, 2.3 MB
+- `projector_screen` Projector Screen, 8727 tris, 3.1 MB
+- `filmstrip_projector_8mm` Filmstrip Projector 8mm, 32697 tris, 3.1 MB
+- `classic_laptop` Classic Laptop, 14450 tris, 2.2 MB
+- `CashRegister_01` Cash Register 01, 9927 tris, 1.0 MB
+- `BarberShopChair_01` Barber Shop Chair 01, 4280 tris, 0.9 MB
+- `bar_chair_round_01` Bar Chair Round 01, 14373 tris, 2.8 MB
+- `metal_stool_01` Metal Stool 01, 8334 tris, 2.3 MB
+- `metal_stool_02` Metal Stool 02, 6532 tris, 2.5 MB
+- `metal_stool_03` Metal Stool 03, 6576 tris, 2.3 MB
+- `steel_frame_shelves_01` Steel Frame Shelves 01, 4348 tris, 1.6 MB
+- `steel_frame_shelves_02` Steel Frame Shelves 02, 4348 tris, 0.5 MB
+- `steel_frame_shelves_03` Steel Frame Shelves 03, 8396 tris, 3.6 MB
+- `worn_metal_rack` Worn Metal Rack, 6372 tris, 2.0 MB
+- `wooden_display_shelves_01` Wooden Display Shelves 01, 3174 tris, 0.5 MB
+- `Shelf_01` Shelf 01, 182 tris, 0.6 MB
+- `mounted_fluorescent_lights` Mounted Fluorescent Lights, 17820 tris, 1.9 MB
+- `hanging_industrial_lamp` Hanging Industrial Lamp, 9530 tris, 3.2 MB
+- `industrial_wall_lamp` Industrial Wall Lamp, 4446 tris, 3.8 MB
+- `caged_hanging_light` Caged Hanging Light, 22893 tris, 3.1 MB
+- `medical_box` Medical Box, 3718 tris, 2.0 MB
+- `medical_tape` Medical Tape, 1408 tris, 1.6 MB
+- `wheelchair_01` Wheelchair 01, 40252 tris, 1.7 MB
+- `vintage_crutches_01` Vintage Crutches 01, 10628 tris, 0.8 MB
+
+## Garage, tools, industry, military, port (58)
+
+- `metal_tool_chest` Metal Tool Chest, 14576 tris, 2.4 MB
+- `metal_toolbox` Metal Toolbox, 14228 tris, 2.7 MB
+- `tool_cart` Tool Cart, 29394 tris, 3.2 MB
+- `bench_vice_01` Bench Vice 01, 2864 tris, 2.4 MB
+- `old_drill_press` Old Drill Press, 21842 tris, 2.4 MB
+- `drill_press_01` Drill Press 01, 58526 tris, 4.0 MB
+- `portable_generator` Portable Generator, 26419 tris, 3.4 MB
+- `portable_welding_cart` Portable Welding Cart, 29418 tris, 2.8 MB
+- `tire_pump` Tire Pump, 6572 tris, 1.7 MB
+- `overhead_crane` Overhead Crane, 89964 tris, 7.3 MB
+- `ladder_sectioned_01` Ladder Sectioned 01, 29140 tris, 2.6 MB
+- `wooden_ladder` Wooden Ladder, 8492 tris, 2.6 MB
+- `wooden_ladder_02` Wooden Ladder 02, 6126 tris, 2.3 MB
+- `small_oil_can_01` Small Oil Can 01, 16746 tris, 0.9 MB
+- `oil_tin` Oil Tin, 2834 tris, 2.1 MB
+- `lubricant_spray` Lubricant Spray, 5476 tris, 1.8 MB
+- `spray_paint_bottles` Spray Paint Bottles, 5040 tris, 2.3 MB
+- `spray_paint_bottles_02` Spray Paint Bottles 02, 6576 tris, 2.2 MB
+- `pipe_wrench` Pipe Wrench, 10746 tris, 3.0 MB
+- `adjustable_wrench` Adjustable Wrench, 5390 tris, 2.6 MB
+- `combination_wrench` Combination Wrench, 1986 tris, 1.5 MB
+- `crowbar_01` Crowbar 01, 2300 tris, 1.6 MB
+- `sledgehammer_01` Sledgehammer 01, 2596 tris, 1.8 MB
+- `hatchet` Hatchet, 5250 tris, 2.0 MB
+- `bolt_cutters_01` Bolt Cutters 01, 6719 tris, 2.5 MB
+- `Drill_01` Drill 01, 2926 tris, 0.5 MB
+- `handsaw_wood` Handsaw Wood, 2548 tris, 2.5 MB
+- `screwdriver` Screwdriver, 3412 tris, 1.5 MB
+- `pliers` Pliers, 4540 tris, 2.0 MB
+- `cross_pein_hammer` Cross Pein Hammer, 2124 tris, 1.5 MB
+- `rusted_spade_01` Rusted Spade 01, 11436 tris, 2.4 MB
+- `picke_dirty_01` Picke Dirty 01, 6196 tris, 2.2 MB
+- `rusted_hacksaw` Rusted Hacksaw, 6546 tris, 2.2 MB
+- `measuring_tape_01` Measuring Tape 01, 2868 tris, 0.4 MB
+- `garden_sprinkler_01` Garden Sprinkler 01, 8192 tris, 2.9 MB
+- `watering_can_metal_01` Watering Can Metal 01, 11837 tris, 2.6 MB
+- `garden_gloves_01` Garden Gloves 01, 6822 tris, 2.9 MB
+- `trowel_01` Trowel 01, 5242 tris, 2.0 MB
+- `seeding_tray_01` Seedling Tray 01, 8334 tris, 2.0 MB
+- `wooden_bucket_01` Wooden Bucket 01, 5116 tris, 2.3 MB
+- `barrel_stove` Barrel Stove, 11404 tris, 2.1 MB
+- `old_military_compressor` Old Military Compressor, 79042 tris, 4.4 MB
+- `old_military_crate` Old Military Crate, 10476 tris, 2.5 MB
+- `wooden_military_crate` Wooden Military Crate, 22986 tris, 3.0 MB
+- `ammo_box` Ammo Box, 4382 tris, 1.5 MB
+- `old_gas_mask` Old Gas Mask, 18900 tris, 2.3 MB
+- `portable_searchlight` Portable Searchlight, 18802 tris, 1.9 MB
+- `signal_flashlight` Signal Flashlight, 9730 tris, 2.0 MB
+- `vintage_flashlight` Vintage Flashlight, 10562 tris, 1.8 MB
+- `small_plastic_torch` Small Plastic Torch, 13252 tris, 2.3 MB
+- `pastic_torch_6v` Plastic Torch 6V, 4352 tris, 1.6 MB
+- `binoculars` Binoculars, 19248 tris, 2.0 MB
+- `rubber_boots` Rubber Boots, 35004 tris, 2.0 MB
+- `life_jacket` Life Jacket, 8968 tris, 2.3 MB
+- `lifebuoy` Lifebuoy, 10728 tris, 2.6 MB
+- `ocean_buoy` Ocean Buoy, 12240 tris, 3.0 MB
+- `lateral_sea_marker` Lateral Sea Marker, 13014 tris, 2.5 MB
+- `modular_wooden_pier` Modular Wooden Pier, 84780 tris, 7.8 MB
+
+## Nature (dead wood, rocks, shrubs) (17)
+
+- `tree_stump_01` Tree Stump 01, 41046 tris, 3.9 MB
+- `tree_stump_02` Tree Stump 02, 62345 tris, 4.5 MB
+- `dead_tree_trunk` Dead Tree Trunk, 101802 tris, 4.8 MB
+- `dead_tree_trunk_02` Dead Tree Trunk 02, 155864 tris, 4.9 MB
+- `rock_07` Rock 07, 27830 tris, 2.2 MB
+- `rock_09` Rock 09, 23280 tris, 2.0 MB
+- `rock_moss_set_01` Rock Moss Set 01, 63127 tris, 1.9 MB
+- `rock_moss_set_02` Rock Moss Set 02, 57647 tris, 1.9 MB
+- `stone_01` Stone 01, 71916 tris, 3.7 MB
+- `boulder_01` Boulder 01, 123976 tris, 5.8 MB
+- `dry_branches_medium_01` Dry Branches Medium 01, 16803 tris, 3.3 MB
+- `fern_02` Fern 02, 6232 tris, 1.1 MB
+- `shrub_02` Shrub 02, 52317 tris, 2.0 MB
+- `shrub_03` Shrub 03, 16955 tris, 1.6 MB
+- `shrub_04` Shrub 04, 47813 tris, 1.9 MB
+- `nettle_plant` Nettle Plant, 46195 tris, 2.5 MB
+- `weed_plant_02` Weed Plant 02, 17062 tris, 2.0 MB

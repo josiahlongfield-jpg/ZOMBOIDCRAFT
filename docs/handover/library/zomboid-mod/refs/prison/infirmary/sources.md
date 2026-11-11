@@ -1,0 +1,12 @@
+# prison/infirmary
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-prison-formerly-connected-with-the-st-marylebone-infirmary-w.jpg | [Prison formerly connected with the St. Marylebone Infirmary. Wellcome ](https://commons.wikimedia.org/wiki/File:Prison_formerly_connected_with_the_St._Marylebone_Infirmary._Wellcome_M0013553.jpg) |  | CC BY 4.0 | Cage, prison or watchhouse formerly connected with the St. Marylebone Infirmary of Workhouse and pulled down at the time of reconstruction - |
+| 02-porter-county-infirmary-1907-valparaiso-indiana-19014932298.jpg | [Porter County Infirmary, 1907 - Valparaiso, Indiana (19014932298).jpg](https://commons.wikimedia.org/wiki/File:Porter_County_Infirmary,_1907_-_Valparaiso,_Indiana_(19014932298).jpg) | Steve Shook from Moscow, Idaho, USA | CC BY 2.0 | New County Infirmary Date: 1907 Source Type: Postcard Publisher, Printer, Photographer: Unknown Postmark: August 7, 1907, Valparaiso, Indian |
+| 03-porter-county-infirmary-1909-valparaiso-indiana-4180604729.jpg | [Porter County Infirmary, 1909 - Valparaiso, Indiana (4180604729).jpg](https://commons.wikimedia.org/wiki/File:Porter_County_Infirmary,_1909_-_Valparaiso,_Indiana_(4180604729).jpg) | Steve Shook from Moscow, Idaho, USA | CC BY 2.0 | PORTER COUNTY INFIRMARY - VALPARAISO, IND. Date: Circa 1909 Source Type: Postcard Publisher, Printer, Photographer: Leo Lilienthal (#44-E19) |
+| 04-hospital-ward-9638297813.jpg | [Hospital Ward (9638297813).jpg](https://commons.wikimedia.org/wiki/File:Hospital_Ward_(9638297813).jpg) | William Warby from London, England | CC BY 2.0 | Hospital ward in Alcatraz prison, San Francisco, California  PERMISSION TO USE: you are welcome to use this photo free of charge for any pur |
+| 05-hospital-ward-9638296057.jpg | [Hospital Ward (9638296057).jpg](https://commons.wikimedia.org/wiki/File:Hospital_Ward_(9638296057).jpg) | William Warby from London, England | CC BY 2.0 | Hospital ward in Alcatraz prison, San Francisco, California  PERMISSION TO USE: you are welcome to use this photo free of charge for any pur |
+| 06-hospital-ward-at-former-stara-gradiska-prison.jpg | [Hospital ward at former Stara Gradiska Prison.jpg](https://commons.wikimedia.org/wiki/File:Hospital_ward_at_former_Stara_Gradiska_Prison.jpg) | Fschoepf | CC BY-SA 4.0 | Krankenstation des ehemaligen Gefängnisses Stara Gradiska |

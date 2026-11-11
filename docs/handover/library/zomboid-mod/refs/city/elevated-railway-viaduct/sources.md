@@ -1,0 +1,15 @@
+# city/elevated-railway-viaduct
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-chicago-elevated-train.jpg | [Chicago Elevated Train.jpg](https://commons.wikimedia.org/wiki/File:Chicago_Elevated_Train.jpg) | Marcel "lazytom" Marchon | CC BY-SA 2.0 | A train of the Chicago Elevated to Midway |
+| 02-stanley-kubrick-l-elevated-railway-chicago-illinois-1949.jpg | [Stanley Kubrick, "L" elevated railway, Chicago, Illinois, 1949.jpg](https://commons.wikimedia.org/wiki/File:Stanley_Kubrick,_%22L%22_elevated_railway,_Chicago,_Illinois,_1949.jpg) | Stanley Kubrick | Public domain | Overhead view of the "L" elevated railway in Chicago, Illinois. |
+| 03-under-the-elevated-railway-chicago-illinois-fsa8a06711u.jpg | [Under the elevated railway, Chicago, Illinois fsa8a06711u.jpg](https://commons.wikimedia.org/wiki/File:Under_the_elevated_railway,_Chicago,_Illinois_fsa8a06711u.jpg) | John Vachon | Public domain |  |
+| 04-construction-of-elevated-railway-viaduct-apalit-railway-stat.jpg | [Construction of elevated railway viaduct Apalit Railway Station 42.jpg](https://commons.wikimedia.org/wiki/File:Construction_of_elevated_railway_viaduct_Apalit_Railway_Station_42.jpg) | FBenjr123 | CC BY-SA 4.0 | Construction of elevated railway viaduct and A2 level Apalit Railway Station, 2021 Apalit railway station is an elevated station, as part of |
+| 05-construction-of-elevated-railway-viaduct-apalit-railway-stat.jpg | [Construction of elevated railway viaduct Apalit Railway Station 08.jpg](https://commons.wikimedia.org/wiki/File:Construction_of_elevated_railway_viaduct_Apalit_Railway_Station_08.jpg) | FBenjr123 | CC BY-SA 4.0 | Construction of elevated railway viaduct and A2 level Apalit Railway Station, 2021 Apalit railway station is an elevated station, as part of |
+| 06-construction-of-elevated-railway-viaduct-apalit-railway-stat.jpg | [Construction of elevated railway viaduct Apalit Railway Station 48.jpg](https://commons.wikimedia.org/wiki/File:Construction_of_elevated_railway_viaduct_Apalit_Railway_Station_48.jpg) | FBenjr123 | CC BY-SA 4.0 | Construction of elevated railway viaduct and A2 level Apalit Railway Station, 2021 Apalit railway station is an elevated station, as part of |
+| 07-the-l-train-tracks-47879876621.jpg | [The L train tracks (47879876621).jpg](https://commons.wikimedia.org/wiki/File:The_L_train_tracks_(47879876621).jpg) | Bex Walton from London, England | CC BY 2.0 | The L train tracks |
+| 08-the-l-train-tracks-32935689047.jpg | [The L train tracks (32935689047).jpg](https://commons.wikimedia.org/wiki/File:The_L_train_tracks_(32935689047).jpg) | Bex Walton from London, England | CC BY 2.0 | The L train tracks |
+| 09-chicago-l-train-tracks-4592690367.jpg | [Chicago - 'L' train tracks (4592690367).jpg](https://commons.wikimedia.org/wiki/File:Chicago_-_%27L%27_train_tracks_(4592690367).jpg) | Ryan from Toronto, Canada | CC BY 2.0 | Chicago - 'L' train tracks |

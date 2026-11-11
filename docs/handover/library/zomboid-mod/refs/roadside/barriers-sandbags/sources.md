@@ -1,0 +1,16 @@
+# roadside/barriers-sandbags
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-barreiranewjersey.jpg | [BarreiraNewJersey.JPG](https://commons.wikimedia.org/wiki/File:BarreiraNewJersey.JPG) | CorreiaPM | Public domain | Barreira New Jersey |
+| 02-yellow-and-black-jersey-barriers.jpg | [Yellow and black Jersey barriers.jpg](https://commons.wikimedia.org/wiki/File:Yellow_and_black_Jersey_barriers.jpg) | Fumikas Sagisavas | CC0 | Yellow and black Jersey barriers |
+| 03-artistic-jersey-barrier-2024-02.jpg | [Artistic Jersey Barrier (2024) 02.jpg](https://commons.wikimedia.org/wiki/File:Artistic_Jersey_Barrier_(2024)_02.jpg) | Daniel Capilla | CC BY-SA 4.0 | Un día junto a la marea de Duna Anaya López, arte urbano de febrero de 2024 sobre una barrera de hormigón tipo New Jersey ubicada en la term |
+| 04-sandbag-wall-geograph-org-uk-3222014.jpg | [Sandbag wall - geograph.org.uk - 3222014.jpg](https://commons.wikimedia.org/wiki/File:Sandbag_wall_-_geograph.org.uk_-_3222014.jpg) | Bill Nicholls | CC BY-SA 2.0 | Sandbag wall |
+| 05-fema-34771-sandbag-wall-in-missouri.jpg | [FEMA - 34771 - Sandbag wall in Missouri.jpg](https://commons.wikimedia.org/wiki/File:FEMA_-_34771_-_Sandbag_wall_in_Missouri.jpg) | Andrea Booher | Public domain | Cape Girardeau, MO, March 29, 2008 -- Sandbags top a levee that withstood Mississippi river flooding in Cape Girardeau County.   Andrea Booh |
+| 06-fema-34762-residents-building-a-sandbag-wall-in-flood-waters.jpg | [FEMA - 34762 - Residents building a sandbag wall in flood waters in Ar](https://commons.wikimedia.org/wiki/File:FEMA_-_34762_-_Residents_building_a_sandbag_wall_in_flood_waters_in_Arkansas.jpg) | Jocelyn Augustino | Public domain | Biscoe, AR, March 28, 2008 --  Philip Lightsey, left, and his son Josh, check the water levels around the sandbags which encompass his house |
+| 07-hesco-barriers-delivered.jpg | [Hesco Barriers Delivered.jpg](https://commons.wikimedia.org/wiki/File:Hesco_Barriers_Delivered.jpg) | Douglas W. Jones | CC0 | Hesco bastions as delivered to the University of Iowa in preparation for flood defense along the Iowa River. |
+| 08-hesco-barriers-installation.jpg | [Hesco Barriers Installation.jpg](https://commons.wikimedia.org/wiki/File:Hesco_Barriers_Installation.jpg) | Douglas W. Jones | CC0 | A crew of workers preparing Hesco bastions for filling beside the University of Iowa's Advanced Technology Laboratories, in preparation for  |
+| 09-hesco-barriers-being-filled.jpg | [Hesco Barriers Being Filled.jpg](https://commons.wikimedia.org/wiki/File:Hesco_Barriers_Being_Filled.jpg) | Douglas W. Jones | CC0 | A crew of workers using skid loaders to fill Hesco bastions around the University of Iowa's Advanced Technology Laboratories, in preparation |
+| 10-razor-wire-fence-at-canberra-railway-station.jpg | [Razor wire fence at Canberra railway station.jpg](https://commons.wikimedia.org/wiki/File:Razor_wire_fence_at_Canberra_railway_station.jpg) | Totallynotarandomalt69 | CC0 | Razor wire fence located around the railcar stabling yard at Canberra railway station in October 2026 |

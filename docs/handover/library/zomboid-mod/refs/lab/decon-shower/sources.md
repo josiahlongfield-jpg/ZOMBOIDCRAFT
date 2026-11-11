@@ -1,0 +1,12 @@
+# lab/decon-shower
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-safety-shower-for-decontamination-geograph-org-uk-6647913.jpg | [Safety shower for decontamination - geograph.org.uk - 6647913.jpg](https://commons.wikimedia.org/wiki/File:Safety_shower_for_decontamination_-_geograph.org.uk_-_6647913.jpg) | Christine Johnstone | CC BY-SA 2.0 | Safety shower for decontamination |
+| 02-poison-gas-decontamination-shower.jpg | [Poison gas decontamination shower.jpg](https://commons.wikimedia.org/wiki/File:Poison_gas_decontamination_shower.jpg) | Otis Historical Archives National Museum of Health and Medicine | CC BY 2.0 | Treatment barracks for gas cases. Poison gas decontamination shower. Evacuation Hospital #2. World War 1. Selected by Kathleen. |
+| 03-decontamination-shower-exercise-desert-sailor-feb-27-2008.jpg | [Decontamination shower, Exercise Desert Sailor, Feb. 27, 2008.jpg](https://commons.wikimedia.org/wiki/File:Decontamination_shower,_Exercise_Desert_Sailor,_Feb._27,_2008.jpg) | Petty Officer 2nd Class Sandra M. Palumbo | Public domain | U.S. Navy Petty Officer 2nd Class Edward Cortez passes through a decontamination shower as members of his team rinse foam off their fire-fig |
+| 04-pueblo-chemical-agent-destruction-pilot-plant-laboratory-853.jpg | [Pueblo Chemical Agent-Destruction Pilot Plant Laboratory (8539127769).](https://commons.wikimedia.org/wiki/File:Pueblo_Chemical_Agent-Destruction_Pilot_Plant_Laboratory_(8539127769).jpg) | PEO ACWA | CC BY 2.0 | Inside the Agent Standards Room of the Pueblo Chemical Agent-Destruction Pilot Plant Laboratory, the deputy operations branch manager explai |
+| 05-csiro-scienceimage-411-protective-plastic-suits.jpg | [CSIRO ScienceImage 411 Protective Plastic Suits.jpg](https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_411_Protective_Plastic_Suits.jpg) | Livestock Industries, CSIRO | CC BY 3.0 | If dealing with a disease agent which can infect humans as well as animals (zoonotic agent), staff working at CSIRO's Australian Animal Heal |
+| 06-the-street-railway-journal-1900-14572061038.jpg | [The Street railway journal (1900) (14572061038).jpg](https://commons.wikimedia.org/wiki/File:The_Street_railway_journal_(1900)_(14572061038).jpg) | Internet Archive Book Images | No restrictions | Identifier: streetrailwayjo161900newy (find matches) Title: The Street railway journal Year: 1884 (1880s) Authors:  Subjects:  Street-railro |

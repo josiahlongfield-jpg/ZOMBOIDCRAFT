@@ -1,0 +1,14 @@
+# ranges/abandoned-tanks-apcs
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-corroded-iron-tank-in-abandoned-mine-on-white-island.jpg | [Corroded iron tank in abandoned mine on White Island.jpg](https://commons.wikimedia.org/wiki/File:Corroded_iron_tank_in_abandoned_mine_on_White_Island.jpg) | Avenue | CC BY-SA 3.0 | Corroding iron tank at the White Island sulphur mine, abandoned after a lahar killed all the workers in 1914. |
+| 02-valley-above-arish-mell-with-abandoned-tank-geograph-org-uk.jpg | [Valley above Arish Mell, with abandoned tank - geograph.org.uk - 80845](https://commons.wikimedia.org/wiki/File:Valley_above_Arish_Mell,_with_abandoned_tank_-_geograph.org.uk_-_8084583.jpg) | David Martin | CC BY-SA 2.0 | Valley above Arish Mell, with abandoned tank |
+| 03-abandoned-liquid-nitrogen-tank-detail.jpg | [Abandoned liquid nitrogen tank detail.jpg](https://commons.wikimedia.org/wiki/File:Abandoned_liquid_nitrogen_tank_detail.jpg) | Digitura | CC0 | Abandoned liquid nitrogen tank outside derelict building. |
+| 04-tank-hulks-from-abandoned-wrecks-to-perfect-targets-dvids450.jpg | [Tank hulks, From abandoned wrecks to perfect targets DVIDS450066.jpg](https://commons.wikimedia.org/wiki/File:Tank_hulks,_From_abandoned_wrecks_to_perfect_targets_DVIDS450066.jpg) | Staff Sgt. Edward Daileg | Public domain | A newly-placed tank hulk target sits several feet away from a depleted one at the Besmaya Combat Training Center. Fifty hulks consisting of  |
+| 05-tank-firing-range-bovington-1.jpg | [Tank Firing Range, Bovington - 1.jpg](https://commons.wikimedia.org/wiki/File:Tank_Firing_Range,_Bovington_-_1.jpg) | Simon | CC BY 2.0 | Tank as a firing range target. |
+| 06-tank-firing-range-bovington-2.jpg | [Tank Firing Range, Bovington (2).jpg](https://commons.wikimedia.org/wiki/File:Tank_Firing_Range,_Bovington_(2).jpg) | Simon | CC BY 2.0 | Tank as a firing range target. |
+| 07-an-anti-government-militant-with-a-machine-gun-stands-in-fro.jpg | [An anti-government militant with a machine gun stands in front of an a](https://commons.wikimedia.org/wiki/File:An_anti-government_militant_with_a_machine_gun_stands_in_front_of_an_abandoned_government_armored_personnel_carrier_during_the_1991_Iraqi_uprisings.jpg) | Unknown authorUnknown author | Public domain | An anti-government militant with a machine gun stands in front of an abandoned government armored personnel carrier during the 1991 Iraqi up |
+| 08-inside-an-armored-personnel-carrier-5453210409.jpg | [Inside an Armored Personnel Carrier (5453210409).jpg](https://commons.wikimedia.org/wiki/File:Inside_an_Armored_Personnel_Carrier_(5453210409).jpg) | Peretz Partensky from San Francisco, USA | CC BY-SA 2.0 | Inside an Armored Personnel Carrier |

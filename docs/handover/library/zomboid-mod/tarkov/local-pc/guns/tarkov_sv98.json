@@ -1,0 +1,542 @@
+{
+ "id": "tarkov_sv98",
+ "name": "SV-98 (kitted)",
+ "anchor": "precision_rifle",
+ "anchorMesh": "pbr_precision_rifle",
+ "calibre": "7.62x54R",
+ "suppressed": true,
+ "fp": "operator_tarkov_sv98",
+ "sight": "scope_34mm_s&b_pm_ii_5_25x56_LOD0",
+ "zoom": 5.0,
+ "reload": [
+  2.833,
+  4.333
+ ],
+ "stats": {
+  "damage": 30.0,
+  "hipSpread": 4.0,
+  "aimSpread": 0.06,
+  "recoil": 2.0,
+  "range": 260.0,
+  "fireDelayTicks": 33,
+  "magazineSize": 10
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "laser",
+  "light",
+  "stock"
+ ],
+ "rail": {
+  "light": {
+   "bone": "tactical_all_steiner_9021_dbal_pl_LOD0",
+   "at": [
+    0.0066,
+    -0.0347,
+    0.0206
+   ],
+   "dir": [
+    0.0003,
+    -0.9997,
+    -0.0225
+   ],
+   "third": [
+    -0.1404,
+    -0.0807,
+    0.8472
+   ]
+  },
+  "laser": {
+   "bone": "tactical_all_steiner_9021_dbal_pl_LOD0",
+   "at": [
+    0.0041,
+    -0.0382,
+    0.0101
+   ],
+   "dir": [
+    0.0003,
+    -0.9997,
+    -0.0225
+   ],
+   "third": [
+    -0.1379,
+    -0.0703,
+    0.8508
+   ]
+  }
+ },
+ "grip": null,
+ "guard": "handguard_sv-98_cnc_guns_ov_unif_keymod_LOD0",
+ "holds": {
+  "handguard_sv-98_cnc_guns_ov_unif_keymod_LOD0": {
+   "palm": [
+    0.05674,
+    0.13089,
+    -0.06513,
+    0.26392,
+    -0.34715,
+    0.75855,
+    -0.48417
+   ],
+   "fingers": {
+    "Base HumanLDigit11 1": [
+     0.71238,
+     -0.14455,
+     -0.0005,
+     0.68675
+    ],
+    "Base HumanLDigit12 1": [
+     0.01502,
+     0.15956,
+     -0.03203,
+     0.98655
+    ],
+    "Base HumanLDigit13 1": [
+     0.0484,
+     0.01621,
+     0.02107,
+     0.99847
+    ],
+    "Base HumanLDigit21 1": [
+     -0.04076,
+     0.27475,
+     -0.08829,
+     0.95658
+    ],
+    "Base HumanLDigit22 1": [
+     -0.08075,
+     0.04604,
+     -0.28747,
+     0.95327
+    ],
+    "Base HumanLDigit23 1": [
+     -0.00051,
+     -0.00027,
+     -0.52798,
+     0.84926
+    ],
+    "Base HumanLDigit31 1": [
+     -0.11532,
+     0.24721,
+     -0.26098,
+     0.926
+    ],
+    "Base HumanLDigit32 1": [
+     -0.06192,
+     -0.00446,
+     -0.61108,
+     0.78913
+    ],
+    "Base HumanLDigit33 1": [
+     -0.05528,
+     0.00914,
+     -0.17325,
+     0.98328
+    ],
+    "Base HumanLDigit41 1": [
+     -0.29089,
+     0.28051,
+     -0.3568,
+     0.84225
+    ],
+    "Base HumanLDigit42 1": [
+     0.02278,
+     0.0338,
+     -0.58301,
+     0.81144
+    ],
+    "Base HumanLDigit43 1": [
+     -0.00111,
+     -0.00039,
+     -0.1263,
+     0.99199
+    ],
+    "Base HumanLDigit51 1": [
+     -0.26904,
+     0.10644,
+     -0.57722,
+     0.76361
+    ],
+    "Base HumanLDigit52 1": [
+     -0.0728,
+     -0.04156,
+     -0.3915,
+     0.91635
+    ],
+    "Base HumanLDigit53 1": [
+     -0.00121,
+     -0.00069,
+     -0.05313,
+     0.99859
+    ]
+   }
+  }
+ },
+ "zooms": [
+  5,
+  25
+ ],
+ "alt": [
+  {
+   "sight": "scope_base_trijicon_rmr_LOD0",
+   "zoom": 0,
+   "reticleMoa": 85,
+   "aim": [
+    -0.0,
+    0.073424,
+    -0.147948,
+    -0.0,
+    -0.0,
+    0.0,
+    1.0
+   ]
+  }
+ ],
+ "tarkov": {
+  "base": "55801eed4bdc2d89578b4588",
+  "aimPath": "/mod_scope/mod_scope_000",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "55801eed4bdc2d89578b4588",
+    "bone": "weapon_izhmash_sv-98_762x54r_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     -0.707107,
+     0.0,
+     0.0,
+     0.707107
+    ],
+    "bones": [
+     "sv-98_internals_LOD0",
+     "weapon_izhmash_sv-98_762x54r_LOD0",
+     "sv-98_bolt_1_LOD0",
+     "sv-98_bolt_2_LOD0",
+     "sv-98_hammer_LOD0",
+     "sv-98_trigger_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "559ba5b34bdc2d1f1a8b4582",
+    "bone": "mag_sv-98_izhmash_sv-98_std_762x54r_10_LOD0",
+    "at": [
+     -0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_sv-98_izhmash_sv-98_std_762x54r_10_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_scope",
+    "item": "5aa66c72e5b5b00016327c93",
+    "bone": "mount_all_nightforce_x_treme_duty_ultralite_one_piece_magmount_multimount_34mm_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_all_nightforce_x_treme_duty_ultralite_one_piece_magmount_34mm_LOD0",
+     "mount_all_nightforce_x_treme_duty_ultralite_one_piece_magmount_multimount_34mm_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope_000",
+    "item": "62850c28da09541f43158cca",
+    "bone": "scope_34mm_s&b_pm_ii_5_25x56_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "backLens",
+     "linza",
+     "scope_34mm_s&b_pm_ii_5_25x56_glass_LOD0",
+     "scope_34mm_s&b_pm_ii_5_25x56_LOD0",
+     "scope_34mm_s&b_pm_ii_5_25x56_switch_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope_001",
+    "item": "5a33b2c9c4a282000c5a9511",
+    "bone": "mount_all_trijicon_rm33_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_all_trijicon_rm33_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope_001/mod_scope",
+    "item": "5a32aa8bc4a2826c6e06d737",
+    "bone": "scope_base_trijicon_rmr_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "linza",
+     "scope_base_trijicon_rmr_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_sight_rear",
+    "item": "56083e1b4bdc2dc8488b4572",
+    "bone": "sight_rear_sv-98_izhmash_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "sight_rear_sv-98_izhmash_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_tactical",
+    "item": "56083eab4bdc2d26448b456a",
+    "bone": "tactical_sv-98_izhmash_heat_ribbon_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "tactical_sv-98_izhmash_heat_ribbon_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_muzzle",
+    "item": "5c4eec9b2e2216398b5aaba2",
+    "bone": "muzzle_sv98_izhmash_thread_muzzle_adapter_762x54_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "muzzle_sv98_izhmash_thread_muzzle_adapter_762x54_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_muzzle",
+    "item": "5c4eecc32e221602b412b440",
+    "bone": "silencer_sv98_izhmash_silencer_std_762x54_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "silencer_sv98_izhmash_silencer_std_762x54_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_muzzle/mod_tactical",
+    "item": "5c4eecde2e221602b3140418",
+    "bone": "tactical_sv98_izhmash_silencer_heat_shield_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "tactical_sv98_izhmash_silencer_heat_shield_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "623b2e9d11c3296b440d1638",
+    "bone": "stock_sv-98_cnc_guns_ov_sv98_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.707107,
+     0.0,
+     0.0,
+     0.707107
+    ],
+    "bones": [
+     "stock_cnc_cnc_guns_m12b_adapter_LOD0",
+     "stock_sv-98_cnc_guns_ov_sv98_LOD0",
+     "stock_cnc_cnc_guns_m12b_button_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard",
+    "item": "623c3c1f37b4b31470357737",
+    "bone": "handguard_sv-98_cnc_guns_ov_unif_keymod_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "handguard_sv-98_cnc_guns_ov_unif_keymod_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard/mod_mount_000",
+    "item": "623c2f4242aee3103f1c44b7",
+    "bone": "mount_keymod_cnc_guns_medium_rail_section_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_keymod_cnc_guns_medium_rail_section_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard/mod_mount_000/mod_tactical",
+    "item": "5d2369418abbc306c62e0c80",
+    "bone": "tactical_all_steiner_9021_dbal_pl_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "flashlight_glass",
+     "ir_switch_000_LOD0",
+     "vs_switch_000_LOD0",
+     "tactical_all_steiner_9021_dbal_pl_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard/mod_mount_001",
+    "item": "623c2f652febb22c2777d8d7",
+    "bone": "mount_keymod_cnc_guns_short_rail_section_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_keymod_cnc_guns_short_rail_section_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_handguard/mod_mount_002",
+    "item": "623c2f652febb22c2777d8d7",
+    "bone": "mount_keymod_cnc_guns_short_rail_section_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_keymod_cnc_guns_short_rail_section_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_pistol_grip",
+    "item": "623c3be0484b5003161840dc",
+    "bone": "pistolgrip_ak_fab_defence_agr_47_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "pistolgrip_ak_fab_defence_agr_47_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock_000",
+    "item": "624c29ce09cd027dff2f8cd7",
+    "bone": "stock_cnc_cnc_guns_m12b_LOD0",
+    "at": [
+     -0.0,
+     -0.0,
+     -0.0,
+     0.0,
+     -0.707106,
+     0.0,
+     0.707107
+    ],
+    "bones": [
+     "stock_cnc_cnc_guns_m12b_LOD0"
+    ]
+   }
+  ]
+ }
+}

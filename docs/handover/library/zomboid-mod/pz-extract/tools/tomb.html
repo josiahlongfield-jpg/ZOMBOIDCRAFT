@@ -1,0 +1,229 @@
+<title>Tomb Body Comparison</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+/* Layout: one full-width stage with a control strip under it, notes below. Dark-first, like a night in Knox County. */
+:root{
+  --bg:#141613; --panel:#1d201b; --line:#33382f; --fg:#e4e2d6; --muted:#9a9d8c;
+  --accent:#b8402f; --accent-fg:#fff4ee; --chip:#262a23;
+  --display:'Oswald','Arial Narrow',sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#eceae1;--panel:#f6f5ef;--line:#cfccbf;--fg:#22241e;--muted:#5d6052;--accent:#a3392a;--accent-fg:#fff;--chip:#e2dfd3;color-scheme:light}}
+:root[data-theme="light"]{--bg:#eceae1;--panel:#f6f5ef;--line:#cfccbf;--fg:#22241e;--muted:#5d6052;--accent:#a3392a;--accent-fg:#fff;--chip:#e2dfd3;color-scheme:light}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,38px);letter-spacing:.02em;text-transform:uppercase;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:68ch}
+.stage{position:relative;width:100%;aspect-ratio:16/10;max-height:72vh;background:#2b2f2a;border:1px solid var(--line);border-radius:6px;overflow:hidden;touch-action:none;cursor:grab}
+.stage canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:10px;bottom:10px;font-family:var(--mono);font-size:12px;color:#e9e7da;background:rgba(10,12,9,.62);padding:4px 8px;border-radius:4px;pointer-events:none}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:#e9e7da;font-family:var(--mono)}
+.loading[hidden]{display:none}
+.controls{display:grid;gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--muted);min-width:92px}
+button{font:inherit;font-size:14px;background:var(--chip);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:6px 11px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.notes{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:8px}
+.notes h2{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:16px;margin:0}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:4px;max-width:75ch}
+code{font-family:var(--mono);font-size:13px}
+.faces{display:flex;flex-wrap:wrap;gap:6px}
+.row[hidden]{display:none}
+</style>
+
+<div class="wrap">
+  <h1>Tomb's Player Body against Zomboid's</h1>
+  <p class="sub">Zomboid's own body on the far left, then Tomb's reworked body with each skin. Everyone is in underwear and plays Zomboid's own animations. Drag to turn the camera, scroll or pinch to zoom.</p>
+
+  <div class="stage" id="stage"><div class="loading" id="loading">Loading the bodies…</div><div class="hud" id="hud"></div></div>
+
+  <div class="controls">
+    <div class="row" role="group" aria-label="Who"><span class="lbl">Bodies</span>
+      <button data-sex="f" aria-pressed="true">Women</button>
+      <button data-sex="m">Men</button>
+    </div>
+    <div class="row" role="group" aria-label="Animation"><span class="lbl">Move</span>
+      <button data-clip="idle">Idle</button>
+      <button data-clip="walk" aria-pressed="true">Walk</button>
+      <button data-clip="sneak">Sneak</button>
+      <button data-clip="run">Run</button>
+      <button data-clip="sprint">Sprint</button>
+    </div>
+    <div class="row" role="group" aria-label="Look"><span class="lbl">Look</span>
+      <button data-wire="0" aria-pressed="true">Skin</button>
+      <button data-wire="1">Wireframe</button>
+      <button id="hairBtn" aria-pressed="true">Hair</button>
+      <button id="lightBtn" aria-pressed="false">Night</button>
+    </div>
+    <div class="row" role="group" aria-label="Camera"><span class="lbl">Camera</span>
+      <button data-cam="mc" aria-pressed="true">Front</button>
+      <button data-cam="back">Back</button>
+      <button data-cam="side">Side on</button>
+      <button data-cam="close">Close on faces</button>
+      <button data-cam="pz">Zomboid top-down</button>
+    </div>
+    <div class="row" role="group" aria-label="Tomb faces" id="faceRow"><span class="lbl">Tomb face</span><div class="faces" id="faces"></div></div>
+  </div>
+
+  <div class="notes">
+    <h2>What you're looking at</h2>
+    <ul id="lineup"></ul>
+    <h2>How different is it?</h2>
+    <ul>
+      <li><b>Shape.</b> Tomb's body has about five times the polygons (5,172 triangles for the woman against Zomboid's 984, and 4,590 for the man against 916). The extra detail goes into the face, hands, chest, hips and knees, so the silhouette is rounder and less blocky. Height and proportions match Zomboid's almost exactly, so Zomboid's clothes and animations fit it. Wireframe shows the difference best.</li>
+      <li><b>Skin.</b> Tomb's textures are 512px against Zomboid's 256px, with painted muscle, collarbones and shading. Its own underwear is a black set, a different style from Zomboid's light blue one.</li>
+      <li><b>Goth.</b> The same body with pale skin, dark lips and eyes and black underwear.</li>
+      <li><b>Faces.</b> Tomb adds 9 faces for men and 9 for women. Each comes in Zomboid's 5 skin tones (only tone 1 is shown here). It also has makeup, muscle and stubble overlays that I haven't loaded yet.</li>
+      <li><b>The two female mods.</b> Detailed Player Texture and Evil's Ink use the same texture layout as Tomb, so they fit Tomb's body as well as Zomboid's. They're shown on Tomb's body here.</li><li><b>Women's base set.</b> Every woman, Zomboid's included, now wears Tomb's black bra and briefs as her base set. The men keep their own.</li>
+      <li>Tomb's DOLL and NUDE variants are left out on purpose.</li>
+    </ul>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const DATA = __DATA__;
+const TEX = __TEX__;
+const FACES = __FACES__;
+(function(){
+const stage=document.getElementById('stage'), hud=document.getElementById('hud');
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.outputEncoding=THREE.sRGBEncoding;
+stage.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+const DAY={sky:0x8f9a9c,amb:0.62,sun:0.72}, NIGHT={sky:0x101521,amb:0.18,sun:0.28};
+scene.fog=new THREE.Fog(DAY.sky,14,44);scene.background=new THREE.Color(DAY.sky);
+const amb=new THREE.HemisphereLight(0xdfe6e8,0x46503a,DAY.amb);scene.add(amb);
+const sun=new THREE.DirectionalLight(0xfff3df,DAY.sun);sun.position.set(4,9,-5);scene.add(sun);
+const camera=new THREE.PerspectiveCamera(50,1,0.05,100);
+function grassTex(){const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');
+  let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+  for(let y=0;y<16;y++)for(let x=0;x<16;x++){const v=rnd();g.fillStyle=`rgb(${76+v*30|0},${98+v*34|0},${52+v*18|0})`;g.fillRect(x*4,y*4,4,4)}
+  g.strokeStyle='rgba(0,0,0,.22)';g.strokeRect(.5,.5,63,63);
+  const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(60,60);return t}
+const gtex=grassTex();
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.MeshLambertMaterial({map:gtex}));
+ground.rotation.x=-Math.PI/2;scene.add(ground);
+const loader=new THREE.TextureLoader();
+const prep=t=>{t.flipY=false;t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t};
+const tex=k=>prep(loader.load(TEX[k]));
+const lam=(map,side)=>new THREE.MeshLambertMaterial({map,alphaTest:0.5,side:side||THREE.DoubleSide,skinning:true});
+const feet=['Bip01_L_Foot','Bip01_R_Foot','Bip01_L_Toe0','Bip01_R_Toe0'];
+const wireMats=[];
+function build(D,bodyPart,x,skinTex,height){
+  const root=new THREE.Group();root.position.x=x;scene.add(root);
+  const bones={},M=new THREE.Matrix4();
+  D.skel.forEach(b=>{const bone=new THREE.Bone();bone.name=b.name;M.fromArray(b.m);M.decompose(bone.position,bone.quaternion,bone.scale);bones[b.name]=bone});
+  D.skel.forEach(b=>{(b.parent?bones[b.parent]:root).add(bones[b.name])});
+  const add=(m,mat)=>{const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.Float32BufferAttribute(m.pos,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(m.nrm,3));
+    g.setAttribute('uv',new THREE.Float32BufferAttribute(m.uv,2));g.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(m.si,4));
+    g.setAttribute('skinWeight',new THREE.Float32BufferAttribute(m.sw,4));
+    const mesh=new THREE.SkinnedMesh(g,mat);mesh.frustumCulled=false;root.add(mesh);
+    mesh.bind(new THREE.Skeleton(m.bones.map(b=>bones[b.name]),m.bones.map(b=>new THREE.Matrix4().fromArray(b.off))),new THREE.Matrix4());return mesh};
+  const bodyMat=lam(skinTex,THREE.FrontSide);
+  const body=add(bodyPart,bodyMat);
+  const wm=new THREE.MeshBasicMaterial({color:0x14201a,wireframe:true,skinning:true});wireMats.push(wm);
+  const wire=add(bodyPart,wm);wire.visible=false;
+  const hair=add(D.parts.hair[0],lam(tex(D===DATA.male?'m_hair':'f_hair')));
+  let ymax=0;const p=D.parts.body[0].pos;for(let i=1;i<p.length;i+=3)ymax=Math.max(ymax,p[i]);
+  root.scale.setScalar(height/ymax);
+  const mixer=new THREE.AnimationMixer(root),actions={},lift={},speeds={};
+  for(const [nm,c] of Object.entries(D.clips)){const tr=[];
+    c.tracks.forEach(t=>{if(!bones[t.bone])return;
+      if(t.q)tr.push(new THREE.QuaternionKeyframeTrack(t.bone+'.quaternion',t.qt,t.q));
+      if(t.p)tr.push(new THREE.VectorKeyframeTrack(t.bone+'.position',t.pt,t.p));
+      if(t.s)tr.push(new THREE.VectorKeyframeTrack(t.bone+'.scale',t.st,t.s));});
+    const a=mixer.clipAction(new THREE.AnimationClip(nm,c.dur,tr));actions[nm]=a;
+    a.play();const dur=c.dur,N=90,S=[];let miny=1e9,sum=0,cnt=0;
+    for(let i=0;i<=N;i++){a.time=dur*i/N;mixer.update(0);root.updateMatrixWorld(true);
+      const ps=feet.map(f=>bones[f].getWorldPosition(new THREE.Vector3()));ps.forEach(q=>{miny=Math.min(miny,q.y)});S.push(ps)}
+    for(const k of [0,1]){const mk=Math.min(...S.map(s=>s[k].y));
+      for(let i=1;i<S.length;i++)if(S[i][k].y<mk+0.03&&S[i-1][k].y<mk+0.03){sum+=-(S[i][k].z-S[i-1][k].z)/(dur/N);cnt++}}
+    speeds[nm]=cnt?sum/cnt:0;lift[nm]=miny-0.03;a.stop();}
+  return {root,mixer,actions,lift,speeds,cur:null,drop:0,body,wire,hair,bodyMat}
+}
+// Tomb skin with a face on top, drawn in a canvas so the face picker can swap it
+function faceCanvas(baseKey){
+  const c=document.createElement('canvas');c.width=c.height=512;const t=prep(new THREE.CanvasTexture(c));
+  const base=new Image();const st={face:null};
+  const draw=()=>{const g=c.getContext('2d');g.clearRect(0,0,512,512);g.drawImage(base,0,0,512,512);
+    if(st.face&&st.face.complete)g.drawImage(st.face,0,0,512,512);t.needsUpdate=true};
+  base.onload=draw;base.src=TEX[baseKey];
+  t.setFace=n=>{if(!n){st.face=null;draw();return}const im=new Image();im.onload=draw;im.src=FACES[n];st.face=im};
+  return t}
+const H_M=1.85,H_F=1.75;
+const LINE={
+  f:[{id:'van',name:"Zomboid's body and skin",part:'van',tex:'bk_f_van'},
+     {id:'tomb',name:"Tomb's body and skin",part:'tomb',tex:'bk_f_tomb',face:true},
+     {id:'goth',name:"Tomb's body, Goth skin",part:'tomb',tex:'bk_f_goth'},
+     {id:'det',name:"Tomb's body, Detailed Player Texture",part:'tomb',tex:'bk_f_detail'},
+     {id:'ink',name:"Tomb's body, Evil's Ink",part:'tomb',tex:'bk_f_ink'}],
+  m:[{id:'van',name:"Zomboid's body and skin",part:'van',tex:'m_uw'},
+     {id:'tomb',name:"Tomb's body and skin",part:'tomb',tex:'tomb_m',face:true},
+     {id:'goth',name:"Tomb's body, Goth skin",part:'tomb',tex:'goth_m'}]};
+const groups={};
+for(const sx of ['f','m']){const D=sx==='f'?DATA.female:DATA.male,L=LINE[sx],n=L.length;groups[sx]=[];
+  L.forEach((e,i)=>{const x=(n-1)/2*1.6-i*1.6;
+    const t=e.face?faceCanvas(e.tex):tex(e.tex);
+    const c=build(D,e.part==='van'?D.parts.body[0]:D.parts.tomb,x,t,sx==='f'?H_F:H_M);c.faceTex=e.face?t:null;c.x=x;groups[sx].push(c)})}
+let sex='f',clipName='walk',speed=0,targetSpeed=0;
+function all(){return groups.f.concat(groups.m)}
+function play(nm){clipName=nm;for(const c of all()){const n=c.actions[nm];n.reset().play();if(c.cur&&c.cur!==n)c.cur.crossFadeTo(n,0.3,false);c.cur=n}
+  targetSpeed=groups[sex][0].speeds[nm]}
+const lineup=document.getElementById('lineup');
+function setSex(s){sex=s;for(const k of ['f','m'])groups[k].forEach(c=>c.root.visible=k===s);
+  targetSpeed=groups[s][0].speeds[clipName];
+  lineup.innerHTML='';LINE[s].forEach((e,i)=>{const li=document.createElement('li');li.textContent=(i===0?'Left: ':i===LINE[s].length-1?'Right: ':'Then: ')+e.name+'.';lineup.appendChild(li)});
+  buildFaces();setCam(camKey)}
+const facesEl=document.getElementById('faces');
+const FN={f:['Joy','Veronica','Alice','Sophie','Emily','Anna','Sammy','Lotte','Lucy'],m:['Jake','Iroquois','Patrick','Peter','Jason','Slater','Zach','Jaeger','Louis']};
+let face={f:null,m:null};
+function buildFaces(){facesEl.innerHTML='';
+  [null].concat(FN[sex]).forEach(n=>{const b=document.createElement('button');b.textContent=n||'Skin only';b.setAttribute('aria-pressed',face[sex]===n);
+    b.addEventListener('click',()=>{face[sex]=n;facesEl.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+      groups[sex].forEach(c=>c.faceTex&&c.faceTex.setFace(n))});facesEl.appendChild(b)})}
+let yaw=Math.PI,pitch=0.08,dist=7,target=new THREE.Vector3(0,1.0,0),fov=50;
+const cams={mc:{yaw:Math.PI,pitch:0.08,dist:7.4,ty:1.0,fov:50},back:{yaw:0,pitch:0.08,dist:7.4,ty:1.0,fov:50},
+  side:{yaw:Math.PI/2+0.35,pitch:0.05,dist:9,ty:1.0,fov:45},close:{yaw:Math.PI,pitch:0.02,dist:3.4,ty:1.55,fov:40},
+  pz:{yaw:Math.PI-0.785,pitch:0.72,dist:14,ty:0.8,fov:34}};
+let camKey='mc';
+function setCam(k){camKey=k;const c=cams[k];yaw=c.yaw;pitch=c.pitch;dist=c.dist*(sex==='m'?0.75:1);target.y=c.ty;fov=c.fov}
+let drag=null;
+stage.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};stage.setPointerCapture(e.pointerId);stage.style.cursor='grabbing'});
+stage.addEventListener('pointermove',e=>{if(!drag)return;yaw-=(e.clientX-drag.x)*0.008;pitch=Math.max(-0.1,Math.min(1.3,pitch+(e.clientY-drag.y)*0.006));drag={x:e.clientX,y:e.clientY}});
+stage.addEventListener('pointerup',()=>{drag=null;stage.style.cursor='grab'});
+stage.addEventListener('wheel',e=>{e.preventDefault();dist=Math.max(1.2,Math.min(22,dist*(1+Math.sign(e.deltaY)*0.08)))},{passive:false});
+function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+new ResizeObserver(resize).observe(stage);resize();
+const press=(sel,b)=>document.querySelectorAll(sel).forEach(x=>x.setAttribute('aria-pressed',x===b));
+document.querySelectorAll('[data-sex]').forEach(b=>b.addEventListener('click',()=>{press('[data-sex]',b);setSex(b.dataset.sex)}));
+document.querySelectorAll('[data-clip]').forEach(b=>b.addEventListener('click',()=>{press('[data-clip]',b);play(b.dataset.clip)}));
+document.querySelectorAll('[data-cam]').forEach(b=>b.addEventListener('click',()=>{press('[data-cam]',b);setCam(b.dataset.cam)}));
+document.querySelectorAll('[data-wire]').forEach(b=>b.addEventListener('click',()=>{press('[data-wire]',b);const w=b.dataset.wire==='1';
+  for(const c of all()){c.wire.visible=w;c.bodyMat.color.setHex(w?0xd9d6cc:0xffffff);c.bodyMat.map=w?null:c.skin;c.bodyMat.needsUpdate=true}}));
+for(const c of all())c.skin=c.bodyMat.map;
+const hb=document.getElementById('hairBtn');let hairOn=true;
+hb.addEventListener('click',()=>{hairOn=!hairOn;hb.setAttribute('aria-pressed',hairOn);for(const c of all())c.hair.visible=hairOn});
+const lb=document.getElementById('lightBtn');let night=false;
+lb.addEventListener('click',()=>{night=!night;lb.setAttribute('aria-pressed',night);const L=night?NIGHT:DAY;scene.background.setHex(L.sky);scene.fog.color.setHex(L.sky);amb.intensity=L.amb;sun.intensity=L.sun});
+setSex('f');play('walk');speed=targetSpeed;
+const labels={idle:'Idle',walk:'Walk',sneak:'Sneak',run:'Run',sprint:'Sprint'};
+const clock=new THREE.Clock();let gz=0;
+document.getElementById('loading').hidden=true;
+window.__ready=true;
+function frame(){const dt=Math.min(0.05,clock.getDelta());
+  for(const c of groups[sex]){c.mixer.update(dt);c.drop+=(c.lift[clipName]-c.drop)*Math.min(1,dt*6);c.root.position.y=-c.drop}
+  speed+=(targetSpeed-speed)*Math.min(1,dt*6);gz=(gz+speed*dt)%1;gtex.offset.y=-gz;
+  camera.fov=fov;camera.updateProjectionMatrix();
+  camera.position.set(target.x+Math.sin(yaw)*Math.cos(pitch)*dist,target.y+Math.sin(pitch)*dist,target.z+Math.cos(yaw)*Math.cos(pitch)*dist);
+  camera.lookAt(target);hud.textContent=labels[clipName]+' · '+Math.abs(speed).toFixed(2)+' blocks/s';
+  renderer.render(scene,camera);requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+})();
+</script>

@@ -1,0 +1,3768 @@
+{
+ "source": "20_sword_slayer.map objects\\characters\\spartans\\spartans + globals\\player_model_customization (pmcg)",
+ "note": "LOCAL ONLY. slots = the game armory table (pmcg); each item lists region/perm pairs, the skinned mesh node name (region__perm) and the instanced pieces it turns on. nobles = per-Noble outfit using their own permutation where the MP model has one (Jorge is a separate model).",
+ "slots": {
+  "helmet": [
+   {
+    "id": "default",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "default",
+      "mesh": "head__default",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "default_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "default",
+      "mesh": "head__default",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_sam",
+      "mesh": null,
+      "pieces": [
+       "flair_sam_helmet_aug__(spartans_player_sam_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "default",
+      "mesh": null,
+      "pieces": [
+       "flair_default_helmet_brim__(spartans_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "default_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "default",
+      "mesh": "head__default",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_sam",
+      "mesh": null,
+      "pieces": [
+       "flair_sam_helmet_aug__(spartans_player_sam_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "default",
+      "mesh": null,
+      "pieces": [
+       "flair_default_helmet_brim__(spartans_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "rosenda",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_rosenda",
+      "mesh": "head__player_rosenda",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "rosenda_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_rosenda",
+      "mesh": "head__player_rosenda",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_helmet__(spartans_player_skull_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "rosenda_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_rosenda",
+      "mesh": "head__player_rosenda",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_rosenda",
+      "mesh": null,
+      "pieces": [
+       "flair_render_helmet_flare__(spartans_player_rosenda_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "adrianna",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_adrianna",
+      "mesh": "head__player_adrianna",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "adrianna_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_adrianna",
+      "mesh": "head__player_adrianna",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_helmet__(spartans_player_skull_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_helmet_aug01__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "adrianna_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_adrianna",
+      "mesh": "head__player_adrianna",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_helmet_aug__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "malcolm",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_malcolm",
+      "mesh": "head__player_malcolm",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "malcolm_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_malcolm",
+      "mesh": "head__player_malcolm",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_jai",
+      "mesh": null,
+      "pieces": [
+       "flair_player_jai_helmet_aug__(spartans_player_jai_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "malcolm_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_malcolm",
+      "mesh": "head__player_malcolm",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_helmet__(spartans_player_skull_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "skull",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_skull",
+      "mesh": "head__player_skull",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "skull_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_skull",
+      "mesh": "head__player_skull",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_helmet__(spartans_player_skull_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "skull_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_skull",
+      "mesh": "head__player_skull",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_isaac",
+      "mesh": null,
+      "pieces": [
+       "flair_player_issac_helmet_augm__(spartans_player_isaac_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "vinh",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_vinh",
+      "mesh": "head__player_vinh",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_vinh",
+      "mesh": null,
+      "pieces": [
+       "flair_player_vinh_helmet_aug__(spartans_player_vinh_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "vinh_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_vinh",
+      "mesh": "head__player_vinh",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_vinh",
+      "mesh": null,
+      "pieces": [
+       "flair_player_vinh_helmet_aug__(spartans_player_vinh_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "vinh_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_vinh",
+      "mesh": "head__player_vinh",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_helmet_aug__(spartans_player_joshua_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "isaac",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_isaac",
+      "mesh": "head__player_isaac",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_isaac",
+      "mesh": null,
+      "pieces": [
+       "flair_player_issac_helmet_augm__(spartans_player_isaac_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "isaac_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_isaac",
+      "mesh": "head__player_isaac",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_jai",
+      "mesh": null,
+      "pieces": [
+       "flair_player_jai_helmet_aug__(spartans_player_jai_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_l_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "isaac_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_isaac",
+      "mesh": "head__player_isaac",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_isaac",
+      "mesh": null,
+      "pieces": [
+       "flair_player_issac_helmet_augm__(spartans_player_isaac_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_kat_helmet_aug__(spartans_kat_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "joshua",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_joshua",
+      "mesh": "head__player_joshua",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "joshua_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_joshua",
+      "mesh": "head__player_joshua",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_helmet_aug__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "joshua_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_joshua",
+      "mesh": "head__player_joshua",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_helmet_aug__(spartans_player_joshua_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "?80163",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "?80163",
+      "mesh": "head__?80163",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "female_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "?80163",
+      "mesh": "head__?80163",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_rosenda",
+      "mesh": null,
+      "pieces": [
+       "flair_render_helmet_flare__(spartans_player_rosenda_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece01__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "female_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "?80163",
+      "mesh": "head__?80163",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_kat_helmet_aug__(spartans_kat_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_rosenda",
+      "mesh": null,
+      "pieces": [
+       "flair_render_helmet_flare__(spartans_player_rosenda_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "jun",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "jun",
+      "mesh": "head__jun",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "jun_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "jun",
+      "mesh": "head__jun",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "jun",
+      "mesh": null,
+      "pieces": [
+       "flair_jun_head_flare__(spartans_jun_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "jun_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "jun",
+      "mesh": "head__jun",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_kat_helmet_aug__(spartans_kat_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_helmet__(spartans_player_skull_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "player_li",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_li",
+      "mesh": "head__player_li",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "player_li_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_li",
+      "mesh": "head__player_li",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "player_li_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_li",
+      "mesh": "head__player_li",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_rosenda",
+      "mesh": null,
+      "pieces": [
+       "flair_render_helmet_flare__(spartans_player_rosenda_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_auntie_dot_comms__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "nicole",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_nicole",
+      "mesh": "head__player_nicole",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "nicole_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_nicole",
+      "mesh": "head__player_nicole",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_nicole",
+      "mesh": null,
+      "pieces": [
+       "flair_player_nicole_helmet_aug__(spartans_player_nicole_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "nicole_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_nicole",
+      "mesh": "head__player_nicole",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_jai",
+      "mesh": null,
+      "pieces": [
+       "flair_player_jai_helmet_aug__(spartans_player_jai_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "carter",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "carter",
+      "mesh": "head__carter",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_auntie_dot_comms__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "carter_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "carter",
+      "mesh": "head__carter",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_helmet__(spartans_player_skull_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "carter_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "carter",
+      "mesh": "head__carter",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_helmet_flare_carter__(spartans_carter_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_auntie_dot_comms__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "john117",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_john117",
+      "mesh": "head__player_john117",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "john117_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_john117",
+      "mesh": "head__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "john117_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_john117",
+      "mesh": "head__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_helmet_aug__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "sam",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_sam",
+      "mesh": "head__player_sam",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "sam_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_sam",
+      "mesh": "head__player_sam",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_auntie_dot_comms__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "sam_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_sam",
+      "mesh": "head__player_sam",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_sam",
+      "mesh": null,
+      "pieces": [
+       "flair_sam_helmet_aug__(spartans_player_sam_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_auntie_dot_comms__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "sam_c",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "?801d8",
+      "mesh": "head__?801d8",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_auntie_dot_comms__(spartans_carter_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_sam",
+      "mesh": null,
+      "pieces": [
+       "flair_sam_helmet_aug__(spartans_player_sam_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "linda",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_linda",
+      "mesh": "head__player_linda",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "linda_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_linda",
+      "mesh": "head__player_linda",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_sam",
+      "mesh": null,
+      "pieces": [
+       "flair_sam_helmet_aug__(spartans_player_sam_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "linda_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_linda",
+      "mesh": "head__player_linda",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_vinh",
+      "mesh": null,
+      "pieces": [
+       "flair_player_vinh_helmet_aug__(spartans_player_vinh_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "will",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_will",
+      "mesh": "head__player_will",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "will_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_will",
+      "mesh": "head__player_will",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_anton_l_ear_piece__(spartans_player_anton_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_auntie_dot_comms__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "will_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_will",
+      "mesh": "head__player_will",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_kat_helmet_aug__(spartans_kat_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_helmet_aug__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "kurt",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_kurt",
+      "mesh": "head__player_kurt",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "kurt_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_kurt",
+      "mesh": "head__player_kurt",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_kat_helmet_aug__(spartans_kat_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_helmet_aug01__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "kurt_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_kurt",
+      "mesh": "head__player_kurt",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_rosenda",
+      "mesh": null,
+      "pieces": [
+       "flair_render_helmet_flare__(spartans_player_rosenda_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_l_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "kelly",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_kelly",
+      "mesh": "head__player_kelly",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "kelly_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_kelly",
+      "mesh": "head__player_kelly",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_helmet_aug01__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "kelly_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_kelly",
+      "mesh": "head__player_kelly",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_vinh",
+      "mesh": null,
+      "pieces": [
+       "flair_player_vinh_helmet_aug__(spartans_player_vinh_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_helmet_aug__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "jai",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_jai",
+      "mesh": "head__player_jai",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "jai_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_jai",
+      "mesh": "head__player_jai",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "jai_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "player_jai",
+      "mesh": "head__player_jai",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_auntie_dot_comms__(spartans_carter_render)"
+      ]
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_jai",
+      "mesh": null,
+      "pieces": [
+       "flair_player_jai_helmet_aug__(spartans_player_jai_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "emile",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "emile",
+      "mesh": "head__emile",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "emile_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "emile",
+      "mesh": "head__emile",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "emile_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "emile",
+      "mesh": "head__emile",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_c",
+      "perm": "player_rosenda",
+      "mesh": null,
+      "pieces": [
+       "flair_render_helmet_flare__(spartans_player_rosenda_render)"
+      ]
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_headpiece_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "cndmnd",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "dlc2_helmet_cndmnd",
+      "mesh": "head__dlc2_helmet_cndmnd",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "cndmnd_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "dlc2_helmet_cndmnd_dfnt",
+      "mesh": "head__dlc2_helmet_cndmnd_dfnt",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "cndmnd_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "dlc2_helmet_cndmnd_mstr",
+      "mesh": "head__dlc2_helmet_cndmnd_mstr",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "cndmnd_c",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "dlc2_helmet_cndmnd",
+      "mesh": "head__dlc2_helmet_cndmnd",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "dlc2_helmet_cndmnd",
+      "mesh": "flair_head_b__dlc2_helmet_cndmnd",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "hilands",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "dlc2_helmet_hilands",
+      "mesh": "head__dlc2_helmet_hilands",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "hilands_a",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "dlc2_helmet_hilands",
+      "mesh": "head__dlc2_helmet_hilands",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "dlc2_helmet_hilands",
+      "mesh": null,
+      "pieces": [
+       "flair_cnm_t__(spartans_dlc2_helmet_hilands_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "hilands_b",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "dlc2_helmet_hilands",
+      "mesh": "head__dlc2_helmet_hilands",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "dlc2_helmet_hilands",
+      "mesh": null,
+      "pieces": [
+       "flair_cbrn_t__(spartans_dlc2_helmet_hilands_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "hilands_c",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "dlc2_helmet_hilands",
+      "mesh": "head__dlc2_helmet_hilands",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "dlc2_helmet_hilands",
+      "mesh": null,
+      "pieces": [
+       "flair_cnm_t__(spartans_dlc2_helmet_hilands_render)"
+      ]
+     },
+     {
+      "region": "flair_head_b",
+      "perm": "dlc2_helmet_hilands",
+      "mesh": null,
+      "pieces": [
+       "flair_cbrn_t__(spartans_dlc2_helmet_hilands_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_belos_corinthian",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_belos_corinthian",
+      "mesh": "flair_head_a__s8_helmet_belos_corinthian",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_belos_transverse",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_belos_transverse",
+      "mesh": "flair_head_a__s8_helmet_belos_transverse",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_belos_kerata",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_belos_kerata",
+      "mesh": "flair_head_a__s8_helmet_belos_kerata",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_belos_leontokardos",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_belos_leontokardos",
+      "mesh": "flair_head_a__s8_helmet_belos_leontokardos",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_belos_stheno",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_belos_stheno",
+      "mesh": "flair_head_a__s8_helmet_belos_stheno",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_belos_cerberus",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_belos_cerberus",
+      "mesh": "flair_head_a__s8_helmet_belos_cerberus",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_blackguard_base",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_blackguard_base",
+      "mesh": "flair_head_a__s8_helmet_blackguard_base",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_blackguard_bishop",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_blackguard_bishop",
+      "mesh": "flair_head_a__s8_helmet_blackguard_bishop",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_blackguard_dragon",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_blackguard_dragon",
+      "mesh": "flair_head_a__s8_helmet_blackguard_dragon",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_blackguard_wind",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_blackguard_wind",
+      "mesh": "flair_head_a__s8_helmet_blackguard_wind",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_blackguard_visage",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_blackguard_visage",
+      "mesh": "flair_head_a__s8_helmet_blackguard_visage",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_blackguard_crown",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_blackguard_crown",
+      "mesh": "flair_head_a__s8_helmet_blackguard_crown",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_drengr_base",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_drengr_base",
+      "mesh": "flair_head_a__s8_helmet_drengr_base",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_drengr_valdemar",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_drengr_valdemar",
+      "mesh": "flair_head_a__s8_helmet_drengr_valdemar",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_drengr_dvalinn",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_drengr_dvalinn",
+      "mesh": "flair_head_a__s8_helmet_drengr_dvalinn",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_drengr_nari",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_drengr_nari",
+      "mesh": "flair_head_a__s8_helmet_drengr_nari",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_drengr_thyra",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_drengr_thyra",
+      "mesh": "flair_head_a__s8_helmet_drengr_thyra",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "s8_helmet_drengr_tyr",
+    "parts": [
+     {
+      "region": "head",
+      "perm": "s8_helmet_dummy",
+      "mesh": "head__s8_helmet_dummy",
+      "pieces": []
+     },
+     {
+      "region": "flair_head_a",
+      "perm": "s8_helmet_drengr_tyr",
+      "mesh": "flair_head_a__s8_helmet_drengr_tyr",
+      "pieces": []
+     }
+    ]
+   }
+  ],
+  "left_shoulder": [
+   {
+    "id": "left_shoulder_blank",
+    "parts": []
+   },
+   {
+    "id": "left_shoulder_1",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_kat_shoulder_armor_l__(spartans_kat_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_2",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_nicole",
+      "mesh": null,
+      "pieces": [
+       "test_nicole_shoulder01__(spartans_player_nicole_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_3",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_fred",
+      "mesh": null,
+      "pieces": [
+       "flair_left_shoulder__(spartans_player_fred_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_4",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_sam",
+      "mesh": null,
+      "pieces": [
+       "flair_left_shoulder01__(spartans_player_sam_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_5",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_l_shoulder_anton__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_6",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_malcolm",
+      "mesh": null,
+      "pieces": [
+       "flair_shoulder_l_malcolm__(spartans_player_malcolm_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_7",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_jai",
+      "mesh": null,
+      "pieces": [
+       "flair_left_shoulder__(spartans_player_jai_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_8",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_l_shoulder_piece__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_9",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_kelly",
+      "mesh": null,
+      "pieces": [
+       "flair_shoulder_l_kelly__(spartans_player_kelly_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_10",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_left_shoulder__(spartans_player_skull_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_11",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_isaac",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_l_shoulder_small_isaac__(spartans_player_isaac_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_12",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_carter_gear_left_shoulder__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_13",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_l_shoulder__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_14",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_li",
+      "mesh": null,
+      "pieces": [
+       "flair_shoulder_li_l__(spartans_player_li_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_15",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_john117",
+      "mesh": null,
+      "pieces": [
+       "flair_john117_gear_left_shoulder__(spartans_player_john117_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_16",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_will",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_r_shoulder_will01__(spartans_player_will_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "left_shoulder_kurt",
+    "parts": [
+     {
+      "region": "flair_left_shoulder",
+      "perm": "player_kurt",
+      "mesh": "flair_left_shoulder__player_kurt",
+      "pieces": []
+     }
+    ]
+   }
+  ],
+  "right_shoulder": [
+   {
+    "id": "right_shoulder_blank",
+    "parts": []
+   },
+   {
+    "id": "right_shoulder_1",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_rosenda",
+      "mesh": null,
+      "pieces": [
+       "flair_kat_shoulder_armor01__(spartans_player_rosenda_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_2",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_nicole",
+      "mesh": null,
+      "pieces": [
+       "test_nicole_shoulder__(spartans_player_nicole_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_3",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_fred",
+      "mesh": null,
+      "pieces": [
+       "flair_right_shoulder__(spartans_player_fred_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_4",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_sam",
+      "mesh": null,
+      "pieces": [
+       "flair_left_shoulder__(spartans_player_sam_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_5",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_r_shoulder_anton__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_6",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_malcolm",
+      "mesh": null,
+      "pieces": [
+       "flair_shoulder_r_malcolm__(spartans_player_malcolm_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_7",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_jai",
+      "mesh": null,
+      "pieces": [
+       "flair_right_shoulder__(spartans_player_jai_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_8",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_r_shoulder_piece__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_9",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_kelly",
+      "mesh": null,
+      "pieces": [
+       "flair_shoulder_r_kelly__(spartans_player_kelly_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_10",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_right_shoulder__(spartans_player_skull_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_11",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_isaac",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_r_shoulder_small_isaac__(spartans_player_isaac_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_12",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_carter_gear_right_shoulder__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_13",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_r_shoulder__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_14",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_li",
+      "mesh": null,
+      "pieces": [
+       "flair_shoulder_li_r__(spartans_player_li_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_15",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_john117",
+      "mesh": null,
+      "pieces": [
+       "flair_john117_gear_right_shoulder__(spartans_player_john117_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_16",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_will",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_knife__(spartans_player_will_render)",
+       "flair_mesh_r_shoulder_will__(spartans_player_will_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "right_shoulder_kurt",
+    "parts": [
+     {
+      "region": "flair_right_shoulder",
+      "perm": "player_kurt",
+      "mesh": "flair_right_shoulder__player_kurt",
+      "pieces": []
+     }
+    ]
+   }
+  ],
+  "chest": [
+   {
+    "id": "chest_blank",
+    "parts": []
+   },
+   {
+    "id": "chest_1",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_fred",
+      "mesh": null,
+      "pieces": [
+       "flair_chest__(spartans_player_fred_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_2",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_torso_anton__(spartans_player_anton_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_3",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_nicole",
+      "mesh": null,
+      "pieces": [
+       "flair_chest_nicole__(spartans_player_nicole_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_grenade_belt_emile_pelvis__(spartans_emile_render)",
+       "flair_mesh_grenade_belt_emile_torso__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_4",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_malcolm",
+      "mesh": null,
+      "pieces": [
+       "flair_chest_malcom__(spartans_player_malcolm_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_5",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_isaac",
+      "mesh": null,
+      "pieces": [
+       "flair_isaac_ammo_packs__(spartans_player_isaac_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_6",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_ammo_packs_torso__(spartans_player_adrianna_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_ammo_packs_belt__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_7",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_torso__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_8",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "jun",
+      "mesh": null,
+      "pieces": [
+       "flair_chest__(spartans_jun_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "jun",
+      "mesh": "flair_chest_b__jun",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_9",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_jai",
+      "mesh": null,
+      "pieces": [
+       "flair_chest_jai__(spartans_player_jai_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_10",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_grenade_belt_emile_back__(spartans_emile_render)",
+       "flair_mesh_chest_grenades_emile__(spartans_emile_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_grenade_belt_emile_pelvis__(spartans_emile_render)",
+       "flair_mesh_grenade_belt_emile_torso__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_11",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_carter_gear_ammopack__(spartans_carter_render)",
+       "flair_carter_gear_pack_b__(spartans_carter_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_carter_gear_pack__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_12",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_kelly",
+      "mesh": null,
+      "pieces": [
+       "flair_chest_kelly__(spartans_player_kelly_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_kat_pistol_packs__(spartans_kat_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_13",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_torso__(spartans_player_joshua_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_neck_piece__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_wp_1",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_anton",
+      "mesh": null,
+      "pieces": [
+       "flair_torso_anton__(spartans_player_anton_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_grenade_belt_emile_pelvis__(spartans_emile_render)",
+       "flair_mesh_grenade_belt_emile_torso__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_wp_2",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_fred",
+      "mesh": null,
+      "pieces": [
+       "flair_chest__(spartans_player_fred_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_grenade_belt_emile_pelvis__(spartans_emile_render)",
+       "flair_mesh_grenade_belt_emile_torso__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "chest_robo_1",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_jai",
+      "mesh": null,
+      "pieces": [
+       "flair_chest_jai__(spartans_player_jai_render)"
+      ]
+     },
+     {
+      "region": "arms",
+      "perm": "player_john117",
+      "mesh": "arms__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "kat",
+      "mesh": "arms__kat",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_robo_2",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_kelly",
+      "mesh": null,
+      "pieces": [
+       "flair_chest_kelly__(spartans_player_kelly_render)"
+      ]
+     },
+     {
+      "region": "arms",
+      "perm": "player_john117",
+      "mesh": "arms__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "kat",
+      "mesh": "arms__kat",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_robo_3",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_grenade_belt_emile_back__(spartans_emile_render)",
+       "flair_mesh_chest_grenades_emile__(spartans_emile_render)"
+      ]
+     },
+     {
+      "region": "arms",
+      "perm": "player_john117",
+      "mesh": "arms__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "kat",
+      "mesh": "arms__kat",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_kurt",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_kurt",
+      "mesh": "flair_chest_a__player_kurt",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_default_roboarm",
+    "parts": [
+     {
+      "region": "arms",
+      "perm": "player_john117",
+      "mesh": "arms__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "kat",
+      "mesh": "arms__kat",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_tacticalpatrol_roboarm",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "jun",
+      "mesh": null,
+      "pieces": [
+       "flair_chest__(spartans_jun_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "jun",
+      "mesh": "flair_chest_b__jun",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "player_john117",
+      "mesh": "arms__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "kat",
+      "mesh": "arms__kat",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_tacticalrecon_roboarm",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_ammo_packs_torso__(spartans_player_adrianna_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_adrianna_ammo_packs_belt__(spartans_player_adrianna_render)"
+      ]
+     },
+     {
+      "region": "arms",
+      "perm": "player_john117",
+      "mesh": "arms__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "kat",
+      "mesh": "arms__kat",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_collargrenadierua_roboarm",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_torso__(spartans_player_joshua_render)"
+      ]
+     },
+     {
+      "region": "flair_chest_b",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_neck_piece__(spartans_player_joshua_render)"
+      ]
+     },
+     {
+      "region": "arms",
+      "perm": "player_john117",
+      "mesh": "arms__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "kat",
+      "mesh": "arms__kat",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_uacounterassault_roboarm",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "player_malcolm",
+      "mesh": null,
+      "pieces": [
+       "flair_chest_malcom__(spartans_player_malcolm_render)"
+      ]
+     },
+     {
+      "region": "arms",
+      "perm": "player_john117",
+      "mesh": "arms__player_john117",
+      "pieces": []
+     },
+     {
+      "region": "arms",
+      "perm": "kat",
+      "mesh": "arms__kat",
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "chest_cndmnd",
+    "parts": [
+     {
+      "region": "flair_chest_a",
+      "perm": "dlc2_chest_cndmnd",
+      "mesh": "flair_chest_a__dlc2_chest_cndmnd",
+      "pieces": []
+     }
+    ]
+   }
+  ],
+  "wrist": [
+   {
+    "id": "wrist_blank",
+    "parts": []
+   },
+   {
+    "id": "wrist_1",
+    "parts": [
+     {
+      "region": "flair_forearm",
+      "perm": "player_kelly",
+      "mesh": null,
+      "pieces": [
+       "flair_wrist__(spartans_player_kelly_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "wrist_2",
+    "parts": [
+     {
+      "region": "flair_forearm",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_l_gauntlet__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "wrist_3",
+    "parts": [
+     {
+      "region": "flair_forearm",
+      "perm": "carter",
+      "mesh": null,
+      "pieces": [
+       "flair_tricorder_mesh__(spartans_carter_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "wrist_4",
+    "parts": [
+     {
+      "region": "flair_forearm",
+      "perm": "player_isaac",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_shotgun_reloader_isaac__(spartans_player_isaac_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "wrist_5",
+    "parts": [
+     {
+      "region": "flair_forearm",
+      "perm": "jun",
+      "mesh": null,
+      "pieces": [
+       "flair_forearm__(spartans_jun_render)"
+      ]
+     }
+    ]
+   }
+  ],
+  "utility": [
+   {
+    "id": "utility_blank",
+    "parts": []
+   },
+   {
+    "id": "utility_1",
+    "parts": [
+     {
+      "region": "flair_thigh",
+      "perm": "emile",
+      "mesh": null,
+      "pieces": [
+       "flair_mesh_thigh_pouch_emile__(spartans_emile_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "utility_2",
+    "parts": [
+     {
+      "region": "flair_thigh",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_thigh__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "utility_3",
+    "parts": [
+     {
+      "region": "flair_thigh",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_thigh_adrianna__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "utility_4",
+    "parts": [
+     {
+      "region": "flair_thigh",
+      "perm": "player_skull",
+      "mesh": null,
+      "pieces": [
+       "flair_thigh__(spartans_player_skull_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "utility_5",
+    "parts": [
+     {
+      "region": "flair_thigh",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_toolkit__(spartans_kat_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "utility_6",
+    "parts": [
+     {
+      "region": "flair_thigh",
+      "perm": "flask",
+      "mesh": "flair_thigh__flask",
+      "pieces": []
+     }
+    ]
+   }
+  ],
+  "knees": [
+   {
+    "id": "knees_default",
+    "parts": [
+     {
+      "region": "flair_knees",
+      "perm": "kat",
+      "mesh": null,
+      "pieces": [
+       "flair_kneepad_kat_l_mesh__(spartans_kat_render)",
+       "flair_kneepad_kat_r_mesh__(spartans_kat_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "knees_1",
+    "parts": [
+     {
+      "region": "flair_knees",
+      "perm": "default",
+      "mesh": null,
+      "pieces": [
+       "flair_kneepad_l_mesh1__(spartans_render)",
+       "flair_kneepad_l_mesh2__(spartans_render)",
+       "flair_kneepad_r_mesh1__(spartans_render)",
+       "flair_kneepad_r_mesh2__(spartans_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "knees_2",
+    "parts": [
+     {
+      "region": "flair_knees",
+      "perm": "player_adrianna",
+      "mesh": null,
+      "pieces": [
+       "flair_knee_adrianna_l__(spartans_player_adrianna_render)",
+       "flair_knee_adrianna_r__(spartans_player_adrianna_render)"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "knees_3",
+    "parts": [
+     {
+      "region": "flair_knees",
+      "perm": "player_joshua",
+      "mesh": null,
+      "pieces": [
+       "flair_joshua_l_knee__(spartans_player_joshua_render)",
+       "flair_joshua_r_knee__(spartans_player_joshua_render)"
+      ]
+     }
+    ]
+   }
+  ],
+  "visor": [
+   {
+    "id": "default",
+    "parts": [
+     {
+      "region": "armor_pieces",
+      "perm": "default",
+      "missing": true
+     }
+    ]
+   },
+   {
+    "id": "spec_ops",
+    "parts": [
+     {
+      "region": "armor_pieces",
+      "perm": "spec_ops",
+      "missing": true
+     }
+    ]
+   },
+   {
+    "id": "space",
+    "parts": [
+     {
+      "region": "armor_pieces",
+      "perm": "space",
+      "missing": true
+     }
+    ]
+   },
+   {
+    "id": "ultra",
+    "parts": [
+     {
+      "region": "armor_pieces",
+      "perm": "ultra",
+      "missing": true
+     }
+    ]
+   },
+   {
+    "id": "zealot",
+    "parts": [
+     {
+      "region": "armor_pieces",
+      "perm": "zealot",
+      "missing": true
+     }
+    ]
+   },
+   {
+    "id": "general",
+    "parts": [
+     {
+      "region": "armor_pieces",
+      "perm": "general",
+      "missing": true
+     }
+    ]
+   },
+   {
+    "id": "zealot_commander",
+    "parts": [
+     {
+      "region": "armor_pieces",
+      "perm": "story_elite",
+      "missing": true
+     }
+    ]
+   },
+   {
+    "id": "officer",
+    "parts": [
+     {
+      "region": "armor_pieces",
+      "perm": "officer",
+      "missing": true
+     }
+    ]
+   }
+  ],
+  "armor_effect": [
+   {
+    "id": "default_armor",
+    "parts": []
+   },
+   {
+    "id": "legendary_flame",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_00",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "eternal_flame",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_01",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "heart_attack",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_02",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "pestilence",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_03",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "storm",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_04",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "halo_bday",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_05",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   }
+  ],
+  "armor_effect_ff": [
+   {
+    "id": "default_armor",
+    "parts": []
+   },
+   {
+    "id": "legendary_flame",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_00",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "eternal_flame",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_01",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "heart_attack",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_02",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "pestilence",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_03",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "storm",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_04",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   },
+   {
+    "id": "halo_bday",
+    "parts": [
+     {
+      "region": "armor_fx",
+      "perm": "armor_fx_05",
+      "mesh": null,
+      "pieces": []
+     }
+    ]
+   }
+  ]
+ },
+ "nobles": {
+  "carter": {
+   "outfit": {
+    "arms": "default",
+    "body": "carter",
+    "decals": "carter",
+    "flair_chest_a": "carter",
+    "flair_chest_b": "carter",
+    "flair_forearm": "carter",
+    "flair_head_a": "carter",
+    "flair_head_b": "carter",
+    "flair_head_c": "carter",
+    "flair_knees": "default",
+    "flair_left_shoulder": "carter",
+    "flair_right_shoulder": "carter",
+    "head": "carter"
+   },
+   "parts": [
+    {
+     "region": "arms",
+     "perm": "default",
+     "mesh": "arms__default",
+     "pieces": []
+    },
+    {
+     "region": "body",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": []
+    },
+    {
+     "region": "decals",
+     "perm": "carter",
+     "mesh": "decals__carter",
+     "pieces": []
+    },
+    {
+     "region": "flair_chest_a",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": [
+      "flair_carter_gear_ammopack__(spartans_carter_render)",
+      "flair_carter_gear_pack_b__(spartans_carter_render)"
+     ]
+    },
+    {
+     "region": "flair_chest_b",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": [
+      "flair_carter_gear_pack__(spartans_carter_render)"
+     ]
+    },
+    {
+     "region": "flair_forearm",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": [
+      "flair_tricorder_mesh__(spartans_carter_render)"
+     ]
+    },
+    {
+     "region": "flair_head_a",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": [
+      "flair_auntie_dot_comms__(spartans_carter_render)"
+     ]
+    },
+    {
+     "region": "flair_head_b",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": [
+      "flair_auntie_dot_comms01__(spartans_carter_render)"
+     ]
+    },
+    {
+     "region": "flair_head_c",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": [
+      "flair_helmet_flare_carter__(spartans_carter_render)"
+     ]
+    },
+    {
+     "region": "flair_knees",
+     "perm": "default",
+     "mesh": null,
+     "pieces": [
+      "flair_kneepad_l_mesh1__(spartans_render)",
+      "flair_kneepad_l_mesh2__(spartans_render)",
+      "flair_kneepad_r_mesh1__(spartans_render)",
+      "flair_kneepad_r_mesh2__(spartans_render)"
+     ]
+    },
+    {
+     "region": "flair_left_shoulder",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": [
+      "flair_carter_gear_left_shoulder__(spartans_carter_render)"
+     ]
+    },
+    {
+     "region": "flair_right_shoulder",
+     "perm": "carter",
+     "mesh": null,
+     "pieces": [
+      "flair_carter_gear_right_shoulder__(spartans_carter_render)"
+     ]
+    },
+    {
+     "region": "head",
+     "perm": "carter",
+     "mesh": "head__carter",
+     "pieces": []
+    }
+   ]
+  },
+  "kat": {
+   "outfit": {
+    "arms": "kat",
+    "body": "?80163",
+    "decals": "kat",
+    "flair_chest_a": "kat",
+    "flair_chest_b": "kat",
+    "flair_head_a": "kat",
+    "flair_head_b": "kat",
+    "flair_knees": "kat",
+    "flair_left_shoulder": "kat",
+    "flair_right_shoulder": "kat",
+    "flair_thigh": "kat",
+    "head": "?80163"
+   },
+   "parts": [
+    {
+     "region": "arms",
+     "perm": "kat",
+     "mesh": "arms__kat",
+     "pieces": []
+    },
+    {
+     "region": "body",
+     "perm": "?80163",
+     "mesh": "body__?80163",
+     "pieces": []
+    },
+    {
+     "region": "decals",
+     "perm": "kat",
+     "mesh": "decals__kat",
+     "pieces": []
+    },
+    {
+     "region": "flair_chest_a",
+     "perm": "kat",
+     "mesh": null,
+     "pieces": []
+    },
+    {
+     "region": "flair_chest_b",
+     "perm": "kat",
+     "mesh": null,
+     "pieces": [
+      "flair_kat_pistol_packs__(spartans_kat_render)"
+     ]
+    },
+    {
+     "region": "flair_head_a",
+     "perm": "kat",
+     "mesh": null,
+     "pieces": [
+      "flair_kat_helmet_aug__(spartans_kat_render)"
+     ]
+    },
+    {
+     "region": "flair_head_b",
+     "perm": "kat",
+     "mesh": null,
+     "pieces": [
+      "flair_kat_helmet_l_aug__(spartans_kat_render)"
+     ]
+    },
+    {
+     "region": "flair_knees",
+     "perm": "kat",
+     "mesh": null,
+     "pieces": [
+      "flair_kneepad_kat_l_mesh__(spartans_kat_render)",
+      "flair_kneepad_kat_r_mesh__(spartans_kat_render)"
+     ]
+    },
+    {
+     "region": "flair_left_shoulder",
+     "perm": "kat",
+     "mesh": null,
+     "pieces": [
+      "flair_kat_shoulder_armor_l__(spartans_kat_render)"
+     ]
+    },
+    {
+     "region": "flair_right_shoulder",
+     "perm": "kat",
+     "mesh": null,
+     "pieces": [
+      "render_kat_robot_arm_armor_r__(spartans_kat_render)"
+     ]
+    },
+    {
+     "region": "flair_thigh",
+     "perm": "kat",
+     "mesh": null,
+     "pieces": [
+      "flair_toolkit__(spartans_kat_render)"
+     ]
+    },
+    {
+     "region": "head",
+     "perm": "?80163",
+     "mesh": "head__?80163",
+     "pieces": []
+    }
+   ]
+  },
+  "jun": {
+   "outfit": {
+    "arms": "default",
+    "body": "jun",
+    "decals": "jun",
+    "flair_chest_a": "jun",
+    "flair_chest_b": "jun",
+    "flair_forearm": "jun",
+    "flair_head_b": "default",
+    "flair_head_c": "jun",
+    "flair_knees": "default",
+    "flair_left_shoulder": "jun",
+    "head": "jun"
+   },
+   "parts": [
+    {
+     "region": "arms",
+     "perm": "default",
+     "mesh": "arms__default",
+     "pieces": []
+    },
+    {
+     "region": "body",
+     "perm": "jun",
+     "mesh": null,
+     "pieces": []
+    },
+    {
+     "region": "decals",
+     "perm": "jun",
+     "mesh": "decals__jun",
+     "pieces": [
+      "flair_backpack__(spartans_jun_render)"
+     ]
+    },
+    {
+     "region": "flair_chest_a",
+     "perm": "jun",
+     "mesh": null,
+     "pieces": [
+      "flair_chest__(spartans_jun_render)"
+     ]
+    },
+    {
+     "region": "flair_chest_b",
+     "perm": "jun",
+     "mesh": "flair_chest_b__jun",
+     "pieces": []
+    },
+    {
+     "region": "flair_forearm",
+     "perm": "jun",
+     "mesh": null,
+     "pieces": [
+      "flair_forearm__(spartans_jun_render)"
+     ]
+    },
+    {
+     "region": "flair_head_b",
+     "perm": "default",
+     "mesh": null,
+     "pieces": [
+      "flair_default_helmet_brim__(spartans_render)"
+     ]
+    },
+    {
+     "region": "flair_head_c",
+     "perm": "jun",
+     "mesh": null,
+     "pieces": [
+      "flair_jun_head_flare__(spartans_jun_render)"
+     ]
+    },
+    {
+     "region": "flair_knees",
+     "perm": "default",
+     "mesh": null,
+     "pieces": [
+      "flair_kneepad_l_mesh1__(spartans_render)",
+      "flair_kneepad_l_mesh2__(spartans_render)",
+      "flair_kneepad_r_mesh1__(spartans_render)",
+      "flair_kneepad_r_mesh2__(spartans_render)"
+     ]
+    },
+    {
+     "region": "flair_left_shoulder",
+     "perm": "jun",
+     "mesh": null,
+     "pieces": [
+      "flair_shoulder_jun_l__(spartans_jun_render)"
+     ]
+    },
+    {
+     "region": "head",
+     "perm": "jun",
+     "mesh": "head__jun",
+     "pieces": []
+    }
+   ]
+  },
+  "emile": {
+   "outfit": {
+    "arms": "default",
+    "body": "emile",
+    "decals": "emile",
+    "flair_chest_a": "emile",
+    "flair_chest_b": "emile",
+    "flair_forearm": "emile",
+    "flair_head_a": "emile",
+    "flair_head_b": "emile",
+    "flair_knees": "default",
+    "flair_right_shoulder": "emile",
+    "flair_thigh": "emile",
+    "head": "emile"
+   },
+   "parts": [
+    {
+     "region": "arms",
+     "perm": "default",
+     "mesh": "arms__default",
+     "pieces": []
+    },
+    {
+     "region": "body",
+     "perm": "emile",
+     "mesh": null,
+     "pieces": []
+    },
+    {
+     "region": "decals",
+     "perm": "emile",
+     "mesh": "decals__emile",
+     "pieces": []
+    },
+    {
+     "region": "flair_chest_a",
+     "perm": "emile",
+     "mesh": null,
+     "pieces": [
+      "flair_grenade_belt_emile_back__(spartans_emile_render)",
+      "flair_mesh_chest_grenades_emile__(spartans_emile_render)"
+     ]
+    },
+    {
+     "region": "flair_chest_b",
+     "perm": "emile",
+     "mesh": null,
+     "pieces": [
+      "flair_mesh_grenade_belt_emile_pelvis__(spartans_emile_render)",
+      "flair_mesh_grenade_belt_emile_torso__(spartans_emile_render)"
+     ]
+    },
+    {
+     "region": "flair_forearm",
+     "perm": "emile",
+     "mesh": null,
+     "pieces": [
+      "flair_mesh_shotgun_reloader_emile__(spartans_emile_render)"
+     ]
+    },
+    {
+     "region": "flair_head_a",
+     "perm": "emile",
+     "mesh": null,
+     "pieces": [
+      "flair_mesh_headpiece_emile__(spartans_emile_render)"
+     ]
+    },
+    {
+     "region": "flair_head_b",
+     "perm": "emile",
+     "mesh": null,
+     "pieces": [
+      "flair_mesh_l_headpiece_emile__(spartans_emile_render)"
+     ]
+    },
+    {
+     "region": "flair_knees",
+     "perm": "default",
+     "mesh": null,
+     "pieces": [
+      "flair_kneepad_l_mesh1__(spartans_render)",
+      "flair_kneepad_l_mesh2__(spartans_render)",
+      "flair_kneepad_r_mesh1__(spartans_render)",
+      "flair_kneepad_r_mesh2__(spartans_render)"
+     ]
+    },
+    {
+     "region": "flair_right_shoulder",
+     "perm": "emile",
+     "mesh": null,
+     "pieces": [
+      "flair_knife__(spartans_emile_render)",
+      "flair_mesh_r_shoulder_big_emile__(spartans_emile_render)"
+     ]
+    },
+    {
+     "region": "flair_thigh",
+     "perm": "emile",
+     "mesh": null,
+     "pieces": [
+      "flair_mesh_thigh_pouch_emile__(spartans_emile_render)"
+     ]
+    },
+    {
+     "region": "head",
+     "perm": "emile",
+     "mesh": "head__emile",
+     "pieces": []
+    }
+   ]
+  },
+  "john": {
+   "outfit": {
+    "arms": "player_john117",
+    "body": "player_john117",
+    "decals": "player_john117",
+    "flair_chest_a": "player_john117",
+    "flair_head_b": "default",
+    "flair_knees": "default",
+    "flair_left_shoulder": "player_john117",
+    "flair_right_shoulder": "player_john117",
+    "head": "player_john117"
+   },
+   "parts": [
+    {
+     "region": "arms",
+     "perm": "player_john117",
+     "mesh": "arms__player_john117",
+     "pieces": []
+    },
+    {
+     "region": "body",
+     "perm": "player_john117",
+     "mesh": null,
+     "pieces": []
+    },
+    {
+     "region": "decals",
+     "perm": "player_john117",
+     "mesh": "decals__player_john117",
+     "pieces": []
+    },
+    {
+     "region": "flair_chest_a",
+     "perm": "player_john117",
+     "mesh": null,
+     "pieces": []
+    },
+    {
+     "region": "flair_head_b",
+     "perm": "default",
+     "mesh": null,
+     "pieces": [
+      "flair_default_helmet_brim__(spartans_render)"
+     ]
+    },
+    {
+     "region": "flair_knees",
+     "perm": "default",
+     "mesh": null,
+     "pieces": [
+      "flair_kneepad_l_mesh1__(spartans_render)",
+      "flair_kneepad_l_mesh2__(spartans_render)",
+      "flair_kneepad_r_mesh1__(spartans_render)",
+      "flair_kneepad_r_mesh2__(spartans_render)"
+     ]
+    },
+    {
+     "region": "flair_left_shoulder",
+     "perm": "player_john117",
+     "mesh": null,
+     "pieces": [
+      "flair_john117_gear_left_shoulder__(spartans_player_john117_render)"
+     ]
+    },
+    {
+     "region": "flair_right_shoulder",
+     "perm": "player_john117",
+     "mesh": null,
+     "pieces": [
+      "flair_john117_gear_right_shoulder__(spartans_player_john117_render)"
+     ]
+    },
+    {
+     "region": "head",
+     "perm": "player_john117",
+     "mesh": "head__player_john117",
+     "pieces": []
+    }
+   ]
+  },
+  "six": {
+   "outfit": {
+    "arms": "default",
+    "body": "default",
+    "decals": "default",
+    "flair_chest_a": "default",
+    "flair_head_b": "default",
+    "flair_knees": "default",
+    "head": "default"
+   },
+   "parts": [
+    {
+     "region": "arms",
+     "perm": "default",
+     "mesh": "arms__default",
+     "pieces": []
+    },
+    {
+     "region": "body",
+     "perm": "default",
+     "mesh": "body__default",
+     "pieces": []
+    },
+    {
+     "region": "decals",
+     "perm": "default",
+     "mesh": "decals__default",
+     "pieces": []
+    },
+    {
+     "region": "flair_chest_a",
+     "perm": "default",
+     "mesh": null,
+     "pieces": []
+    },
+    {
+     "region": "flair_head_b",
+     "perm": "default",
+     "mesh": null,
+     "pieces": [
+      "flair_default_helmet_brim__(spartans_render)"
+     ]
+    },
+    {
+     "region": "flair_knees",
+     "perm": "default",
+     "mesh": null,
+     "pieces": [
+      "flair_kneepad_l_mesh1__(spartans_render)",
+      "flair_kneepad_l_mesh2__(spartans_render)",
+      "flair_kneepad_r_mesh1__(spartans_render)",
+      "flair_kneepad_r_mesh2__(spartans_render)"
+     ]
+    },
+    {
+     "region": "head",
+     "perm": "default",
+     "mesh": "head__default",
+     "pieces": []
+    }
+   ]
+  }
+ }
+}

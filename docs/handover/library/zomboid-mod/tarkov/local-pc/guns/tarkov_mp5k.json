@@ -1,0 +1,229 @@
+{
+ "id": "tarkov_mp5k",
+ "name": "HK MP5K (kitted)",
+ "anchor": "smg",
+ "anchorMesh": "pbr_smg",
+ "calibre": "9x19mm",
+ "fp": "operator_tarkov_mp5k",
+ "sight": "scope_all_eotech_xps3_LOD0",
+ "reticleMoa": 152.4,
+ "reload": [
+  2.767,
+  3.667
+ ],
+ "stats": {
+  "damage": 7.0,
+  "hipSpread": 1.4,
+  "aimSpread": 0.5,
+  "recoil": 0.65,
+  "range": 60.0,
+  "magazineSize": 30,
+  "selectFire": true,
+  "autoRpm": 900.0
+ },
+ "kit": [
+  "sight",
+  "stock"
+ ],
+ "grip": null,
+ "guard": "handguard_mp5k_hk_kurtz_grip_std_LOD0",
+ "holds": {
+  "handguard_mp5k_hk_kurtz_grip_std_LOD0": {
+   "palm": [
+    0.06007,
+    0.12251,
+    -0.08234,
+    -0.17274,
+    0.03642,
+    -0.77765,
+    0.60341
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.39295,
+     -0.21061,
+     0.0414,
+     0.89416
+    ],
+    "Base HumanLDigit12": [
+     -0.05549,
+     0.19928,
+     -0.13146,
+     0.9695
+    ],
+    "Base HumanLDigit": [
+     -0.0052,
+     -0.02456,
+     -0.39519,
+     0.91825
+    ]
+   }
+  }
+ },
+ "tarkov": {
+  "base": "5d2f0d8048f0356c925bc3b0",
+  "aimPath": "/mod_reciever/mod_mount/mod_scope",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "5d2f0d8048f0356c925bc3b0",
+    "bone": "weapon_hk_mp5_kurtz_9x19_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ],
+    "bones": [
+     "kurtz_bolt_LOD0",
+     "kurtz_hammer_LOD0",
+     "weapon_hk_mp5_kurtz_9x19_LOD0",
+     "kurtz_release_LOD0",
+     "kurtz_selector_LOD0",
+     "kurtz_trigger_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5926c3b286f774640d189b6b",
+    "bone": "mag_mp5_hk_std_curved_9x19_30_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     2e-06,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_mp5_hk_std_curved_9x19_30_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5d2f261548f03576f500e7b7",
+    "bone": "reciever_mp5k_hk_kurtz_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "reciever_mp5k_hk_kurtz_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_handguard",
+    "item": "5d2f259b48f0355a844acd74",
+    "bone": "handguard_mp5k_hk_kurtz_grip_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "handguard_mp5k_hk_kurtz_grip_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "5926d2be86f774134d668e4e",
+    "bone": "sight_rear_mp5_hk_drum_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     2e-06,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "sight_rear_mp5_hk_drum_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_stock",
+    "item": "5d2f25bc48f03502573e5d85",
+    "bone": "stock_mp5k_hk_kurtz_end_cap_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "stock_mp5k_hk_kurtz_end_cap_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_mount",
+    "item": "5926dad986f7741f82604363",
+    "bone": "mount_hk_mfi_universal_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     2e-06,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_hk_mfi_universal_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_mount/mod_scope",
+    "item": "58491f3324597764bc48fa02",
+    "bone": "scope_all_eotech_xps3_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "linza",
+     "scope_all_eotech_xps3_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "5d2f2d5748f03572ec0c0139",
+    "bone": "charge_mp5k_hk_kurtz_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "charge_mp5k_hk_kurtz_std_LOD0"
+    ]
+   }
+  ]
+ }
+}

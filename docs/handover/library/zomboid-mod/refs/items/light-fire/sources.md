@@ -1,0 +1,23 @@
+# items/light-fire
+
+Per-item reference photos from Wikimedia Commons (1024 px thumbnails), free licences only. File = <item id>.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| big_flashlight.jpg | [Leuchtende Taschenlampe.jpg](https://commons.wikimedia.org/wiki/File:Leuchtende_Taschenlampe.jpg) | kaʁstn Disk/Cat | Public domain | A lit flashlight |
+| brass_lighter.jpg | [Zippo Detail.jpg](https://commons.wikimedia.org/wiki/File:Zippo_Detail.jpg) | Ricardo Liberato | CC BY-SA 2.0 | Shot with and MP-E 65 at 1x (minimum magnification) f16, 15s exposure in dark room (long exposure to allow time for the spark while letting  |
+| candle.jpg | [Candle light projected through a glass orb.jpg](https://commons.wikimedia.org/wiki/File:Candle_light_projected_through_a_glass_orb.jpg) | W.carter | CC BY-SA 4.0 | The flame of a candle projected on a table though a glass paper weight acting as a lens. The photo is a manual HDR combination of nine photo |
+| charcoal.jpg | [Bags of charcoal from Kamampa.jpg](https://commons.wikimedia.org/wiki/File:Bags_of_charcoal_from_Kamampa.jpg) | Brenac40 | CC BY-SA 4.0 | Charcoal a product from trees after they are been cut down |
+| firestarter.jpg | [Fire making by means of the mouth-set bow drill, Eskimo.jpg](https://commons.wikimedia.org/wiki/File:Fire_making_by_means_of_the_mouth-set_bow_drill,_Eskimo.jpg) | Internet Archive Book Images | No restrictions | Fire making by means of the drill. Top, the mouth-set bow drill, Eskimo; bottom, with the simple two-stick drill; widespread Identifier: bul |
+| firewood.jpg | [Fire, Fireplace, Rostov-on-Don, Russia.jpg](https://commons.wikimedia.org/wiki/File:Fire,_Fireplace,_Rostov-on-Don,_Russia.jpg) | Vyacheslav Argenberg | CC BY 4.0 | Fire. Fireplace. Wood fire. Rostov-on-Don, Russia. |
+| flare_gun.jpg | [Pistol, flare (AM 1946.189-12).jpg](https://commons.wikimedia.org/wiki/File:Pistol,_flare_(AM_1946.189-12).jpg) | Kokura Arsenal | CC BY 4.0 | Japanese Naval triple barrel flare pistol, WW2 flare pistol- triple smoothbore four inch barrels (slightly tapered externally); 26.6mm calib |
+| flashlight.jpg | [Flashlight tail cap switch.jpg](https://commons.wikimedia.org/wiki/File:Flashlight_tail_cap_switch.jpg) | Lucasbosch | CC BY-SA 3.0 | Endkappenschalter einer Taschenlampe (LED LENSER T7M) |
+| glow_stick.jpg | [Glow stick solution.jpg](https://commons.wikimedia.org/wiki/File:Glow_stick_solution.jpg) | Myesd | CC BY-SA 4.0 | Solution extracted from glow stick. |
+| headlamp.jpg | [Dülmen, Kirchspiel, Börnste, BMW Mini -- 2019 -- 7207-13.jpg](https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Kirchspiel,_B%C3%B6rnste,_BMW_Mini_--_2019_--_7207-13.jpg) | Dietmar Rabich | CC BY-SA 4.0 | Mini Cooper (BMW Group) in Dülmen, North Rhine-Westphalia, GermanyThe Mini dates back to the classic Mini from 1959, which was developed by  |
+| kerosene.jpg | [4 litre Kristallfotogen kerosene can by Aktiebolaget Lyse Sweden early](https://commons.wikimedia.org/wiki/File:4_litre_Kristallfotogen_kerosene_can_by_Aktiebolaget_Lyse_Sweden_early_20th_century.jpg) | R. Henrik Nilsson | CC BY 4.0 | 4-litre Kristallfotogen kerosene can by Aktiebolaget Lyse, Sweden, early 20th century. Ca 25*13.5*13.5 cm and 622 grams. |
+| kerosene_lantern.jpg | [Vintage rusty kerosene pressure lantern Petromax on lace tablecloth.jp](https://commons.wikimedia.org/wiki/File:Vintage_rusty_kerosene_pressure_lantern_Petromax_on_lace_tablecloth.jpg) | Undeka 11 | CC BY-SA 4.0 | An old vintage rusty kerosene pressure lantern, also known as Petromax, placed on a white lace tablecloth. The antique metal lantern with a  |
+| lantern_battery_light.jpg | [Lantern battery comparison-1.jpg](https://commons.wikimedia.org/wiki/File:Lantern_battery_comparison-1.jpg) | Lead holder | CC BY-SA 3.0 | A 4.5 and 6 volt lantern battery side by side comparison |
+| lighter.jpg | [BIC lighter 2008-12-31.jpg](https://commons.wikimedia.org/wiki/File:BIC_lighter_2008-12-31.jpg) | Sun Ladder | CC BY-SA 3.0 | A Bic cigarette lighter |
+| lighter_fluid.jpg | [Embers Charcoal Lighter Fluid.jpg](https://commons.wikimedia.org/wiki/File:Embers_Charcoal_Lighter_Fluid.jpg) | Escogo | CC BY-SA 4.0 | Embers Charcoal Lighter Fluid 32oz - The Home Depot |
+| matches.jpg | [Match and match labels, 100 years ago.jpg](https://commons.wikimedia.org/wiki/File:Match_and_match_labels,_100_years_ago.jpg) | Takkk | CC BY-SA 3.0 | Matchbox and match labels, 100 years ago - Swedish. |
+| penlight.jpg | [Flashlight tail cap switch.jpg](https://commons.wikimedia.org/wiki/File:Flashlight_tail_cap_switch.jpg) | Lucasbosch | CC BY-SA 3.0 | Endkappenschalter einer Taschenlampe (LED LENSER T7M) |

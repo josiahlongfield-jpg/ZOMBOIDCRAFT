@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Character</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#0b0c0e}
+a{color:#e8e4da}a:hover{color:#ffffff}
+.cond{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.slot{position:absolute;padding:0;border:1px solid rgba(232,228,218,.16);cursor:pointer;overflow:hidden;box-sizing:border-box;transition:border-color .12s,box-shadow .12s}
+.slot:hover,.slot:focus-visible{border-color:rgba(255,255,255,.9);box-shadow:0 0 0 1px rgba(255,255,255,.35),0 0 18px rgba(255,255,255,.12);outline:none}
+.slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none}
+.slot .shine{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 40%);pointer-events:none}
+.slot .wear{position:absolute;left:0;bottom:0;height:2px;background:rgba(232,228,218,.85)}
+.slot .count{position:absolute;right:4px;bottom:2px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;color:#fff;text-shadow:0 1px 2px #000}
+.pix img{image-rendering:pixelated}
+.pip{display:inline-block;width:7px;height:7px;transform:rotate(45deg);margin-right:5px;box-sizing:border-box}
+.hint{display:inline-flex;align-items:center;gap:6px}
+.key{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border:1px solid rgba(232,228,218,.55);border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:#e8e4da}
+.tab{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(232,228,218,.62);text-decoration:none;padding:6px 2px 10px;border-bottom:2px solid transparent}
+.tab:hover{color:#fff}
+.bar{position:relative;height:6px;background:rgba(232,228,218,.12)}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:#e8e4da}
+.perk{display:flex;flex-direction:column;align-items:center;gap:6px;width:64px}
+.perk .ring{width:40px;height:40px;border-radius:50%;border:1px solid rgba(232,228,218,.5);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04)}
+.perk.enh .ring{border-color:#e0c25e;box-shadow:0 0 0 2px rgba(224,194,94,.25)}
+.perk svg{width:22px;height:22px;fill:none;stroke:#e8e4da;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.lnk{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#e0c25e;text-decoration:none}
+.lnk:hover{color:#fff1b8}
+</style>
+</helmet>
+<div style="position: relative; width: 1600px; height: 900px; overflow: hidden; background: #0b0c0e; font-family: 'Barlow', sans-serif; color: #e8e4da">
+  <img src="/_blob/fd16460b46a4117fc5aca08613b33d51" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+  <div style="position: absolute; inset: 0; background: radial-gradient(ellipse 46% 60% at 50% 55%, rgba(10,12,14,0.15) 0%, rgba(8,9,11,0.72) 70%, rgba(6,7,8,0.92) 100%)"></div>
+  <div style="position: absolute; left: 0; right: 0; top: 0; height: 150px; background: linear-gradient(180deg, rgba(5,6,7,0.9) 0%, rgba(5,6,7,0) 100%)"></div>
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 120px; background: linear-gradient(0deg, rgba(5,6,7,0.85) 0%, rgba(5,6,7,0) 100%)"></div>
+  <div style="position: absolute; left: 545px; top: 812px; width: 510px; height: 70px; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%)"></div>
+
+  <div style="position: absolute; left: 32px; top: 18px; display: flex; align-items: center; gap: 14px">
+    <div style="width: 46px; height: 46px; border: 1px solid rgba(232,228,218,0.5); display: flex; align-items: center; justify-content: center; background: rgba(20,22,20,0.6)">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" style="fill: none; stroke: #e8e4da; stroke-width: 1.5"><path d="M12 2.5C7.6 2.5 4 5.8 4 10.1c0 2.6 1.3 4.6 3 5.8V18.5h10v-2.6c1.7-1.2 3-3.2 3-5.8 0-4.3-3.6-7.6-8-7.6z"></path><circle cx="8.8" cy="10.6" r="1.8"></circle><circle cx="15.2" cy="10.6" r="1.8"></circle><path d="M10 21.5v-3M14 21.5v-3"></path></svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span class="cond" style="font-size: 24px; font-weight: 700; letter-spacing: 0.08em; line-height: 1">Josiah</span>
+      <span style="font-size: 13px; color: rgba(232,228,218,0.68)">Survivor · day 12 · 214 kills</span>
+    </div>
+  </div>
+
+  <nav aria-label="Kit pages" style="position: absolute; left: 0; right: 0; top: 16px; display: flex; justify-content: center; align-items: center; gap: 30px">
+    <span class="key" style="opacity: 0.35">Q</span>
+    <span class="tab" aria-current="page" style="color: #ffffff; border-bottom-color: #e8e4da">Character</span>
+    <a class="tab" href="Supplies.dc.html">Supplies</a>
+    <span class="tab" style="opacity: 0.45">Health</span>
+    <span class="tab" style="opacity: 0.45">Skills</span>
+    <a href="Supplies.dc.html" class="key" aria-label="Next page" style="text-decoration: none">E</a>
+  </nav>
+
+  <div style="position: absolute; right: 32px; top: 20px; display: flex; flex-direction: column; align-items: flex-end; gap: 4px">
+    <span class="cond" style="font-size: 22px; font-weight: 600; line-height: 1">21:40 · Friday</span>
+    <span style="font-size: 13px; color: rgba(232,228,218,0.68)">Rain, 9°C · wind from the west</span>
+  </div>
+
+  <div style="position: absolute; left: 470px; top: 80px; width: 660px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px">
+    <sc-for list="{{stats}}" as="s" hint-placeholder-count="6">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span class="cond" style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; color: rgba(232,228,218,0.66)">{{s.label}}</span>
+        <span class="cond" style="font-size: 22px; font-weight: 600; letter-spacing: 0.02em; line-height: 1; color: {{s.color}}">{{s.value}}</span>
+        <div class="bar" style="height: 3px"><i style="{{s.bar}}"></i></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <img src="/_blob/5bfd3a6cb58b71a02b3a94af13c711ce" alt="Your survivor wearing the equipped gear" style="position: absolute; left: 575px; top: 140px; width: 450px; height: 703px; object-fit: contain">
+
+  <div style="position: absolute; left: 96px; top: 150px; width: 420px; display: flex; align-items: center; gap: 12px">
+    <span class="cond" style="font-size: 15px; font-weight: 600; letter-spacing: 0.18em">Weapons</span>
+    <span style="flex-grow: 1; height: 1px; background: rgba(232,228,218,0.3)"></span>
+  </div>
+  <sc-for list="{{weapons}}" as="w" hint-placeholder-count="3">
+    <div style="position: absolute; left: 96px; top: {{w.top}}px; width: 440px; height: 100px">
+      <span class="cond" style="position: absolute; left: 0; top: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; color: rgba(232,228,218,0.62)">{{w.label}} · {{w.sub}}</span>
+      <button class="slot" aria-label="{{w.item.name}}, {{w.label}} slot" onClick="{{w.click}}" onMouseEnter="{{w.enter}}" onMouseLeave="{{w.leave}}" onFocus="{{w.enter}}" onBlur="{{w.leave}}" style="left: 0; top: 18px; width: 210px; height: 84px; {{w.item.tileBg}}">
+        <span class="shine"></span>
+        <img src="{{w.item.img}}" alt="">
+        <span class="wear" style="{{w.item.wearBar}}"></span>
+      </button>
+      <div style="position: absolute; left: 224px; top: 22px; width: 216px; display: flex; flex-direction: column; gap: 5px">
+        <span class="cond" style="font-size: 21px; font-weight: 600; line-height: 1; color: #f2efe8">{{w.item.name}}</span>
+        <span style="font-size: 13px; color: rgba(232,228,218,0.7)">{{w.item.short}}</span>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <span style="display: inline-flex"><sc-for list="{{w.item.pips}}" as="p" hint-placeholder-count="5"><span class="pip" style="{{p.style}}"></span></sc-for></span>
+          <span class="cond" style="font-size: 12px; font-weight: 600; letter-spacing: 0.12em; color: {{w.item.rarityText}}">{{w.item.rarityName}}</span>
+          <sc-if value="{{w.inspect}}" hint-placeholder-val="{{false}}"><a class="lnk" href="Inspect.dc.html" style="margin-left: 6px">Inspect ›</a></sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 96px; top: 560px; width: 340px; display: flex; align-items: center; gap: 12px">
+    <span class="cond" style="font-size: 15px; font-weight: 600; letter-spacing: 0.18em">Belt</span>
+    <span style="flex-grow: 1; height: 1px; background: rgba(232,228,218,0.3)"></span>
+  </div>
+  <sc-for list="{{belt}}" as="b" hint-placeholder-count="5">
+    <button class="slot pix" aria-label="{{b.item.name}}" onMouseEnter="{{b.enter}}" onMouseLeave="{{b.leave}}" onFocus="{{b.enter}}" onBlur="{{b.leave}}" style="left: {{b.left}}px; top: 592px; width: 60px; height: 60px; {{b.item.tileBg}}">
+      <span class="shine"></span>
+      <img src="{{b.item.img}}" alt="" style="{{b.item.imgPad}}">
+      <span class="count">{{b.item.count}}</span>
+    </button>
+  </sc-for>
+
+  <div style="position: absolute; right: 96px; top: 150px; width: 420px; display: flex; align-items: center; gap: 12px">
+    <span style="flex-grow: 1; height: 1px; background: rgba(232,228,218,0.3)"></span>
+    <span class="cond" style="font-size: 15px; font-weight: 600; letter-spacing: 0.18em">Clothing</span>
+  </div>
+  <sc-for list="{{gear}}" as="g" hint-placeholder-count="5">
+    <div style="position: absolute; right: 96px; top: {{g.top}}px; width: 420px; height: 84px">
+      <button class="slot" aria-label="{{g.item.name}}, {{g.label}} slot" onClick="{{g.click}}" onMouseEnter="{{g.enter}}" onMouseLeave="{{g.leave}}" onFocus="{{g.enter}}" onBlur="{{g.leave}}" style="right: 0; top: 0; width: 80px; height: 80px; {{g.item.tileBg}}">
+        <span class="shine"></span>
+        <img src="{{g.item.img}}" alt="" style="inset: 6px; width: 68px; height: 68px">
+        <span class="wear" style="{{g.item.wearBar}}"></span>
+      </button>
+      <div style="position: absolute; right: 94px; top: 6px; width: 300px; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; text-align: right">
+        <span class="cond" style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; color: rgba(232,228,218,0.62)">{{g.label}}</span>
+        <span class="cond" style="font-size: 20px; font-weight: 600; line-height: 1; color: #f2efe8">{{g.item.name}}</span>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <span style="font-size: 13px; color: rgba(232,228,218,0.7)">{{g.item.short}}</span>
+          <span style="display: inline-flex"><sc-for list="{{g.item.pips}}" as="p" hint-placeholder-count="5"><span class="pip" style="{{p.style}}"></span></sc-for></span>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; right: 96px; top: 660px; width: 300px; display: flex; align-items: center; gap: 12px">
+    <span style="flex-grow: 1; height: 1px; background: rgba(232,228,218,0.3)"></span>
+    <span class="cond" style="font-size: 15px; font-weight: 600; letter-spacing: 0.18em">Carry</span>
+  </div>
+  <sc-for list="{{carry}}" as="c" hint-placeholder-count="4">
+    <div style="position: absolute; left: {{c.left}}px; top: 692px; width: 66px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+      <button class="slot {{c.pix}}" aria-label="{{c.item.name}}, {{c.label}} slot" onClick="{{c.click}}" onMouseEnter="{{c.enter}}" onMouseLeave="{{c.leave}}" onFocus="{{c.enter}}" onBlur="{{c.leave}}" style="position: relative; width: 66px; height: 66px; {{c.item.tileBg}}">
+        <span class="shine"></span>
+        <img src="{{c.item.img}}" alt="" style="{{c.item.imgPad}}">
+        <span class="wear" style="{{c.item.wearBar}}"></span>
+      </button>
+      <span class="cond" style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; color: rgba(232,228,218,0.62)">{{c.label}}</span>
+    </div>
+  </sc-for>
+
+  <sc-if value="{{fly.open}}" hint-placeholder-val="{{false}}">
+    <div role="dialog" aria-label="{{fly.title}}" style="position: absolute; {{fly.pos}}; padding: 14px; background: rgba(12,13,15,0.94); border: 1px solid rgba(232,228,218,0.22); box-shadow: 0 18px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px">
+        <span class="cond" style="font-size: 13px; font-weight: 600; letter-spacing: 0.16em">{{fly.title}}</span>
+        <button onClick="{{fly.close}}" aria-label="Close" style="background: none; border: none; color: rgba(232,228,218,0.7); cursor: pointer; font-size: 18px; line-height: 1; padding: 2px 4px">×</button>
+      </div>
+      <sc-if value="{{fly.empty}}" hint-placeholder-val="{{false}}">
+        <span style="font-size: 13px; color: rgba(232,228,218,0.66); width: 220px">Nothing else carried for this slot. Loot finds show up here.</span>
+      </sc-if>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{fly.items}}" as="f" hint-placeholder-count="3">
+          <button class="slot {{f.pix}}" aria-label="Equip {{f.item.name}}" onClick="{{f.pick}}" onMouseEnter="{{f.enter}}" onMouseLeave="{{f.leave}}" onFocus="{{f.enter}}" onBlur="{{f.leave}}" style="position: relative; width: {{fly.w}}px; height: {{fly.h}}px; {{f.item.tileBg}}">
+            <span class="shine"></span>
+            <img src="{{f.item.img}}" alt="" style="{{f.item.imgPad}}">
+            <span style="position: absolute; left: 5px; top: 4px; display: inline-flex"><sc-for list="{{f.item.pips}}" as="p" hint-placeholder-count="5"><span class="pip" style="width: 5px; height: 5px; margin-right: 3px; {{p.style}}"></span></sc-for></span>
+            <span class="wear" style="{{f.item.wearBar}}"></span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{card.show}}" hint-placeholder-val="{{false}}">
+    <div role="tooltip" style="position: absolute; {{card.pos}}; width: 400px; background: rgba(12,13,15,0.96); border: 1px solid rgba(232,228,218,0.18); box-shadow: 0 24px 60px rgba(0,0,0,0.65); pointer-events: none">
+      <div style="padding: 14px 18px 12px; {{card.band}}">
+        <div class="cond" style="font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: 0.04em">{{card.name}}</div>
+        <div style="margin-top: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 500">
+          <span>{{card.type}}</span>
+          <span class="cond" style="font-size: 14px; font-weight: 700; letter-spacing: 0.12em">{{card.rarityName}}</span>
+        </div>
+      </div>
+      <div style="padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <span style="display: inline-flex"><sc-for list="{{card.pips}}" as="p" hint-placeholder-count="5"><span class="pip" style="width: 9px; height: 9px; margin-right: 6px; {{p.style}}"></span></sc-for></span>
+            <span class="cond" style="font-size: 14px; font-weight: 600; letter-spacing: 0.14em">Tier {{card.tier}}</span>
+          </div>
+          <sc-if value="{{card.ammo}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; align-items: baseline; gap: 8px">
+              <span class="cond" style="font-size: 28px; font-weight: 600; line-height: 1">{{card.ammo}}</span>
+              <span style="font-size: 12px; color: rgba(232,228,218,0.66)">{{card.carried}}</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{card.count}}" hint-placeholder-val="{{false}}">
+            <span class="cond" style="font-size: 28px; font-weight: 600; line-height: 1">×{{card.count}}</span>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{card.hasPerks}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; justify-content: flex-start; gap: 8px; padding: 12px 0; border-top: 1px solid rgba(232,228,218,0.14); border-bottom: 1px solid rgba(232,228,218,0.14)">
+            <sc-for list="{{card.perks}}" as="k" hint-placeholder-count="5">
+              <div class="perk {{k.enh}}">
+                <div class="ring">
+                  <sc-if value="{{k.barrel}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 10h15M2 14h15"></path><circle cx="19.5" cy="12" r="2.2"></circle></svg></sc-if>
+                  <sc-if value="{{k.action}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6M4 12h10v5"></path><circle cx="14" cy="18.6" r="1.6"></circle><path d="M17 8h3"></path></svg></sc-if>
+                  <sc-if value="{{k.sight}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6"></circle><path d="M12 3v5M12 16v5M3 12h5M16 12h5"></path></svg></sc-if>
+                  <sc-if value="{{k.stock}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h9l8 3v4l-8-1.5H3z"></path></svg></sc-if>
+                  <sc-if value="{{k.trait}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 9-7 9-7-9z"></path><path d="M12 8l3.5 4-3.5 4-3.5-4z"></path></svg></sc-if>
+                  <sc-if value="{{k.blade}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17L18 4l1.5 1.5-11 13.5z"></path><path d="M4 16l4 4M3 21l2-2"></path></svg></sc-if>
+                  <sc-if value="{{k.grip}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="18" rx="1"></rect><path d="M9 7l6 2M9 11l6 2M9 15l6 2"></path></svg></sc-if>
+                  <sc-if value="{{k.balance}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M8 20h8M5 8h14"></path><path d="M5 8l-2.5 5h5zM19 8l-2.5 5h5z"></path></svg></sc-if>
+                  <sc-if value="{{k.gear}}" hint-placeholder-val="{{false}}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="12" rx="1.5"></rect><path d="M9 7V4.5h6V7M5 12h14"></path></svg></sc-if>
+                </div>
+                <span style="font-size: 11px; line-height: 1.2; text-align: center; color: rgba(232,228,218,0.86)">{{k.name}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{card.perkLine}}" hint-placeholder-val="{{false}}">
+          <span style="font-size: 13px; line-height: 1.4; color: rgba(232,228,218,0.86)">{{card.perkLine}}</span>
+        </sc-if>
+
+        <sc-if value="{{card.hasStats}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; flex-direction: column; gap: 7px">
+            <sc-for list="{{card.stats}}" as="t" hint-placeholder-count="6">
+              <div style="display: grid; grid-template-columns: 96px 1fr 34px; align-items: center; gap: 10px">
+                <span style="font-size: 13px; color: rgba(232,228,218,0.78); text-align: right">{{t.label}}</span>
+                <div class="bar"><i style="{{t.bar}}"></i></div>
+                <span class="cond" style="font-size: 15px; font-weight: 600">{{t.value}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <div style="display: grid; grid-template-columns: 96px 1fr 70px; align-items: center; gap: 10px">
+          <span style="font-size: 13px; color: rgba(232,228,218,0.78); text-align: right">Condition</span>
+          <div class="bar" style="height: 4px"><i style="{{card.condBar}}"></i></div>
+          <span class="cond" style="font-size: 14px; font-weight: 600">{{card.condWord}}</span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 13px; color: rgba(232,228,218,0.72)">
+          <span>{{card.weight}}</span>
+          <span>{{card.extra}}</span>
+        </div>
+
+        <span style="font-size: 13px; line-height: 1.45; font-style: italic; color: rgba(232,228,218,0.66)">{{card.lore}}</span>
+      </div>
+      <div style="padding: 10px 18px; border-top: 1px solid rgba(232,228,218,0.12); display: flex; gap: 18px; font-size: 12px; color: rgba(232,228,218,0.72)">
+        <span class="hint"><span class="key">LMB</span>{{card.lmb}}</span>
+        <span class="hint"><span class="key">F</span>Inspect</span>
+        <span class="hint"><span class="key">X</span>Drop</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <div style="position: absolute; left: 32px; right: 32px; bottom: 18px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: rgba(232,228,218,0.72)">
+    <span>Hover anything to inspect it. Click a slot to swap in gear you're carrying.</span>
+    <div style="display: flex; gap: 22px">
+      <span class="hint"><span class="key">Q</span><span class="key">E</span>Pages</span>
+      <span class="hint"><span class="key">Alt</span>Compare</span>
+      <span class="hint"><span class="key">Tab</span>Close</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":900}}'>
+const IMG = {
+  hunting_rifle: '/_blob/351b15951e71d1a4142bd617e2601d63', assault_rifle: '/_blob/c2600e95b6b7fce2c8d064af41fee0d1', shotgun: '/_blob/6300e3bc4866ed71c90765e11fa2aabc', pistol: '/_blob/aa51d64af9efe796c6e7d40b09705a4e',
+  machete: '/_blob/e6ed10accb8a825926c2549711aa4e62', katana: '/_blob/fe0104b8120d159addb63d64501d3aec', spiked_bat: '/_blob/4c4c9f671a71bdd584df2546c94f5dfd', crowbar: '/_blob/75ddd32fa0838e600bb2d5a9fdf5c22a', kitchen_knife: '/_blob/8c28d3423d7cc3e04717dc4c9de9f42a', sledgehammer: '/_blob/b420e099082d6fd13c586a12b52f5830', baseball_bat: '/_blob/ebf6e3573b87d9c7d48db2c0b8d05a09',
+  helmet: '/_blob/1f8ca833b792e8eac69b1d41b9f1f889', jacket: '/_blob/566ee784953c2d3afbaf5f052eb4134f', gloves: '/_blob/d322a4ef369a7c4c8d1e0acc5d423374', trousers: '/_blob/d0bbb63d8cad11d706f69775217c32e8', boots: '/_blob/6f4ad92a3e511a462dd1a46b41dc5f2f',
+  plate_carrier: '/_blob/c4818e0ada91e7048089438e4e20d0e7', rucksack: '/_blob/15a338acb7712effd6a4e567ae99d9ff', hiking: '/_blob/570bec7481ce4f4304409f9ca9c76e77', school: '/_blob/7749a29ca923aadbec4feb3ed9c61a1c', duffel: '/_blob/5e656ab37ce3ea511a78b1cf1682f8f8', fanny: '/_blob/efce8d14c6c554fc4cd64cc6404c7d41',
+  watch: '/_blob/c4cee024323d1eab2f322f0066622fbf', bandage: '/_blob/1eb091bb778db148ebe019720f900d2c', splint: '/_blob/47c49a64f6626acdb4c4ac8e9df8bcdf', water: '/_blob/8e0cd00a122e7e953535d479f1f51013', pills: '/_blob/b8c2bdbe21d7dc97727527bfa1921c43', ammo9: '/_blob/b5a8553186e3486d8b50d2f4456dfd17'
+};
+const RAR = {
+  common: { name: 'Common', band: 'background: #c9c0ad; color: #1b1a17', text: '#d9d1c0', tile: 'background: linear-gradient(160deg, #5c5850 0%, #34312c 100%)' },
+  uncommon: { name: 'Scarce', band: 'background: #5d6a34; color: #f2f3ea', text: '#b6c47a', tile: 'background: linear-gradient(160deg, #525d30 0%, #23281a 100%)' },
+  rare: { name: 'Rare', band: 'background: #4a6d97; color: #f3f6fa', text: '#9fc2ea', tile: 'background: linear-gradient(160deg, #3d5a7d 0%, #1b2636 100%)' },
+  legendary: { name: 'Prized', band: 'background: #6e2626; color: #f8eeee', text: '#e09a92', tile: 'background: linear-gradient(160deg, #5c2424 0%, #2a1212 100%)' },
+  exotic: { name: 'Grail', band: 'background: #b08d3e; color: #1c1608', text: '#e0c27a', tile: 'background: linear-gradient(160deg, #6b5626 0%, #2f2611 100%)' }
+};
+const S = (label, v) => ({ label, v });
+const K = (kind, name, enh) => ({ kind, name, enh: !!enh });
+const ITEMS = {
+  hunting_rifle: { kind: 'gun', name: 'Hunting Rifle', type: 'Bolt-action rifle', short: 'Bolt-action · .308', rarity: 'uncommon', tier: 3, img: IMG.hunting_rifle, cond: 0.62, weight: 4.1, ammo: '4 / 5', carried: '.308 · 27 carried',
+    stats: [S('Damage', 84), S('Range', 78), S('Stability', 41), S('Handling', 52), S('Reload', 35), S('Noise', 92)],
+    perks: [K('barrel', 'Fluted barrel'), K('action', 'Smooth bolt'), K('sight', '4× scope'), K('stock', 'Walnut stock'), K('trait', "Hunter's rest")],
+    lore: 'Pulled from a deer stand off the county road. Someone kept it oiled right up until the end.' },
+  assault_rifle: { kind: 'gun', name: 'Assault Rifle', type: 'Semi-automatic rifle', short: 'Semi-auto · 5.56', rarity: 'rare', tier: 2, img: IMG.assault_rifle, cond: 0.41, weight: 3.6, ammo: '30 / 30', carried: '5.56 · 60 carried',
+    stats: [S('Damage', 58), S('Range', 64), S('Stability', 70), S('Handling', 66), S('Reload', 60), S('Noise', 96)],
+    perks: [K('barrel', 'Standard barrel'), K('action', 'Gritty trigger'), K('sight', 'Red dot'), K('stock', 'Folding stock'), K('trait', 'Field-cleaned')],
+    lore: 'Police issue. The rack it came from was empty except for this one, and it shows.' },
+  shotgun: { kind: 'gun', name: 'Pump Shotgun', type: 'Pump-action shotgun', short: 'Pump-action · 12 gauge', rarity: 'common', tier: 5, img: IMG.shotgun, cond: 0.97, weight: 3.4, ammo: '6 / 6', carried: '12 ga · 14 carried',
+    stats: [S('Damage', 92), S('Range', 22), S('Stability', 48), S('Handling', 61), S('Reload', 30), S('Noise', 98)],
+    perks: [K('barrel', 'Cylinder bore', 1), K('action', 'Slick pump', 1), K('sight', 'Bead sight'), K('stock', 'Recoil pad', 1), K('trait', "Gunsmith's tune", 1)],
+    lore: 'A common gun with uncommon care. Whoever owned this cleaned it every Sunday.' },
+  pistol_t2: { kind: 'gun', name: 'Service Pistol', type: 'Semi-automatic pistol', short: 'Semi-auto · 9mm', rarity: 'common', tier: 2, img: IMG.pistol, cond: 0.55, weight: 0.9, ammo: '12 / 15', carried: '9mm · 34 carried',
+    stats: [S('Damage', 38), S('Range', 40), S('Stability', 62), S('Handling', 88), S('Reload', 74), S('Noise', 80)],
+    perks: [K('barrel', 'Standard barrel'), K('action', 'Light trigger'), K('sight', 'Iron sights'), K('stock', 'Rubber grip'), K('trait', 'Quick draw')],
+    lore: 'Still in its holster on the officer at the roadblock.' },
+  pistol_t4: { kind: 'gun', name: 'Service Pistol', type: 'Semi-automatic pistol', short: 'Semi-auto · 9mm', rarity: 'common', tier: 4, img: IMG.pistol, cond: 0.88, weight: 0.9, ammo: '15 / 15', carried: '9mm · 34 carried',
+    stats: [S('Damage', 41), S('Range', 46), S('Stability', 74), S('Handling', 90), S('Reload', 80), S('Noise', 80)],
+    perks: [K('barrel', 'Match barrel', 1), K('action', 'Tuned trigger', 1), K('sight', 'Night sights'), K('stock', 'Stippled grip'), K('trait', 'Quick draw')],
+    lore: "A competition shooter's carry gun. Same pistol, better hands." },
+  machete: { kind: 'melee', name: 'Machete', type: 'Blade · one-handed', short: 'Blade · one-handed', rarity: 'uncommon', tier: 4, img: IMG.machete, cond: 0.74, weight: 0.7,
+    stats: [S('Damage', 46), S('Swing speed', 72), S('Reach', 38), S('Knockback', 30), S('Stamina', 34), S('Durability', 70)],
+    perks: [K('blade', 'Honed edge', 1), K('grip', 'Paracord wrap'), K('balance', 'Forward weight'), K('trait', 'Clean cuts')],
+    lore: 'Hung by the back door of a farmhouse, sharpened often.' },
+  katana: { kind: 'melee', name: 'Katana', type: 'Blade · two-handed', short: 'Blade · two-handed', rarity: 'rare', tier: 2, img: IMG.katana, cond: 0.46, weight: 1.2,
+    stats: [S('Damage', 62), S('Swing speed', 64), S('Reach', 58), S('Knockback', 22), S('Stamina', 46), S('Durability', 40)],
+    perks: [K('blade', 'Display steel'), K('grip', 'Silk wrap'), K('balance', 'Balanced'), K('trait', "Collector's piece")],
+    lore: "Off a dentist's office wall. Sharp enough, but display steel won't take much abuse." },
+  spiked_bat: { kind: 'melee', name: 'Spiked Bat', type: 'Blunt · two-handed', short: 'Blunt · two-handed', rarity: 'common', tier: 3, img: IMG.spiked_bat, cond: 0.58, weight: 1.1,
+    stats: [S('Damage', 52), S('Swing speed', 55), S('Reach', 52), S('Knockback', 70), S('Stamina', 50), S('Durability', 45)],
+    perks: [K('blade', 'Nail head'), K('grip', 'Taped handle'), K('balance', 'Heavy end'), K('trait', 'Homemade')], lore: 'Somebody had an afternoon, a hammer and a box of nails.' },
+  crowbar: { kind: 'melee', name: 'Crowbar', type: 'Blunt · one-handed', short: 'Blunt · one-handed', rarity: 'common', tier: 1, img: IMG.crowbar, cond: 0.33, weight: 1.6,
+    stats: [S('Damage', 40), S('Swing speed', 50), S('Reach', 42), S('Knockback', 60), S('Stamina', 48), S('Durability', 92)],
+    perks: [K('blade', 'Pry tip'), K('grip', 'Bare steel'), K('balance', 'Even weight'), K('trait', 'Breaks locks')], lore: 'Bent, chipped, and still the best key in town.' },
+  kitchen_knife: { kind: 'melee', name: 'Kitchen Knife', type: 'Blade · one-handed', short: 'Blade · one-handed', rarity: 'common', tier: 2, img: IMG.kitchen_knife, cond: 0.5, weight: 0.3,
+    stats: [S('Damage', 24), S('Swing speed', 90), S('Reach', 16), S('Knockback', 8), S('Stamina', 14), S('Durability', 30)],
+    perks: [K('blade', 'Thin blade'), K('grip', 'Plastic handle'), K('balance', 'Light'), K('trait', 'Stabber')], lore: 'From the block on the counter. Better than nothing.' },
+  sledgehammer: { kind: 'melee', name: 'Sledgehammer', type: 'Blunt · two-handed', short: 'Blunt · two-handed', rarity: 'common', tier: 3, img: IMG.sledgehammer, cond: 0.8, weight: 4.5,
+    stats: [S('Damage', 88), S('Swing speed', 22), S('Reach', 54), S('Knockback', 96), S('Stamina', 90), S('Durability', 96)],
+    perks: [K('blade', 'Steel head'), K('grip', 'Fibreglass'), K('balance', 'Head-heavy'), K('trait', 'Wall breaker')], lore: 'Slow, heavy, and it takes down a wall.' },
+  baseball_bat: { kind: 'melee', name: 'Baseball Bat', type: 'Blunt · two-handed', short: 'Blunt · two-handed', rarity: 'common', tier: 2, img: IMG.baseball_bat, cond: 0.44, weight: 0.9,
+    stats: [S('Damage', 40), S('Swing speed', 60), S('Reach', 50), S('Knockback', 64), S('Stamina', 40), S('Durability', 50)],
+    perks: [K('blade', 'Ash wood'), K('grip', 'Taped grip'), K('balance', 'Balanced'), K('trait', 'Home run')], lore: 'Signed by a little-league team, years ago.' },
+  helmet: { kind: 'gear', name: 'Ballistic Helmet', type: 'Head · hard armour', short: 'Bite 90 · Scratch 95', rarity: 'rare', tier: 2, img: IMG.helmet, cond: 0.8, weight: 1.4, prot: { bite: 90, scratch: 95, warmth: 10 },
+    perks: [K('gear', 'NV mount'), K('trait', 'Padded liner')], lore: "Stencilled with a unit number that's half scraped off." },
+  jacket: { kind: 'gear', name: 'Field Jacket', type: 'Torso · waxed cotton', short: 'Bite 25 · Scratch 55', rarity: 'common', tier: 3, img: IMG.jacket, cond: 0.7, weight: 1.2, prot: { bite: 25, scratch: 55, warmth: 60 },
+    perks: [K('gear', 'Four pockets'), K('trait', 'Waxed')], lore: 'Stays dry in the rain longer than you will.' },
+  gloves: { kind: 'gear', name: 'Work Gloves', type: 'Hands · leather', short: 'Bite 10 · Scratch 45', rarity: 'common', tier: 2, img: IMG.gloves, cond: 0.6, weight: 0.2, prot: { bite: 10, scratch: 45, warmth: 20 },
+    perks: [K('gear', 'Leather palm')], lore: 'Climb through broken windows without leaving half your hand behind.' },
+  trousers: { kind: 'gear', name: 'Cargo Trousers', type: 'Legs · cotton', short: 'Bite 20 · Scratch 40', rarity: 'common', tier: 2, img: IMG.trousers, cond: 0.65, weight: 0.8, prot: { bite: 20, scratch: 40, warmth: 35 },
+    perks: [K('gear', 'Cargo pockets'), K('trait', 'Reinforced knees')], lore: 'Two extra pockets, and the knees are patched twice over.' },
+  boots: { kind: 'gear', name: 'Combat Boots', type: 'Feet · leather', short: 'Bite 60 · Scratch 80', rarity: 'uncommon', tier: 3, img: IMG.boots, cond: 0.78, weight: 1.6, prot: { bite: 60, scratch: 80, warmth: 40 },
+    perks: [K('gear', 'Steel toe'), K('trait', 'Quiet soles')], lore: 'Broken in by someone else. Fits well enough.' },
+  plate_carrier: { kind: 'bag', name: 'Plate Carrier', type: 'Vest · armour', short: '6 slots', rarity: 'rare', tier: 3, img: IMG.plate_carrier, cond: 0.84, weight: 2.1, prot: { bite: 70, scratch: 90, warmth: 15 }, cap: '6 slots · mags reload faster',
+    perks: [K('gear', 'Front plate'), K('trait', 'Mag pouches')], lore: 'Took it off a National Guard checkpoint that never got the order to leave.' },
+  rucksack: { kind: 'bag', name: 'Military Rucksack', type: 'Back · frame pack', short: '24 slots', rarity: 'uncommon', tier: 3, img: IMG.rucksack, cond: 0.71, weight: 2.2, cap: '24 slots · up to 28 kg', loadCap: 28,
+    perks: [K('gear', 'Frame sheet'), K('trait', 'Hip belt')], lore: 'Heavy when empty. Worth it when full.' },
+  hiking: { kind: 'bag', name: 'Hiking Backpack', type: 'Back · day pack', short: '18 slots', rarity: 'uncommon', tier: 2, img: IMG.hiking, cond: 0.82, weight: 1.2, cap: '18 slots · up to 22 kg', loadCap: 22,
+    perks: [K('gear', 'Rain cover')], lore: 'Trail map still in the lid pocket.' },
+  school: { kind: 'bag', name: 'School Backpack', type: 'Back · small pack', short: '8 slots', rarity: 'common', tier: 1, img: IMG.school, cond: 0.5, weight: 0.5, cap: '8 slots · up to 12 kg', loadCap: 12,
+    perks: [K('gear', 'One strap left')], lore: 'There is still homework inside.' },
+  fanny: { kind: 'bag', name: 'Fanny Pack', type: 'Waist · pouch', short: '2 slots', rarity: 'common', tier: 1, img: IMG.fanny, cond: 0.66, weight: 0.2, cap: '2 slots',
+    perks: [K('gear', 'Quick reach')], lore: "Out of fashion. Doesn't matter now." },
+  watch: { kind: 'bag', name: 'Digital Watch', type: 'Wrist · electronics', short: 'Time and day', rarity: 'common', tier: 1, img: IMG.watch, cond: 0.9, weight: 0.05, cap: 'Shows time on the HUD', pix: true,
+    perks: [K('gear', 'Backlight'), K('trait', 'Alarm lure')], lore: 'Set the alarm and leave it behind to pull them away.' },
+  bandage: { kind: 'supply', name: 'Bandage', type: 'Medical', rarity: 'common', tier: 1, img: IMG.bandage, count: 4, pix: true, weight: 0.05, desc: 'Binds the worst open wound and stops it bleeding.', lore: 'Clean, for now.' },
+  splint: { kind: 'supply', name: 'Splint', type: 'Medical', rarity: 'common', tier: 1, img: IMG.splint, count: 1, pix: true, weight: 0.3, desc: 'Sets a broken limb. Heals three times faster.', lore: 'Two sticks and a bandage.' },
+  water: { kind: 'supply', name: 'Water Bottle', type: 'Drink', rarity: 'common', tier: 1, img: IMG.water, count: 1, weight: 0.6, desc: 'About half full. Refill from a tap or rain barrel.', lore: '' },
+  pills: { kind: 'supply', name: 'Painkillers', type: 'Medical', rarity: 'uncommon', tier: 1, img: IMG.pills, count: 1, weight: 0.1, desc: 'Dulls pain for an hour, so hurt arms aim steadier.', lore: '' },
+  ammo9: { kind: 'supply', name: '9mm Rounds', type: 'Ammunition', rarity: 'common', tier: 1, img: IMG.ammo9, count: 34, weight: 0.4, desc: 'Fits the service pistol.', lore: '' }
+};
+const POOLS = {
+  sling: ['hunting_rifle', 'assault_rifle', 'shotgun'], holster: ['pistol_t2', 'pistol_t4'],
+  sheath: ['machete', 'katana', 'spiked_bat', 'crowbar', 'kitchen_knife', 'sledgehammer', 'baseball_bat'],
+  head: ['helmet'], torso: ['jacket'], hands: ['gloves'], legs: ['trousers'], feet: ['boots'],
+  vest: ['plate_carrier'], back: ['rucksack', 'hiking', 'school'], waist: ['fanny'], wrist: ['watch']
+};
+const WEAPON_SLOTS = [['sling', 'Sling', 'Long gun', 186], ['holster', 'Holster', 'Sidearm', 302], ['sheath', 'Sheath', 'Melee', 418]];
+const GEAR_SLOTS = [['head', 'Head', 182], ['torso', 'Torso', 276], ['hands', 'Hands', 370], ['legs', 'Legs', 464], ['feet', 'Feet', 558]];
+const CARRY_SLOTS = [['vest', 'Vest', 1222], ['back', 'Back', 1298], ['waist', 'Waist', 1374], ['wrist', 'Wrist', 1450]];
+const BELT = ['bandage', 'splint', 'pills', 'water', 'ammo9'];
+const FLAT = { bandage: 1, splint: 1, watch: 1 };
+
+function pips(tier, rarity) {
+  const on = rarity === 'exotic' ? '#e8cc6e' : '#ece7dc';
+  return [1, 2, 3, 4, 5].map(i => ({ style: i <= tier ? 'background: ' + on : 'background: transparent; border: 1px solid rgba(236,231,220,0.38)' }));
+}
+function condWord(c) { return c > 0.9 ? 'Like new' : c > 0.7 ? 'Good' : c > 0.5 ? 'Worn' : c > 0.3 ? 'Battered' : 'Breaking'; }
+function view(id) {
+  const it = ITEMS[id], r = RAR[it.rarity];
+  const flat = FLAT[id];
+  return Object.assign({}, it, {
+    id, rarityName: r.name, rarityText: r.text, tileBg: r.tile, pips: pips(it.tier, it.rarity),
+    wearBar: 'width: ' + Math.round((it.cond || 0) * 100) + '%',
+    imgPad: flat ? 'inset: 12px; width: calc(100% - 24px); height: calc(100% - 24px); image-rendering: pixelated' : 'inset: 5px; width: calc(100% - 10px); height: calc(100% - 10px)',
+    count: it.count ? '×' + it.count : ''
+  });
+}
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { equip: { sling: 'hunting_rifle', holster: 'pistol_t2', sheath: 'machete', head: 'helmet', torso: 'jacket', hands: 'gloves', legs: 'trousers', feet: 'boots', vest: 'plate_carrier', back: 'rucksack', waist: 'fanny', wrist: 'watch' }, hover: null, open: null };
+  }
+  hoverOn(id, pos) { this.setState({ hover: { id, pos } }); }
+  hoverOff() { this.setState({ hover: null }); }
+  toggle(slot) { this.setState({ open: this.state.open === slot ? null : slot, hover: null }); }
+  equipItem(slot, id) { this.setState({ equip: Object.assign({}, this.state.equip, { [slot]: id }), open: null, hover: null }); }
+  renderVals() {
+    const eq = this.state.equip;
+    const est = id => ({ gun: 560, melee: 520, gear: 400, bag: 400, supply: 250 })[ITEMS[id].kind];
+    const topPos = (left, top, id) => 'left: ' + left + 'px; top: ' + Math.max(80, Math.min(top, 884 - est(id))) + 'px';
+
+    const weapons = WEAPON_SLOTS.map(([key, label, sub, top]) => ({
+      key, label, sub, top, item: view(eq[key]), inspect: eq[key] === 'hunting_rifle',
+      click: () => this.toggle(key),
+      enter: () => this.state.open === key ? null : this.hoverOn(eq[key], topPos(560, top, eq[key])),
+      leave: () => this.hoverOff()
+    }));
+    const gear = GEAR_SLOTS.map(([key, label, top]) => ({
+      key, label, top, item: view(eq[key]),
+      click: () => this.toggle(key),
+      enter: () => this.state.open === key ? null : this.hoverOn(eq[key], topPos(780, top, eq[key])),
+      leave: () => this.hoverOff()
+    }));
+    const carry = CARRY_SLOTS.map(([key, label, left]) => ({
+      key, label, left, item: view(eq[key]), pix: FLAT[eq[key]] ? 'pix' : '',
+      click: () => this.toggle(key),
+      enter: () => this.state.open === key ? null : this.hoverOn(eq[key], 'left: 800px; bottom: 60px'),
+      leave: () => this.hoverOff()
+    }));
+    const belt = BELT.map((id, i) => ({
+      item: view(id), left: 96 + i * 68,
+      enter: () => this.hoverOn(id, 'left: 96px; bottom: 324px'), leave: () => this.hoverOff()
+    }));
+
+    // the swap flyout next to the open slot: the alternatives you're carrying
+    let fly = { open: false, items: [], empty: false };
+    const open = this.state.open;
+    if (open) {
+      const others = POOLS[open].filter(id => id !== eq[open]);
+      const isWeapon = WEAPON_SLOTS.some(s => s[0] === open), isGear = GEAR_SLOTS.some(s => s[0] === open);
+      const w = isWeapon ? 150 : 76, h = isWeapon ? 60 : 76;
+      const cols = Math.min(3, Math.max(1, others.length)), rows = Math.max(1, Math.ceil(others.length / 3));
+      const boxW = cols * w + (cols - 1) * 8 + 30, boxH = 52 + rows * h + (rows - 1) * 8;
+      let pos, cardLeft, cardTop;
+      if (isWeapon) {
+        const top = WEAPON_SLOTS.find(s => s[0] === open)[3];
+        pos = 'left: 318px; top: ' + (top + 8) + 'px'; cardLeft = 318 + boxW + 14; cardTop = top;
+      } else if (isGear) {
+        const top = GEAR_SLOTS.find(s => s[0] === open)[2];
+        const left = 1418 - boxW; pos = 'left: ' + left + 'px; top: ' + (top - 6) + 'px'; cardLeft = left - 414; cardTop = top;
+      } else {
+        const left = 1516 - boxW; pos = 'left: ' + left + 'px; top: ' + (680 - boxH) + 'px'; cardLeft = left - 414; cardTop = 680 - boxH;
+      }
+      const title = 'Carried · ' + ({ sling: 'long guns', holster: 'sidearms', sheath: 'melee', head: 'head', torso: 'torso', hands: 'hands', legs: 'legs', feet: 'feet', vest: 'vests', back: 'packs', waist: 'waist', wrist: 'wrist' })[open];
+      fly = {
+        open: true, title, pos, w, h, empty: others.length === 0,
+        close: () => this.setState({ open: null }),
+        items: others.map(id => ({
+          item: view(id), pix: FLAT[id] ? 'pix' : '',
+          pick: () => this.equipItem(open, id),
+          enter: () => this.hoverOn(id, topPos(Math.max(16, cardLeft), cardTop, id)),
+          leave: () => this.hoverOff()
+        }))
+      };
+    }
+
+    // the inspect card
+    let card = { show: false };
+    const hv = this.state.hover;
+    if (hv) {
+      const it = view(hv.id), r = RAR[it.rarity];
+      const bar = v => 'width: ' + v + '%';
+      let stats = [], extra = '';
+      if (it.kind === 'gun' || it.kind === 'melee') stats = it.stats.map(s => ({ label: s.label, value: s.v, bar: bar(s.v) }));
+      else if (it.prot) stats = [S('Bite', it.prot.bite), S('Scratch', it.prot.scratch), S('Warmth', it.prot.warmth)].map(s => ({ label: s.label + ' guard', value: s.v, bar: bar(s.v) }));
+      if (it.cap) extra = it.cap;
+      const kinds = ['barrel', 'action', 'sight', 'stock', 'trait', 'blade', 'grip', 'balance', 'gear'];
+      const perks = (it.perks || []).map(p => { const o = { name: p.name, enh: p.enh ? 'enh' : '' }; kinds.forEach(k => o[k] = p.kind === k); return o; });
+      const equippedHere = Object.values(eq).includes(hv.id);
+      card = {
+        show: true, pos: hv.pos, name: it.name, type: it.type, rarityName: r.name, band: r.band, tier: it.tier, pips: it.pips,
+        ammo: it.ammo || '', carried: it.carried || '', count: it.count || '',
+        hasPerks: perks.length > 0, perks, perkLine: it.desc || '',
+        hasStats: stats.length > 0, stats,
+        condBar: 'width: ' + Math.round(it.cond * 100) + '%; background: ' + (it.cond < 0.35 ? '#d0603c' : '#e8e4da'),
+        condWord: it.kind === 'supply' ? '' : condWord(it.cond) + ' ' + Math.round(it.cond * 100) + '%',
+        weight: (it.weight < 0.1 ? '<0.1' : it.weight.toFixed(1)) + ' kg' + (it.count > 1 ? ' each' : ''), extra,
+        lore: it.lore || '', lmb: it.kind === 'supply' ? 'Use' : equippedHere ? 'Swap' : 'Equip'
+      };
+      if (it.kind === 'supply') card.condBar = 'width: 100%; background: #e8e4da';
+    }
+
+    // the stat strip across the top, from what you're wearing
+    const w = id => ITEMS[eq[id]].weight;
+    const load = 9.6 + ['sling', 'holster', 'sheath', 'head', 'torso', 'hands', 'legs', 'feet', 'vest', 'back', 'waist', 'wrist'].reduce((a, k) => a + w(k), 0);
+    const cap = ITEMS[eq.back].loadCap || 12;
+    const p = k => ITEMS[eq[k]].prot || { bite: 0, scratch: 0, warmth: 0 };
+    const torso = { bite: Math.max(p('torso').bite, p('vest').bite), scratch: Math.max(p('torso').scratch, p('vest').scratch) };
+    const bite = Math.round((p('head').bite + torso.bite * 2 + p('hands').bite + p('legs').bite + p('feet').bite) / 6);
+    const scratch = Math.round((p('head').scratch + torso.scratch * 2 + p('hands').scratch + p('legs').scratch + p('feet').scratch) / 6);
+    const warmth = Math.round((p('head').warmth + p('torso').warmth * 2 + p('hands').warmth + p('legs').warmth + p('feet').warmth) / 6);
+    const over = load / cap;
+    const speed = over > 0.75 ? -Math.round((over - 0.75) * 40) : 0;
+    const stats = [
+      { label: 'Bite guard', value: bite + '%', bar: 'width: ' + bite + '%', color: '#f2efe8' },
+      { label: 'Scratch guard', value: scratch + '%', bar: 'width: ' + scratch + '%', color: '#f2efe8' },
+      { label: 'Warmth', value: warmth, bar: 'width: ' + warmth + '%', color: '#f2efe8' },
+      { label: 'Noise', value: 'Low', bar: 'width: 24%', color: '#f2efe8' },
+      { label: 'Load', value: load.toFixed(1) + ' / ' + cap, bar: 'width: ' + Math.min(100, Math.round(over * 100)) + '%; background: ' + (over > 0.9 ? '#d0603c' : '#e8e4da'), color: over > 0.9 ? '#e68a66' : '#f2efe8' },
+      { label: 'Speed', value: speed === 0 ? 'Normal' : speed + '%', bar: 'width: ' + (100 + speed) + '%', color: speed < 0 ? '#e68a66' : '#f2efe8' }
+    ];
+    return { weapons, gear, carry, belt, fly, card, stats };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quick slots in game</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#0b0c0e}
+a{color:#e8e4da}a:hover{color:#ffffff}
+.cond{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.12em}
+.sq{position:relative;width:64px;height:64px;box-sizing:border-box;border:1px solid rgba(232,228,218,.28);background:rgba(12,13,15,.42)}
+.sq img{position:absolute;inset:4px;width:56px;height:56px;object-fit:contain}
+.seg{font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em}
+</style>
+</helmet>
+<div style="position: relative; width: 1600px; height: 900px; overflow: hidden; background: #0b0c0e; font-family: 'Barlow', sans-serif; color: #e8e4da">
+  <img src="/_blob/61067495ebb64db9b4cfb6f49582b845" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+  <div style="position: absolute; inset: 0; background: radial-gradient(ellipse 60% 60% at 50% 45%, rgba(10,12,14,0) 0%, rgba(8,9,11,0.55) 75%, rgba(6,7,8,0.85) 100%)"></div>
+
+  <div aria-hidden="true" style="position: absolute; left: 796px; top: 446px; width: 8px; height: 8px; border-radius: 50%; border: 1px solid rgba(242,239,232,0.8)"></div>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 26px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+    <sc-if value="{{showName}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span class="cond" style="font-size: 22px; font-weight: 600; color: #f2efe8">{{heldName}}</span>
+        <span class="cond" style="font-size: 14px; font-weight: 600; color: rgba(232,228,218,0.68)">{{heldWord}}</span>
+      </div>
+    </sc-if>
+    <div style="display: flex; align-items: flex-end; gap: 12px">
+      <sc-for list="{{slots}}" as="s" hint-placeholder-count="6">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+          <span class="cond" style="font-size: 11px; font-weight: 600; color: {{s.labelColor}}">{{s.label}}</span>
+          <div class="sq" style="{{s.box}}">
+            <sc-if value="{{s.img}}" hint-placeholder-val="{{ true }}">
+              <img src="{{s.img}}" alt="{{s.alt}}">
+            </sc-if>
+            <span class="cond" style="position: absolute; left: 4px; top: 2px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; color: rgba(232,228,218,0.6)">{{s.key}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{lockNote}}" hint-placeholder-val="{{ false }}">
+      <span class="cond" style="font-size: 12px; font-weight: 600; color: rgba(232,228,218,0.55)">{{lockNote}}</span>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{watch}}" hint-placeholder-val="{{ true }}">
+    <div style="position: absolute; right: 34px; bottom: 30px; display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+      <span class="cond" style="font-size: 11px; font-weight: 600; color: rgba(232,228,218,0.55)">On your wrist</span>
+      <span class="seg" style="font-size: 44px; line-height: 1; color: #f2efe8">21:40</span>
+      <span class="cond" style="font-size: 13px; font-weight: 600; color: rgba(232,228,218,0.68)">Fri · day 12</span>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"kit":{"editor":"enum","options":["No belt","Leather belt","Duty belt, holster and sheath"],"default":"Duty belt, holster and sheath"},"watch":{"editor":"boolean","default":true},"$preview":{"width":1600,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const kit = this.props.kit ?? 'Duty belt, holster and sheath';
+    const watch = this.props.watch ?? true;
+    const img = {
+      rifle: '/_blob/5c0360076a2d64dd5c0a8baa3fec05ca', pistol: '/_blob/367c66bec1befc8b67839398c9b8be6c',
+      knife: '/_blob/ceda54be1923292953327cb482028ed5', machete: '/_blob/6084e9a1e759cc3dfc7b2a46757c1f6d',
+      crowbar: '/_blob/42430a44990b0a88bf5eb442e2614c1e', bandage: '/_blob/a666bebc90433074cf8f892f59124c9a'
+    };
+    const slot = (label, key, item, alt, selected) => ({
+      label, key, img: item ? img[item] : '', alt: alt || '',
+      labelColor: selected ? '#f2efe8' : 'rgba(232,228,218,0.62)',
+      box: selected ? 'border-color: rgba(242,239,232,0.95); box-shadow: 0 0 0 1px rgba(242,239,232,0.35), 0 0 18px rgba(242,239,232,0.12)' : ''
+    });
+    let slots, lockNote = '';
+    if (kit === 'No belt') {
+      slots = [slot('Hands', '1', 'crowbar', 'Crowbar', true), slot('Back', '6', 'rifle', 'Hunting rifle on the sling', false)];
+      lockNote = 'Hip slots need a belt';
+    } else if (kit === 'Leather belt') {
+      slots = [slot('Hands', '1', 'crowbar', 'Crowbar', true), slot('Hip', '2', 'machete', 'Machete', false),
+        slot('Hip', '3', 'knife', 'Kitchen knife', false), slot('Back', '6', 'rifle', 'Hunting rifle on the sling', false)];
+      lockNote = 'A holster or sheath adds its own slot';
+    } else {
+      slots = [slot('Hands', '1', 'crowbar', 'Crowbar', true), slot('Hip', '2', 'machete', 'Machete', false),
+        slot('Hip', '3', '', '', false), slot('Holster', '4', 'pistol', 'Pistol', false),
+        slot('Sheath', '5', 'knife', 'Kitchen knife', false), slot('Back', '6', 'rifle', 'Hunting rifle on the sling', false),
+        slot('Pouch', '7', 'bandage', 'Bandage', false), slot('Pouch', '8', '', '', false)];
+    }
+    return { slots, lockNote, watch, showName: true, heldName: 'Crowbar', heldWord: 'Worn' };
+  }
+}
+</script>
+</body>
+</html>

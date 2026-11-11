@@ -1,0 +1,33 @@
+# items/hygiene-household
+
+Per-item reference photos from Wikimedia Commons (1024 px thumbnails), free licences only. File = <item id>.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| air_freshener.jpg | [Air Wick automatic air freshener-5060.jpg](https://commons.wikimedia.org/wiki/File:Air_Wick_automatic_air_freshener-5060.jpg) | Raimond Spekking | CC BY-SA 4.0 | Air Wick automatic air freshener |
+| bleach.jpg | [HK Kao Bleaches 2.JPG](https://commons.wikimedia.org/wiki/File:HK_Kao_Bleaches_2.JPG) | Meadohsum | CC BY-SA 3.0 | zh:家庭用品 zh:花王牌  漂白劑 |
+| broom.jpg | [Hue Vietnam Broom-in-Càn-Thành-Palace-01.jpg](https://commons.wikimedia.org/wiki/File:Hue_Vietnam_Broom-in-C%C3%A0n-Th%C3%A0nh-Palace-01.jpg) | CEphoto, Uwe Aranas | CC BY-SA 3.0 | Hue, Vietnam: A broom in the Càn Thành Palace within the Citadel of Huế. |
+| bug_spray.jpg | [Off and Cutter DEET Insect Repellent - Bug Spray (27827388427).jpg](https://commons.wikimedia.org/wiki/File:Off_and_Cutter_DEET_Insect_Repellent_-_Bug_Spray_(27827388427).jpg) | Tony Webster from Minneapolis, Minnesota, United States | CC BY 2.0 | Two bottles of insect repellent (bug spray) - Off! brand and Cutter Backwoods brand. -   (C) 2018 Tony Webster |
+| comb.jpg | [Plastic comb, 2015-06-07.jpg](https://commons.wikimedia.org/wiki/File:Plastic_comb,_2015-06-07.jpg) | Crisco 1492 | CC BY-SA 4.0 | Plastic comb, 2015-06-07 |
+| deodorant.jpg | [2023 Dezodoranty.jpg](https://commons.wikimedia.org/wiki/File:2023_Dezodoranty.jpg) | Jacek Halicki | CC BY-SA 4.0 | Deodorants |
+| detergent.jpg | [Woman in the shadow of a conical hat made of repurposed bags of laundr](https://commons.wikimedia.org/wiki/File:Woman_in_the_shadow_of_a_conical_hat_made_of_repurposed_bags_of_laundry_detergent_in_Don_Det_Laos.jpg) | Basile Morin | CC BY-SA 4.0 | Woman in the shadow of a conical hat made of repurposed plastic wraps of laundry detergent sewn together and used as waterproofing material, |
+| dish_soap.jpg | [Soap in blue dish.JPG](https://commons.wikimedia.org/wiki/File:Soap_in_blue_dish.JPG) | TheLewisRepublic | Public domain | A white bar of soap in a light blue plastic soap dish. |
+| hair_dryer.jpg | [HITACHI HAIR DRYER HD-1650.jpg](https://commons.wikimedia.org/wiki/File:HITACHI_HAIR_DRYER_HD-1650.jpg) | Dinkun Chen | CC BY-SA 4.0 | HITACHI HAIR DRYER HD-1650 |
+| hairbrush.jpg | [Hairbrush flat.JPG](https://commons.wikimedia.org/wiki/File:Hairbrush_flat.JPG) | en:User:Musical Linguist | CC BY-SA 3.0 | Flat hairbrush |
+| makeup_bag.jpg | [Woman looking for something in her makeup bag closeup.jpg](https://commons.wikimedia.org/wiki/File:Woman_looking_for_something_in_her_makeup_bag_closeup.jpg) | Shixart1985 | CC BY 2.0 | Woman looking for something in her makeup bag closeup |
+| mop_bucket.jpg | [Mop and bucket, 7-Eleven.jpg](https://commons.wikimedia.org/wiki/File:Mop_and_bucket,_7-Eleven.jpg) | Ser Amantio di Nicolao | CC BY-SA 4.0 | Fairfax County, Virginia |
+| nail_clippers.jpg | [Nail-clippers-variety.jpg](https://commons.wikimedia.org/wiki/File:Nail-clippers-variety.jpg) | Evan-Amos | Public domain | Three types of nail clippers, used to cut finger- and toenails as part of grooming. The left is in the plier style, while the centre and rig |
+| perfume.jpg | [Moscow. State Historical Museum. Perfume bottle P4151939 2600.jpg](https://commons.wikimedia.org/wiki/File:Moscow._State_Historical_Museum._Perfume_bottle_P4151939_2600.jpg) | Alexxx1979 | CC BY-SA 4.0 | Moscow. State Historical Museum. Perfume bottle (France, Paris. Last quarter of the 19th century. Firm "Boucheron") |
+| razor.jpg | [Philips electric shaver BW 2026-05-06 17-52-02.jpg](https://commons.wikimedia.org/wiki/File:Philips_electric_shaver_BW_2026-05-06_17-52-02.jpg) | Berthold Werner | CC BY-SA 4.0 | Philips electric shaver, 1950s or 1960s |
+| safety_pins.jpg | [2023 Agrafki.jpg](https://commons.wikimedia.org/wiki/File:2023_Agrafki.jpg) | Jacek Halicki | CC BY-SA 4.0 | Safety pins |
+| sewing_kit.jpg | [Kit, sewing (AM 1965.78.588-5) (cropped).jpg](https://commons.wikimedia.org/wiki/File:Kit,_sewing_(AM_1965.78.588-5)_(cropped).jpg) | not researched | CC BY 4.0 | Ladies Companion sewing kit, made of brown leather containing 1 inch tape 1 pair of (brass) scissors, 1 needle-holder, 1 stiletto, 2 bodkins |
+| shampoo.jpg | [2023 Szampon przeciwłupieżowy Ziaja.jpg](https://commons.wikimedia.org/wiki/File:2023_Szampon_przeciw%C5%82upie%C5%BCowy_Ziaja.jpg) | Jacek Halicki | CC BY-SA 4.0 | Ziaja anti-dandruff shampoo |
+| shaving_cream.jpg | [Shaving software pics 011, Mühle Pinsel Sandalwood shaving cream (3834](https://commons.wikimedia.org/wiki/File:Shaving_software_pics_011,_M%C3%BChle_Pinsel_Sandalwood_shaving_cream_(383447787).jpg) | Shagun | CC BY 2.0 | original flickr: Sandalwood shaving cream in tin (my preferred shaving cream).  This cream will last you at least 5 times longer than any ca |
+| soap_bar.jpg | [Aleppo soap 01.jpg](https://commons.wikimedia.org/wiki/File:Aleppo_soap_01.jpg) | Bernard Gagnon | CC BY-SA 3.0 | Aleppo soap, Syria |
+| sponge.jpg | [Aplysina archeri (Stove-pipe Sponge-pink variation).jpg](https://commons.wikimedia.org/wiki/File:Aplysina_archeri_(Stove-pipe_Sponge-pink_variation).jpg) | Nhobgood (talk) Nick Hobgood | CC BY-SA 3.0 | Stove-pipe Sponge-pink variation. |
+| sunscreen.jpg | [Sunscreen Sonnencreme in Zürich Switzerland.jpg](https://commons.wikimedia.org/wiki/File:Sunscreen_Sonnencreme_in_Z%C3%BCrich_Switzerland.jpg) | Alpantex | CC BY-SA 4.0 | Apply swiss sunscreen before swimming |
+| thread_spool.jpg | [Wooden spools of sewing thread in different colors 6.jpg](https://commons.wikimedia.org/wiki/File:Wooden_spools_of_sewing_thread_in_different_colors_6.jpg) | W.carter | CC BY-SA 4.0 | Wooden spools (bobbins) of cotton sewing thread in different colors. Studio photography in Tuntorp, Brastad, Lysekil Municipality, Sweden. |
+| toilet_paper.jpg | [Toilet paper orientation over.jpg](https://commons.wikimedia.org/wiki/File:Toilet_paper_orientation_over.jpg) | Elya | CC BY-SA 3.0 | Toilet paper, orientation "over" |
+| toothbrush.jpg | [Toothbrush x3 20050716 002.jpg](https://commons.wikimedia.org/wiki/File:Toothbrush_x3_20050716_002.jpg) | Jonas Bergsten | Public domain | Three toothbrushes, photo taken in Sweden |
+| toothpaste.jpg | [Toothpasteonbrush.jpg](https://commons.wikimedia.org/wiki/File:Toothpasteonbrush.jpg) | Thegreenj | CC BY-SA 3.0 | Putting toothpaste on a toothbrush. The toothpaste is Crest Pro-Health Clean Cinnamon, 0.454% stannous fluoride, 0.16% w/v fluoride ion. |
+| trash_bags.jpg | [Trash bags filled with leaves.jpg](https://commons.wikimedia.org/wiki/File:Trash_bags_filled_with_leaves.jpg) | Cucharatorcida | CC BY-SA 4.0 | Trash bags filled with dry leaves |

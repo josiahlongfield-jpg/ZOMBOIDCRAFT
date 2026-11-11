@@ -1,0 +1,71 @@
+{
+ "id": "tarkov_m4a1",
+ "name": "Colt M4A1 (kitted)",
+ "anchor": "assault_rifle",
+ "anchorMesh": "pbr_assault_rifle",
+ "calibre": "5.56mm",
+ "suppressed": true,
+ "reload": [
+  2.833,
+  4.333
+ ],
+ "stats": {
+  "damage": 12.0,
+  "hipSpread": 3.0,
+  "aimSpread": 0.4,
+  "recoil": 0.8,
+  "shotNoise": 55.0,
+  "range": 100.0,
+  "fireDelayTicks": 3,
+  "magazineSize": 30,
+  "selectFire": true,
+  "autoRpm": 800.0,
+  "bloomRecover": 3.0
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "laser",
+  "light",
+  "foregrip",
+  "stock"
+ ],
+ "rail": {
+  "laser": {
+   "bone": "tactical_all_morovision_anpeq15_LOD0",
+   "at": [
+    -0.0239,
+    -0.0439,
+    0.0074
+   ],
+   "dir": [
+    0.0004,
+    -1,
+    0.0002
+   ],
+   "third": [
+    -0.1558,
+    -0.0213,
+    0.6908
+   ]
+  },
+  "light": {
+   "bone": "flashlight_surefire_m600_ultra_scout_LOD0",
+   "at": [
+    0,
+    -0.0911,
+    0.0139
+   ],
+   "dir": [
+    -0.0003,
+    -1,
+    0.0004
+   ],
+   "third": [
+    -0.0969,
+    -0.0597,
+    0.7758
+   ]
+  }
+ }
+}

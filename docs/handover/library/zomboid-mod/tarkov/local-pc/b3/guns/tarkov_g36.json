@@ -1,0 +1,247 @@
+{
+ "id": "tarkov_g36",
+ "name": "HK G36 (kitted)",
+ "anchor": "assault_rifle",
+ "anchorMesh": "pbr_assault_rifle",
+ "calibre": "5.56mm",
+ "fp": "operator_tarkov_g36",
+ "sight": "scope_base_hensoldt_hkv_red_dot_sight_LOD0",
+ "reticleMoa": 85,
+ "reload": [
+  3.167,
+  4.567
+ ],
+ "stats": {
+  "damage": 12.0,
+  "hipSpread": 3.0,
+  "aimSpread": 0.4,
+  "recoil": 0.8,
+  "range": 110.0,
+  "fireDelayTicks": 3,
+  "magazineSize": 30,
+  "selectFire": true,
+  "autoRpm": 750.0
+ },
+ "kit": [
+  "sight",
+  "stock"
+ ],
+ "grip": null,
+ "guard": null,
+ "tarkov": {
+  "base": "623063e994fc3f7b302a9696",
+  "kit": [
+   {
+    "path": "",
+    "item": "623063e994fc3f7b302a9696",
+    "bones": [
+     "g36_internals_LOD0",
+     "g36_hammer_LOD0",
+     "g36_fire_selector_LOD0",
+     "g36_trigger_LOD0",
+     "reciever_g36_hk_g36_LOD0",
+     "g36_bolt_main_LOD0",
+     "g36_bolt_pin_LOD0",
+     "g36_bolt_rotate_LOD0",
+     "g36_bolt_handle_LOD0",
+     "g36_bolt_path_LOD0",
+     "g36_bolt_catch_LOD0",
+     "weapon_hk_g36_556x45_LOD0",
+     "g36_release_LOD0"
+    ],
+    "bone": "reciever_g36_hk_g36_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707106
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "62307b7b10d2321fa8741921",
+    "bones": [
+     "mag_g36_hk_std_556x45_30_LOD0"
+    ],
+    "bone": "mag_g36_hk_std_556x45_30_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "622f140da5958f63c67f1735",
+    "bones": [
+     "stock_g36_hk_buttstock_std_LOD0",
+     "stock_g36_hk_buttstock_button_LOD0"
+    ],
+    "bone": "stock_g36_hk_buttstock_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "622b38c56762c718e457e246",
+    "bones": [
+     "barrel_g36_hk_480mm_556x45_LOD0"
+    ],
+    "bone": "barrel_g36_hk_480mm_556x45_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "622f128cec80d870d349b4e8",
+    "bones": [
+     "muzzle_g36_hk_4_prong_flash_hider_556x45_LOD0"
+    ],
+    "bone": "muzzle_g36_hk_4_prong_flash_hider_556x45_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_gas_block",
+    "item": "622b327b267a1b13a44abea3",
+    "bones": [
+     "gas_block_g36_hk_std_LOD0"
+    ],
+    "bone": "gas_block_g36_hk_std_LOD0",
+    "at": [
+     1e-06,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard",
+    "item": "6231654c71b5bc3baa1078e5",
+    "bones": [
+     "handguard_g36_hk_heatshield_a1_LOD0"
+    ],
+    "bone": "handguard_g36_hk_heatshield_a1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_bipod",
+    "item": "622b397c9a3d4327e41843b6",
+    "bones": [
+     "bipod_g36_hk_std_LOD0",
+     "bipod_g36_hk_std_axis_left_LOD0",
+     "bipod_g36_hk_std_latch_left_LOD0",
+     "bipod_g36_hk_std_axis_right_LOD0",
+     "bipod_g36_hk_std_latch_right_LOD0"
+    ],
+    "bone": "bipod_g36_hk_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount",
+    "item": "622f02437762f55aaa68ac85",
+    "bones": [
+     "mount_g36_hk_magwell_std_LOD0"
+    ],
+    "bone": "mount_g36_hk_magwell_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.707107,
+     0.0,
+     -0.0,
+     0.707107
+    ]
+   },
+   {
+    "path": "/mod_scope",
+    "item": "622b4d7df9cfc87d675d2ded",
+    "bones": [
+     "backLens",
+     "linza",
+     "scope_g36_hensoldt_hkv_carry_handle_3x_glass_LOD0",
+     "scope_g36_hensoldt_hkv_carry_handle_3x_LOD0"
+    ],
+    "bone": "scope_g36_hensoldt_hkv_carry_handle_3x_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope",
+    "item": "622efbcb99f4ea1a4d6c9a15",
+    "bones": [
+     "linza",
+     "scope_base_hensoldt_hkv_red_dot_sight_glass_LOD0",
+     "scope_base_hensoldt_hkv_red_dot_sight_LOD0"
+    ],
+    "bone": "scope_base_hensoldt_hkv_red_dot_sight_LOD0",
+    "at": [
+     1e-06,
+     0.0,
+     0.0,
+     -0.0,
+     -0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_scope/mod_scope",
+  "aimIndex": 0
+ }
+}

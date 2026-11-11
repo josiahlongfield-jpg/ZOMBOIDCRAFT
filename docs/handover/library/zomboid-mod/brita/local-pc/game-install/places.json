@@ -1,0 +1,561 @@
+{
+ "source": "Arsenal(26) GunFighter: Brita_06Multi_Distro.lua and sandbox-options.txt defaults, US army region",
+ "places": {
+  "gunshop": {
+   "count": 1.0484,
+   "guns": {
+    "SW_M500": 0.003,
+    "Bush_AR15_MOE": 0.005,
+    "American180": 0.005,
+    "AssaultRifle2": 0.004,
+    "Colt1911": 0.005,
+    "AR57_PDW": 0.003,
+    "BOAR": 0.002,
+    "TenPointTurbo_XLT": 0.01,
+    "Winchester1866": 0.0008
+   },
+   "extras": [
+    {
+     "item": "sw500_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "item": "acp45_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "item": "fn57_ammo",
+     "p": 0.06,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "item": "colt45_ammo",
+     "p": 0.04,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "part": "sp_fastfire",
+     "p": 0.015
+    },
+    {
+     "part": "sp_eflx",
+     "p": 0.015
+    },
+    {
+     "part": "sp_micro_h2",
+     "p": 0.015
+    },
+    {
+     "part": "sp_acro",
+     "p": 0.015
+    },
+    {
+     "part": "sp_aems",
+     "p": 0.015
+    },
+    {
+     "part": "sp_uh1",
+     "p": 0.015
+    },
+    {
+     "part": "sp_trihawk",
+     "p": 0.015
+    },
+    {
+     "part": "sp_hamr",
+     "p": 0.015
+    },
+    {
+     "part": "sp_rt6",
+     "p": 0.015
+    },
+    {
+     "part": "sp_vudu",
+     "p": 0.015
+    },
+    {
+     "part": "sp_razor",
+     "p": 0.015
+    },
+    {
+     "part": "sp_pm2_18",
+     "p": 0.015
+    },
+    {
+     "part": "sp_hensoldt",
+     "p": 0.015
+    },
+    {
+     "part": "sp_pm2_320",
+     "p": 0.015
+    },
+    {
+     "part": "sp_goldeneagle",
+     "p": 0.015
+    },
+    {
+     "part": "ForeGrip",
+     "p": 0.015
+    },
+    {
+     "part": "Grip_Magpul",
+     "p": 0.015
+    },
+    {
+     "part": "Grip_TG",
+     "p": 0.015
+    },
+    {
+     "part": "Grip_BCM",
+     "p": 0.015
+    },
+    {
+     "part": "Grip_MLOK",
+     "p": 0.015
+    },
+    {
+     "part": "Grip_Fold",
+     "p": 0.015
+    }
+   ]
+  },
+  "pawn": {
+   "count": 1.0759,
+   "guns": {
+    "SW_M500": 0.003,
+    "Bush_AR15_MOE": 0.005,
+    "American180": 0.005,
+    "AssaultRifle2": 0.004,
+    "Colt1911": 0.005,
+    "AR57_PDW": 0.003,
+    "BOAR": 0.002,
+    "TenPointTurbo_XLT": 0.01,
+    "Winchester1866": 0.0008
+   },
+   "extras": [
+    {
+     "part": "sp_fastfire",
+     "p": 0.005
+    },
+    {
+     "part": "sp_eflx",
+     "p": 0.005
+    },
+    {
+     "part": "sp_micro_h2",
+     "p": 0.005
+    },
+    {
+     "part": "sp_acro",
+     "p": 0.005
+    },
+    {
+     "part": "sp_aems",
+     "p": 0.005
+    },
+    {
+     "part": "sp_uh1",
+     "p": 0.005
+    },
+    {
+     "part": "sp_trihawk",
+     "p": 0.005
+    },
+    {
+     "part": "sp_hamr",
+     "p": 0.005
+    },
+    {
+     "part": "sp_rt6",
+     "p": 0.005
+    },
+    {
+     "part": "sp_vudu",
+     "p": 0.005
+    },
+    {
+     "part": "sp_razor",
+     "p": 0.005
+    },
+    {
+     "part": "sp_pm2_18",
+     "p": 0.005
+    },
+    {
+     "part": "sp_hensoldt",
+     "p": 0.005
+    },
+    {
+     "part": "sp_pm2_320",
+     "p": 0.005
+    },
+    {
+     "part": "sp_goldeneagle",
+     "p": 0.005
+    },
+    {
+     "part": "ForeGrip",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_Magpul",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_TG",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_BCM",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_MLOK",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_Fold",
+     "p": 0.005
+    }
+   ]
+  },
+  "police": {
+   "count": 0.6868,
+   "guns": {
+    "M870_CQB": 0.0056,
+    "Bush_AR15_MOE": 0.007,
+    "AAC_Honey": 0.007,
+    "Colt1911": 0.007
+   },
+   "extras": [
+    {
+     "mag": "Bush_AR15_MOE",
+     "p": 0.03
+    },
+    {
+     "mag": "AAC_Honey",
+     "p": 0.03
+    },
+    {
+     "mag": "Bush_AR15_MOE",
+     "p": 0.03
+    },
+    {
+     "mag": "AAC_Honey",
+     "p": 0.03
+    },
+    {
+     "item": "acp45_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    }
+   ]
+  },
+  "swat": {
+   "count": 0.0,
+   "guns": {},
+   "extras": []
+  },
+  "army": {
+   "count": 0.2682,
+   "guns": {
+    "AAC_Honey": 0.005,
+    "AssaultRifle2": 0.004,
+    "Colt1911": 0.005,
+    "HEAVY": 0.003
+   },
+   "extras": [
+    {
+     "mag": "AAC_Honey",
+     "p": 0.03
+    },
+    {
+     "mag": "Colt1911",
+     "p": 0.03
+    },
+    {
+     "mag": "AAC_Honey",
+     "p": 0.03
+    },
+    {
+     "mag": "Colt1911",
+     "p": 0.03
+    },
+    {
+     "item": "acp45_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    }
+   ]
+  },
+  "security": {
+   "count": 0.986,
+   "guns": {
+    "M870_CQB": 0.004,
+    "Bush_AR15_MOE": 0.005,
+    "AAC_Honey": 0.005,
+    "Colt1911": 0.005,
+    "AR57_PDW": 0.003,
+    "L86": 0.005
+   },
+   "extras": [
+    {
+     "mag": "Bush_AR15_MOE",
+     "p": 0.03
+    },
+    {
+     "mag": "AAC_Honey",
+     "p": 0.03
+    },
+    {
+     "mag": "Colt1911",
+     "p": 0.03
+    },
+    {
+     "mag": "AR57_PDW",
+     "p": 0.018
+    },
+    {
+     "mag": "L86",
+     "p": 0.03
+    },
+    {
+     "item": "acp45_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "item": "fn57_ammo",
+     "p": 0.06,
+     "min": 20,
+     "max": 50
+    }
+   ]
+  },
+  "hunting": {
+   "count": 0.8365,
+   "guns": {
+    "SW_M500": 0.0048,
+    "Colt1911": 0.008,
+    "BOAR": 0.0032,
+    "TenPointTurbo_XLT": 0.016,
+    "Winchester1866": 0.00128,
+    "HEAVY": 0.0048
+   },
+   "extras": [
+    {
+     "item": "sw500_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "item": "acp45_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "item": "colt45_ammo",
+     "p": 0.04,
+     "min": 20,
+     "max": 50
+    }
+   ]
+  },
+  "surplus": {
+   "count": 1.0918,
+   "guns": {
+    "SW_M500": 0.0036,
+    "Bush_AR15_MOE": 0.006,
+    "American180": 0.006,
+    "AssaultRifle2": 0.0048,
+    "Colt1911": 0.006,
+    "M2Carbine": 0.006,
+    "BOAR": 0.0024,
+    "TenPointTurbo_XLT": 0.012,
+    "Winchester1866": 0.00096,
+    "RPG_7": 0.0048
+   },
+   "extras": [
+    {
+     "item": "sw500_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "item": "acp45_ammo",
+     "p": 0.1,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "item": "colt45_ammo",
+     "p": 0.04,
+     "min": 20,
+     "max": 50
+    },
+    {
+     "part": "sp_fastfire",
+     "p": 0.005
+    },
+    {
+     "part": "sp_eflx",
+     "p": 0.005
+    },
+    {
+     "part": "sp_micro_h2",
+     "p": 0.005
+    },
+    {
+     "part": "sp_acro",
+     "p": 0.005
+    },
+    {
+     "part": "sp_aems",
+     "p": 0.005
+    },
+    {
+     "part": "sp_uh1",
+     "p": 0.005
+    },
+    {
+     "part": "sp_trihawk",
+     "p": 0.005
+    },
+    {
+     "part": "sp_hamr",
+     "p": 0.005
+    },
+    {
+     "part": "sp_rt6",
+     "p": 0.005
+    },
+    {
+     "part": "sp_vudu",
+     "p": 0.005
+    },
+    {
+     "part": "sp_razor",
+     "p": 0.005
+    },
+    {
+     "part": "sp_pm2_18",
+     "p": 0.005
+    },
+    {
+     "part": "sp_hensoldt",
+     "p": 0.005
+    },
+    {
+     "part": "sp_pm2_320",
+     "p": 0.005
+    },
+    {
+     "part": "sp_goldeneagle",
+     "p": 0.005
+    },
+    {
+     "part": "ForeGrip",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_Magpul",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_TG",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_BCM",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_MLOK",
+     "p": 0.005
+    },
+    {
+     "part": "Grip_Fold",
+     "p": 0.005
+    }
+   ]
+  },
+  "storage": {
+   "count": 0.707,
+   "guns": {
+    "M870_CQB": 0.0016,
+    "SW_M500": 0.0012,
+    "Bush_AR15_MOE": 0.002,
+    "American180": 0.002,
+    "AAC_Honey": 0.002,
+    "AssaultRifle2": 0.0016,
+    "Colt1911": 0.002,
+    "AR57_PDW": 0.0012,
+    "M2Carbine": 0.002,
+    "BOAR": 0.0008,
+    "TenPointTurbo_XLT": 0.004,
+    "Winchester1866": 0.00032,
+    "L86": 0.002,
+    "RPG_7": 0.0016,
+    "HEAVY": 0.0012
+   },
+   "extras": []
+  },
+  "case_pistol": {
+   "count": 1,
+   "guns": {
+    "Colt1911": 0.017949
+   },
+   "extras": []
+  },
+  "case_rifle": {
+   "count": 1,
+   "guns": {
+    "M2Carbine": 0.00157,
+    "M870_CQB": 0.012465,
+    "Winchester1866": 0.002316,
+    "Bush_AR15_MOE": 0.000899,
+    "L86": 0.001934,
+    "AssaultRifle2": 0.003202,
+    "TenPointTurbo_XLT": 0.010025,
+    "BOAR": 0.002589
+   },
+   "extras": []
+  },
+  "ccw": {
+   "count": 2e-05,
+   "guns": {
+    "Colt1911": 4e-07
+   },
+   "extras": []
+  }
+ },
+ "rarity": {
+  "Colt1911": "C",
+  "SW_M500": "R",
+  "AR57_PDW": "R",
+  "M2Carbine": "S",
+  "AAC_Honey": "P",
+  "Bush_AR15_MOE": "S",
+  "AssaultRifle2": "R",
+  "BOAR": "P",
+  "M870_CQB": "C",
+  "Winchester1866": "S",
+  "American180": "R",
+  "L86": "P",
+  "RPG_7": "G",
+  "TenPointTurbo_XLT": "S",
+  "HEAVY": "P"
+ }
+}

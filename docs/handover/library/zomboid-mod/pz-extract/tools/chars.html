@@ -1,0 +1,187 @@
+<title>Zomboid Survivor Line-up</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+/* Layout: one full-width stage with a control strip under it, notes below. Dark-first, like a night in Knox County. */
+:root{
+  --bg:#141613; --panel:#1d201b; --line:#33382f; --fg:#e4e2d6; --muted:#9a9d8c;
+  --accent:#b8402f; --accent-fg:#fff4ee; --chip:#262a23;
+  --display:'Oswald','Arial Narrow',sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#eceae1;--panel:#f6f5ef;--line:#cfccbf;--fg:#22241e;--muted:#5d6052;--accent:#a3392a;--accent-fg:#fff;--chip:#e2dfd3;color-scheme:light}}
+:root[data-theme="light"]{--bg:#eceae1;--panel:#f6f5ef;--line:#cfccbf;--fg:#22241e;--muted:#5d6052;--accent:#a3392a;--accent-fg:#fff;--chip:#e2dfd3;color-scheme:light}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(26px,4vw,38px);letter-spacing:.02em;text-transform:uppercase;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:68ch}
+.stage{position:relative;width:100%;aspect-ratio:16/10;max-height:72vh;background:#2b2f2a;border:1px solid var(--line);border-radius:6px;overflow:hidden;touch-action:none;cursor:grab}
+.stage canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:10px;bottom:10px;font-family:var(--mono);font-size:12px;color:#e9e7da;background:rgba(10,12,9,.62);padding:4px 8px;border-radius:4px;pointer-events:none}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:#e9e7da;font-family:var(--mono)}
+.loading[hidden]{display:none}
+.controls{display:grid;gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row .lbl{font-family:var(--display);text-transform:uppercase;letter-spacing:.08em;font-size:13px;color:var(--muted);min-width:92px}
+button{font:inherit;font-size:14px;background:var(--chip);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:6px 11px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.notes{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:8px}
+.notes h2{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:16px;margin:0}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:4px;max-width:75ch}
+code{font-family:var(--mono);font-size:13px}
+</style>
+
+<div class="wrap">
+  <h1>Zomboid survivors, in our world</h1>
+  <p class="sub">Zomboid's male and female player bodies from your B42 install, with Zomboid's own walk, run and sprint, at Minecraft scale. The three women are the same body with the standard skin, Detailed Player Texture and Evil's Ink, all in Zomboid's base underwear. Drag to turn the camera, scroll or pinch to zoom.</p>
+
+  <div class="stage" id="stage"><div class="loading" id="loading">Loading the characters…</div><div class="hud" id="hud"></div></div>
+
+  <div class="controls">
+    <div class="row" role="group" aria-label="Animation"><span class="lbl">Move</span>
+      <button data-clip="idle">Idle</button>
+      <button data-clip="walk" aria-pressed="true">Walk</button>
+      <button data-clip="sneak">Sneak</button>
+      <button data-clip="run">Run</button>
+      <button data-clip="sprint">Sprint</button>
+    </div>
+    <div class="row" role="group" aria-label="Who"><span class="lbl">Show</span>
+      <button data-show="all" aria-pressed="true">All four</button>
+      <button data-show="m">Male</button>
+      <button data-show="f0">Female, standard</button>
+      <button data-show="f1">Detailed Player Texture</button>
+      <button data-show="f2">Evil's Ink</button>
+    </div>
+    <div class="row" role="group" aria-label="Outfit"><span class="lbl">Outfit</span>
+      <button data-outfit="uw" aria-pressed="true">Underwear</button>
+      <button data-outfit="dressed">Starter outfit</button>
+    </div>
+    <div class="row" role="group" aria-label="Camera"><span class="lbl">Camera</span>
+      <button data-cam="mc" aria-pressed="true">Front</button>
+      <button data-cam="pz">Zomboid top-down</button>
+      <button data-cam="side">Side on</button>
+      <button id="lightBtn" aria-pressed="false">Night</button>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h2>What you're looking at</h2>
+    <ul>
+      <li>Left to right: male, female with Zomboid's standard skin, female with Detailed Player Texture, female with Evil's Ink.</li>
+      <li>They open in Zomboid's base underwear. The starter outfit button puts on a T-shirt, jeans, socks and trainers, all Zomboid's own clothes.</li>
+      <li>Both mods cover the whole body here. Both are nude retextures, so Zomboid's own bra and briefs are painted over them in the same place as on the standard body.</li>
+      <li>Detailed Player Texture is 1024px against Zomboid's 256px, so the face and arms are sharper. Evil's Ink is 2048px (shown at 1024px here) and adds pale skin, face paint and arm tattoos.</li>
+      <li>The women use Zomboid's female idle, walk and run. Sneak and sprint are shared with the male, which is also how Zomboid does it.</li>
+    </ul>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const DATA = __DATA__;
+const TEX = __TEX__;
+(function(){
+const stage=document.getElementById('stage'), hud=document.getElementById('hud');
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));renderer.outputEncoding=THREE.sRGBEncoding;
+stage.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+const DAY={sky:0x8f9a9c,amb:0.62,sun:0.72}, NIGHT={sky:0x101521,amb:0.18,sun:0.28};
+scene.fog=new THREE.Fog(DAY.sky,12,40);scene.background=new THREE.Color(DAY.sky);
+const amb=new THREE.HemisphereLight(0xdfe6e8,0x46503a,DAY.amb);scene.add(amb);
+const sun=new THREE.DirectionalLight(0xfff3df,DAY.sun);sun.position.set(4,9,-5);scene.add(sun);
+const camera=new THREE.PerspectiveCamera(50,1,0.05,100);
+function grassTex(){const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');
+  let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+  for(let y=0;y<16;y++)for(let x=0;x<16;x++){const v=rnd();g.fillStyle=`rgb(${76+v*30|0},${98+v*34|0},${52+v*18|0})`;g.fillRect(x*4,y*4,4,4)}
+  g.strokeStyle='rgba(0,0,0,.22)';g.strokeRect(.5,.5,63,63);
+  const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(60,60);return t}
+const gtex=grassTex();
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.MeshLambertMaterial({map:gtex}));
+ground.rotation.x=-Math.PI/2;scene.add(ground);
+const loader=new THREE.TextureLoader();
+const tex=k=>{const t=loader.load(TEX[k]);t.flipY=false;t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t};
+const lam=(map,side)=>new THREE.MeshLambertMaterial({map,alphaTest:0.5,side:side||THREE.DoubleSide,skinning:true});
+const feet=['Bip01_L_Foot','Bip01_R_Foot','Bip01_L_Toe0','Bip01_R_Toe0'];
+function build(D,x,texs,height){
+  const root=new THREE.Group();root.position.x=x;scene.add(root);
+  const bones={},M=new THREE.Matrix4();
+  D.skel.forEach(b=>{const bone=new THREE.Bone();bone.name=b.name;M.fromArray(b.m);M.decompose(bone.position,bone.quaternion,bone.scale);bones[b.name]=bone});
+  D.skel.forEach(b=>{(b.parent?bones[b.parent]:root).add(bones[b.name])});
+  const add=(m,mat)=>{const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.Float32BufferAttribute(m.pos,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(m.nrm,3));
+    g.setAttribute('uv',new THREE.Float32BufferAttribute(m.uv,2));g.setAttribute('skinIndex',new THREE.Uint16BufferAttribute(m.si,4));
+    g.setAttribute('skinWeight',new THREE.Float32BufferAttribute(m.sw,4));
+    const mesh=new THREE.SkinnedMesh(g,mat);mesh.frustumCulled=false;root.add(mesh);
+    mesh.bind(new THREE.Skeleton(m.bones.map(b=>bones[b.name]),m.bones.map(b=>new THREE.Matrix4().fromArray(b.off))),new THREE.Matrix4());return mesh};
+  const bodyMat=lam(tex(texs.uw),THREE.FrontSide), dressed=tex(texs.body), uwTex=bodyMat.map;
+  add(D.parts.body[0],bodyMat);
+  const jeans=add(D.parts.trousers[0],lam(tex(texs.jeans)));add(D.parts.hair[0],lam(tex(texs.hair)));
+  jeans.visible=false;
+  const outfit=k=>{bodyMat.map=k==='uw'?uwTex:dressed;bodyMat.needsUpdate=true;jeans.visible=k!=='uw'};
+  // height: tallest point of the bind mesh
+  let ymax=0;const p=D.parts.body[0].pos;for(let i=1;i<p.length;i+=3)ymax=Math.max(ymax,p[i]);
+  const s=height/ymax;root.scale.setScalar(s);
+  const mixer=new THREE.AnimationMixer(root),actions={},speeds={},lift={};
+  for(const [nm,c] of Object.entries(D.clips)){const tr=[];
+    c.tracks.forEach(t=>{if(!bones[t.bone])return;
+      if(t.q)tr.push(new THREE.QuaternionKeyframeTrack(t.bone+'.quaternion',t.qt,t.q));
+      if(t.p)tr.push(new THREE.VectorKeyframeTrack(t.bone+'.position',t.pt,t.p));
+      if(t.s)tr.push(new THREE.VectorKeyframeTrack(t.bone+'.scale',t.st,t.s));});
+    const a=mixer.clipAction(new THREE.AnimationClip(nm,c.dur,tr));actions[nm]=a;
+    a.play();const dur=c.dur,N=90,S=[];let miny=1e9,sum=0,cnt=0;
+    for(let i=0;i<=N;i++){a.time=dur*i/N;mixer.update(0);root.updateMatrixWorld(true);
+      const ps=feet.map(f=>bones[f].getWorldPosition(new THREE.Vector3()));ps.forEach(q=>{miny=Math.min(miny,q.y)});S.push(ps)}
+    for(const k of [0,1]){const mk=Math.min(...S.map(s=>s[k].y));
+      for(let i=1;i<S.length;i++)if(S[i][k].y<mk+0.03&&S[i-1][k].y<mk+0.03){sum+=-(S[i][k].z-S[i-1][k].z)/(dur/N);cnt++}}
+    speeds[nm]=cnt?sum/cnt:0;lift[nm]=miny-0.03;a.stop();}
+  return {root,mixer,actions,speeds,lift,cur:null,drop:0,outfit}
+}
+const H_M=1.85,H_F=1.75;
+const chars={
+  m:build(DATA.male,2.4,{body:'m_body',uw:'m_uw',jeans:'m_jeans',hair:'m_hair'},H_M),
+  f0:build(DATA.female,0.8,{body:'f_body_std',uw:'f_uw_std',jeans:'f_jeans',hair:'f_hair'},H_F),
+  f1:build(DATA.female,-0.8,{body:'f_body_detail',uw:'f_uw_detail',jeans:'f_jeans',hair:'f_hair'},H_F),
+  f2:build(DATA.female,-2.4,{body:'f_body_ink',uw:'f_uw_ink',jeans:'f_jeans',hair:'f_hair'},H_F)};
+const xs={m:2.4,f0:0.8,f1:-0.8,f2:-2.4};
+let clipName='walk',speed=0,targetSpeed=0;
+function play(nm){clipName=nm;for(const c of Object.values(chars)){const n=c.actions[nm];n.reset().play();if(c.cur&&c.cur!==n)c.cur.crossFadeTo(n,0.3,false);c.cur=n}
+  targetSpeed=chars.f0.speeds[nm];}
+play('walk');speed=targetSpeed;
+let yaw=Math.PI,pitch=0.08,dist=6.2,target=new THREE.Vector3(0,1.0,0),fov=50,focusX=0;
+const cams={mc:{yaw:Math.PI,pitch:0.08,dist:6.2,ty:1.0,fov:50},pz:{yaw:Math.PI-0.785,pitch:0.72,dist:13,ty:0.8,fov:34},side:{yaw:Math.PI/2+0.25,pitch:0.05,dist:8,ty:1.0,fov:45}};
+let camKey='mc';
+function setCam(k){camKey=k;const c=cams[k];yaw=c.yaw;pitch=c.pitch;dist=c.dist*(show==='all'?1:0.5);target.y=c.ty;fov=c.fov}
+let show='all';
+function setShow(k){show=k;for(const [id,c] of Object.entries(chars))c.root.visible=(k==='all'||k===id);focusX=k==='all'?0:xs[k];setCam(camKey)}
+let drag=null;
+stage.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};stage.setPointerCapture(e.pointerId);stage.style.cursor='grabbing'});
+stage.addEventListener('pointermove',e=>{if(!drag)return;yaw-=(e.clientX-drag.x)*0.008;pitch=Math.max(-0.1,Math.min(1.3,pitch+(e.clientY-drag.y)*0.006));drag={x:e.clientX,y:e.clientY}});
+stage.addEventListener('pointerup',()=>{drag=null;stage.style.cursor='grab'});
+stage.addEventListener('wheel',e=>{e.preventDefault();dist=Math.max(1.4,Math.min(20,dist*(1+Math.sign(e.deltaY)*0.08)))},{passive:false});
+function resize(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+new ResizeObserver(resize).observe(stage);resize();
+const press=(sel,b)=>document.querySelectorAll(sel).forEach(x=>x.setAttribute('aria-pressed',x===b));
+document.querySelectorAll('[data-clip]').forEach(b=>b.addEventListener('click',()=>{press('[data-clip]',b);play(b.dataset.clip)}));
+document.querySelectorAll('[data-cam]').forEach(b=>b.addEventListener('click',()=>{press('[data-cam]',b);setCam(b.dataset.cam)}));
+document.querySelectorAll('[data-outfit]').forEach(b=>b.addEventListener('click',()=>{press('[data-outfit]',b);for(const c of Object.values(chars))c.outfit(b.dataset.outfit)}));
+document.querySelectorAll('[data-show]').forEach(b=>b.addEventListener('click',()=>{press('[data-show]',b);setShow(b.dataset.show)}));
+const lb=document.getElementById('lightBtn');let night=false;
+lb.addEventListener('click',()=>{night=!night;lb.setAttribute('aria-pressed',night);const L=night?NIGHT:DAY;scene.background.setHex(L.sky);scene.fog.color.setHex(L.sky);amb.intensity=L.amb;sun.intensity=L.sun});
+const labels={idle:'Idle',walk:'Walk',sneak:'Sneak',run:'Run',sprint:'Sprint'};
+const clock=new THREE.Clock();let gz=0;
+document.getElementById('loading').hidden=true;
+function frame(){const dt=Math.min(0.05,clock.getDelta());
+  for(const c of Object.values(chars)){c.mixer.update(dt);c.drop+=(c.lift[clipName]-c.drop)*Math.min(1,dt*6);c.root.position.y=-c.drop}
+  speed+=(targetSpeed-speed)*Math.min(1,dt*6);gz=(gz+speed*dt)%1;gtex.offset.y=-gz;
+  target.x+=(focusX-target.x)*Math.min(1,dt*8);
+  camera.fov=fov;camera.updateProjectionMatrix();
+  camera.position.set(target.x+Math.sin(yaw)*Math.cos(pitch)*dist,target.y+Math.sin(pitch)*dist,target.z+Math.cos(yaw)*Math.cos(pitch)*dist);
+  camera.lookAt(target);hud.textContent=labels[clipName]+' · '+Math.abs(speed).toFixed(2)+' blocks/s';
+  renderer.render(scene,camera);requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+})();
+</script>

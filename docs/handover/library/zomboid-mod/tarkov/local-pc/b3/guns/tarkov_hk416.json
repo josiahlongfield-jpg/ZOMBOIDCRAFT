@@ -1,0 +1,613 @@
+{
+ "id": "tarkov_hk416",
+ "name": "HK 416A5 (kitted)",
+ "anchor": "assault_rifle",
+ "anchorMesh": "pbr_assault_rifle",
+ "calibre": "5.56mm",
+ "suppressed": true,
+ "fp": "operator_tarkov_hk416",
+ "sight": "scope_all_eotech_exps3_LOD0",
+ "reticleMoa": 152.4,
+ "reload": [
+  4.833,
+  5.833
+ ],
+ "stats": {
+  "damage": 12.0,
+  "hipSpread": 3.0,
+  "aimSpread": 0.4,
+  "recoil": 0.85,
+  "range": 110.0,
+  "fireDelayTicks": 3,
+  "magazineSize": 30,
+  "selectFire": true,
+  "autoRpm": 850.0
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "laser",
+  "light",
+  "foregrip",
+  "stock"
+ ],
+ "rail": {
+  "laser": {
+   "bone": "tactical_all_morovision_anpeq15_LOD0",
+   "at": [
+    -0.0239,
+    -0.0439,
+    0.0074
+   ],
+   "dir": [
+    0,
+    -1,
+    -0.0025
+   ],
+   "third": [
+    -0.1566,
+    -0.0152,
+    0.5988
+   ]
+  },
+  "light": {
+   "bone": "tactical_all_insight_wmx200_LOD0",
+   "at": [
+    0,
+    -0.0594,
+    0.0172
+   ],
+   "dir": [
+    0.0025,
+    -1,
+    0
+   ],
+   "third": [
+    -0.0873,
+    -0.0598,
+    0.6901
+   ]
+  }
+ },
+ "grip": "foregrip_all_magpul_afg_LOD0",
+ "guard": "handguard_416_hk_quad_rail_LOD0",
+ "holds": {
+  "handguard_416_hk_quad_rail_LOD0": {
+   "part": "handguard_416_hk_quad_rail",
+   "slot": "mod_handguard",
+   "palm": [
+    0.0529,
+    -0.01259,
+    -0.04957,
+    -0.24513,
+    0.3797,
+    -0.71863,
+    0.5285
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.73045,
+     -0.11108,
+     0.05196,
+     0.67186
+    ],
+    "Base HumanLDigit12": [
+     -0.21584,
+     0.0411,
+     -0.01529,
+     0.97544
+    ],
+    "Base HumanLDigit13": [
+     -0.06827,
+     -0.00264,
+     0.04762,
+     0.99653
+    ],
+    "Base HumanLDigit21": [
+     -0.00098,
+     0.26323,
+     -0.08436,
+     0.96104
+    ],
+    "Base HumanLDigit22": [
+     -0.03257,
+     0.02682,
+     -0.31159,
+     0.94928
+    ],
+    "Base HumanLDigit23": [
+     0.00013,
+     0.00057,
+     -0.34971,
+     0.93686
+    ],
+    "Base HumanLDigit31": [
+     -0.06694,
+     0.23693,
+     -0.26515,
+     0.93225
+    ],
+    "Base HumanLDigit32": [
+     -0.01924,
+     -0.00492,
+     -0.46425,
+     0.88548
+    ],
+    "Base HumanLDigit33": [
+     -0.00196,
+     0.00119,
+     -0.40038,
+     0.91635
+    ],
+    "Base HumanLDigit41": [
+     -0.19452,
+     0.24295,
+     -0.41444,
+     0.8552
+    ],
+    "Base HumanLDigit42": [
+     0.0061,
+     0.02897,
+     -0.40866,
+     0.91221
+    ],
+    "Base HumanLDigit43": [
+     -5e-05,
+     0.00058,
+     -0.34722,
+     0.93778
+    ],
+    "Base HumanLDigit51": [
+     -0.21554,
+     0.14224,
+     -0.55157,
+     0.79315
+    ],
+    "Base HumanLDigit52": [
+     -0.07163,
+     0.03224,
+     -0.36682,
+     0.92697
+    ],
+    "Base HumanLDigit53": [
+     0.00216,
+     0.00051,
+     -0.20765,
+     0.9782
+    ]
+   }
+  },
+  "foregrip_all_magpul_afg_LOD0": {
+   "part": "foregrip_all_magpul_afg_blk",
+   "slot": "mod_foregrip",
+   "palm": [
+    -0.04955,
+    0.10298,
+    0.05579,
+    0.76748,
+    -0.56397,
+    -0.2572,
+    0.16362
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.40628,
+     -0.12009,
+     0.06647,
+     0.90338
+    ],
+    "Base HumanLDigit12": [
+     -0.06612,
+     0.15179,
+     -0.14229,
+     0.97588
+    ],
+    "Base HumanLDigit13": [
+     6e-05,
+     -0.00048,
+     0.12799,
+     0.99177
+    ],
+    "Base HumanLDigit21": [
+     0.04657,
+     0.26194,
+     -0.05289,
+     0.96251
+    ],
+    "Base HumanLDigit22": [
+     -1e-05,
+     -7e-05,
+     -0.35565,
+     0.93462
+    ],
+    "Base HumanLDigit23": [
+     -3e-05,
+     9e-05,
+     -0.56026,
+     0.82831
+    ],
+    "Base HumanLDigit31": [
+     -0.13369,
+     0.2435,
+     -0.25157,
+     0.92712
+    ],
+    "Base HumanLDigit32": [
+     -1e-05,
+     0,
+     -0.61386,
+     0.78942
+    ],
+    "Base HumanLDigit33": [
+     0,
+     1e-05,
+     -0.41071,
+     0.91176
+    ],
+    "Base HumanLDigit41": [
+     -0.23509,
+     0.2361,
+     -0.38106,
+     0.86243
+    ],
+    "Base HumanLDigit42": [
+     -1e-05,
+     3e-05,
+     -0.62552,
+     0.78021
+    ],
+    "Base HumanLDigit43": [
+     1e-05,
+     -2e-05,
+     -0.2295,
+     0.97331
+    ],
+    "Base HumanLDigit51": [
+     -0.33842,
+     0.16006,
+     -0.53429,
+     0.75788
+    ],
+    "Base HumanLDigit52": [
+     0,
+     7e-05,
+     -0.59768,
+     0.80174
+    ],
+    "Base HumanLDigit53": [
+     -0.03379,
+     -0.05558,
+     0.02672,
+     0.99752
+    ]
+   }
+  }
+ },
+ "tarkov": {
+  "base": "5bb2475ed4351e00853264e3",
+  "kit": [
+   {
+    "path": "",
+    "item": "5bb2475ed4351e00853264e3",
+    "bones": [
+     "bolt_LOD0",
+     "bolt_catch_LOD0",
+     "weapon_hk_416a5_556x45_LOD0",
+     "release_LOD0",
+     "selector_LOD0",
+     "trigger_LOD0"
+    ],
+    "bone": "weapon_hk_416a5_556x45_LOD0",
+    "at": [
+     -0.156825,
+     1.413956,
+     0.017428,
+     -0.707107,
+     0.0,
+     -0.0,
+     0.707107
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5bb20e0ed4351e3bac1212dc",
+    "bones": [
+     "pistolgrip_ar15_hk_battle_grip_beavertail_LOD0"
+    ],
+    "bone": "pistolgrip_ar15_hk_battle_grip_beavertail_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5c05413a0db834001c390617",
+    "bones": [
+     "mag_stanag_hk_416_steel_maritime_556x45_30_LOD0"
+    ],
+    "bone": "mag_stanag_hk_416_steel_maritime_556x45_30_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5bb20d53d4351e4502010a69",
+    "bones": [
+     "reciever_ar15_hk_hk416a5_std_LOD0"
+    ],
+    "bone": "reciever_ar15_hk_hk416a5_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_scope",
+    "item": "5c07dd120db834001c39092d",
+    "bones": [
+     "backLens",
+     "linza_mode_000",
+     "scope_all_eotech_g33_glass_LOD0",
+     "scope_all_eotech_g33_pos_1_LOD0",
+     "scope_all_eotech_exps3_LOD0",
+     "scope_all_eotech_g33_mount_LOD0"
+    ],
+    "bone": "scope_all_eotech_exps3_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel",
+    "item": "5bb20d9cd4351e00334c9d8a",
+    "bones": [
+     "barrel_416_hk_368mm_556x45_LOD0",
+     "sight_front_416_hk_flip_up_sight_unfold_LOD0"
+    ],
+    "bone": "barrel_416_hk_368mm_556x45_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_muzzle",
+    "item": "544a38634bdc2d58388b4568",
+    "bones": [
+     "muzzle_ar15_colt_usgi_a2_556x45_LOD0"
+    ],
+    "bone": "muzzle_ar15_colt_usgi_a2_556x45_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     -0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_muzzle/mod_muzzle",
+    "item": "638612b607dfed1ccb7206ba",
+    "bones": [
+     "silencer_sdqd_griffin_m4sd_k_silencer_556x45_LOD0"
+    ],
+    "bone": "silencer_sdqd_griffin_m4sd_k_silencer_556x45_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     2e-06,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_gas_block",
+    "item": "5bb20dcad4351e3bac1212da",
+    "bones": [
+     "gas_block_416_hk_416a5_std_LOD0"
+    ],
+    "bone": "gas_block_416_hk_416a5_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_handguard",
+    "item": "5bb20de5d4351e0035629e59",
+    "bones": [
+     "handguard_416_hk_quad_rail_LOD0"
+    ],
+    "bone": "handguard_416_hk_quad_rail_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_handguard/mod_foregrip",
+    "item": "588226d124597767ad33f787",
+    "bones": [
+     "foregrip_all_magpul_afg_LOD0"
+    ],
+    "bone": "foregrip_all_magpul_afg_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_handguard/mod_tactical_000",
+    "item": "544909bb4bdc2d6f028b4577",
+    "bones": [
+     "switch_000_LOD0",
+     "tactical_all_morovision_anpeq15_LOD0"
+    ],
+    "bone": "tactical_all_morovision_anpeq15_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_handguard/mod_tactical_001",
+    "item": "626becf9582c3e319310b837",
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_insight_wmx200_LOD0"
+    ],
+    "bone": "tactical_all_insight_wmx200_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "5bb20e49d4351e3bac1212de",
+    "bones": [
+     "sight_rear_all_hk_416_flip_up_LOD0",
+     "sight_rear_all_hk_416_flip_up_unfolded_LOD0"
+    ],
+    "bone": "sight_rear_all_hk_416_flip_up_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "5bb20e58d4351e00320205d7",
+    "bones": [
+     "stock_ar15_hk_enhanced_stock_tube_LOD0"
+    ],
+    "bone": "stock_ar15_hk_enhanced_stock_tube_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock_000",
+    "item": "5bb20e70d4351e0035629f8f",
+    "bones": [
+     "stock_ar15_hk_slim_line_LOD0"
+    ],
+    "bone": "stock_ar15_hk_slim_line_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "5bb20dbcd4351e44f824c04e",
+    "bones": [
+     "charge_ar15_hk_extended_latch_charging_handle_LOD0"
+    ],
+    "bone": "charge_ar15_hk_extended_latch_charging_handle_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_reciever/mod_scope",
+  "aimIndex": 0,
+  "folds": [
+   {
+    "bone": "sight_rear_all_hk_416_flip_up_unfolded_LOD0",
+    "hinge": [
+     0.0,
+     0.00058,
+     0.00091
+    ],
+    "axis": [
+     1,
+     0,
+     0
+    ],
+    "angle": 90.0
+   }
+  ]
+ }
+}

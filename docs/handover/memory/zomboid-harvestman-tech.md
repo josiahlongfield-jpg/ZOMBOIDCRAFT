@@ -1,0 +1,19 @@
+---
+name: zomboid-harvestman-tech
+description: How the Harvestman preview is built (smooth WebGL mesh kit, round-5 leggy shape constants, test harness), for the in-game model later
+metadata:
+  type: project
+  modified: 2026-10-28T00:28:15.506Z
+---
+
+Preview: https://claude.ai/artifact/HSqxssuzVqTUWwtebz3Z1L (v26 now). Full page /mnt/project-files/zomboid-mod/characters/preview-src/harvestman.html, built by concatenating r5_head.css.html + r5_body.html + r5_a.js + r5_b.js + r5_c.js + r5_d.js (same folder; r4_* = the old big-body round). Direction: [[zomboid-harvestman-direction]].
+
+- r6_a: Mesh 15 floats/vertex, grid/slab/tube/box(full sizes)/ellipsoid/torus/gear/spike, MAT table.
+- r5_c/r6_c: harvestman(o, dyn) -> rigid [mesh, frame] parts + per-frame world mesh; measure() for the stat cards.
+- Tests: shot.js, statvals.js, nanrun.js (non-finite vertices), stress/motion probes via mkprobe.sh.
+- Round 6: buildLeg(Lb,rA,rB,gearR,seed,kind) leaf shingles. v18 (2026-10-28): 2-joint legs hung from ball-socket hips on the hull's lower edge (LEGS hip, buildBody), thighF/R a 1.28, lowF/R = curveLeg(buildLeg(b+c)) bent into a rigid arc (legArc path: CURVE 0.35 + two KINK 0.22 bends at 1/3, 2/3; bows to knee side), IK uses chord L.lc. v19 ALL BLACK except red (MAT scale/steel/dark/chrome/cable neutral black, steel/plate shader rust+edges grey); room keeps ROOM_STEEL. v22 STANCE: body sunk between high knees, hunt BODY_Y 2.5, restR 1.75/1.85; room floor STAND_H 2.5 (floorness from up.y), walls/ceiling hug at NAV_H 2.05 with feet spread x CLING_SPREAD 1.85; feeding stays 2.41. Short thigh leans back from its foot, so legs near the fold limit lc-a swing into the hull: feet stay >= lc-a+0.3..0.45 away (step out, reach past crates, grab dip only 0.5), r6_c slides the point out; clear.js.part measures thigh-in-hull. Knee pole = perp(0.4up + foot side) + 0.6 perp(up), never degenerate. Hide spot high on back wall. Backups r6_*_vNN per version.
+- Round 6d (v8): buildBody = body7.js in r6_b (b7Pt dart z -1.55..0.95, b7c centre rises to tail and drops to the nose; blade() herringbone rows rooted at the keel, slab edge:0 = no bright rims; keel tube shape [1,0.3]; crown spikes up=[1,0,0] so they face front). Skull/jaw/face not drawn. 6e (v9): spine row spikes along keel in body; beard moved to the rig (dyn tubes, grips head when feeding); feed head frame = child(body,[0,-0.64,0.86]) face up; arms spear torso with MAT.maw wounds; MAT.scale c [0.175,0.15,0.115].
+- 6f (v13): feed BODY_Y 2.41 so the upright victim's toes drag; head child(body,[0,-0.64,0.74]) back to it, right under the beard roots (body y -0.38, z 0.62-0.7); feed scythe W [s0.2,-0.96,0.47], tip [s0.13,-1.25,0.98], elbow solved from S with forward pole + side 0.13; blade bulge = up off the chord; wounds found by sampling the blade at torso z +-0.115.
+- TEST ROOM (v14, r7_room.js between r6_c and r6_d; page = r6_head+r6_body+r6_a+r6_b+r6_c+r7_room+r6_d): body slides on NAV_FACES (room shrunk by NAV_H), navRoute over edges, navUp blends normals; footSpot raycasts hip->rest spot (castRoom: room inside + CRATES); stepFeet one/two legs, fidget taps; corpse = 7-point verlet (GRIP pins head/neck in body frame); mind needs hunger/restless/curious/wary + PLANS (wander, perch, ceiling, hide, listen, feed, stalk, leave) picked by weighted chance; taps = hearNoise (freeze/investigate/retreat/threat/ignore by mood). Hash: v=room, act=<plan>, noise=x,y,z@t, follow=1; logrun.js prints the choice log. uDark shader corner.
+- v15 movement: wave gait (GAIT_OFF, STRIDE 2.2) on distance+turn phase, feet retarget during swing, spring-smoothed body path (rp/rv), capped turn rate, room legs use ikPole (pole = up + out) so knees never buckle; motion.js.part + mkprobe.sh measure jerk/knees/crossing.
+- Phone freeze fix: room view ignores reduce-motion (it zeroed dt).

@@ -1,0 +1,12 @@
+# dam/control-room
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-control-room-pumped-storage-plant-1909-1420.jpg | [Control room pumped storage plant 1909-1420.jpg](https://commons.wikimedia.org/wiki/File:Control_room_pumped_storage_plant_1909-1420.jpg) | Mozzihh | CC BY-SA 4.0 | Control room of the Geesthacht pumped storage power plant (Original from 1958), Geesthacht, Germany |
+| 02-view-of-control-room-showing-control-panels-in-cavity-plant.jpg | [VIEW OF CONTROL ROOM SHOWING CONTROL PANELS IN CAVITY PLANT - Snoqualm](https://commons.wikimedia.org/wiki/File:VIEW_OF_CONTROL_ROOM_SHOWING_CONTROL_PANELS_IN_CAVITY_PLANT_-_Snoqualmie_Falls_Hydroelectric_Project,_.5_mile_north_of_Snoqualmie,_Snoqualmie,_King_County,_WA_HAER_WASH,17-SNOQ.V,1-21.tif) |  | Public domain | Baker, Charles H., Engineer; Stone and Webster Engineering Corporation, Engineer; Snoqualmie Power Company, Builder |
+| 03-nova-scotia-dsc03224-control-room-8475702461.jpg | [Nova Scotia DSC03224 - Control Room (8475702461).jpg](https://commons.wikimedia.org/wiki/File:Nova_Scotia_DSC03224_-_Control_Room_(8475702461).jpg) | Dennis G. Jarvis | CC BY-SA 2.0 | Control room at the power plant, where the turbines are monitored and the power is connected to the main grid. |
+| 04-ross-dam-control-room-1970s-46810306772.jpg | [Ross Dam control room, 1970s (46810306772).jpg](https://commons.wikimedia.org/wiki/File:Ross_Dam_control_room,_1970s_(46810306772).jpg) | Seattle Municipal Archives from Seattle, WA | CC BY 2.0 | Ross Dam control room, Washington state, U.S., 1970s. |
+| 05-thurmond-dam-control-room-9372416230.jpg | [Thurmond Dam Control Room (9372416230).jpg](https://commons.wikimedia.org/wiki/File:Thurmond_Dam_Control_Room_(9372416230).jpg) | U.S. Army Corps of Engineers from USA | CC BY 2.0 | CLARKS HILL, S.C. -Officials with the U.S. Army Corps of Engineers Savannah District operate the spillway gates at the J. Strom Thurmond Dam |
+| 06-boundary-dam-control-room-1967-41685075950.jpg | [Boundary Dam control room, 1967 (41685075950).jpg](https://commons.wikimedia.org/wiki/File:Boundary_Dam_control_room,_1967_(41685075950).jpg) | Seattle Municipal Archives from Seattle, WA | CC BY 2.0 | Boundary Dam control room, 1967. Boundary Dam is dam on the Pend Oreille River, Washington state, U.S. |

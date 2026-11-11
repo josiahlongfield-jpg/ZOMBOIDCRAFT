@@ -1,0 +1,41 @@
+<!doctype html><html><body style="margin:0;background:#1d2228">
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const q=new URLSearchParams(location.search);
+const W=+q.get('w')||960,H=+q.get('h')||540;
+const R=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});R.setSize(W,H);R.outputColorSpace=THREE.SRGBColorSpace;
+document.body.appendChild(R.domElement);
+const S=new THREE.Scene();S.background=new THREE.Color(0x2a3038);
+S.add(new THREE.HemisphereLight(0xdfe8f0,0x3a3328,1.4));
+const d=new THREE.DirectionalLight(0xffffff,2.2);d.position.set(0.3,1,-0.4);S.add(d);
+const d2=new THREE.DirectionalLight(0xffffff,0.8);d2.position.set(-0.6,0.2,1);S.add(d2);
+const fov=+q.get('fov')||49;const SIDE=q.get('side')==='front'?THREE.FrontSide:(q.get('side')==='back'?THREE.BackSide:THREE.DoubleSide);
+const cam=new THREE.PerspectiveCamera(fov,W/H,0.01,50);window.__C=cam;cam.position.set(0,0,0);cam.lookAt(0,0,1);
+const arms=q.get('arms')||'arms__default', flair=q.get('flair')||'';
+const off=document.createElement('canvas');off.width=W;off.height=H;const g=off.getContext('2d');
+let mixer,clips={},cur=null;
+const colp=q.get('col');
+const loadCol=()=>new Promise(r=>{if(!colp)return r(null);new GLTFLoader().load('col/'+colp+'.glb',g=>{const m={};g.scene.traverse(o=>{if(o.isMesh&&o.material)m[o.material.name]=o.material;});r(m);});});
+loadCol().then(CM=>new GLTFLoader().load(q.get('f'),async gl=>{
+  gl.scene.traverse(o=>{const n=o.name||'';
+    const pn=(o.parent&&o.parent.name)||'';const own=(n.startsWith('arms__')||n.startsWith('flair_forearm__'))&&!(pn.startsWith('arms__')||pn.startsWith('flair_forearm__'));
+    if(own&&n.startsWith('arms__'))o.visible=(n===arms);
+    if(own&&n.startsWith('flair_forearm__'))o.visible=(n===flair);
+    if(o.isMesh&&own)console.log('mesh',n,o.visible);
+    if(q.get('noup')&&o.isMesh&&o.material&&o.material.name==='spartan_armor'){let a=o;while(a&&!(a.name||'').startsWith('arms__'))a=a.parent;if(a)o.visible=false;}
+    if(o.isMesh){o.frustumCulled=false;let a=o;while(a){if((a.name||'').startsWith('arms__')||(a.name||'').startsWith('flair_forearm__'))break;a=a.parent;} if(a&&o.material){if(CM&&CM[o.material.name]){o.material=CM[o.material.name].clone();o.material.side=SIDE;o.material.metalness=Math.min(o.material.metalness??0,0.3);o.material.roughness=Math.max(o.material.roughness??1,0.55);}else{o.material=o.material.clone();o.material.color.multiplyScalar(+q.get('tint')||0.55);}} const m=o.material;if(m){m.side=SIDE;if(m.metalness!==undefined){m.metalness=Math.min(m.metalness,0.3);m.roughness=Math.max(m.roughness??1,0.55);}}}});
+  S.add(gl.scene);window.__G=gl.scene;window.__T=THREE;
+  if(q.get('wp')){await new Promise(res=>new GLTFLoader().load('wpn/'+q.get('wp')+'.glb',wg=>{const rh=gl.scene.getObjectByName('r_hand');for(const c of [...wg.scene.children]){let skin=false;c.traverse(o=>{if(o.isMesh){skin=true;o.frustumCulled=false;if(o.material)o.material.side=SIDE;}});if(c.isMesh)S.add(c);else rh.add(c);}res();}));}
+  mixer=new THREE.AnimationMixer(gl.scene);
+  for(const c of gl.animations)clips[c.name.replace('first_person:','')]=c;
+  window.CLIPS=Object.fromEntries(Object.entries(clips).map(([k,c])=>[k,c.duration]));
+  window.READY=true;}));
+window.frame=(name,t,cap)=>{
+  if(cur!==name){mixer.stopAllAction();const a=mixer.clipAction(clips[name]);a.play();cur=name;}
+  mixer.setTime(t);R.render(S,cam);
+  g.drawImage(R.domElement,0,0);
+  if(cap){g.font='600 22px sans-serif';g.fillStyle='rgba(0,0,0,0.45)';g.fillRect(0,0,W,44);g.fillStyle='#e8edf2';g.fillText(cap,18,30);}
+  return off.toDataURL('image/jpeg',0.9);};
+</script></body></html>

@@ -1,0 +1,17 @@
+set -e
+cd "$(dirname "$0")"
+python3 vid.py AR57_PDW "AR-57 PDW: top magazine swap" 
+python3 vid.py Colt1911 "Colt 1911: empty reload (slide locked back)"
+python3 vid.py AAC_Honey "AAC Honey Badger: mag swap and charging handle"
+python3 vid.py L86 "L86 LSW: mag swap and cocking handle"
+python3 vid.py M2Carbine "M2 Carbine: mag swap and operating rod"
+python3 vid.py AssaultRifle2 "M14-type rifle: mag swap and operating rod"
+python3 vid.py American180 "American-180: pan drum swap and charging handle"
+python3 vid.py M870_CQB "Remington 870: four shells and the pump"
+python3 vid.py Winchester1866 "Winchester 1866: four rounds through the gate, then the lever"
+python3 vid.py SW_M500 "S&W 500: cylinder out, empties dumped, speedloader"
+python3 vid.py BOAR "LAR Big Boar .50: bolt up and back, one round, bolt home"
+python3 vid.py RPG_7 "RPG-7: new rocket in the muzzle, hammer cocked"
+python3 vid.py TenPointTurbo_XLT "TenPoint crossbow: string drawn back, bolt laid in"
+python3 vid.py DSHK "DShK: feed cover up, belt laid, cover shut, charging handle"
+echo ALLDONE

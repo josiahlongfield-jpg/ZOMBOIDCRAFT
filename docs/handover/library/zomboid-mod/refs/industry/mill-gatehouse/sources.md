@@ -1,0 +1,12 @@
+# industry/mill-gatehouse
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-elevations-and-floor-plan-st-elizabeths-hospital-gatehouse-n.jpg | [Elevations and Floor Plan - St. Elizabeths Hospital, Gatehouse No. 2, ](https://commons.wikimedia.org/wiki/File:Elevations_and_Floor_Plan_-_St._Elizabeths_Hospital,_Gatehouse_No._2,_2701_Martin_Luther_King_Jr._Avenue,_Southeast,_Washington,_District_of_Columbia,_DC_HABS_DC-349-AX_(sheet_1_of_1).tif) | Burian, Andrew Related names:  General Services Administration, Owner Wiss, Jann | Public domain |  |
+| 02-elevations-and-floor-plan-st-elizabeths-hospital-gatehouse-n.png | [Elevations and Floor Plan - St. Elizabeths Hospital, Gatehouse No. 2, ](https://commons.wikimedia.org/wiki/File:Elevations_and_Floor_Plan_-_St._Elizabeths_Hospital,_Gatehouse_No._2,_2701_Martin_Luther_King_Jr._Avenue,_Southeast,_Washington,_District_of_Columbia,_DC_HABS_DC-349-AX_(sheet_1_of_1).png) | Burian, Andrew Related names:  General Services Administration, Owner Wiss, Jann | Public domain |  |
+| 03-electrical-news-and-engineering-1919-14595566218.jpg | [Electrical news and engineering (1919) (14595566218).jpg](https://commons.wikimedia.org/wiki/File:Electrical_news_and_engineering_(1919)_(14595566218).jpg) | Internet Archive Book Images | No restrictions | Identifier: electricalnewsen28donm (find matches) Title: Electrical news and engineering Year: 1891 (1890s) Authors:  Subjects:  Electrical  |
+| 04-mi-space-entrance-gates-factory-road-newport-geograph-org-uk.jpg | [Mi-Space entrance gates, Factory Road, Newport - geograph.org.uk - 527](https://commons.wikimedia.org/wiki/File:Mi-Space_entrance_gates,_Factory_Road,_Newport_-_geograph.org.uk_-_5279427.jpg) | Jaggery | CC BY-SA 2.0 | Mi-Space entrance gates, Factory Road, Newport |
+| 05-factory-entrance-gate-talbot-green-geograph-org-uk-4013972.jpg | [Factory entrance gate, Talbot Green - geograph.org.uk - 4013972.jpg](https://commons.wikimedia.org/wiki/File:Factory_entrance_gate,_Talbot_Green_-_geograph.org.uk_-_4013972.jpg) | Jaggery | CC BY-SA 2.0 | Factory entrance gate, Talbot Green |
+| 06-elektrisola-factory-entrance-gate-in-janda-baik.jpg | [Elektrisola factory entrance gate in Janda Baik.jpg](https://commons.wikimedia.org/wiki/File:Elektrisola_factory_entrance_gate_in_Janda_Baik.jpg) | WPSamson | CC0 | Elektrisola factory entrance gate in Janda Baik |

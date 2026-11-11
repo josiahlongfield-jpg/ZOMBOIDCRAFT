@@ -1,0 +1,340 @@
+{
+ "id": "tarkov_vepr",
+ "name": "VPO-136 Vepr-KM 7.62x39 (kitted)",
+ "anchor": "assault_rifle",
+ "anchorMesh": "pbr_assault_rifle",
+ "calibre": "7.62x39mm",
+ "suppressed": true,
+ "fp": "operator_tarkov_vepr",
+ "sight": "scope_all_eotech_xps3_LOD0",
+ "reticleMoa": 152.4,
+ "reload": [
+  4.133,
+  5.7
+ ],
+ "stats": {
+  "damage": 14.0,
+  "hipSpread": 3.2,
+  "aimSpread": 0.45,
+  "recoil": 1.15,
+  "range": 100.0,
+  "fireDelayTicks": 3,
+  "magazineSize": 30,
+  "selectFire": false
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "stock"
+ ],
+ "grip": null,
+ "guard": "handguard_ak_molot_vepr_km_vpo_136_LOD0",
+ "holds": {
+  "handguard_ak_molot_vepr_km_vpo_136_LOD0": {
+   "part": "handguard_ak_molot_vepr_km_vpo_136",
+   "slot": "mod_handguard",
+   "palm": [
+    0.04793,
+    0.00835,
+    -0.06305,
+    -0.24142,
+    0.46722,
+    -0.67701,
+    0.51486
+   ],
+   "fingers": {
+    "Base HumanLDigit11 1": [
+     0.57134,
+     -0.24026,
+     -0.07454,
+     0.78121
+    ],
+    "Base HumanLDigit12 1": [
+     0.06912,
+     0.08216,
+     -0.03534,
+     0.99359
+    ],
+    "Base HumanLDigit13 1": [
+     7e-05,
+     -0.00048,
+     0.05954,
+     0.99823
+    ],
+    "Base HumanLDigit21 1": [
+     -0.09368,
+     0.21767,
+     -0.26567,
+     0.93449
+    ],
+    "Base HumanLDigit22 1": [
+     -0.03146,
+     0.07008,
+     -0.23325,
+     0.96938
+    ],
+    "Base HumanLDigit23 1": [
+     -0.00109,
+     0.00705,
+     -0.51507,
+     0.85712
+    ],
+    "Base HumanLDigit31 1": [
+     -0.12442,
+     0.17554,
+     -0.42412,
+     0.87967
+    ],
+    "Base HumanLDigit32 1": [
+     -0.06043,
+     0.04561,
+     -0.38043,
+     0.9217
+    ],
+    "Base HumanLDigit33 1": [
+     -0.00318,
+     0.00488,
+     -0.42086,
+     0.90711
+    ],
+    "Base HumanLDigit41 1": [
+     -0.17605,
+     0.17191,
+     -0.5247,
+     0.81495
+    ],
+    "Base HumanLDigit42 1": [
+     -0.06996,
+     0.03035,
+     -0.36863,
+     0.92644
+    ],
+    "Base HumanLDigit43 1": [
+     -0.0043,
+     0.00223,
+     -0.25312,
+     0.96742
+    ],
+    "Base HumanLDigit51 1": [
+     -0.23936,
+     0.13386,
+     -0.6193,
+     0.7357
+    ],
+    "Base HumanLDigit52 1": [
+     -0.07636,
+     0.01082,
+     -0.37585,
+     0.92347
+    ],
+    "Base HumanLDigit53 1": [
+     -0.00433,
+     0.00267,
+     -0.17227,
+     0.98504
+    ]
+   }
+  }
+ },
+ "tarkov": {
+  "base": "59e6152586f77473dc057aa1",
+  "kit": [
+   {
+    "path": "",
+    "item": "59e6152586f77473dc057aa1",
+    "bones": [
+     "bolt_vpo_136_LOD0",
+     "hammer_vpo_136_LOD0",
+     "weapon_molot_vepr_km_vpo_136_762x39_kolodka_LOD0",
+     "weapon_molot_vepr_km_vpo_136_762x39_LOD0",
+     "release_vpo_136_LOD0",
+     "selector_vpo_136_LOD0",
+     "trigger_vpo_136_LOD0"
+    ],
+    "bone": "weapon_molot_vepr_km_vpo_136_762x39_LOD0",
+    "at": [
+     -0.156825,
+     1.41501,
+     0.017592,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_gas_block",
+    "item": "59e649f986f77411d949b246",
+    "bones": [
+     "gas_block_ak_molot_vepr_km_vpo_136_LOD0"
+    ],
+    "bone": "gas_block_ak_molot_vepr_km_vpo_136_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_gas_block/mod_handguard",
+    "item": "59e6284f86f77440d569536f",
+    "bones": [
+     "handguard_ak_molot_vepr_km_vpo_136_LOD0"
+    ],
+    "bone": "handguard_ak_molot_vepr_km_vpo_136_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_muzzle",
+    "item": "5a0d63621526d8dba31fe3bf",
+    "bones": [
+     "silencer_akm_tochmash_pbs-1_762x39_LOD0"
+    ],
+    "bone": "silencer_akm_tochmash_pbs-1_762x39_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "59e6318286f77444dd62c4cc",
+    "bones": [
+     "pistolgrip_ak_molot_bakelit_LOD0"
+    ],
+    "bone": "pistolgrip_ak_molot_bakelit_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5649af884bdc2d1b2b8b4589",
+    "bones": [
+     "reciever_ak_zenit_b33_LOD0"
+    ],
+    "bone": "reciever_ak_zenit_b33_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_scope",
+    "item": "584924ec24597768f12ae244",
+    "bones": [
+     "linza",
+     "scope_all_eotech_xps3_LOD0"
+    ],
+    "bone": "scope_all_eotech_xps3_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_sight_rear",
+    "item": "59d650cf86f7741b846413a4",
+    "bones": [
+     "sight_rear_ak_izhmash_akm_std_LOD0"
+    ],
+    "bone": "sight_rear_ak_izhmash_akm_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "59e6227d86f77440d64f5dc2",
+    "bones": [
+     "stock_ak_molot_vepr_km_vpo_136_LOD0"
+    ],
+    "bone": "stock_ak_molot_vepr_km_vpo_136_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5b1fd4e35acfc40018633c39",
+    "bones": [
+     "mag_ak_izhmash_akms_aluminium_762x39_30_LOD0"
+    ],
+    "bone": "mag_ak_izhmash_akms_aluminium_762x39_30_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "5648ac824bdc2ded0b8b457d",
+    "bones": [
+     "charge_ak_zenit_rp1_LOD0"
+    ],
+    "bone": "charge_ak_zenit_rp1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_reciever/mod_scope",
+  "aimIndex": 0
+ }
+}

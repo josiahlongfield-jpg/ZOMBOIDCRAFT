@@ -1,0 +1,716 @@
+[
+{
+"name": "g_hunting_rifle",
+"models": [
+"hunting_rifle",
+"hunting_rifle_mag",
+"hunting_rifle_scope"
+],
+"rot": [
+0,
+90,
+0
+],
+"size": [
+640,
+256
+],
+"pad": 0.05,
+"gain": 2.3
+},
+{
+"name": "g_assault_rifle",
+"models": [
+"assault_rifle",
+"assault_rifle_mag",
+"assault_rifle_stock",
+"assault_rifle_irons",
+"assault_rifle_handle"
+],
+"rot": [
+0,
+90,
+0
+],
+"size": [
+640,
+256
+],
+"pad": 0.05,
+"gain": 2.3
+},
+{
+"name": "g_assault_rifle_dot",
+"models": [
+"assault_rifle",
+"assault_rifle_mag",
+"assault_rifle_stock",
+"assault_rifle_red_dot",
+"assault_rifle_handle",
+"assault_rifle_foregrip"
+],
+"rot": [
+0,
+90,
+0
+],
+"size": [
+640,
+256
+],
+"pad": 0.05,
+"gain": 2.3
+},
+{
+"name": "g_shotgun",
+"models": [
+"shotgun",
+"shotgun_handle"
+],
+"rot": [
+0,
+90,
+0
+],
+"size": [
+640,
+256
+],
+"pad": 0.05,
+"gain": 2.3
+},
+{
+"name": "g_hunting_rifle_bare",
+"models": [
+"hunting_rifle",
+"hunting_rifle_mag"
+],
+"rot": [
+0,
+90,
+0
+],
+"size": [
+640,
+256
+],
+"pad": 0.05,
+"gain": 2.3
+},
+{
+"name": "g_pistol",
+"models": [
+"pistol",
+"pistol_mag",
+"pistol_handle"
+],
+"rot": [
+0,
+90,
+0
+],
+"size": [
+640,
+256
+],
+"pad": 0.12,
+"gain": 2.3
+},
+{
+"name": "m_machete",
+"models": [
+"machete"
+],
+"size": [
+640,
+256
+],
+"pad": 0.04,
+"tilt": -48,
+"gain": 1.3
+},
+{
+"name": "m_fire_axe",
+"models": [
+"fire_axe"
+],
+"size": [
+640,
+256
+],
+"pad": 0.04,
+"tilt": -48,
+"gain": 1.3
+},
+{
+"name": "m_katana",
+"models": [
+"katana"
+],
+"size": [
+640,
+256
+],
+"pad": 0.04,
+"tilt": -48,
+"gain": 1.3
+},
+{
+"name": "m_baseball_bat",
+"models": [
+"baseball_bat_worn"
+],
+"size": [
+640,
+256
+],
+"pad": 0.04,
+"tilt": -48,
+"gain": 1.3
+},
+{
+"name": "m_crowbar",
+"models": [
+"crowbar"
+],
+"size": [
+640,
+256
+],
+"pad": 0.04,
+"tilt": -48,
+"gain": 1.3
+},
+{
+"name": "m_spiked_bat",
+"models": [
+"spiked_bat"
+],
+"size": [
+640,
+256
+],
+"pad": 0.04,
+"tilt": -48,
+"gain": 1.3
+},
+{
+"name": "m_kitchen_knife",
+"models": [
+"kitchen_knife"
+],
+"size": [
+640,
+256
+],
+"pad": 0.1,
+"tilt": -48,
+"gain": 1.3
+},
+{
+"name": "m_sledgehammer",
+"models": [
+"sledgehammer"
+],
+"size": [
+640,
+256
+],
+"pad": 0.04,
+"tilt": -48,
+"gain": 1.3
+},
+{
+"name": "c_helmet",
+"proc": "helmet",
+"rot": [
+16,
+-30,
+0
+],
+"size": [
+384,
+384
+],
+"pad": 0.1
+},
+{
+"name": "c_jacket",
+"proc": "jacket",
+"rot": [
+10,
+-24,
+0
+],
+"size": [
+384,
+384
+],
+"pad": 0.1
+},
+{
+"name": "c_gloves",
+"proc": "gloves",
+"rot": [
+14,
+-24,
+0
+],
+"size": [
+384,
+384
+],
+"pad": 0.12
+},
+{
+"name": "c_trousers",
+"proc": "trousers",
+"rot": [
+10,
+-24,
+0
+],
+"size": [
+384,
+384
+],
+"pad": 0.1
+},
+{
+"name": "c_boots",
+"proc": "boots",
+"rot": [
+14,
+-40,
+0
+],
+"size": [
+384,
+384
+],
+"pad": 0.1
+},
+{
+"name": "b_military_rucksack",
+"models": [
+"military_rucksack"
+],
+"size": [
+384,
+384
+],
+"pad": 0.08
+},
+{
+"name": "b_plate_carrier",
+"models": [
+"plate_carrier"
+],
+"size": [
+384,
+384
+],
+"pad": 0.08
+},
+{
+"name": "b_hiking_backpack",
+"models": [
+"hiking_backpack"
+],
+"size": [
+384,
+384
+],
+"pad": 0.08
+},
+{
+"name": "b_school_backpack",
+"models": [
+"school_backpack"
+],
+"size": [
+384,
+384
+],
+"pad": 0.08
+},
+{
+"name": "b_duffel_bag",
+"models": [
+"duffel_bag"
+],
+"size": [
+384,
+384
+],
+"pad": 0.08
+},
+{
+"name": "b_fanny_pack",
+"models": [
+"fanny_pack"
+],
+"size": [
+384,
+384
+],
+"pad": 0.12
+},
+{
+"name": "p_scope_4x",
+"models": [
+"part_scope_4x"
+],
+"rot": [
+14,
+60,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.08
+},
+{
+"name": "p_red_dot",
+"models": [
+"part_red_dot"
+],
+"rot": [
+14,
+60,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "p_holo",
+"models": [
+"part_holo"
+],
+"rot": [
+14,
+60,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "p_suppressor",
+"models": [
+"part_suppressor"
+],
+"rot": [
+14,
+60,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.08
+},
+{
+"name": "p_laser",
+"models": [
+"part_laser"
+],
+"rot": [
+14,
+60,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "p_light",
+"models": [
+"part_light"
+],
+"rot": [
+14,
+60,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "p_foregrip",
+"models": [
+"part_foregrip"
+],
+"rot": [
+14,
+60,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "a_pistol_ammo",
+"models": [
+"pistol_ammo"
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "a_rifle_ammo",
+"models": [
+"rifle_ammo"
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "a_hunting_rifle_ammo",
+"models": [
+"hunting_rifle_ammo"
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "a_shotgun_shell",
+"models": [
+"shotgun_shell"
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "a_ammo_can",
+"models": [
+"ammo_can"
+],
+"size": [
+256,
+256
+],
+"pad": 0.1
+},
+{
+"name": "s_beans",
+"proc": "beans",
+"rot": [
+16,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "s_water",
+"proc": "water",
+"rot": [
+12,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.12
+},
+{
+"name": "s_pills",
+"proc": "pills",
+"rot": [
+16,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.2
+},
+{
+"name": "s_tape",
+"proc": "tape",
+"rot": [
+10,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.12
+},
+{
+"name": "s_scrap",
+"proc": "scrap",
+"rot": [
+24,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.1
+},
+{
+"name": "s_powder",
+"proc": "powder",
+"rot": [
+16,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "s_batteries",
+"proc": "batteries",
+"rot": [
+16,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "s_matches",
+"proc": "matches",
+"rot": [
+30,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.1
+},
+{
+"name": "s_rags",
+"proc": "rags",
+"rot": [
+30,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.12
+},
+{
+"name": "s_spool",
+"proc": "spool",
+"rot": [
+16,
+-30,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "s_jerky",
+"proc": "jerky",
+"rot": [
+10,
+-24,
+0
+],
+"size": [
+256,
+256
+],
+"pad": 0.14
+},
+{
+"name": "figure",
+"figure": true,
+"rot": [
+0,
+0,
+0
+],
+"size": [
+800,
+1250
+],
+"pad": 0.03,
+"mood": true
+},
+{
+"name": "inspect_rifle",
+"models": [
+"hunting_rifle",
+"hunting_rifle_mag",
+"hunting_rifle_scope"
+],
+"rot": [
+10,
+62,
+-6
+],
+"size": [
+1600,
+640
+],
+"pad": 0.05,
+"persp": 20,
+"mood": true,
+"gain": 2.3
+}
+]

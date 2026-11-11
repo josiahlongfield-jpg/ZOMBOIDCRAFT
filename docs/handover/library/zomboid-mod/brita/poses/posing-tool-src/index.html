@@ -1,0 +1,1417 @@
+<title>Survivor Arms Posing Tool</title>
+<style>
+:root { color-scheme: dark; --bg: #15181a; --panel: #1f2427; --line: #343b40; --fg: #e4e8ea; --muted: #97a1a7; --accent: #8fbf6a; --warn: #ff5a4f; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, "Segoe UI", sans-serif; }
+header { display: flex; align-items: center; gap: 12px; padding: 8px 14px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+header .grow { flex: 1; }
+button, label.btn { background: #2b3236; color: var(--fg); border: 1px solid var(--line); border-radius: 5px; padding: 5px 10px; cursor: pointer; font: inherit; }
+button:hover, label.btn:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); color: #111; border-color: var(--accent); font-weight: 600; }
+input[type=file] { display: none; }
+main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 10px; padding: 10px; }
+.views { display: grid; gap: 10px; align-content: start; }
+.view { position: relative; background: #dfe3e6; border-radius: 6px; overflow: hidden; aspect-ratio: 16 / 9; }
+.view canvas { display: block; width: 100%; height: 100%; }
+.view .tag { position: absolute; left: 8px; top: 6px; background: rgba(0,0,0,.55); padding: 2px 7px; border-radius: 4px; font-size: 12px; }
+#lens { position: absolute; left: 50%; top: 50%; height: var(--d) !important; aspect-ratio: 1; transform: translate(-50%,-50%); border: 2px solid rgba(224,36,42,.8); border-radius: 50%; pointer-events: none; }
+.view .cross { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; transform: translate(-50%,-50%); pointer-events: none; }
+.view .cross::before, .view .cross::after { content: ""; position: absolute; background: #e0242a; box-shadow: 0 0 0 1px rgba(0,0,0,.35); }
+.view .cross::before { left: 10px; top: 0; width: 2px; height: 22px; }
+.view .cross::after { top: 10px; left: 0; height: 2px; width: 22px; }
+.view img.overlay { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; display: none; }
+.sidebtns { position: absolute; right: 8px; top: 6px; display: flex; gap: 4px; }
+.sidebtns button { padding: 2px 7px; font-size: 12px; background: rgba(0,0,0,.55); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px; overflow-y: auto; max-height: calc(100vh - 70px); }
+details { border-bottom: 1px solid var(--line); padding: 6px 0; }
+summary { cursor: pointer; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+summary .clash { font-weight: 500; font-size: 12px; color: var(--muted); }
+summary .clash.bad { color: var(--warn); }
+.row { display: grid; grid-template-columns: 128px minmax(0,1fr) 58px; gap: 6px; align-items: center; margin: 5px 0; }
+.row span { color: var(--muted); font-size: 12px; }
+.row input[type=range] { width: 100%; accent-color: var(--accent); }
+.row input[type=number] { width: 54px; background: #15181a; color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 2px 4px; font: inherit; font-size: 12px; }
+.reset { font-size: 12px; padding: 2px 8px; margin-top: 4px; }
+textarea { width: 100%; height: 110px; background: #15181a; color: var(--fg); border: 1px solid var(--line); border-radius: 4px; font: 11px/1.3 ui-monospace, Consolas, monospace; margin-top: 8px; }
+.hint { color: var(--muted); font-size: 12px; margin: 6px 0; }
+#drop { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.75); font-size: 20px; z-index: 5; }
+#start { max-width: 560px; margin: 60px auto; text-align: center; color: var(--muted); }
+#start h2 { color: var(--fg); }
+@media (max-width: 900px) { main { grid-template-columns: minmax(0,1fr); } .panel { max-height: none; } }
+/* PC: the sliders ride down the page beside the views, so they're in reach next to the free-look side view too */
+@media (min-width: 901px) { .panel { position: sticky; top: 10px; align-self: start; max-height: calc(100vh - 20px); } }
+#sync { color: var(--muted); font-size: 12px; }
+.att .pick { display: grid; grid-template-columns: 128px minmax(0,1fr); gap: 6px; align-items: center; margin: 6px 0; }
+.att .pick span { color: var(--muted); font-size: 12px; }
+.att select { min-width: 0; background: #2b3236; color: var(--fg); border: 1px solid var(--line); border-radius: 5px; padding: 4px 6px; font: inherit; }
+@media (max-width: 700px) { .att .pick { grid-template-columns: 96px minmax(0,1fr); } .att select { font-size: 16px; } }
+.follow { border: 1px solid var(--line); border-radius: 6px; padding: 8px; margin: 6px 0 4px; }
+.follow label { display: flex; gap: 8px; align-items: center; font-weight: 600; }
+.follow select { flex: 1; min-width: 0; background: #2b3236; color: var(--fg); border: 1px solid var(--line); border-radius: 5px; padding: 4px 6px; font: inherit; }
+#review { position: fixed; inset: 0; z-index: 6; background: var(--bg); overflow-y: auto; padding: 12px; }
+#review .bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; position: sticky; top: -12px; background: var(--bg); padding: 8px 0; z-index: 1; }
+#review .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+#review .cell { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
+#review .cell.good { border-color: var(--accent); }
+#review .cell.fix { border-color: var(--warn); }
+#review .cell img { width: 100%; aspect-ratio: 16/9; display: block; border-radius: 4px; cursor: pointer; background: #dfe3e6; }
+#review .cell .nm { font-weight: 600; margin: 4px 0 2px; }
+#review .cell .src { color: var(--muted); font-size: 12px; min-height: 1.4em; }
+#review .cell .btns { display: flex; gap: 6px; margin-top: 4px; }
+#review .cell .btns button.on.g { background: var(--accent); color: #111; }
+#review .cell .btns button.on.f { background: var(--warn); color: #111; }
+#sync.ok { color: var(--accent); }
+#sync.bad { color: var(--warn); }
+.vtoggle { display: none; gap: 6px; }
+.modes { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.modes button { border: 0; border-radius: 0; }
+#gunpick { background: #2b3236; color: var(--fg); border: 1px solid var(--line); border-radius: 5px; padding: 5px 8px; font: inherit; max-width: 100%; }
+.modes button.on { background: var(--accent); color: #111; font-weight: 600; }
+.vtoggle button.on { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 700px) {
+  header { padding: 8px 10px; gap: 8px; }
+  header h1 { width: 100%; }
+  header .grow { display: none; }
+  main { padding: 6px 10px; gap: 8px; }
+  .views { position: sticky; top: 0; z-index: 3; background: var(--bg); padding: 4px 0 6px; gap: 6px; }
+  .vtoggle { display: flex; }
+  .view.mhide { display: none; }
+  .view .tag { font-size: 11px; }
+  .sidebtns { top: auto; bottom: 6px; right: 6px; left: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .row { grid-template-columns: 96px minmax(0,1fr) 56px; }
+  .row input[type=range] { height: 28px; }
+  .row input[type=number] { font-size: 16px; width: 56px; }
+  .panel { padding: 8px; }
+}
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<header>
+  <h1>Survivor arms posing tool</h1>
+  <select id="gunpick" aria-label="Gun"></select>
+  <span class="modes" role="group" aria-label="Pose"><button id="m-hip" class="on">Hip fire</button><button id="m-ads">Aim down sights</button><button id="m-tpready">3rd person: ready</button><button id="m-tpaim">3rd person: aim</button></span>
+  <label class="btn">Overlay a picture<input id="overlayfile" type="file" accept="image/*"></label>
+  <label style="display:flex;gap:6px;align-items:center;color:var(--muted)">opacity <input id="overlayop" type="range" min="0" max="1" step="0.05" value="0.4"></label>
+  <label style="display:flex;gap:6px;align-items:center;color:var(--muted)">Game FOV <input id="fov" type="range" min="70" max="110" step="1" value="70"><b id="fovv" style="color:var(--fg,#eee);min-width:2.2em">70</b></label>
+  <label style="display:flex;gap:6px;align-items:center;color:var(--muted)"><input id="street" type="checkbox"> Street behind</label>
+  <label id="crossopt" style="display:flex;gap:6px;align-items:center;color:var(--muted)"><input id="crosson" type="checkbox" checked> Crosshair</label>
+  <span id="sync">Connecting…</span><span class="grow"></span>
+  <button id="reviewbtn" hidden>Review all guns</button>
+  <button id="restore" title="Puts back every pose as saved online at 10:56 UTC on 3 November">Restore my saved poses</button>
+  <button id="undo">Undo</button>
+  <button id="resetall">Reset this pose</button>
+  <button id="copy" class="primary">Copy numbers</button>
+</header>
+<div id="start"><h2>Loading her arms and the guns…</h2><p>This takes a few seconds on a phone.</p></div>
+<main id="app" style="display:none">
+  <div class="views">
+    <div class="vtoggle"><button data-v="0" class="on" id="vt0">Game view</button><button data-v="1" id="vt1">Side view</button></div>
+    <div class="view" id="v1"><span class="tag" id="v1tag">Her eyes (game view, 70° FOV)</span><div class="cross"></div><div id="lens" hidden></div><img class="overlay" id="overlay" alt=""></div>
+    <div class="view mhide" id="v2"><span class="tag" id="v2tag">Side view: drag to turn, pinch or scroll to zoom</span>
+      <div class="sidebtns"><button data-cam="front" class="tponly">Front</button><button data-cam="left">Left</button><button data-cam="right">Right</button><button data-cam="below">Below</button><button data-cam="rhand">Trigger hand</button><button data-cam="lhand">Front hand</button></div></div>
+  </div>
+  <div class="panel" id="panel">
+    <p class="hint" id="hint"></p>
+    <div class="follow" hidden><label>Follows <select id="followpick"></select></label><p class="hint" id="followmsg"></p><button id="refollow" hidden>Follow it again in this pose</button></div>
+  </div>
+</main>
+<div id="review" hidden><div class="bar"><b id="reviewtitle"></b><span class="grow"></span><span id="reviewcount" style="color:var(--muted)"></span><button id="reviewclose" class="primary">Close</button></div><div class="grid" id="reviewgrid"></div></div>
+<div id="drop">Drop a picture to lay it over the game view</div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const HOLDS = { rifle: 'Rifle', smg: 'SMG', sniper: 'Sniper', shotgun: 'Shotgun', pistol: 'Pistol', crossbow: 'Crossbow', launcher: 'Launcher' };
+const holdOf = h => HOLDS[h] || h;
+// ------------------------------------------------------------------ controls
+const HAND = [
+  ['x', 'Move left / right', -60, 60, 0.1, 'cm'], ['y', 'Move down / up', -60, 60, 0.1, 'cm'], ['z', 'Move closer / away', -60, 60, 0.1, 'cm'],
+  ['yaw', 'Turn left / right', -180, 180, 0.5, '°'], ['pitch', 'Tilt down / up', -180, 180, 0.5, '°'], ['roll', 'Roll', -180, 180, 0.5, '°'],
+  ['curl', 'All fingers open / close', -90, 150, 0.5, '°'],
+  ['f1', 'Index finger', -90, 150, 0.5, '°'], ['f2', 'Middle finger', -90, 150, 0.5, '°'], ['f3', 'Ring finger', -90, 150, 0.5, '°'], ['f4', 'Little finger', -90, 150, 0.5, '°'],
+  ['ta', 'Thumb in / out', -120, 120, 0.5, '°'], ['tb', 'Thumb back / forward', -120, 120, 0.5, '°'],
+  ['fyaw', 'Forearm swing', -120, 120, 0.5, '°', 0, 'hip ads'], ['fpitch', 'Forearm drop / raise', -120, 120, 0.5, '°', 0, 'hip ads'],
+  ['elbow', 'Elbow in / out', -150, 150, 0.5, '°', 0, 'tpready tpaim'], ['ftwist', 'Forearm twist', -180, 180, 0.5, '°']];
+const TP = m => m === 'tpready' || m === 'tpaim';
+const MODES = ['hip', 'ads', 'tpready', 'tpaim'];
+const GROUPS = [
+  { id: 'gun', title: h => 'Gun (this gun only)', ctl: [
+    ['x', 'Move left / right', -60, 60, 0.1, 'cm'], ['y', 'Move down / up', -60, 60, 0.1, 'cm'], ['z', 'Move closer / away', -60, 60, 0.1, 'cm'],
+    ['yaw', 'Turn left / right', -90, 90, 0.5, '°'], ['pitch', 'Tilt down / up', -90, 90, 0.5, '°'], ['roll', 'Roll', -180, 180, 0.5, '°'],
+    ['size', 'Size', 40, 250, 1, '%', 100], ['lens', 'Scope lens size', 25, 80, 1, '% of screen height', 50, 'ads']], note: m => TP(m) ? 'Third person: the gun starts where Zomboid\'s stance puts her hands; both arms stay joined and reach for it.' : 'Hip fire: at 0° turn and tilt the barrel points straight at the crosshair wherever you move the gun.' },
+  { id: 'R', title: h => `Trigger hand (every ${holdOf(h)})`, ctl: HAND },
+  { id: 'L', title: h => 'Front hand (this gun only)', ctl: HAND },
+];
+const groupDefaults = g => Object.fromEntries(g.ctl.map(c => [c[0], c[6] ?? 0]));
+const fill = (def, o) => Object.assign(def, o || {});
+
+// ------------------------------------------------------------------ state
+// P.holds[hold][mode] = {R}: the trigger hand, shared by every gun of that kind; P.guns[gun][mode] = {gun, L}: that gun's own placement and front hand
+let P = { holds: {}, guns: {}, gun: 'AAC_Honey', mode: 'hip' };
+let IDX = [], G0 = null;
+const handsOf = (h, m) => { const H = (P.holds[h] ??= {}); const x = (H[m] ??= {}); x.R = fill(groupDefaults(GROUPS[1]), x.R); return x; };
+const gunOf = (g, m) => { const Gs = (P.guns[g] ??= {}); const x = (Gs[m] ??= {}); x.gun = fill(groupDefaults(GROUPS[0]), x.gun);
+  // a long gun's front hand first starts from the front hand he set on the old rifle
+  if (!x.L && P.legacyL && P.legacyL[m] && info(g) && info(g).hold !== 'pistol') x.L = { ...P.legacyL[m] };
+  x.L = fill(groupDefaults(GROUPS[2]), x.L); return x; };
+const info = id => IDX.find(g => g.id === id);
+// ---- attachments: P.att[gun] = {grip, gcm, optic, ocm, oy} (the gun's own fit, every pose); P.optics[optic].dy = its
+// sight line height fix in mm (that optic on every gun); P.gripHand[grip][pose] = the front hand on that grip (every gun)
+let PARTS = {};
+const attOf = gid => ((P.att ??= {})[gid] ??= { grip: '', gcm: null, optic: '', ocm: null, oy: 0 });
+const fits = (id, gid) => !!(id && PARTS[id] && PARTS[id].mount.includes(gid));
+const gripOn = gid => { const a = P.att && P.att[gid]; return a && fits(a.grip, gid) && GUNDATA[gid] ? PARTS[a.grip] : null; };
+const opticOn = gid => { const a = P.att && P.att[gid]; return a && fits(a.optic, gid) && GUNDATA[gid] ? PARTS[a.optic] : null; };
+const optDy = id => ((P.optics || {})[id] || {}).dy || 0;
+const gripHandOf = (id, m) => { const H = ((P.gripHand ??= {})[id] ??= {}); H[m] = fill(groupDefaults(GROUPS[2]), H[m]); return H[m]; };
+function ownSl(gid, m) { const h = info(gid).hold; const gm = gunOf(gid, m), g = gripOn(gid); return { gun: gm.gun, R: handsOf(h, m).R, L: g ? gripHandOf(g.id, m) : gm.L }; }
+// templates: a gun can follow another gun's pose, carried over by matching parts (see derive); his own edits detach it
+const DEFAULT_FOLLOW = { AR57_PDW: 'AAC_Honey', American180: 'AAC_Honey', AssaultRifle2: 'AAC_Honey', BOAR: 'AAC_Honey', DSHK: 'AAC_Honey',
+  L86: 'AAC_Honey', M2Carbine: 'AAC_Honey', M870_CQB: 'AAC_Honey', RPG_7: 'AAC_Honey', TenPointTurbo_XLT: 'AAC_Honey', Winchester1866: 'AAC_Honey',
+  // wave 2 (Josiah 21:01): each new gun starts from the gun he already posed in its class
+  Automag: 'Colt1911', G17: 'Colt1911', HK_USP: 'Colt1911', Colt1903: 'Colt1911', SW_327: 'SW_M500', Colt_Service38: 'SW_M500',
+  CAR15SMG: 'AR57_PDW', MP7: 'AR57_PDW', UZI: 'AR57_PDW', AUG9: 'AR57_PDW',
+  Bush_AR15_MOE: 'AAC_Honey', AK47: 'AAC_Honey', F2000: 'AAC_Honey', G36C: 'AAC_Honey', SCARL: 'AAC_Honey',
+  FAL: 'AssaultRifle2', SCARH: 'AssaultRifle2', M1: 'AssaultRifle2', M60: 'L86', PKM: 'L86', Ruger_No1_308: 'Winchester1866',
+  M82: 'BOAR', M40A3: 'BOAR', SV_98: 'BOAR', UTS15: 'M870_CQB', M1014_Wick: 'M870_CQB', SPAS12_Fixed: 'M870_CQB',
+  // wave 3 (88 guns, Josiah 2026-11-06 "yes move on"): each starts from the gun he posed in its class
+  AK74: 'AAC_Honey', AK74_Custom: 'AAC_Honey', AKM_Custom: 'AAC_Honey', M723: 'AAC_Honey',
+  CAR15_Survival: 'AAC_Honey', AssaultRifle: 'AAC_Honey', G21: 'Colt1911', M870_Wingmaster: 'M870_CQB',
+  VIPER_G2: 'M870_CQB', M1887: 'M870_CQB', ROYAL_SXS: 'M870_CQB', Coachgun: 'M870_CQB', A400: 'M870_CQB',
+  SPAS12: 'M870_CQB', DEagle: 'Colt1911', AMT1911: 'Colt1911', B93R: 'Colt1911', M9: 'Colt1911', G34: 'Colt1911',
+  VP70: 'Colt1911', MP45: 'Colt1911', XD4: 'Colt1911', Makarov: 'Colt1911', FN_57: 'Colt1911',
+  Judge513_45LC: 'SW_M500', GP100_6: 'SW_M500', M29_44Carbine: 'Winchester1866', M1911_Carbine: 'AR57_PDW',
+  Model55: 'AR57_PDW', Bizon2_01: 'AR57_PDW', EVO: 'AR57_PDW', KRISS: 'AR57_PDW', MAC10: 'AR57_PDW',
+  UMP9: 'AR57_PDW', UMP45: 'AR57_PDW', UZI_Micro: 'AR57_PDW', Carbon15_97: 'AR57_PDW', MPA57DMG: 'Colt1911',
+  TAC50: 'BOAR', CheyTac50: 'BOAR', Sako85: 'BOAR', L96: 'BOAR', M40: 'BOAR', WA2000: 'BOAR',
+  AK12_New: 'AAC_Honey', AK308: 'AssaultRifle2', AN94: 'AAC_Honey', AR18: 'AAC_Honey', FAMAS: 'L86',
+  Galil: 'AssaultRifle2', SKS: 'AAC_Honey', Vz58: 'AAC_Honey', AUG_A3: 'L86', L85A2: 'L86', MK47: 'AAC_Honey',
+  ADAR: 'AAC_Honey', Bush_XM15: 'AAC_Honey', Bush_XM15_Custom: 'AAC_Honey', M4: 'AAC_Honey', G33: 'AAC_Honey',
+  XM8: 'AAC_Honey', AK74_Alpha: 'AAC_Honey', Ots14_4A_03: 'AAC_Honey', M14EBR: 'AssaultRifle2',
+  MAS49: 'AssaultRifle2', OTS_03_SVU: 'AssaultRifle2', M1903: 'BOAR', RPK16: 'L86', G21LMG: 'L86', M249E3: 'L86',
+  RPD: 'L86', TXS_804_45LC: 'M870_CQB', Colt1855: 'M870_CQB', KS23_S: 'M870_CQB', M870_MCS: 'M870_CQB',
+  M1208: 'M870_CQB', SPAS_15: 'M870_CQB', USAS_12: 'M870_CQB', CAWS: 'M870_CQB', TOZ106: 'M870_CQB',
+  NEF_Handi_410: 'M870_CQB', Viper: 'Winchester1866', Thompson_Center_3006: 'Winchester1866', AR7: 'M2Carbine',
+  KAC_M203: 'AAC_Honey', M2A1: 'AAC_Honey', M635S: 'AR57_PDW', KG9: 'AR57_PDW' };
+const followOf = gid => { const f = P.follow || {}; const t = gid in f ? f[gid] : (DEFAULT_FOLLOW[gid] || null); return t && t !== gid && info(t) ? t : null; };
+const ownIn = (gid, m) => !!(P.own && P.own[gid] && P.own[gid][m]);
+const followers = t => IDX.filter(g => followOf(g.id) === t);
+function sl(gid = P.gun, m = P.mode, depth = 0) {
+  const t = depth < 5 && !ownIn(gid, m) ? followOf(gid) : null;
+  if (t) { const d = derive(gid, t, m, depth); if (d) return d; }
+  return ownSl(gid, m);
+}
+// before he moves a slider on a following gun, it takes the derived pose as its own (in this pose only)
+function makeOwn(gid = P.gun, m = P.mode) {
+  if (ownIn(gid, m) || !followOf(gid)) return;
+  const d = sl(gid, m);
+  const gm = gunOf(gid, m); gm.gun = { ...d.gun }; if (!gripOn(gid)) gm.L = { ...d.L };
+  const R = handsOf(info(gid).hold, m).R;
+  if (Object.entries(R).every(([k, v]) => v === (groupDefaults(GROUPS[1])[k] ?? 0))) Object.assign(R, d.R);
+  ((P.own ??= {})[gid] ??= {})[m] = true;
+  setTimeout(syncInputs, 0);
+}
+const history = [];
+const STORE = 'survivor-arms-tool-v1';
+let T = 0;
+// 2026-11-03 fixes, applied once to each saved copy (the mark rides along with it) so every pose looks as he left it:
+// - the Honey Badger's mesh had been drawn from a stale grip point (0.9 cm low, 2.8 cm back) since its pack irons went
+//   on and he posed it around that; the mesh is back on its real grip, so its poses take the same shift the other way.
+// - Size used to grow every gun from its grip, lifting (and on a few guns sliding sideways) the sight line off the eye
+//   in aim down sights; it now grows about the sight line, so each resized ADS pose takes the old lift into its sliders.
+// - his Honey ADS 0.1 sideways only worked round the pack rear sight being off centre (now centred): back to 0.
+const SIZE_LIFT = {"AAC_Honey":[0.0,22.7977],"AR57_PDW":[0.0,20.7913],"American180":[0.0,15.7181],"AssaultRifle2":[-1.3125,10.3632],"BOAR":[-2.625,23.2767],"Colt1911":[0.0,8.8627],"DSHK":[0.0,13.4031],"L86":[-0.4375,19.8625],"M2Carbine":[-1.0938,9.2364],"M870_CQB":[0.0,17.8006],"RPG_7":[0.0,20.304],"SW_M500":[0.0,8.4473],"TenPointTurbo_XLT":[0.0,19.047],"Winchester1866":[0.0,10.4562]};
+function migrate() {
+  if (P.fixes && P.fixes.f1103) return;
+  const r1 = v => Math.round(v * 10) / 10;
+  for (const [gid, g] of Object.entries(P.guns || {})) {
+    const c = g && g.ads && g.ads.gun; if (!c) continue;
+    let dx = 0, dy = 0, dz = 0;
+    if (gid === 'AAC_Honey') { dy -= 0.898; dz -= 2.835; }
+    const L = SIZE_LIFT[gid], k = (c.size ?? 100) / 100 - 1;
+    if (L && k) { dx += L[0] * k; dy += L[1] * k; }
+    if (dx || dy || dz) { c.x = r1(c.x + dx); c.y = r1(c.y + dy); c.z = r1(c.z + dz); }
+    if (gid === 'AAC_Honey' && Math.abs(c.x - 0.1) < 1e-6) c.x = 0;
+  }
+  const h = P.guns && P.guns.AAC_Honey && P.guns.AAC_Honey.hip && P.guns.AAC_Honey.hip.gun;
+  if (h) { h.x = r1(h.x + 0.158); h.y = r1(h.y - 1.016); h.z = r1(h.z - 2.79); }
+  (P.fixes ??= {}).f1103 = 1;
+}
+function adopt(s) {
+  if (!s) return;
+  if (s.state) { P = Object.assign({ holds: {}, guns: {}, gun: 'AAC_Honey', mode: 'hip' }, s.state); migrate(); return; }
+  // an earlier version kept one rifle pose (its gun was the old rifle, now retired): keep the hands as the rifle hold
+  const old = s.sliders || s;
+  for (const m of ['hip', 'ads']) { const o = old[m] || (m === 'hip' ? old : null); if (o && o.R) fill(handsOf('rifle', m).R, o.R); if (o && o.L) (P.legacyL ??= {})[m] = o.L; }
+}
+try { const s = JSON.parse(localStorage.getItem(STORE) || 'null'); if (s) { adopt(s); T = s.t || 0; } } catch (e) {}
+const T0 = T;   // what this device opened with; the online save wins over anything newer than this made before it arrived
+let prevNumbers = null;
+const keepLocal = () => { try { localStorage.setItem(STORE, JSON.stringify({ state: P, t: T })); } catch (e) {} };
+const save = () => { T = Date.now(); keepLocal(); scheduleCloud(); };
+
+// ---- online save: one document, readable by Claude, so the pose follows him between devices
+const syncEl = document.getElementById('sync');
+const setSync = (txt, cls) => { syncEl.textContent = txt; syncEl.className = cls || ''; };
+let cloudTried = false, cloudDoc = null, cloudTimer = null, cloudBusy = false, cloudAgain = false;
+function scheduleCloud() { if (!cloudDoc) return; setSync('Saving…'); clearTimeout(cloudTimer); cloudTimer = setTimeout(pushCloud, 1200); }
+// what goes online: a gun's pose that's still all defaults and not his own is left out (it's made again when needed,
+// and a following gun takes its pose from its template anyway), and numbers are kept to 3 places, so 129 guns fit
+// under the 256 KB the online store allows
+function compactState(p) {
+  const r = v => typeof v === 'number' ? Math.round(v * 1000) / 1000 : v;
+  const isDef = (o, g) => !o || Object.entries(groupDefaults(g)).every(([k, d]) => (o[k] ?? d) === d);
+  const out = { ...p, guns: {} };
+  for (const [g, Gs] of Object.entries(p.guns || {})) {
+    const keep = {};
+    for (const [m, x] of Object.entries(Gs || {})) {
+      if (!ownIn(g, m) && x && isDef(x.gun, GROUPS[0]) && isDef(x.L, GROUPS[2])) continue;
+      keep[m] = JSON.parse(JSON.stringify(x), (k, v) => r(v));
+    }
+    if (Object.keys(keep).length) out.guns[g] = keep;
+  }
+  return out;
+}
+async function pushCloud() {
+  if (!cloudDoc) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  cloudBusy = true;
+  try {
+    const st = compactState(P), size = JSON.stringify(st).length;
+    if (size > 250000) throw { code: 'too big (' + Math.round(size / 1024) + ' KB)' };
+    await cloudDoc.set({ state: st, t: T });
+    setSync('Saved online ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 'ok');
+  } catch (e) { setSync('Not saved online (' + (e.code || e.message) + '), kept on this device', 'bad'); }
+  cloudBusy = false;
+  if (cloudAgain) { cloudAgain = false; pushCloud(); }
+}
+async function connectCloud() {
+  await connectCloud0();
+  // nothing of his on this device and nothing came from online: put back the copy published with the page
+  if (!Object.keys(P.own || {}).length) await restoreBackup('Online save did not load, so your 10:56 poses were put back');
+}
+async function connectCloud0() {
+  const timer = setTimeout(() => { if (!cloudDoc) setSync('Saved on this device only'); }, 10000);
+  try {
+    const db = window.claude && window.claude.use ? await window.claude.use('db') : null;
+    if (!db) { clearTimeout(timer); setSync('Saved on this device only'); return; }
+    const doc = db.doc('poses/current');
+    const snap = await doc.get();
+    clearTimeout(timer);
+    cloudDoc = doc;
+    const d = snap.exists ? snap.data() : null;
+    if (d && d.numbers) prevNumbers = d.numbers;
+    if (d && (d.t || 0) > T0) {
+      pushHistory(); adopt(d); T = d.t; keepLocal(); setFov(P.fov || 70); await showGun(P.gun);
+      setSync('Loaded your saved pose', 'ok');
+    } else if (T > ((d && d.t) || 0)) pushCloud();
+    else setSync(d ? 'Saved online' : 'Saves online as you go', 'ok');
+  } catch (e) { clearTimeout(timer); setSync('Saved on this device only (' + (e.code || e.message) + ')', 'bad'); }
+}
+// his poses as saved online at 10:56 UTC, 3 Nov (Josiah 19:11: "they are all still reset"), published beside the page
+async function restoreBackup(msg) {
+  try {
+    const b = await (await fetch('poses-backup.json', { cache: 'no-store' })).json();
+    pushHistory(); adopt(b); T = Date.now(); keepLocal(); setFov(P.fov || 70); await showGun(P.gun);
+    if (cloudDoc) pushCloud();
+    setSync(msg || 'Your saved poses are back' + (cloudDoc ? ', saving online' : ' (saved on this device only)'), cloudDoc ? 'ok' : 'bad');
+  } catch (e) { setSync('Could not restore (' + (e.message || e) + ')', 'bad'); }
+}
+document.getElementById('restore').onclick = () => { if (confirm('Put back every gun pose as it was saved at 10:56 UTC this morning? Undo takes it back.')) restoreBackup(); };
+
+// ---- panel
+const panel = document.getElementById('panel');
+const inputs = {}, clashEls = {}, titleEls = {}, pasteBtns = {};
+for (const g of GROUPS) {
+  const d = document.createElement('details'); d.open = true;
+  const sm = document.createElement('summary'); sm.innerHTML = `<span></span><span class="clash"></span>`; d.appendChild(sm);
+  titleEls[g.id] = sm.firstChild; clashEls[g.id] = sm.querySelector('.clash');
+  if (g.note) { const n = document.createElement('p'); n.className = 'hint'; n.dataset.note = g.id; d.appendChild(n); }
+  for (const [k, label, lo, hi, step, unit, , only] of g.ctl) {
+    const row = document.createElement('div'); row.className = 'row'; if (only) row.dataset.only = only;
+    row.innerHTML = `<span>${label} (${unit})</span><input type="range" min="${lo}" max="${hi}" step="${step}"><input type="number" step="${step}">`;
+    const [r, n] = row.querySelectorAll('input');
+    r.id = `${g.id}-${k}`; n.id = `${g.id}-${k}-n`;
+    const set = (v, push) => { if (push) pushHistory(); makeOwn(); sl()[g.id][k] = +v; r.value = v; n.value = (+v).toFixed(step < 1 ? 1 : 0); update(); save(); };
+    r.addEventListener('pointerdown', () => { pushHistory(); makeOwn(); });
+    r.addEventListener('input', () => set(r.value, false));
+    n.addEventListener('change', () => set(n.value, true));
+    inputs[g.id + '.' + k] = v => { r.value = v; n.value = (+v).toFixed(step < 1 ? 1 : 0); };
+    d.appendChild(row);
+  }
+  const b = document.createElement('button'); b.className = 'reset'; b.textContent = 'Reset';
+  b.onclick = () => { pushHistory(); makeOwn(); Object.assign(sl()[g.id], groupDefaults(g)); syncInputs(); update(); save(); };
+  // copy a hand's grip (or the gun's placement) and paste it onto another gun or pose; the copy is kept until replaced
+  const cb = document.createElement('button'); cb.className = 'reset'; cb.textContent = 'Copy';
+  const pb = document.createElement('button'); pb.className = 'reset'; pb.textContent = 'Paste';
+  const what = g.id === 'gun' ? 'gun placement and attachments' : g.id === 'R' ? 'trigger hand grip' : 'front hand grip';
+  // the gun's copy carries its attachments too (picks and their sliders)
+  cb.onclick = () => { (P.clip ??= {})[g.id] = { v: { ...sl()[g.id] }, att: g.id === 'gun' ? { ...attOf(P.gun), ocmBy: { ...(attOf(P.gun).ocmBy || {}) } } : undefined, from: `${info(P.gun).name.split(' ').slice(0, 2).join(' ')}, ${MODE_NAMES[P.mode]}` }; keepLocal(); save(); syncInputs();
+    cb.textContent = 'Copied'; setTimeout(() => cb.textContent = 'Copy', 1200); };
+  pb.onclick = async () => { const c = P.clip && P.clip[g.id]; if (!c) return; pushHistory(); makeOwn(); Object.assign(sl()[g.id], c.v);
+    if (c.att) pasteAtt(c.att);
+    await loadAtt(P.gun); syncInputs(); update(); save(); };
+  pasteBtns[g.id] = [pb, what];
+  const bar = document.createElement('div'); bar.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap'; bar.append(b, cb, pb);
+  d.appendChild(bar); panel.appendChild(d);
+}
+// copy the whole of this view of this gun (gun placement and attachments, trigger hand, front hand) in one go (Josiah 07:41)
+{ const cb = document.createElement('button'); cb.className = 'primary'; cb.textContent = 'Copy all (this view)';
+  const pb = document.createElement('button'); pb.className = 'reset'; pb.textContent = 'Paste all';
+  cb.onclick = () => { (P.clip ??= {}).all = { v: Object.fromEntries(GROUPS.map(g => [g.id, { ...sl()[g.id] }])), att: { ...attOf(P.gun), ocmBy: { ...(attOf(P.gun).ocmBy || {}) } }, from: `${info(P.gun).name.split(' ').slice(0, 2).join(' ')}, ${MODE_NAMES[P.mode]}` };
+    keepLocal(); save(); syncInputs(); cb.textContent = 'Copied'; setTimeout(() => cb.textContent = 'Copy all (this view)', 1200); };
+  pb.onclick = async () => { const c = P.clip && P.clip.all; if (!c) return; pushHistory(); makeOwn();
+    for (const g of GROUPS) if (c.v[g.id]) Object.assign(sl()[g.id], c.v[g.id]);
+    pasteAtt(c.att); await loadAtt(P.gun); syncInputs(); update(); save(); };
+  pasteBtns.all = [pb, 'whole view (gun, attachments and both hands)'];
+  const bar = document.createElement('div'); bar.id = 'allbar'; bar.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px';
+  bar.append(cb, pb); panel.insertBefore(bar, panel.firstChild); }
+const out = document.createElement('textarea'); out.readOnly = true; out.id = 'numbers'; out.placeholder = 'Press "Copy numbers" if Claude asks for them; otherwise your poses reach Claude by themselves.'; panel.appendChild(out);
+function syncInputs() {
+  if (!IDX.length) return;
+  const S = sl(), h = info(P.gun).hold;
+  for (const g of GROUPS) { titleEls[g.id].textContent = g.title(h); for (const c of g.ctl) inputs[g.id + '.' + c[0]](S[g.id][c[0]]); }
+  if (gripOn(P.gun)) titleEls.L.textContent = `Front hand (on the ${gripOn(P.gun).name}, every gun)`;
+  syncAtt();
+  document.querySelectorAll('[data-note]').forEach(n => n.textContent = GROUPS.find(g => g.id === n.dataset.note).note(P.mode));
+  document.getElementById('hint').textContent = (TP(P.mode) ? `Third person is how other players see her. The body takes Zomboid's own ${info(P.gun).hold === 'pistol' ? 'pistol' : 'rifle'} stance; move the gun and her hands follow it, with the arms bending to reach. ` : '') + `Red means that part is inside the gun. The trigger hand is shared by every ${holdOf(h)}, so a change to it moves it on every ${holdOf(h)}. The gun and the front hand belong to the ${info(P.gun).name} alone (a gun you haven't touched yet starts from the pose of the gun you posed in its class). Each of the four poses is kept separately. Everything saves online as you go, so it opens the same on your phone and your PC.`;
+  for (const m of MODES) document.getElementById('m-' + m).classList.toggle('on', P.mode === m);
+  if (attNoteGun !== P.gun) attNote = '';
+  for (const [id, [pb, what]] of Object.entries(pasteBtns)) { const c = P.clip && P.clip[id]; pb.disabled = !c; pb.title = c ? `Paste the ${what} copied from: ${c.from}` : `Copy a ${what} first`; const lb = id === 'all' ? 'Paste all' : 'Paste'; pb.textContent = c ? `${lb} (from ${c.from})` : lb; }
+  { const fp = document.getElementById('followpick'), t = followOf(P.gun), fl = followers(P.gun);
+    fp.innerHTML = '<option value="">Nothing (its own poses)</option>' + IDX.filter(g => g.id !== P.gun && followOf(g.id) !== P.gun).map(g => `<option value="${g.id}">${g.name}</option>`).join('');
+    fp.value = t || '';
+    let msg = '';
+    if (t && !ownIn(P.gun, P.mode)) msg = `In ${MODE_NAMES[P.mode]} this gun copies the ${info(t).name}'s pose, matched to its own grip, handguard and sights. Moving any slider gives it its own pose here.`;
+    else if (t) msg = `In ${MODE_NAMES[P.mode]} this gun has its own pose (you changed it). Its other poses still follow the ${info(t).name}.`;
+    else msg = 'This gun keeps its own poses.';
+    if (fl.length) msg += ` It is the template for ${fl.length} gun${fl.length > 1 ? 's' : ''}: ${fl.map(g => g.name).join(', ')}. Changes here carry to them.`;
+    document.getElementById('followmsg').textContent = msg;
+    document.getElementById('refollow').hidden = !(t && ownIn(P.gun, P.mode)); }
+  document.querySelectorAll('[data-only]').forEach(r => r.hidden = !r.dataset.only.split(' ').includes(P.mode));
+  document.querySelectorAll('.tponly').forEach(r => r.hidden = !TP(P.mode));
+  const tp = TP(P.mode);
+  document.getElementById('v1tag').textContent = tp ? 'Over her shoulder (your third-person view)' : P.fov > 70 ? `Her eyes (world at ${P.fov}° FOV; hands and gun stay at 70° like the game)` : 'Her eyes (game view, 70° FOV)';
+  document.getElementById('v2tag').textContent = tp ? 'How other players see her: drag to turn, pinch or scroll to zoom' : 'Side view: drag to turn, pinch or scroll to zoom';
+  document.getElementById('vt1').textContent = tp ? 'Other players' : 'Side view';
+  document.getElementById('vt0').textContent = tp ? 'Shoulder view' : 'Game view';
+  document.getElementById('lens').hidden = P.mode !== 'ads' || !!opticOn(P.gun);
+  // the crosshair can be hidden while aiming down sights, to check the sights line up on their own
+  document.getElementById('crossopt').hidden = P.mode !== 'ads';
+  document.getElementById('crosson').checked = !P.hideCross;
+  document.getElementById('street').checked = !!P.street;
+  document.querySelector('#v1 .cross').hidden = P.mode === 'ads' && !!P.hideCross;
+}
+function pushHistory() { history.push(JSON.stringify(P)); if (history.length > 200) history.shift(); }
+document.getElementById('undo').onclick = async () => { if (history.length) { P = JSON.parse(history.pop()); setFov(P.fov || 70); await showGun(P.gun); save(); } };
+document.getElementById('resetall').onclick = () => { pushHistory(); makeOwn(); const S = sl(); for (const g of GROUPS) Object.assign(S[g.id], groupDefaults(g)); syncInputs(); update(); save(); };
+async function setMode(m) {
+  if (TP(m) && !BODY) { try { await loadBody(); } catch (e) { alert('Her body data did not load. Try again.'); return; } }
+  const was = TP(P.mode); P.mode = m; syncInputs(); update(); setSide(was === TP(m) ? sideNow : TP(m) ? 'front' : 'left'); keepLocal(); }
+for (const m of MODES) document.getElementById('m-' + m).onclick = () => setMode(m);
+const MODE_NAMES = { hip: 'Hip fire', ads: 'Aim down sights', tpready: '3rd person: ready', tpaim: '3rd person: aim' };
+// a starting point for the rest of the class: this gun's placement and front hand, in this pose only (Undo takes it back)
+document.getElementById('followpick').onchange = async e => {
+  pushHistory(); (P.follow ??= {})[P.gun] = e.target.value || null;
+  if (P.own && P.own[P.gun]) delete P.own[P.gun];          // a new template: every pose follows it
+  if (e.target.value) await gunData(e.target.value);
+  syncInputs(); update(); save();
+};
+document.getElementById('refollow').onclick = () => { pushHistory(); if (P.own && P.own[P.gun]) delete P.own[P.gun][P.mode]; syncInputs(); update(); save(); };
+document.getElementById('street').onchange = e => { P.street = e.target.checked; keepLocal(); render(); };
+document.getElementById('crosson').onchange = e => { P.hideCross = !e.target.checked; syncInputs(); keepLocal(); };
+
+// ------------------------------------------------------------------ maths (eye frame: x right, y up, -z ahead)
+const D2R = Math.PI / 180;
+const m3 = a => new THREE.Matrix3().set(...a);
+const V = (...a) => new THREE.Vector3(...a);
+const rotEuler = (yaw, pitch, roll) => new THREE.Matrix4().makeRotationY(yaw * D2R).multiply(new THREE.Matrix4().makeRotationX(pitch * D2R)).multiply(new THREE.Matrix4().makeRotationZ(roll * D2R));
+const axisRot = (axis, deg) => new THREE.Matrix4().makeRotationAxis(axis.clone().normalize(), deg * D2R);
+function m4(R, p) { const m = new THREE.Matrix4(); const e = R.elements; // Matrix3 elements are column-major
+  m.set(e[0], e[3], e[6], p.x, e[1], e[4], e[7], p.y, e[2], e[5], e[8], p.z, 0, 0, 0, 1); return m; }
+const about = (rot, pivot) => new THREE.Matrix4().makeTranslation(pivot.x, pivot.y, pivot.z).multiply(rot).multiply(new THREE.Matrix4().makeTranslation(-pivot.x, -pivot.y, -pivot.z));
+// piv: in aim down sights the Size slider grows the gun about the point on its sight line level with the grip (gun
+// units off the grip), so the sights stay dead on the eye at any size; elsewhere it grows about the grip
+const gunM = (b, c = { x: 0, y: 0, z: 0, yaw: 0, pitch: 0, roll: 0, size: 100 }, piv = null) => {
+  const R = new THREE.Matrix4().makeRotationFromQuaternion(b.q).premultiply(rotEuler(c.yaw, c.pitch, c.roll));
+  const p = b.grip.clone().add(V(c.x / 100, c.y / 100, -c.z / 100)), k = c.size / 100, o = piv || V(0, 0, 0);
+  return new THREE.Matrix4().makeTranslation(p.x, p.y, p.z).multiply(R).multiply(new THREE.Matrix4().makeScale(b.scale, b.scale, b.scale))
+    .multiply(new THREE.Matrix4().makeTranslation(o.x, o.y, o.z)).multiply(new THREE.Matrix4().makeScale(k, k, k)).multiply(new THREE.Matrix4().makeTranslation(-o.x, -o.y, -o.z));
+};
+
+// Where the arms and gun start for one gun and pose. Hip fire: the hold's arms, the gun's own grip put where the
+// hold's grip sits. Aim down sights: the gun's own sight line runs straight ahead from her eye (eye at the gun's
+// eye point when it has one), the arms carried along as one piece so the hands keep their hip fit.
+let ARMS = null, HOLDKITS = null;
+// Hip fire: every gun's barrel is aimed so its bore line runs through the crosshair, meeting the view centre this
+// far ahead (the 2.7 m hip aim he picked for the old guns). The gun turns about its grip; the slider angles are
+// added on top, so with them at 0 the gun points dead at the crosshair wherever it is moved.
+const AIM = 2.7;
+function aimQ(gripEye, gi, scale) {
+  const o = V(...gi.bore).sub(V(...gi.grip)).divideScalar(16).multiplyScalar(scale);   // bore point from the grip, gun frame
+  let w = V(0, 0, -1); const R = new THREE.Matrix4();
+  for (let i = 0; i < 40; i++) {
+    const up = V(0, 1, 0), u = up.sub(w.clone().multiplyScalar(up.dot(w))).normalize(), r = w.clone().cross(u);
+    R.makeBasis(r, u, w.clone().negate());                       // gun right, up, back -> eye frame
+    const b = gripEye.clone().add(o.clone().applyMatrix4(R));
+    w = V(0, 0, -AIM).sub(b).normalize();
+  }
+  return new THREE.Quaternion().setFromRotationMatrix(R);
+}
+const BASES = {};
+function bases(gid, m) {
+  const os = m === 'ads' ? opticSights(gid) : null;
+  const key = gid + '/' + m + (os ? '/' + os.key : ''); if (BASES[key]) return BASES[key];
+  const gi = info(gid), H = HOLDKITS[gi.hold === 'pistol' ? 'pistol' : 'rifle'];
+  const base = H.mats.map(([r, p]) => m4(m3(r), V(...p)));
+  const fistP = [0, 1].map(s => V(...ARMS.fists[s]).applyMatrix4(base[s * 5 + 2]));
+  const q = new THREE.Quaternion(...H.gun.q);
+  const gripEye = V(...H.gun.grip).divideScalar(16).subScalar(0.5).multiplyScalar(H.gun.scale).applyQuaternion(q).add(V(...H.gun.t)).add(V(...ARMS.arm));
+  const kitGun = { q, scale: H.gun.scale, grip: gripEye };
+  const aimed = { q: aimQ(gripEye, gi, H.gun.scale), scale: H.gun.scale, grip: gripEye };
+  const Ah = gunM(aimed).multiply(gunM(kitGun).invert());     // the arms carried along, so the hands keep their fit
+  const hip = { base: base.map(x => x.clone().premultiply(Ah)), fistP: fistP.map(v => v.clone().applyMatrix4(Ah)), gun: aimed };
+  let b = hip;
+  if (m === 'ads') {
+    const sg = os ? os.sights : gi.sights, F = V(...sg.front), Rr = V(...sg.rear), gp = V(...gi.grip);
+    const f = F.clone().sub(Rr).normalize();
+    const up = V(0, 1, 0); const u = up.sub(f.clone().multiplyScalar(up.dot(f))).normalize();
+    const r = f.clone().cross(u);
+    // gun pixels -> eye: right -> +x, up -> +y, along the sights -> -z
+    const Rg = new THREE.Matrix4().makeBasis(r, u, f.clone().negate()).transpose();
+    const qa = new THREE.Quaternion().setFromRotationMatrix(Rg);
+    let eyePx;
+    if (sg.eye != null && Math.abs(f.z) > 1e-6) eyePx = Rr.clone().add(f.clone().multiplyScalar((sg.eye - Rr.z) / f.z));
+    else eyePx = Rr.clone().add(f.clone().multiplyScalar(-(gi.hold === 'pistol' ? 0.45 : 0.30) * 16 / H.gun.scale));
+    const grip = gp.clone().sub(eyePx).divideScalar(16).multiplyScalar(H.gun.scale).applyMatrix4(Rg);
+    const gun = { q: qa, scale: H.gun.scale, grip };
+    const A = gunM(gun).multiply(gunM(hip.gun).invert());
+    const piv = Rr.clone().add(f.clone().multiplyScalar((gp.z - Rr.z) / f.z)).sub(gp).divideScalar(16); piv.z = 0;
+    b = { base: hip.base.map(x => x.clone().premultiply(A)), fistP: hip.fistP.map(v => v.clone().applyMatrix4(A)), gun, piv };
+  }
+  return (BASES[key] = b);
+}
+
+function poseBones(gid = P.gun, m = P.mode) {
+  const S = sl(gid, m), bs = bases(gid, m);
+  const M = bs.base.map(x => x.clone());
+  const raw = gunRawC(gid, m, S.gun), auto = autoL(gid, m, raw) || V(0, 0, 0);
+  for (const [s, id] of [[0, 'R'], [1, 'L']]) {
+    const c = S[id], o = s * 5, a = s ? auto : V(0, 0, 0);
+    const hand = new THREE.Matrix4().makeTranslation(c.x / 100 + a.x, c.y / 100 + a.y, -c.z / 100 + a.z).multiply(about(rotEuler(c.yaw, c.pitch, c.roll), bs.fistP[s]));
+    for (const b of [1, 2, 3, 4]) M[o + b].premultiply(hand);
+    const piv = b => new THREE.Vector3().setFromMatrixPosition(M[o + b]);
+    const ax = (b, i) => new THREE.Vector3().setFromMatrixColumn(M[o + b], i);
+    M[o + 4].premultiply(about(axisRot(ax(4, 1), c.curl), piv(4)));
+    M[o + 3].premultiply(about(axisRot(ax(3, 2), c.ta), piv(3)));
+    M[o + 3].premultiply(about(axisRot(ax(3, 1), c.tb), piv(3)));
+    M[o + 1].premultiply(about(rotEuler(c.fyaw, c.fpitch, 0), piv(2)));
+    // twist the forearm about its own line (elbow to wrist); the hand stays where it is
+    M[o + 1].premultiply(about(axisRot(piv(2).sub(piv(1)), c.ftwist || 0), piv(2)));
+  }
+  // her four fingers are one piece in Zomboid; each is split off by its place across the hand and curled on its own
+  for (const [s, id] of [[0, 'R'], [1, 'L']]) {
+    const c = S[id], f = M[s * 5 + 4], ax = new THREE.Vector3().setFromMatrixColumn(f, 1), pv = new THREE.Vector3().setFromMatrixPosition(f);
+    for (let k = 0; k < 4; k++) M[10 + s * 4 + k] = f.clone().premultiply(about(axisRot(ax, c['f' + (k + 1)] || 0), pv));
+  }
+  const push = adsPush(gid, m, raw);
+  if (push) for (const x of M) x.premultiply(push);
+  return M;
+}
+function gunMatrix(gid = P.gun, m = P.mode) { return TP(m) ? tpGunMatrix(gid, m) : gunMatrixC(gid, m, sl(gid, m).gun); }
+// aim down sights never lets the rear sight (or the back of a fitted optic) come closer than 6 cm to her eye, or
+// the camera's near limit (5 cm, like Minecraft) cuts it off: the whole rig, gun and arms, slides straight back
+// along the sight line, which keeps the sight dead on the crosshair
+const ADS_MIN_EYE = 0.06;
+function adsPush(gid, m, raw) {
+  if (m !== 'ads') return null;
+  const os = opticSights(gid), r = os ? os.sights.rear : info(gid).sights.rear;
+  const d = -V(...r).sub(GUNDATA[gid].grip).divideScalar(16).applyMatrix4(raw).z;
+  return d < ADS_MIN_EYE ? new THREE.Matrix4().makeTranslation(0, 0, -(ADS_MIN_EYE - d)) : null;
+}
+function gunMatrixC(gid, m, c) {
+  const raw = gunRawC(gid, m, c), push = adsPush(gid, m, raw);
+  return push ? raw.premultiply(push) : raw;
+}
+function gunRawC(gid, m, c) {
+  if (TP(m)) return gunM(tpBase(gid, m), c);
+  const b = bases(gid, m);
+  if (m !== 'hip') return gunM(b.gun, c, b.piv);
+  // re-aimed at the crosshair from wherever the sliders move its grip
+  const grip = b.gun.grip.clone().add(V(c.x / 100, c.y / 100, -c.z / 100));
+  const s = b.gun.scale * c.size / 100;
+  return gunM({ q: aimQ(grip, info(gid), s), scale: b.gun.scale, grip: b.gun.grip }, c);
+}
+
+// ------------------------------------------------------------------ scene
+let sideNow = 'left', armGeo, armPos, armCol, gunObj = null, lastPose = null;
+const views = [document.getElementById('v1'), document.getElementById('v2')];
+const renderers = views.map(v => { const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); r.setClearColor(0xdfe3e6); v.prepend(r.domElement); return r; });
+// plain light background by default so small dark sights stand out; the street is there to judge the FOV
+const street = () => !!P.street;
+const scene = new THREE.Scene();
+scene.add(new THREE.HemisphereLight(0xffffff, 0x404030, 0.9));
+const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(0.3, 1, 0.5); scene.add(dl);
+const camEye = new THREE.PerspectiveCamera(70, 16 / 9, 0.05, 50);   // the game draws hands and gun at 70° whatever the FOV setting, near plane 0.05 like Minecraft
+// the world behind her, drawn at the game's FOV setting (Minecraft's own FOV is vertical, 70 normal to 110 Quake Pro)
+const camWorld = new THREE.PerspectiveCamera(70, 16 / 9, 0.05, 400);
+const world = new THREE.Scene();
+world.background = new THREE.Color(0x8a9aa6);
+world.add(new THREE.HemisphereLight(0xffffff, 0x404030, 1.0));
+{ const ground = new THREE.Mesh(new THREE.PlaneGeometry(800, 800), new THREE.MeshLambertMaterial({ color: 0x5d6b4f }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -1.62; world.add(ground);
+  const grid = new THREE.GridHelper(400, 400, 0x46523b, 0x4f5b44); grid.position.y = -1.615; world.add(grid);
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(6, 800), new THREE.MeshLambertMaterial({ color: 0x3b3d40 }));
+  road.rotation.x = -Math.PI / 2; road.position.set(0, -1.61, -400); world.add(road);
+  const zm = new THREE.MeshLambertMaterial({ color: 0x6b4a3c });
+  // zombie-sized stand-ins (0.6 wide, 1.9 tall) at 5, 10, 20 and 40 m, spread left to right
+  for (const [x, d] of [[0, 10], [-3, 5], [3.5, 7], [-6, 20], [7, 20], [0, 40], [-14, 40], [16, 30], [-9, 12], [11, 12]]) {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1.9, 0.4), zm); b.position.set(x, -1.62 + 0.95, -d); world.add(b);
+  }
+  // a house-front and posts out to the sides so the edges of a wide FOV show something
+  const wm = new THREE.MeshLambertMaterial({ color: 0x9a8f7c });
+  for (const s of [-1, 1]) { const h = new THREE.Mesh(new THREE.BoxGeometry(8, 5, 8), wm); h.position.set(s * 14, -1.62 + 2.5, -6); world.add(h);
+    for (let d = 2; d < 60; d += 6) { const post = new THREE.Mesh(new THREE.BoxGeometry(0.15, 1.2, 0.15), wm); post.position.set(s * 4, -1.62 + 0.6, -d); world.add(post); } }
+}
+const fovEl = document.getElementById('fov');
+function setFov(v, keep) {
+  v = Math.max(70, Math.min(110, Math.round(+v || 70)));
+  P.fov = v; fovEl.value = v; document.getElementById('fovv').textContent = v;
+  camWorld.fov = v; camWorld.updateProjectionMatrix();
+  camTP.fov = v; camTP.updateProjectionMatrix();
+  syncInputs();
+  if (keep) save(); render();
+}
+fovEl.oninput = e => setFov(e.target.value, true);
+const camSide = new THREE.PerspectiveCamera(45, 16 / 9, 0.01, 400);
+const camTP = new THREE.PerspectiveCamera(70, 16 / 9, 0.05, 400);   // the game's shoulder camera (whole world at the FOV setting)
+const orbit = new OrbitControls(camSide, renderers[1].domElement);
+orbit.addEventListener('change', render);
+
+async function gunzip(b64) {
+  const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  return new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+}
+const GUNDATA = {};
+// the gun as the game draws it: its own texture (nearest pixels, like Minecraft) and the game's black ink outline, a
+// shell pushed out along the smooth normals by the mesh's outline width, seen from inside
+const inkMat = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide });
+async function paintGeo(j, pos, unit, skipBare = true) {
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  let mat = null, ink = null;
+  if (j.tex && j.uv) {
+    const uq = new Uint16Array(await gunzip(j.uv)), uv = new Float32Array(uq.length);
+    for (let i = 0; i < uq.length; i++) uv[i] = uq[i] / 65535;
+    geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+    const tex = await new THREE.TextureLoader().loadAsync(j.tex);
+    tex.flipY = false; tex.colorSpace = THREE.SRGBColorSpace; tex.magFilter = THREE.NearestFilter; tex.minFilter = THREE.NearestMipmapLinearFilter;
+    mat = new THREE.MeshLambertMaterial({ map: tex, side: THREE.DoubleSide, alphaTest: 0.5 });
+    if (j.sn && j.outline) {
+      // triangles with no smooth normal (the iron sights) get no ink, so the peep hole stays clear
+      const sn = new Int8Array(await gunzip(j.sn)), ip = [], w = j.outline * unit;
+      for (let t = 0; t < pos.length; t += 9) {
+        let any = !skipBare; for (let k = 0; k < 9 && !any; k++) if (sn[t + k]) any = true; if (!any) continue;
+        for (let i = t; i < t + 9; i += 3) { const l = Math.hypot(sn[i], sn[i + 1], sn[i + 2]) || 1; ip.push(pos[i] + sn[i] / l * w, pos[i + 1] + sn[i + 1] / l * w, pos[i + 2] + sn[i + 2] / l * w); }
+      }
+      ink = new THREE.BufferGeometry(); ink.setAttribute('position', new THREE.BufferAttribute(new Float32Array(ip), 3));
+    }
+  }
+  geo.computeVertexNormals();
+  return { geo, mat, ink };
+}
+const empty = new THREE.BufferGeometry();
+function setLook(obj, D, fallback) {
+  obj.geometry = D.geo; obj.material = D.mat || fallback;
+  const ink = obj.children[0]; if (ink) { ink.geometry = D.ink || empty; ink.visible = !!D.ink; }
+}
+const GUNLOAD = {};
+function gunData(gid) { if (GUNDATA[gid]) return Promise.resolve(GUNDATA[gid]); return GUNLOAD[gid] ??= gunData1(gid); }
+async function gunData1(gid) {
+  const j = await fetch('guns/' + gid + '.json').then(r => r.json());
+  const tq = new Int16Array(await gunzip(j.tris));
+  const field = new Int8Array(await gunzip(j.field.data));
+  const gp = V(...j.grip), pos = new Float32Array(tq.length);
+  for (let i = 0; i < tq.length; i += 3) { pos[i] = (tq[i] / 1000 - gp.x) / 16; pos[i + 1] = (tq[i + 1] / 1000 - gp.y) / 16; pos[i + 2] = (tq[i + 2] / 1000 - gp.z) / 16; }
+  const { geo, mat, ink } = await paintGeo(j, pos, 1 / 16);
+  geo.computeBoundingBox();
+  const pxMin = geo.boundingBox.min.clone().multiplyScalar(16).add(gp), pxMax = geo.boundingBox.max.clone().multiplyScalar(16).add(gp);
+  return (GUNDATA[gid] = { geo, mat, ink, field, shape: j.field.shape, lo: j.field.lo, vox: j.field.vox, grip: gp, pxMin, pxMax });
+}
+const gunMat = new THREE.MeshLambertMaterial({ color: 0x2b2b2b, side: THREE.DoubleSide });
+let GD = null;
+async function showGun(gid) {
+  if (!info(gid)) gid = IDX[0].id;
+  P.gun = gid; document.getElementById('gunpick').value = gid;
+  if (followOf(gid)) await gunData(followOf(gid));
+  await gunData(gid); await loadAtt(gid);
+  GD = GUNDATA[gid];
+  if (gunObj) scene.remove(gunObj);
+  gunObj = new THREE.Mesh(GD.geo, gunMat); gunObj.matrixAutoUpdate = false; gunObj.add(new THREE.Mesh(empty, inkMat)); scene.add(gunObj);
+  syncInputs(); update(); setSide(sideNow); keepLocal();
+}
+
+function buildArms() {
+  const n = ARMS.infl.length;
+  armGeo = new THREE.BufferGeometry();
+  armPos = new Float32Array(n * 3); armCol = new Float32Array(n * 3);
+  armGeo.setAttribute('position', new THREE.BufferAttribute(armPos, 3));
+  armGeo.setAttribute('color', new THREE.BufferAttribute(armCol, 3));
+  armGeo.setIndex(ARMS.tris.flat());
+  scene.add(new THREE.Mesh(armGeo, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide })));
+}
+
+const tmp = new THREE.Vector3(), acc = new THREE.Vector3();
+function update() {
+  if (!ARMS || !GD) return;
+  if (TP(P.mode)) { if (BODY) tpUpdate(); return; }
+  const M = poseBones();
+  const G = gunMatrix(); gunObj.matrix.copy(G); gunObj.matrixWorldNeedsUpdate = true; placeParts('fp', P.gun, G);
+  setLook(gunObj, bareOn(P.gun) || GD, gunMat);
+  const Ginv = G.clone().invert(), FD = fieldOf(P.gun);
+  const inside = [0, 0], total = [0, 0], sh = FD.shape;
+  const FG = ARMS.fgroup;
+  ARMS.infl.forEach((row, i) => {
+    acc.set(0, 0, 0); let side = 0, best = 0;
+    for (const [j, w, x, y, z] of row) { const jj = (j === 4 || j === 9) && FG[i] >= 0 ? 10 + (j === 9 ? 4 : 0) + FG[i] : j; tmp.set(x, y, z).applyMatrix4(M[jj]).multiplyScalar(w); acc.add(tmp); if (w > best) { best = w; side = j < 5 ? 0 : 1; } }
+    armPos[i * 3] = acc.x; armPos[i * 3 + 1] = acc.y; armPos[i * 3 + 2] = acc.z;
+    tmp.copy(acc).applyMatrix4(Ginv).multiplyScalar(16).add(GD.grip);   // the gun's own pixels
+    const ix = Math.round((tmp.x - FD.lo[0]) / FD.vox), iy = Math.round((tmp.y - FD.lo[1]) / FD.vox), iz = Math.round((tmp.z - FD.lo[2]) / FD.vox);
+    let f = 15;
+    if (ix >= 0 && iy >= 0 && iz >= 0 && ix < sh[0] && iy < sh[1] && iz < sh[2]) f = FD.field[(ix * sh[1] + iy) * sh[2] + iz];
+    const hit = f + 1 < 0;
+    total[side]++; if (hit) inside[side]++;
+    armCol[i * 3] = hit ? 1 : 0.85; armCol[i * 3 + 1] = hit ? 0.15 : 0.7; armCol[i * 3 + 2] = hit ? 0.12 : 0.6;
+  });
+  armGeo.attributes.position.needsUpdate = true; armGeo.attributes.color.needsUpdate = true; armGeo.computeVertexNormals(); armGeo.computeBoundingSphere();
+  for (const [s, id] of [[0, 'R'], [1, 'L']]) {
+    const p = inside[s] / Math.max(1, total[s]) * 100;
+    clashEls[id].textContent = p > 0 ? `${p.toFixed(1)}% inside the gun` : 'no clash';
+    clashEls[id].classList.toggle('bad', p > 0);
+  }
+  lastPose = { M, G };
+  document.getElementById('lens').style.setProperty('--d', sl().gun.lens + '%');
+  render();
+}
+
+
+// ------------------------------------------------------------------ third person: her whole body in Zomboid's own stance
+// body.json: her Zomboid body as [bone, weight, local xyz] rows, and the frame-0 poses of the clips the game plays with a
+// gun in hand (rifle_idle / rifle_aim for every long gun, pistol_idle / pistol_aim). World: she faces -z, eye near 0.
+let BODY = null, bodyGeo, bodyPos, bodyCol, bodyMesh;
+// real overall lengths (m), so each gun starts at its true size against her
+const REAL = { AAC_Honey: 0.80, AR57_PDW: 0.83, American180: 0.90, AssaultRifle2: 1.12, BOAR: 1.27, Colt1911: 0.22, DSHK: 1.60,
+  L86: 0.90, M2Carbine: 0.90, M870_CQB: 0.80, RPG_7: 0.95, SW_M500: 0.46, TenPointTurbo_XLT: 0.85, Winchester1866: 1.00,
+  // wave 2 (2026-11-03): real overall lengths, stocks extended
+  Automag: 0.29, G17: 0.20, HK_USP: 0.194, Colt1903: 0.178, SW_327: 0.267, Colt_Service38: 0.273, AUG9: 0.665, CAR15SMG: 0.73, MP7: 0.64,
+  UZI: 0.65, Bush_AR15_MOE: 0.89, AK47: 0.88, F2000: 0.69, G36C: 0.72, SCARL: 0.89, SCARH: 0.965, FAL: 1.09, M1: 1.10, M82: 1.448,
+  M40A3: 1.124, SV_98: 1.20, UTS15: 0.775, M1014_Wick: 1.0, SPAS12_Fixed: 1.041, Ruger_No1_308: 0.97, M60: 1.105, PKM: 1.173,
+  // wave 3 (real overall lengths, stocks extended)
+  AK74: 0.943, AK74_Custom: 0.943, AKM_Custom: 0.88, M723: 0.84, CAR15_Survival: 0.79, AssaultRifle: 1.0, G21: 0.208, M870_Wingmaster: 1.2, VIPER_G2: 1.22, M1887: 1.0, ROYAL_SXS: 1.15, Coachgun: 0.93, A400: 1.24, SPAS12: 1.041, DEagle: 0.27, AMT1911: 0.22, B93R: 0.24, M9: 0.217, G34: 0.207, VP70: 0.204, MP45: 0.2, XD4: 0.18, Makarov: 0.161, FN_57: 0.208, Judge513_45LC: 0.24, GP100_6: 0.3, M29_44Carbine: 0.85, M1911_Carbine: 0.6, Model55: 0.8, Bizon2_01: 0.66, EVO: 0.67, KRISS: 0.63, MAC10: 0.55, UMP9: 0.69, UMP45: 0.69, UZI_Micro: 0.46, Carbon15_97: 0.51, MPA57DMG: 0.36, TAC50: 1.448, CheyTac50: 1.4, Sako85: 1.1, L96: 1.18, M40: 1.117, WA2000: 0.905, AK12_New: 0.94, AK308: 0.94, AN94: 0.943, AR18: 0.97, FAMAS: 0.757, Galil: 0.979, SKS: 1.02, Vz58: 0.845, AUG_A3: 0.79, L85A2: 0.785, MK47: 0.87, ADAR: 0.89, Bush_XM15: 0.89, Bush_XM15_Custom: 0.89, M4: 0.84, G33: 0.9, XM8: 0.84, AK74_Alpha: 0.94, Ots14_4A_03: 0.61, M14EBR: 0.89, MAS49: 1.1, OTS_03_SVU: 0.9, M1903: 1.1, RPK16: 1.076, G21LMG: 1.02, M249E3: 1.04, RPD: 1.037, TXS_804_45LC: 0.97, Colt1855: 1.06, KS23_S: 0.84, M870_MCS: 0.95, M1208: 0.71, SPAS_15: 1.0, USAS_12: 0.96, CAWS: 0.76, TOZ106: 0.7, NEF_Handi_410: 1.0, Viper: 0.98, Thompson_Center_3006: 1.0, AR7: 0.89, KAC_M203: 0.7, M2A1: 1.0, M635S: 0.73, KG9: 0.32 };
+let bodyLoading = null;
+function loadBody() {
+  return bodyLoading ??= fetch('body.json').then(r => { if (!r.ok) throw new Error('body'); return r.json(); }).then(b => {
+    BODY = b;
+    BODY.children = b.bones.map(() => []); b.parent.forEach((p, i) => { if (p >= 0) BODY.children[p].push(i); });
+    const n = b.infl.length;
+    bodyGeo = new THREE.BufferGeometry(); bodyPos = new Float32Array(n * 3); bodyCol = new Float32Array(n * 3);
+    bodyGeo.setAttribute('position', new THREE.BufferAttribute(bodyPos, 3));
+    bodyGeo.setAttribute('color', new THREE.BufferAttribute(bodyCol, 3));
+    bodyGeo.setIndex(b.tris.flat());
+    bodyMesh = new THREE.Mesh(bodyGeo, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
+    tpScene.add(bodyMesh);
+  });
+}
+const tpScene = new THREE.Scene();
+tpScene.add(new THREE.HemisphereLight(0xffffff, 0x404030, 0.9));
+{ const l = new THREE.DirectionalLight(0xffffff, 0.8); l.position.set(0.4, 1, 0.6); tpScene.add(l); }
+const tpGun = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshLambertMaterial({ color: 0x2b2b2b, side: THREE.DoubleSide }));
+tpGun.matrixAutoUpdate = false; tpGun.add(new THREE.Mesh(empty, inkMat)); tpScene.add(tpGun);
+const tpGunMat = tpGun.material;
+
+const qv = a => new THREE.Quaternion(a[0], a[1], a[2], a[3]);
+const clipOf = (gid, m) => (info(gid).hold === 'pistol' ? 'pistol' : 'rifle') + (m === 'tpaim' ? '_aim' : '_idle');
+function stance(gid, m) {
+  const st = BODY.stances[clipOf(gid, m)];
+  return { pos: st.pos.map(p => V(...p)), q: st.quat.map(qv) };
+}
+const below = (b, fn) => { fn(b); for (const c of BODY.children[b]) below(c, fn); };
+// turn a bone and everything hanging from it about the bone's own joint
+function turnBelow(S, bone, r, pivot = S.pos[bone].clone()) {
+  below(bone, b => { S.pos[b].sub(pivot).applyQuaternion(r).add(pivot); S.q[b].premultiply(r).normalize(); });
+}
+const palmOf = (S, s) => V(...BODY.fists[s]).applyQuaternion(S.q[BODY.idx.hand[s]]).add(S.pos[BODY.idx.hand[s]]);
+const rotTo = (a, b) => new THREE.Quaternion().setFromUnitVectors(a.clone().normalize(), b.clone().normalize());
+// two-bone reach, as the game does it: the shoulder stays, the elbow bends in the plane it already bends in
+function reach(S, s, target) {
+  const u = BODY.idx.upper[s], f = BODY.idx.fore[s], h = BODY.idx.hand[s];
+  const sh = S.pos[u].clone(), el = S.pos[f].clone(), wr = S.pos[h].clone();
+  const a = sh.distanceTo(el), b = el.distanceTo(wr);
+  const toT = target.clone().sub(sh);
+  const d = Math.max(Math.abs(a - b) + 1e-3, Math.min(a + b - 1e-3, toT.length()));
+  const dir = toT.clone().normalize();
+  const bend = el.clone().sub(sh); bend.sub(dir.clone().multiplyScalar(bend.dot(dir)));
+  if (bend.lengthSq() < 1e-8) bend.set(s === 0 ? 0.3 : -0.3, -1, 0.2);
+  bend.normalize();
+  const cos = Math.max(-1, Math.min(1, (a * a + d * d - b * b) / (2 * a * d))), sin = Math.sqrt(1 - cos * cos);
+  const elbow = sh.clone().add(dir.clone().multiplyScalar(a * cos)).add(bend.multiplyScalar(a * sin));
+  turnBelow(S, u, rotTo(el.clone().sub(sh), elbow.clone().sub(sh)));
+  const want = sh.clone().add(dir.clone().multiplyScalar(d));
+  turnBelow(S, f, rotTo(S.pos[h].clone().sub(S.pos[f]), want.clone().sub(S.pos[f])));
+}
+// where the gun starts: its grip in her trigger hand, the barrel laid toward her other hand (long guns) or along her
+// forearm (pistols), the sights kept as near up as they go; then sized to its real length
+const TPB = {};
+function tpBase(gid, m) {
+  const key = gid + '/' + m; if (TPB[key]) return TPB[key];
+  const S = stance(gid, m), gi = info(gid);
+  const pR = palmOf(S, 0), pL = palmOf(S, 1);
+  // aiming: the barrel points at the crosshair (20 m out); ready: along her forearm (pistol) or toward her other hand
+  let fwd = m === 'tpaim' ? V(0, 0, -20).sub(pR) : gi.hold === 'pistol' ? pR.clone().sub(S.pos[BODY.idx.fore[0]]) : pL.clone().sub(pR);
+  fwd.normalize();
+  const up = V(0, 1, 0); const u = up.sub(fwd.clone().multiplyScalar(up.dot(fwd))).normalize(), r = fwd.clone().cross(u);
+  const q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(r, u, fwd.clone().negate()));
+  GUNDATA[gid].geo.computeBoundingBox();
+  const bb = GUNDATA[gid].geo.boundingBox, len = bb.max.z - bb.min.z;
+  const scale = (REAL[gid] || 0.9) / len;
+  const b = { q, scale, grip: pR, S };
+  const G0 = gunM(b), G0i = G0.clone().invert();
+  b.handOnGun = [pR, pL].map(p => p.clone().applyMatrix4(G0i));   // each palm in the gun's own frame
+  return (TPB[key] = b);
+}
+function tpGunMatrix(gid = P.gun, m = P.mode) { return gunM(tpBase(gid, m), sl(gid, m).gun); }
+function tpPose(gid = P.gun, m = P.mode) {
+  const b = tpBase(gid, m), C = sl(gid, m), G = tpGunMatrix(gid, m);
+  const S = { pos: b.S.pos.map(v => v.clone()), q: b.S.q.map(v => v.clone()) };
+  const turnG = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().extractRotation(G)).multiply(b.q.clone().invert());
+  for (const [s, id] of [[0, 'R'], [1, 'L']]) {
+    const c = C[id], h = BODY.idx.hand[s], u = BODY.idx.upper[s], f = BODY.idx.fore[s];
+    // the hand rides on the gun, then his own move and turn about the palm
+    const palm = b.handOnGun[s].clone().applyMatrix4(G).add(V(c.x / 100, c.y / 100, -c.z / 100));
+    if (s === 1) { const a = autoL(gid, m, G); if (a) palm.add(a); }
+    const rq = new THREE.Quaternion().setFromRotationMatrix(rotEuler(c.yaw, c.pitch, c.roll));
+    const hq = rq.multiply(turnG).multiply(b.S.q[h]);
+    const wrist = palm.clone().sub(V(...BODY.fists[s]).applyQuaternion(hq));
+    reach(S, s, wrist);
+    // swing the elbow round the shoulder-to-wrist line (the wrist stays put)
+    const axis = S.pos[h].clone().sub(S.pos[u]).normalize();
+    turnBelow(S, u, new THREE.Quaternion().setFromAxisAngle(axis, (s === 0 ? -1 : 1) * c.elbow * D2R));
+    // the hand turned to how it should sit, about the wrist
+    turnBelow(S, h, hq.clone().multiply(S.q[h].clone().invert()));
+    // fingers, thumb and forearm twist like first person
+    const f1 = BODY.idx.f1[s], f0 = BODY.idx.f0[s];
+    const ax = (b, i) => V(...[[1, 0, 0], [0, 1, 0], [0, 0, 1]][i]).applyQuaternion(S.q[b]);
+    turnBelow(S, f1, new THREE.Quaternion().setFromAxisAngle(ax(f1, 1), c.curl * D2R));
+    turnBelow(S, f0, new THREE.Quaternion().setFromAxisAngle(ax(f0, 2), c.ta * D2R));
+    turnBelow(S, f0, new THREE.Quaternion().setFromAxisAngle(ax(f0, 1), c.tb * D2R));
+    S.q[f].premultiply(new THREE.Quaternion().setFromAxisAngle(S.pos[h].clone().sub(S.pos[f]).normalize(), (c.ftwist || 0) * D2R));
+  }
+  const M = S.pos.map((p, i) => new THREE.Matrix4().compose(p, S.q[i], V(1, 1, 1)));
+  // the four fingers split off the one Zomboid finger bone, each curled on its own
+  for (const [s, id] of [[0, 'R'], [1, 'L']]) {
+    const f = M[BODY.idx.f1[s]], axv = new THREE.Vector3().setFromMatrixColumn(f, 1), pv = new THREE.Vector3().setFromMatrixPosition(f);
+    for (let k = 0; k < 4; k++) M.push(f.clone().premultiply(about(axisRot(axv, C[id]['f' + (k + 1)] || 0), pv)));
+  }
+  return { M, S, G };
+}
+function tpUpdate() {
+  const { M, G } = tpPose();
+  setLook(tpGun, bareOn(P.gun) || GD, tpGunMat); tpGun.matrix.copy(G); tpGun.matrixWorldNeedsUpdate = true; placeParts('tp', P.gun, G);
+  const FD = fieldOf(P.gun), Ginv = G.clone().invert(), sh = FD.shape, nb = BODY.bones.length, FG = BODY.fgroup, f1 = BODY.idx.f1;
+  const side = j => { let b = j; while (b >= 0) { if (b === BODY.idx.upper[0]) return 0; if (b === BODY.idx.upper[1]) return 1; b = BODY.parent[b]; } return -1; };
+  const sideOf = BODY.sideOf ??= BODY.bones.map((_, j) => side(j));
+  const inside = [0, 0], total = [0, 0];
+  BODY.infl.forEach((row, i) => {
+    acc.set(0, 0, 0); let best = 0, bj = 0;
+    for (const [j, w, x, y, z] of row) {
+      const jj = FG[i] >= 0 && (j === f1[0] || j === f1[1]) ? nb + (j === f1[1] ? 4 : 0) + FG[i] : j;
+      tmp.set(x, y, z).applyMatrix4(M[jj]).multiplyScalar(w); acc.add(tmp); if (w > best) { best = w; bj = j; }
+    }
+    bodyPos[i * 3] = acc.x; bodyPos[i * 3 + 1] = acc.y; bodyPos[i * 3 + 2] = acc.z;
+    tmp.copy(acc).applyMatrix4(Ginv).multiplyScalar(16).add(GD.grip);
+    const ix = Math.round((tmp.x - FD.lo[0]) / FD.vox), iy = Math.round((tmp.y - FD.lo[1]) / FD.vox), iz = Math.round((tmp.z - FD.lo[2]) / FD.vox);
+    let fv = 15;
+    if (ix >= 0 && iy >= 0 && iz >= 0 && ix < sh[0] && iy < sh[1] && iz < sh[2]) fv = FD.field[(ix * sh[1] + iy) * sh[2] + iz];
+    const hit = fv + 1 < 0, sd = sideOf[bj];
+    if (sd >= 0) { total[sd]++; if (hit) inside[sd]++; }
+    bodyCol[i * 3] = hit ? 1 : 0.85; bodyCol[i * 3 + 1] = hit ? 0.15 : 0.7; bodyCol[i * 3 + 2] = hit ? 0.12 : 0.6;
+  });
+  bodyGeo.attributes.position.needsUpdate = true; bodyGeo.attributes.color.needsUpdate = true; bodyGeo.computeVertexNormals(); bodyGeo.computeBoundingSphere();
+  for (const [s, id] of [[0, 'R'], [1, 'L']]) {
+    const p = inside[s] / Math.max(1, total[s]) * 100;
+    clashEls[id].textContent = p > 0 ? `${p.toFixed(1)}% of the arm inside the gun` : 'no clash';
+    clashEls[id].classList.toggle('bad', p > 0);
+  }
+  // the game's shoulder camera: behind her, over the right shoulder, turned onto where her eyes look
+  const aim = P.mode === 'tpaim', back = aim ? 0.75 : 1.4, sideO = aim ? 0.7 : 0.9, upO = aim ? 0.35 : 0.55;
+  camTP.position.set(sideO, upO, back); camTP.lookAt(0, 0, -20);
+  lastPose = { tp: true, M, G };
+  render();
+}
+
+
+// ------------------------------------------------------------------ attachments
+// parts/<id>.json: the part in metres in the gun's frame (x right, y up, z back), its origin where it mounts (a grip:
+// top middle, on the gun's underside; an optic: underside middle, on the gun's top). Each is drawn at its real size
+// against the gun: the gun's model length stands for its real length (REAL), so metres x k = gun units.
+const kOf = gid => { const G = GUNDATA[gid]; return (G.pxMax.z - G.pxMin.z) / 16 / (REAL[gid] || 0.9); };
+const cmToPx = (gid, cm) => cm / 100 * kOf(gid) * 16;
+function topside(G, zpx) {
+  const sh = G.shape, vox = G.vox, lo = G.lo;
+  const iz = Math.round((zpx - lo[2]) / vox); if (iz < 0 || iz >= sh[2]) return null;
+  const x0 = Math.max(0, Math.round((6.5 - lo[0]) / vox)), x1 = Math.min(sh[0] - 1, Math.round((9.5 - lo[0]) / vox));
+  for (let iy = sh[1] - 1; iy >= 0; iy--) for (let ix = x0; ix <= x1; ix++) if (G.field[(ix * sh[1] + iy) * sh[2] + iz] + 1 < 0) return lo[1] + iy * vox;
+  return null;
+}
+// where each part mounts, in the gun's pixels
+function gripMount(gid) {
+  const g = gripOn(gid); if (!g) return null;
+  const G = GUNDATA[gid], z = G.grip.z - cmToPx(gid, attOf(gid).gcm ?? 25);
+  return V(midX(gid), underside(fieldOf(gid), z) ?? G.pxMin.y, z);
+}
+// the gun's own centre line across (its irons sat on it; not every gun is drawn at x 8)
+const midX = gid => info(gid).sights.rear[0];
+// the top of the gun under a sight's base, measured off its actual faces (not the clash grid): for each 0.05 px
+// step along the gun, the highest point of the gun within 10 mm either side of its centre line
+const RAILTOP = {};
+function railTop(gid, za, zb) {
+  const B = fieldOf(gid), G = GUNDATA[gid], key = gid + (B === G ? '' : '/bare');
+  let R = RAILTOP[key];
+  if (!R) {
+    const pos = B.geo.attributes.position.array, gp = G.grip, cx = midX(gid), hw = 0.010 * kOf(gid) * 16, dz = 0.05;
+    const z0 = G.pxMin.z - 1, n = Math.ceil((G.pxMax.z - z0 + 2) / dz), top = new Float32Array(n).fill(-1e9);
+    const clip = (poly, ax, v, ge) => { const out = []; for (let i = 0; i < poly.length; i++) { const a = poly[i], b = poly[(i + 1) % poly.length], ia = ge ? a[ax] >= v : a[ax] <= v, ib = ge ? b[ax] >= v : b[ax] <= v; if (ia) out.push(a); if (ia !== ib) { const t = (v - a[ax]) / (b[ax] - a[ax]); out.push(a.map((c, k) => c + t * (b[k] - c))); } } return out; };
+    for (let t = 0; t < pos.length; t += 9) {
+      let poly = [0, 3, 6].map(o => [pos[t + o] * 16 + gp.x, pos[t + o + 1] * 16 + gp.y, pos[t + o + 2] * 16 + gp.z]);
+      poly = clip(clip(poly, 0, cx - hw, true), 0, cx + hw, false); if (poly.length < 3) continue;
+      const zs = poly.map(p => p[2]), i0 = Math.max(0, Math.floor((Math.min(...zs) - z0) / dz)), i1 = Math.min(n - 1, Math.floor((Math.max(...zs) - z0) / dz));
+      for (let i = i0; i <= i1; i++) {
+        const q = clip(clip(poly, 2, z0 + i * dz, true), 2, z0 + (i + 1) * dz, false);
+        for (const p of q) if (p[1] > top[i]) top[i] = p[1];
+      }
+    }
+    R = RAILTOP[key] = { z0, dz, top };
+  }
+  let y = -1e9;
+  for (let i = Math.max(0, Math.floor((za - R.z0) / R.dz)); i <= Math.min(R.top.length - 1, Math.floor((zb - R.z0) / R.dz)); i++) y = Math.max(y, R.top[i]);
+  return y > -1e8 ? y : null;
+}
+// where a sight first sits on a gun: red dots go back on the receiver, their back face where the rear sight stood;
+// magnified sights a quarter of the way from the rear sight to the front sight (cm ahead of the trigger)
+function ocmDefault(gid, o) {
+  const sg = info(gid).sights, k16 = kOf(gid) * 16;
+  // magnified scopes start with their eyepiece 8 cm (eye relief) in front of her eye, which stays at the gun's eye point
+  const z = o && o.mag <= 1 ? sg.rear[2] - o.back * k16 : o && sg.eye != null ? sg.eye - (0.08 + o.back) * k16 : sg.rear[2] - 0.25 * (sg.rear[2] - sg.front[2]);
+  return Math.round((GUNDATA[gid].grip.z - z) / k16 * 1000) / 10;
+}
+// forward / back is kept per gun AND per sight class (Josiah 08:06): red dots/holos, prisms + low power (to 8x), long range.
+// A class not set yet on this gun starts at its own first spot; the old single value carries to the class fitted then.
+const OPT_CLASS = o => o.mag <= 1 ? 'dot' : o.mag <= 8 ? 'low' : 'long';
+const OPT_CLASS_NAME = { dot: 'red dots and holos', low: 'prisms and scopes to 8x', long: 'long-range scopes' };
+function ocmOf(gid, o) {
+  const a = attOf(gid), c = OPT_CLASS(o), cur = PARTS[a.optic];
+  // v25: a red dot still at the old spot (never moved by hand) goes back to the new one
+  if (a.ocmV !== 2) { if (cur && cur.mag <= 1 && a.ocm != null && Math.abs(a.ocm - ocmDefault(gid, null)) < 0.06) a.ocm = ocmDefault(gid, cur); a.ocmV = 2; }
+  if (!a.ocmBy) { a.ocmBy = {}; const cur = PARTS[a.optic]; if (cur && a.ocm != null) a.ocmBy[OPT_CLASS(cur)] = a.ocm; }
+  // then per sight (Josiah 08:10): a sight not set yet starts where its class was set on this gun, else its own first spot
+  if (a.ocmBy[o.id] == null) a.ocmBy[o.id] = a.ocmBy[c] != null ? a.ocmBy[c] : ocmDefault(gid, o);
+  return a.ocmBy[o.id];
+}
+function opticMount(gid) {
+  const o = opticOn(gid); if (!o) return null;
+  const G = GUNDATA[gid], a = attOf(gid), z = G.grip.z - cmToPx(gid, ocmOf(gid, o)), k16 = kOf(gid) * 16;
+  // its base sits on the highest point of the gun under it, square on the centre line
+  const foot = o.foot || [o.front, o.back], y = railTop(gid, z + foot[0] * k16, z + foot[1] * k16);
+  return V(midX(gid), (y ?? topside(fieldOf(gid), z) ?? G.pxMax.y) + cmToPx(gid, a.oy || 0), z);
+}
+// the optic's sight line in the gun's pixels: red dots keep her eye where the irons had it; magnified sights put it
+// 8 cm behind the eyepiece (their eye relief)
+function opticSights(gid) {
+  const o = opticOn(gid); if (!o) return null;
+  const mp = opticMount(gid), k16 = kOf(gid) * 16, gi = info(gid);
+  const y = mp.y + (o.line + optDy(o.id) / 1000) * k16, back = mp.z + o.back * k16;
+  // her eye stays where the gun puts it (its irons' eye point), whatever sight is on and wherever it sits on the rail, so
+  // the forward / back slider moves the sight along the rail in her view, not the gun under it (Josiah 08:09); only the
+  // 6 cm rule (adsPush) moves the gun, when a sight comes closer than that
+  const eye = gi.sights.eye != null ? gi.sights.eye : gi.sights.rear[2] + 0.30 * 16 / HOLDKITS[gi.hold === 'pistol' ? 'pistol' : 'rifle'].gun.scale;
+  const sights = { front: [mp.x, y, mp.z + o.front * k16], rear: [mp.x, y, back], eye };
+  return { sights, key: o.id + ':' + [y, mp.z, eye].map(v => v.toFixed(3)).join(',') };
+}
+// the front palm goes to the middle of the grip; his front-hand sliders move it from there
+function autoL(gid, m, G) {
+  const g = gripOn(gid); if (!g || !PARTGEO[g.id]) return null;
+  const at = V(...g.c).multiplyScalar(kOf(gid)).add(gripMount(gid).sub(GUNDATA[gid].grip).divideScalar(16)).applyMatrix4(G);
+  return at.sub(basePalm(gid, m, G));
+}
+const PARTGEO = {}, PARTLOAD = {};
+function partData(id) {
+  if (PARTGEO[id]) return Promise.resolve(PARTGEO[id]);
+  return PARTLOAD[id] ??= fetch('parts/' + id + '.json').then(r => r.json()).then(async j => {
+    const q = new Int16Array(await gunzip(j.tris)), pos = new Float32Array(q.length);
+    for (let i = 0; i < q.length; i++) pos[i] = q[i] / 10000;
+    const D = { pos, split: {} };
+    if (j.glass) D.gl = new Uint8Array(await gunzip(j.glass));     // the pack marks its own lenses (1) and reticle (2)
+    if (j.tex && j.uv) { const r = await paintGeo(j, pos, 1, false); D.mat = r.mat; D.uv = r.geo.attributes.uv.array; D.ip = r.ink ? r.ink.attributes.position.array : null; }
+    // the sight's own reticles from the pack: lit ones (red dots, holo, a piggyback dot) sit in the sight in 3D; a scope's
+    // own reticle (main) is drawn over its zoomed picture, filling the eyepiece
+    if (j.reticles) D.rets = await Promise.all(j.reticles.map(async R => {
+      const tex = await new THREE.TextureLoader().loadAsync(R.tex); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+      const p = new Float32Array(R.tri.length * 9); R.tri.forEach((t, i) => p.set(pos.subarray(t * 9, t * 9 + 9), i * 9));
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(p, 3)); g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(R.uv), 2));
+      g.computeBoundingBox(); const bb = g.boundingBox;
+      return { main: R.main, geo: g, r: R.r, cx: (bb.min.x + bb.max.x) / 2, cy: (bb.min.y + bb.max.y) / 2,
+        mat: new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: !R.main, side: THREE.DoubleSide }) };
+    }));
+    return (PARTGEO[id] = D);
+  });
+}
+// an optic's glass: the faces across the sight line that cover it, grown over the flat pane or lens they belong to
+// (same plane, joined at corners, inside the optic's middle); her eye looks through it in aim down sights
+function glassSplit(id, y) {
+  const d = PARTGEO[id], key = y.toFixed(4); if (d.split[key]) return d.split[key];
+  const p = d.pos, n = p.length / 9, N = new Float32Array(n * 4), cover = new Uint8Array(n);
+  const near = (ax, ay, bx, by) => { const ex = bx - ax, ey = by - ay, t = Math.max(0, Math.min(1, ((0 - ax) * ex + (y - ay) * ey) / (ex * ex + ey * ey || 1))); return Math.hypot(ax + t * ex, ay + t * ey - y); };
+  const vkey = i => Math.round(p[i] * 2e4) + ',' + Math.round(p[i + 1] * 2e4) + ',' + Math.round(p[i + 2] * 2e4);
+  const at = new Map();
+  let wx = 0, wy = 0;
+  for (let i = 0; i < p.length; i += 3) { wx = Math.max(wx, Math.abs(p[i])); wy = Math.max(wy, Math.abs(p[i + 1] - y)); }
+  const lim = Math.max(wx, wy);
+  for (let t = 0; t < n; t++) {
+    const i = t * 9, [ax, ay, az, bx, by, bz, cx, cy, cz] = p.subarray(i, i + 9);
+    const ux = bx - ax, uy = by - ay, uz = bz - az, vx = cx - ax, vy = cy - ay, vz = cz - az;
+    let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx; const nl = Math.hypot(nx, ny, nz) || 1; nx /= nl; ny /= nl; nz /= nl;
+    N[t * 4] = nx; N[t * 4 + 1] = ny; N[t * 4 + 2] = nz; N[t * 4 + 3] = nx * ax + ny * ay + nz * az;
+    for (let v = 0; v < 3; v++) { const k = vkey(i + v * 3); (at.get(k) || at.set(k, []).get(k)).push(t); }
+    if (Math.abs(nz) > 0.2) {
+      const s1 = (bx - ax) * (y - ay) - (by - ay) * (0 - ax), s2 = (cx - bx) * (y - by) - (cy - by) * (0 - bx), s3 = (ax - cx) * (y - cy) - (ay - cy) * (0 - cx);
+      if ((s1 >= 0 && s2 >= 0 && s3 >= 0) || (s1 <= 0 && s2 <= 0 && s3 <= 0) || Math.min(near(ax, ay, bx, by), near(bx, by, cx, cy), near(cx, cy, ax, ay)) < 0.0015) cover[t] = 1;
+    }
+  }
+  const inside = t => { for (let v = 0; v < 3; v++) { const i = t * 9 + v * 3; if (Math.hypot(p[i], p[i + 1] - y) > lim) return false; } return true; };
+  const glassT = new Uint8Array(n), q = [];
+  if (d.gl) for (let t = 0; t < n; t++) glassT[t] = d.gl[t] ? 1 : 0;
+  else for (let t = 0; t < n; t++) if (cover[t]) { glassT[t] = 1; q.push(t); }
+  while (q.length) {
+    const t = q.pop();
+    for (let v = 0; v < 3; v++) for (const u of at.get(vkey(t * 9 + v * 3)) || []) {
+      if (glassT[u]) continue;
+      const dot = N[t * 4] * N[u * 4] + N[t * 4 + 1] * N[u * 4 + 1] + N[t * 4 + 2] * N[u * 4 + 2];
+      if (Math.abs(dot) > 0.97 && Math.abs(Math.abs(N[u * 4 + 3]) - Math.abs(N[t * 4 + 3])) < 0.0015 && inside(u)) { glassT[u] = 1; q.push(u); }
+    }
+  }
+  const B = { p: [], uv: [], ip: [] }, Gl = { p: [], uv: [], ip: [] };
+  for (let t = 0; t < n; t++) { const o = glassT[t] ? Gl : B; o.p.push(...p.subarray(t * 9, t * 9 + 9));
+    if (d.uv) o.uv.push(...d.uv.subarray(t * 6, t * 6 + 6)); if (d.ip) o.ip.push(...d.ip.subarray(t * 9, t * 9 + 9)); }
+  const mk = o => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(o.p), 3));
+    if (o.uv.length) g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(o.uv), 2)); g.computeVertexNormals(); return g; };
+  const ink = d.ip ? new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(B.ip), 3)) : null;
+  return (d.split[key] = { body: mk(B), glass: mk(Gl), ink });
+}
+const partMat = new THREE.MeshLambertMaterial({ color: 0x3a3d40, side: THREE.DoubleSide });
+const glassMat = new THREE.MeshLambertMaterial({ color: 0x6f8fa0, side: THREE.DoubleSide, transparent: true, opacity: 0.45 });
+// a red dot sight's lit dot, where the pack puts it on its window (2 MOA-ish: 1.2 mm across at the window)
+const dotMat = new THREE.MeshBasicMaterial({ color: 0xff2a1a, side: THREE.DoubleSide }), dotGeo = new THREE.CircleGeometry(0.0006, 20);
+const PM = {};
+for (const [k, sc] of [['fp', scene], ['tp', tpScene]]) {
+  PM[k] = {};
+  for (const [n, mat] of [['grip', partMat], ['optic', partMat], ['glass', glassMat], ['dot', dotMat]]) { const o = new THREE.Mesh(n === 'dot' ? dotGeo : new THREE.BufferGeometry(), mat); o.matrixAutoUpdate = false; o.visible = false;
+    if (n !== 'glass' && n !== 'dot') o.add(new THREE.Mesh(empty, inkMat)); sc.add(o); PM[k][n] = o; }
+}
+for (const [k, sc] of [['fp', scene], ['tp', tpScene]]) { const g = new THREE.Group(); g.matrixAutoUpdate = false; g.visible = false; sc.add(g); PM[k].rets = g; PM[k].retsFor = null; }
+// a fitted scope or sight replaces the irons (Josiah): the gun is drawn, mounted and clash-checked without them
+const BARELOAD = {};
+function bareData(gid) {
+  return BARELOAD[gid] ??= fetch('guns/' + gid + '.noirons.json').then(r => r.ok ? r.json() : null).then(async j => {
+    if (!j) return null;
+    const G = GUNDATA[gid], tq = new Int16Array(await gunzip(j.tris)), pos = new Float32Array(tq.length), gp = G.grip;
+    for (let i = 0; i < tq.length; i += 3) { pos[i] = (tq[i] / 1000 - gp.x) / 16; pos[i + 1] = (tq[i + 1] / 1000 - gp.y) / 16; pos[i + 2] = (tq[i + 2] / 1000 - gp.z) / 16; }
+    const { geo, mat, ink } = await paintGeo(j, pos, 1 / 16);
+    return (G.bare = { geo, mat, ink, field: new Int8Array(await gunzip(j.field.data)), shape: j.field.shape, lo: j.field.lo, vox: j.field.vox });
+  }).catch(() => null);
+}
+const bareOn = gid => opticOn(gid) && GUNDATA[gid].bare ? GUNDATA[gid].bare : null;
+const fieldOf = gid => bareOn(gid) || GUNDATA[gid];
+const loadAtt = gid => Promise.all([gripOn(gid), opticOn(gid)].filter(Boolean).map(p => partData(p.id)).concat(opticOn(gid) ? [bareData(gid)] : [])).catch(() => {});
+const partM = (G, gid, mp) => { const k = kOf(gid); return G.clone().multiply(new THREE.Matrix4().makeTranslation(...mp.clone().sub(GUNDATA[gid].grip).divideScalar(16).toArray())).multiply(new THREE.Matrix4().makeScale(k, k, k)); };
+function placeParts(which, gid, G) {
+  const S = PM[which], g = gripOn(gid), o = opticOn(gid);
+  S.grip.visible = !!(g && PARTGEO[g.id]);
+  if (S.grip.visible) { const sp = glassSplit(g.id, 99); setLook(S.grip, { geo: sp.body, mat: PARTGEO[g.id].mat, ink: sp.ink }, partMat); S.grip.matrix.copy(partM(G, gid, gripMount(gid))); S.grip.matrixWorldNeedsUpdate = true; }
+  const on = !!(o && PARTGEO[o.id]); S.optic.visible = S.glass.visible = on;
+  if (on) {
+    const sp = glassSplit(o.id, o.line + optDy(o.id) / 1000), M = partM(G, gid, opticMount(gid));
+    setLook(S.optic, { geo: sp.body, mat: PARTGEO[o.id].mat, ink: sp.ink }, partMat); S.glass.geometry = sp.glass;
+    for (const x of [S.optic, S.glass]) { x.matrix.copy(M); x.matrixWorldNeedsUpdate = true; }
+    const D = PARTGEO[o.id], lit = (D.rets || []).filter(R => !R.main);
+    if (S.retsFor !== o.id) { S.rets.clear(); for (const R of lit) S.rets.add(new THREE.Mesh(R.geo, R.mat)); S.retsFor = o.id; }
+    S.rets.visible = lit.length > 0; S.rets.matrix.copy(M); S.rets.matrixWorldNeedsUpdate = true;
+    S.dot.visible = !!o.dot && !(D.rets && D.rets.length);       // a plain dot only where the sight has no reticle of its own
+    if (S.dot.visible) { S.dot.matrix.copy(M).multiply(new THREE.Matrix4().makeTranslation(...o.dot)); S.dot.matrixWorldNeedsUpdate = true; }
+  } else S.dot.visible = S.rets.visible = false;
+  if ((g && !PARTGEO[g.id]) || (o && !PARTGEO[o.id]) || (o && !BARELOAD[gid])) loadAtt(gid).then(() => { if (P.gun === gid) update(); });
+}
+function attNumbers(gid) {
+  const g = gripOn(gid), o = opticOn(gid); if (!g && !o) return null;
+  const r3 = v => Math.round(v * 1000) / 1000, out = { metresToGunUnits: r4(kOf(gid)) };
+  if (g) out.grip = { id: g.id, mountPx: gripMount(gid).toArray().map(r3) };
+  if (o) { const s = opticSights(gid); out.optic = { id: o.id, mountPx: opticMount(gid).toArray().map(r3), lineFixMm: optDy(o.id), sights: { front: s.sights.front.map(r3), rear: s.sights.rear.map(r3), eye: r3(s.sights.eye) }, mag: o.mag }; }
+  return out;
+}
+// ---- the panel group
+const ATT = {};
+function buildAttPanel() {
+  const d = document.createElement('details'); d.open = true; d.className = 'att';
+  d.innerHTML = `<summary><span>Attachments (this gun, every pose)</span><span class="clash" id="attsum"></span></summary>
+    <p class="hint" id="atthint"></p>
+    <div class="pick"><span>Foregrip</span><select id="att-grip"></select></div><div id="att-gripctl"></div>
+    <div class="pick"><span>Optic</span><select id="att-optic"></select></div><div id="att-opticctl"></div>`;
+  const row = (host, key, label, lo, hi, step, unit, get, put) => {
+    const r = document.createElement('div'); r.className = 'row';
+    r.innerHTML = `<span>${label} (${unit})</span><input type="range" min="${lo}" max="${hi}" step="${step}"><input type="number" step="${step}">`;
+    const [a, n] = r.querySelectorAll('input'); a.id = 'att-' + key; n.id = 'att-' + key + '-n';
+    const set = (v, push) => { if (push) pushHistory(); put(+v); a.value = v; n.value = (+v).toFixed(step < 1 ? 1 : 0); update(); save(); };
+    a.addEventListener('pointerdown', () => pushHistory());
+    a.addEventListener('input', () => set(a.value, false)); n.addEventListener('change', () => set(n.value, true));
+    ATT[key] = { row: r, show: () => { const v = get(); a.value = v; n.value = (+v).toFixed(step < 1 ? 1 : 0); } };
+    host.appendChild(r);
+  };
+  const gc = d.querySelector('#att-gripctl'), oc = d.querySelector('#att-opticctl');
+  row(gc, 'gcm', 'Grip forward / back', -20, 90, 0.1, 'cm ahead of the trigger', () => attOf(P.gun).gcm ?? 25, v => attOf(P.gun).gcm = v);
+  row(oc, 'ocm', 'Optic forward / back', -25, 70, 0.1, 'cm ahead of the trigger', () => { const o = opticOn(P.gun); return o ? ocmOf(P.gun, o) : 0; },
+    v => { const o = opticOn(P.gun); if (o) { ocmOf(P.gun, o); attOf(P.gun).ocmBy[o.id] = v; } });
+  row(oc, 'oy', 'Optic down / up', -5, 5, 0.1, 'cm', () => attOf(P.gun).oy || 0, v => attOf(P.gun).oy = v);
+  row(oc, 'dy', 'Sight line height fix', -30, 30, 0.5, 'mm, this optic on every gun', () => { const o = opticOn(P.gun); return o ? optDy(o.id) : 0; },
+    v => { const o = opticOn(P.gun); if (o) ((P.optics ??= {})[o.id] ??= {}).dy = v; });
+  d.querySelector('#att-grip').onchange = async e => {
+    pushHistory(); const id = e.target.value, a = attOf(P.gun), gid = P.gun, m = P.mode;
+    if (id) {
+      await partData(id).catch(() => {});
+      if (a.gcm == null) {     // first grip on this gun: where her front palm is now
+        const S = sl(gid, m), G = gunRawC(gid, m, S.gun);
+        const palm = basePalm(gid, m, G).add(V(S.L.x / 100, S.L.y / 100, -S.L.z / 100)).applyMatrix4(G.clone().invert()).multiplyScalar(16).add(GUNDATA[gid].grip);
+        a.gcm = Math.round(Math.max(3, Math.min(60, (GUNDATA[gid].grip.z - palm.z) / 16 / kOf(gid) * 100)) * 10) / 10;
+      }
+      // a grip's first front hand takes this gun's finger and wrist shape; it then sits on that grip on every gun
+      if (!(P.gripHand && P.gripHand[id])) for (const mm of MODES) { const L = { ...sl(gid, mm).L }; Object.assign(gripHandOf(id, mm), L, { x: 0, y: 0, z: 0 }); }
+    }
+    a.grip = id; syncInputs(); update(); save();
+  };
+  d.querySelector('#att-optic').onchange = async e => {
+    pushHistory(); const id = e.target.value, a = attOf(P.gun), gid = P.gun;
+    if (id) {
+      await partData(id).catch(() => {}); await bareData(gid);
+      if (PARTS[a.optic]) ocmOf(gid, PARTS[a.optic]);    // the old single value stays with the class it was set on
+      a.ocmV = 2;
+    }
+    a.optic = id; syncInputs(); update(); save();
+  };
+  const first = panel.querySelectorAll('details')[1]; panel.insertBefore(d, first || null);
+}
+// pasting a gun's copy onto another gun: the same grip and optic where they fit it (a part that doesn't fit leaves that
+// slot as it was and says so), at the same distances ahead of the trigger
+function pasteAtt(src) {
+  const a = attOf(P.gun), miss = [];
+  for (const [slot, pos] of [['grip', ['gcm']], ['optic', ['ocm', 'oy']]]) {
+    if (!src[slot]) { a[slot] = ''; continue; }
+    if (!fits(src[slot], P.gun)) { miss.push(PARTS[src[slot]] ? PARTS[src[slot]].name : src[slot]); continue; }
+    a[slot] = src[slot]; for (const k of pos) if (src[k] != null) a[k] = src[k];
+    if (slot === 'optic') { if (src.ocmBy && Object.keys(src.ocmBy).length) a.ocmBy = { ...src.ocmBy }; else delete a.ocmBy; }
+  }
+  attNoteGun = P.gun; attNote = miss.length ? `Pasted. ${miss.join(' and ')} ${miss.length > 1 ? "don't" : "doesn't"} fit the ${info(P.gun).name}, so ${miss.length > 1 ? 'those slots were' : 'that slot was'} left as ${miss.length > 1 ? 'they were' : 'it was'}. ` : '';
+}
+let attNote = '', attNoteGun = null;
+const OPTIC_GROUPS = [['Red dots and holographic (no zoom)', o => o.mag <= 1], ['Prisms and low-power scopes (up to 8x)', o => o.mag > 1 && o.mag <= 8],
+  ['Long-range scopes', o => true]];
+function syncAtt() {
+  if (!ATT.gcm) return;
+  const gid = P.gun, a = (P.att || {})[gid] || {}, opts = (list, none) => `<option value="">${none}</option>` + list;
+  const grips = Object.values(PARTS).filter(p => p.kind !== 'optic' && p.mount.includes(gid));
+  const gs = document.getElementById('att-grip');
+  gs.innerHTML = opts(grips.map(p => `<option value="${p.id}">${p.name}${p.kind === 'bipod' ? ' (held as a grip)' : ''}</option>`).join(''), grips.length ? 'None' : 'None fit this gun');
+  gs.value = fits(a.grip, gid) ? a.grip : ''; gs.disabled = !grips.length;
+  const left = Object.values(PARTS).filter(p => p.kind === 'optic' && p.mount.includes(gid)); let html = '';
+  for (const [t, f] of OPTIC_GROUPS) { const here = left.filter(f); left.splice(0, left.length, ...left.filter(o => !here.includes(o)));
+    if (here.length) html += `<optgroup label="${t}">` + here.map(o => `<option value="${o.id}">${o.name}${o.mag > 1 ? ` (${o.mag}x)` : ''}</option>`).join('') + '</optgroup>'; }
+  const os = document.getElementById('att-optic');
+  os.innerHTML = opts(html, html ? 'None (iron sights)' : 'None fit this gun'); os.value = fits(a.optic, gid) ? a.optic : ''; os.disabled = !html;
+  const g = gripOn(gid), o = opticOn(gid);
+  ATT.gcm.row.hidden = !g; for (const k of ['ocm', 'oy', 'dy']) ATT[k].row.hidden = !o;
+  if (o) ATT.ocm.row.firstChild.textContent = `Optic forward / back, this sight on this gun (cm ahead of the trigger)`;
+  for (const k in ATT) ATT[k].show();
+  document.getElementById('attsum').textContent = [g && 'grip', o && 'optic'].filter(Boolean).join(' + ') || 'none';
+  document.getElementById('atthint').textContent = attNote + (g ? `The front hand now holds the ${g.name}: its sliders below move and turn her hand on this grip, and that hold carries to every gun you fit it to. ` : '')
+    + (o ? `Aim down sights now looks along the ${o.name}'s sight line${o.mag > 1 ? ' (no zoom here; the game zooms it picture-in-picture)' : ''}. If the dot or reticle centre sits off the line, use the height fix once and it applies on every gun. ` : '')
+    + (!g && !o ? 'Only parts that fit this gun in Brita\'s Arsenal are listed, plus your own pack.' : '');
+}
+
+// ------------------------------------------------------------------ templates: carrying a pose onto another gun by its parts
+// The gun takes the template's placement as is (its own grip goes where the template's grip went, so the trigger hand
+// fits it the same). The front hand keeps its shape and turn; its palm goes to the same spot on this gun: the same reach
+// ahead of the pistol grip (kept on the gun), at the same height off the gun's underside there. Pistols: the support
+// hand keeps its place against the grip.
+function underside(G, zpx) {
+  const sh = G.shape, vox = G.vox, lo = G.lo;
+  const iz = Math.round((zpx - lo[2]) / vox); if (iz < 0 || iz >= sh[2]) return null;
+  const x0 = Math.max(0, Math.round((6.5 - lo[0]) / vox)), x1 = Math.min(sh[0] - 1, Math.round((9.5 - lo[0]) / vox));
+  for (let iy = 0; iy < sh[1]; iy++) for (let ix = x0; ix <= x1; ix++) if (G.field[(ix * sh[1] + iy) * sh[2] + iz] + 1 < 0) return lo[1] + iy * vox;
+  return null;
+}
+function mapPalm(px, t, gid) {
+  const a = GUNDATA[t], b = GUNDATA[gid];
+  if (info(gid).hold === 'pistol' || info(t).hold === 'pistol') return px.clone().sub(a.grip).add(b.grip);
+  const z = Math.max(b.pxMin.z + 1.5, Math.min(b.grip.z - 3, b.grip.z + (px.z - a.grip.z)));
+  const ua = underside(a, px.z), ub = underside(b, z);
+  const y = ua != null && ub != null ? ub + (px.y - ua) : b.grip.y + (px.y - a.grip.y);
+  return V(px.x, y, z);
+}
+// the front palm with no slider move: first person it stays put while the gun moves; third person it rides the gun
+const basePalm = (gid, m, G) => TP(m) ? tpBase(gid, m).handOnGun[1].clone().applyMatrix4(G) : bases(gid, m).fistP[1].clone();
+function derive(gid, t, m, depth) {
+  if (!GUNDATA[t] || !GUNDATA[gid] || (TP(m) && !BODY)) { gunData(t).then(() => gunData(gid)).then(() => { if (P.gun === gid) { syncInputs(); update(); } }); return null; }
+  const S = sl(t, m, depth + 1);
+  const gun = { ...S.gun }, L = { ...S.L };
+  const GT = gunRawC(t, m, S.gun), GG = gunRawC(gid, m, gun);
+  if (gripOn(gid)) return { gun, L: gripHandOf(gripOn(gid).id, m), R: S.R, from: t };
+  const palm = basePalm(t, m, GT).add(V(S.L.x / 100, S.L.y / 100, -S.L.z / 100)).add(autoL(t, m, GT) || V(0, 0, 0));
+  const px = palm.applyMatrix4(GT.clone().invert()).multiplyScalar(16).add(GUNDATA[t].grip);
+  const want = mapPalm(px, t, gid).sub(GUNDATA[gid].grip).divideScalar(16).applyMatrix4(GG);
+  const d = want.sub(basePalm(gid, m, GG));
+  L.x = d.x * 100; L.y = d.y * 100; L.z = -d.z * 100;
+  return { gun, L, R: S.R, from: t };
+}
+
+// ------------------------------------------------------------------ review: every gun in this pose, one picture each
+const REVIEW_SHOT = {};
+async function snapshot(gid) {
+  await gunData(gid); const t = followOf(gid); if (t) await gunData(t);
+  const keepGun = P.gun, keepGD = GD;
+  P.gun = gid; GD = GUNDATA[gid];
+  if (TP(P.mode)) { tpUpdate(); } else { update(); }
+  const url = renderers[0].domElement.toDataURL('image/jpeg', 0.8);
+  P.gun = keepGun; GD = keepGD;
+  return url;
+}
+async function openReview() {
+  const grid = document.getElementById('reviewgrid'); grid.innerHTML = '';
+  document.getElementById('review').hidden = false;
+  document.getElementById('reviewtitle').textContent = `All guns, ${MODE_NAMES[P.mode]}`;
+  const rv = (P.review ??= {});
+  const count = () => { const v = IDX.map(g => (rv[g.id] || {})[P.mode]); document.getElementById('reviewcount').textContent = `${v.filter(x => x === 'good').length} good, ${v.filter(x => x === 'fix').length} need work, ${v.filter(x => !x).length} not checked`; };
+  for (const g of IDX) {
+    const c = document.createElement('div'); c.className = 'cell';
+    const t = followOf(g.id), fl = followers(g.id);
+    const src = fl.length ? `Template for ${fl.length}` : t && !ownIn(g.id, P.mode) ? `Follows the ${info(t).name}` : t ? 'Own pose (changed)' : 'Own pose';
+    c.innerHTML = `<img alt=""><div class="nm"></div><div class="src"></div><div class="btns"><button class="g">Good</button><button class="f">Needs work</button></div>`;
+    c.querySelector('.nm').textContent = g.name; c.querySelector('.src').textContent = src;
+    const mark = () => { const v = (rv[g.id] || {})[P.mode]; c.classList.toggle('good', v === 'good'); c.classList.toggle('fix', v === 'fix');
+      c.querySelector('.g').classList.toggle('on', v === 'good'); c.querySelector('.f').classList.toggle('on', v === 'fix'); count(); };
+    for (const [cls, val] of [['.g', 'good'], ['.f', 'fix']]) c.querySelector(cls).onclick = () => { const o = (rv[g.id] ??= {}); o[P.mode] = o[P.mode] === val ? null : val; mark(); save(); };
+    c.querySelector('img').onclick = async () => { document.getElementById('review').hidden = true; await showGun(g.id); };
+    grid.appendChild(c); mark();
+  }
+  const cells = [...grid.children];
+  for (let i = 0; i < IDX.length; i++) { if (document.getElementById('review').hidden) break; cells[i].querySelector('img').src = await snapshot(IDX[i].id); }
+  update();
+}
+document.getElementById('reviewbtn').onclick = () => openReview();
+document.getElementById('reviewclose').onclick = () => { document.getElementById('review').hidden = true; update(); };
+
+renderers[0].autoClear = false;
+// ---- magnified scopes, as the game will draw them (Josiah 2026-11-02/03): the eyepiece shows the world zoomed by the
+// scope's power with its own reticle over it, filling the eyepiece; the world outside is drawn softer (half size, mild
+// blur), the hands and gun stay sharp; no FOV change. Red dots and other 1x sights get none of this.
+const PIP = { cam: new THREE.PerspectiveCamera(), ortho: new THREE.OrthographicCamera(0, 1, 1, 0, -1, 1), scene: new THREE.Scene(), soft: new THREE.Scene(), flat: new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1) };
+PIP.discMat = new THREE.ShaderMaterial({ uniforms: { map: { value: null }, res: { value: new THREE.Vector2() }, c: { value: new THREE.Vector2() }, R: { value: 1 } }, depthTest: false, depthWrite: false,
+  vertexShader: 'void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+  fragmentShader: `uniform sampler2D map; uniform vec2 res, c; uniform float R;
+    void main() { vec2 d = gl_FragCoord.xy - c; vec4 col = texture2D(map, 0.5 + d / res); float e = length(d) / R;
+      gl_FragColor = vec4(col.rgb * (1.0 - 0.92 * smoothstep(0.84, 1.0, e)), 1.0);
+      #include <colorspace_fragment>
+    }` });
+PIP.disc = new THREE.Mesh(new THREE.CircleGeometry(1, 128), PIP.discMat); PIP.disc.renderOrder = 0; PIP.scene.add(PIP.disc);
+PIP.ret = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial()); PIP.ret.matrixAutoUpdate = false; PIP.ret.renderOrder = 1; PIP.scene.add(PIP.ret);
+PIP.softMat = new THREE.ShaderMaterial({ uniforms: { map: { value: null }, px: { value: new THREE.Vector2() } }, depthTest: false, depthWrite: false,
+  vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+  fragmentShader: `uniform sampler2D map; uniform vec2 px; varying vec2 vUv;
+    void main() { vec4 s = vec4(0.0); for (int i = -1; i <= 1; i++) for (int j = -1; j <= 1; j++) s += texture2D(map, vUv + vec2(float(i), float(j)) * px);
+      gl_FragColor = vec4(s.rgb / 9.0, 1.0);
+      #include <colorspace_fragment>
+    }` });
+PIP.soft.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), PIP.softMat));
+const pipRT = (k, w, h) => { const t = PIP[k]; if (t && t.width === w && t.height === h) return t; if (t) t.dispose(); return (PIP[k] = new THREE.WebGLRenderTarget(w, h)); };
+function pipOn() {
+  if (P.mode !== 'ads' || TP(P.mode)) return null;
+  const o = opticOn(P.gun), D = o && PARTGEO[o.id];
+  if (!o || !(o.mag > 1) || !o.eyepiece || !D || !PM.fp.optic.visible) return null;
+  return { o, R: (D.rets || []).find(R => R.main) };
+}
+function drawPip(r, on) {
+  const { o, R } = on, sz = r.getDrawingBufferSize(new THREE.Vector2()), W = sz.x, H = sz.y, OM = PM.fp.optic.matrixWorld;
+  const y = o.line + optDy(o.id) / 1000, ez = o.eyepiece[0], re = o.eyepiece[1];
+  const px = (x, yy) => { const v = V(x, yy, ez).applyMatrix4(OM).project(camEye); return new THREE.Vector2((v.x + 1) / 2 * W, (v.y + 1) / 2 * H); };
+  const c = px(0, y), ex = px(re, y).sub(c), ey = px(0, y + re).sub(c), Rpx = (ex.length() + ey.length()) / 2;
+  // the zoomed world: same eye, the field narrowed by the scope's power
+  const rt = pipRT('rtPip', W, H); r.setRenderTarget(rt); r.clear();
+  if (street()) { PIP.cam.copy(camWorld); PIP.cam.fov = 2 * Math.atan(Math.tan(camWorld.fov * Math.PI / 360) / o.mag) * 180 / Math.PI; PIP.cam.updateProjectionMatrix(); r.render(world, PIP.cam); }
+  r.setRenderTarget(null);
+  Object.assign(PIP.ortho, { left: 0, right: W, top: H, bottom: 0 }); PIP.ortho.updateProjectionMatrix();
+  PIP.disc.position.set(c.x, c.y, 0); PIP.disc.scale.set(Rpx, Rpx, 1);
+  PIP.discMat.uniforms.map.value = rt.texture; PIP.discMat.uniforms.res.value.set(W, H); PIP.discMat.uniforms.c.value.copy(c); PIP.discMat.uniforms.R.value = Rpx;
+  PIP.ret.visible = !!R;
+  if (R) { // the reticle disc laid over the eyepiece, turned with the gun
+    PIP.ret.geometry = R.geo; PIP.ret.material = R.mat; const k = 1 / R.r;
+    PIP.ret.matrix.set(ex.x * k, ey.x * k, 0, c.x - (R.cx * ex.x + R.cy * ey.x) * k, ex.y * k, ey.y * k, 0, c.y - (R.cx * ex.y + R.cy * ey.y) * k, 0, 0, 0, 0, 0, 0, 0, 1);
+    PIP.ret.matrixWorldNeedsUpdate = true;
+  }
+  r.render(PIP.scene, PIP.ortho);
+}
+// red dots and holo sights in her eye view (Josiah 07:53): the same sight picture at her real eye distance as she'd get
+// from 15 cm back. The sight is drawn shorter along its sight line, about its back face, by eye distance / 15 cm, so its
+// far window opens up exactly as it would from 15 cm; it stays on the rail and dead centre. Side views keep its real length.
+const RED_EYE = 0.15;
+function shrinkOptic(on) {
+  const S = PM.fp;
+  if (!on) { if (S.shrunk) { for (const [x, m] of S.shrunk) { x.matrix.copy(m); x.matrixWorldNeedsUpdate = true; } S.shrunk = null; } return; }
+  const o = opticOn(P.gun);
+  if (P.mode !== 'ads' || !o || o.mag > 1 || !S.optic.visible) return;
+  camEye.updateMatrixWorld(); const M = S.optic.matrix, Mi = M.clone().invert(), eye = camEye.getWorldPosition(V()).applyMatrix4(Mi), d = eye.z - o.back;
+  if (!(d > 0) || d >= RED_EYE) return;
+  const Z = new THREE.Matrix4().makeTranslation(0, 0, o.back).multiply(new THREE.Matrix4().makeScale(1, 1, d / RED_EYE)).multiply(new THREE.Matrix4().makeTranslation(0, 0, -o.back));
+  const W = M.clone().multiply(Z).multiply(Mi);
+  S.shrunk = [S.optic, S.glass, S.rets, S.dot].map(x => { const old = x.matrix.clone(); x.matrix.premultiply(W); x.matrixWorldNeedsUpdate = true; return [x, old]; });
+}
+function render() { if (!ARMS || !GD) return;
+  const r = renderers[0]; r.clear();
+  if (TP(P.mode)) { if (street()) r.render(world, camTP); r.render(tpScene, camTP); const r2 = renderers[1]; r2.autoClear = false; r2.clear(); if (street()) r2.render(world, camSide); r2.render(tpScene, camSide); return; }
+  const pip = pipOn(); document.getElementById('lens').hidden = P.mode !== 'ads' || !!pip || !!opticOn(P.gun);
+  if (street()) {
+    if (pip) { // outside the scope: the world at half size, softened
+      const sz = r.getDrawingBufferSize(new THREE.Vector2()), w = Math.max(1, sz.x >> 1), h = Math.max(1, sz.y >> 1), rt = pipRT('rtLow', w, h);
+      r.setRenderTarget(rt); r.clear(); r.render(world, camWorld); r.setRenderTarget(null);
+      PIP.softMat.uniforms.map.value = rt.texture; PIP.softMat.uniforms.px.value.set(0.8 / w, 0.8 / h); r.render(PIP.soft, PIP.flat);
+    } else r.render(world, camWorld);
+    r.clearDepth();
+  }
+  PM.fp.glass.visible = P.mode !== 'ads'; shrinkOptic(true); r.render(scene, camEye); shrinkOptic(false); PM.fp.glass.visible = true;
+  if (pip) drawPip(r, pip);
+  renderers[1].autoClear = true; renderers[1].render(scene, camSide); }
+function resize() {
+  views.forEach((v, i) => { const w = v.clientWidth, h = Math.round(w * 9 / 16); renderers[i].setSize(w, h, false); renderers[i].domElement.style.width = '100%'; renderers[i].domElement.style.height = '100%'; });
+  render();
+}
+addEventListener('resize', resize);
+
+function setSide(which) {
+  sideNow = which;
+  if (!lastPose) return;
+  const M = lastPose.M;
+  if (lastPose.tp) {
+    const S = BODY.idx, pr = V().setFromMatrixPosition(M[S.hand[0]]), pl = V().setFromMatrixPosition(M[S.hand[1]]);
+    const body = V(0, -0.75, 0);
+    const views = { front: [body, V(0.9, 0.35, -2.6)], left: [body, V(-2.7, 0.3, -0.2)], right: [body, V(2.7, 0.3, -0.2)], below: [body, V(0.4, -1.4, -1.6)],
+      rhand: [pr, V(0.25, 0.2, -0.45)], lhand: [pl, V(-0.3, 0.2, -0.45)] };
+    const [t, off] = views[which] || views.front;
+    orbit.target.copy(t); camSide.position.copy(t).add(off); orbit.update(); render(); return;
+  }
+  const rh = new THREE.Vector3().setFromMatrixPosition(M[2]), lh = new THREE.Vector3().setFromMatrixPosition(M[7]);
+  const mid = rh.clone().add(lh).multiplyScalar(0.5);
+  let target = mid, off;
+  if (which === 'left') off = V(-0.95, 0.08, 0);
+  else if (which === 'right') off = V(0.95, 0.08, 0);
+  else if (which === 'below') off = V(-0.05, -0.9, 0.05);
+  else if (which === 'rhand') { target = rh; off = V(-0.22, 0.03, 0.02); }
+  else { target = lh; off = V(-0.22, 0.04, 0.04); }
+  orbit.target.copy(target); camSide.position.copy(target).add(off); orbit.update(); render();
+}
+document.querySelectorAll('[data-cam]').forEach(b => b.onclick = () => setSide(b.dataset.cam));
+
+// ------------------------------------------------------------------ numbers out (eye frame, metres)
+const r4 = v => Math.round(v * 1e4) / 1e4;
+function numbers(gid, m) {
+  const M = poseBones(gid, m), G = gunMatrix(gid, m);
+  const pos = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
+  G.decompose(pos, q, sc);
+  const bones = {};
+  const names = [...ARMS.bones, ...['R', 'L'].flatMap(sd => ['index', 'middle', 'ring', 'little'].map(f => `${sd}_Finger1_${f}`))];
+  names.forEach((n, i) => { const p = new THREE.Vector3(), r = new THREE.Quaternion(), s = new THREE.Vector3(); M[i].decompose(p, r, s); bones[n] = { pos: p.toArray().map(r4), quat: r.toArray().map(r4) }; });
+  const o = { gun: { gripPx: info(gid).grip, gripEye: pos.toArray().map(r4), quat: q.toArray().map(r4), scale: r4(sc.x) }, bonesEye: bones };
+  if (m === 'ads') o.lens = sl(gid, m).gun.lens / 100;   // scope lens diameter, share of screen height
+  const at = attNumbers(gid); if (at) o.att = at;
+  return o;
+}
+// third person: her pose in her own frame (feet at 0, facing -z, x to her right), metres; the clip it starts from
+function tpNumbers(gid, m) {
+  if (!BODY || !GUNDATA[gid]) return null;
+  const { M, G } = tpPose(gid, m), lift = new THREE.Matrix4().makeTranslation(0, 1.62, 0);
+  const pos = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3();
+  G.clone().premultiply(lift).decompose(pos, q, sc);
+  const bones = {};
+  const names = [...BODY.bones, ...['R', 'L'].flatMap(sd => ['index', 'middle', 'ring', 'little'].map(f => `Bip01_${sd}_Finger1_${f}`))];
+  names.forEach((n, i) => { if (!/Arm|Forearm|Hand|Finger|Clavicle/.test(n)) return; const p = new THREE.Vector3(), r = new THREE.Quaternion(), s = new THREE.Vector3(); M[i].clone().premultiply(lift).decompose(p, r, s); bones[n] = { pos: p.toArray().map(r4), quat: r.toArray().map(r4) }; });
+  return { clip: clipOf(gid, m), gun: { gripPx: info(gid).grip, gripBody: pos.toArray().map(r4), quat: q.toArray().map(r4), scale: r4(sc.x) }, bonesBody: bones };
+}
+function allNumbers() {
+  const o = { tool: 'survivor-arms-posing-tool v4', guns: {} };
+  for (const g of IDX) {
+    const old = prevNumbers && prevNumbers.guns && prevNumbers.guns[g.id];
+    if (!GUNDATA[g.id]) { if (old) o.guns[g.id] = old; continue; }
+    try { o.guns[g.id] = { hold: g.hold, hip: numbers(g.id, 'hip'), ads: numbers(g.id, 'ads') };
+      for (const m of ['tpready', 'tpaim']) { const t = tpNumbers(g.id, m); if (t) o.guns[g.id][m] = t; } }
+    catch (e) { if (old) o.guns[g.id] = old; else delete o.guns[g.id]; } }
+  return o;
+}
+document.getElementById('copy').onclick = async () => {
+  if (!ARMS || !lastPose) return;
+  const text = JSON.stringify({ state: P, numbers: allNumbers() });
+  out.value = text;
+  try { await navigator.clipboard.writeText(text); document.getElementById('copy').textContent = 'Copied'; setTimeout(() => document.getElementById('copy').textContent = 'Copy numbers', 1500); }
+  catch (e) { out.select(); }
+};
+
+// ------------------------------------------------------------------ picture overlay, views, start
+const ov = document.getElementById('overlay');
+const showPic = f => { ov.src = URL.createObjectURL(f); ov.style.display = 'block'; ov.style.opacity = document.getElementById('overlayop').value; };
+document.getElementById('overlayfile').onchange = e => { const f = e.target.files[0]; if (f) showPic(f); };
+document.getElementById('overlayop').oninput = e => ov.style.opacity = e.target.value;
+const drop = document.getElementById('drop');
+addEventListener('dragover', e => { e.preventDefault(); drop.style.display = 'flex'; });
+addEventListener('dragleave', e => { if (e.target === drop) drop.style.display = 'none'; });
+addEventListener('drop', e => { e.preventDefault(); drop.style.display = 'none'; const f = e.dataTransfer.files[0]; if (f && f.type.startsWith('image/')) showPic(f); });
+document.querySelectorAll('.vtoggle button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.vtoggle button').forEach(x => x.classList.toggle('on', x === b));
+  views.forEach((v, i) => v.classList.toggle('mhide', i !== +b.dataset.v));
+  resize();
+});
+const pick = document.getElementById('gunpick');
+pick.onchange = () => showGun(pick.value);
+const failed = () => { document.querySelector('#start h2').textContent = 'The arm and gun data did not load. Reload the page to try again.'; };
+Promise.all(['arms.json', 'holds.json', 'guns/index.json'].map(u => fetch(u).then(r => { if (!r.ok) throw new Error(u); return r.json(); }))
+    .concat(fetch('parts/index.json').then(r => r.ok ? r.json() : []).catch(() => [])))
+  .then(async ([arms, holds, idx, parts]) => {
+    ARMS = arms; HOLDKITS = holds; IDX = idx; PARTS = Object.fromEntries(parts.map(p => [p.id, p]));
+    // parts that are gone (Brita sights; his first pack's sights and grips and the Brita bipod, Josiah 08:46) come off the guns
+    for (const a of Object.values(P.att || {})) if (a) { if (a.optic && !PARTS[a.optic]) { a.optic = ''; a.oy = 0; } if (a.grip && !PARTS[a.grip]) a.grip = ''; }
+    buildAttPanel();
+    for (const h of Object.keys(HOLDS)) {
+      const gs = IDX.filter(g => g.hold === h); if (!gs.length) continue;
+      const og = document.createElement('optgroup'); og.label = HOLDS[h];
+      for (const g of gs) { const o = document.createElement('option'); o.value = g.id; o.textContent = g.name; og.appendChild(o); }
+      pick.appendChild(og);
+    }
+    buildArms();
+    document.getElementById('start').style.display = 'none';
+    document.getElementById('app').style.display = '';
+    resize();
+    setFov(P.fov || 70);
+    if (TP(P.mode)) await loadBody().catch(() => { P.mode = 'hip'; }); else loadBody().catch(() => {});
+    await showGun(P.gun);
+    setSide(TP(P.mode) ? 'front' : 'left');
+    connectCloud(); cloudTried = true;     // the online save first (Josiah 18:56: a slow load of 41 guns hid his poses)
+    for (const g of IDX) await gunData(g.id).catch(() => {});
+  })
+  .catch(failed)
+  .finally(() => { if (!cloudTried) connectCloud(); });
+</script>

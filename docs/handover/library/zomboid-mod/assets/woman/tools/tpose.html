@@ -1,0 +1,45 @@
+<!doctype html><html><body style="margin:0;background:#1a1c20"><div id="view" style="width:900px;height:1000px"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import {load} from './app.js';
+const q=new URLSearchParams(location.search); const show=q.get('show').split(',');
+const A=await load(document.getElementById('view')); window.A=A; const T=A.THREE;
+A.scene.background=new T.Color(0x1a1c20);
+for(const k in A.meshes) A.meshes[k].visible=show.includes(k);
+A.reset();
+const RAW=q.get('raw')==='1';
+if(!RAW) for(const [s,sx] of [['l',1],['r',-1]]){ A.aim('upperarm_'+s,'lowerarm_'+s,[sx,0,0]); A.aim('lowerarm_'+s,'hand_'+s,[sx,0,0]);
+  const mid='middle_01_'+s; if(A.B[mid]!==undefined) A.aim('hand_'+s,mid,[sx,0,0]); }
+// she is modelled on tiptoe for heels: drop each heel until the ankle-to-ball line falls FOOT deg, toes keep their world turn
+const FOOT=+(q.get('foot')||32);
+if(!RAW && q.get('feet')!=='0') for(const s of ['l','r']){ const f=A.bones[A.B['foot_'+s]], b=A.bones[A.B['ball_'+s]];
+  const a=f.getWorldPosition(new T.Vector3()), c=b.getWorldPosition(new T.Vector3()), d=c.clone().sub(a);
+  window['ANG_'+s]=Math.atan2(-d.y,Math.hypot(d.x,d.z))*180/Math.PI;
+  const bq=b.getWorldQuaternion(new T.Quaternion()); const h=Math.hypot(d.x,d.z), r=FOOT*Math.PI/180;
+  A.aim('foot_'+s,'ball_'+s,[d.x/h*Math.cos(r),-Math.sin(r),d.z/h*Math.cos(r)]);
+  const pq=b.parent.getWorldQuaternion(new T.Quaternion()); b.quaternion.copy(pq.invert().multiply(bq)); b.updateMatrixWorld(true); }
+A.ground(); A.onFrame=null;
+A.cam.position.set(0,0.95,4.6); A.controls.target.set(0,0.9,0);
+// skinned vertices -> OBJ in metres, feet on y=0
+const v=new T.Vector3(); let V=[],VT=[],F=[],vo=1,lines=['mtllib woman_tpose.mtl']; let minY=1e9;
+const parts=[];
+for(const k of show){ const m=A.meshes[k]; if(!m) continue; m.updateMatrixWorld(true); const g=m.geometry,n=g.attributes.position.count,P=new Float32Array(n*3);
+  for(let i=0;i<n;i++){ m.getVertexPosition(i,v); v.applyMatrix4(m.matrixWorld); P.set([v.x,v.y,v.z],i*3); minY=Math.min(minY,v.y);} parts.push([k,m,P]); }
+for(const [k,m,P] of parts){ const g=m.geometry,n=P.length/3,uv=g.attributes.uv.array,ix=g.index.array;
+  lines.push('o '+k,'usemtl '+m.material.name);
+  for(let i=0;i<n;i++) lines.push('v '+P[i*3].toFixed(5)+' '+(P[i*3+1]-minY).toFixed(5)+' '+P[i*3+2].toFixed(5));
+  for(let i=0;i<n;i++) lines.push('vt '+uv[i*2].toFixed(5)+' '+uv[i*2+1].toFixed(5));
+  for(let i=0;i<ix.length;i+=3){ const a=ix[i]+vo,b=ix[i+1]+vo,c=ix[i+2]+vo; lines.push(`f ${a}/${a} ${b}/${b} ${c}/${c}`); }
+  vo+=n; }
+window.OUT=lines.join('\n');
+// the face rig, for putting back on Mixamo's body: per vertex how much follows the jaw and each top eyelid, and where they turn
+const grp=n=>/^(c_jawbonex|c_chin_0[12]x|c_lips_bot|c_teeth_bot|tong_)/.test(n)?0:/^c_lips_corner_mini/.test(n)?3:/^c_eyelid_top_.*_l$/.test(n)?1:/^c_eyelid_top_.*_r$/.test(n)?2:-1;
+const face={pivots:{},meshes:{}};
+for(const [k,m,P] of parts){ const sk=m.skeleton,SI=m.geometry.attributes.skinIndex.array,SW=m.geometry.attributes.skinWeight.array,n=P.length/3; const idx=[],w=[],pos=[];
+  for(let i=0;i<n;i++){ const f=[0,0,0]; for(let c=0;c<4;c++){ const g=grp(sk.bones[SI[i*4+c]].name), x=SW[i*4+c]; if(g===3) f[0]+=x*0.5; else if(g>=0) f[g]+=x; }
+    if(f[0]+f[1]+f[2]>0.01){ idx.push(i); w.push(f.map(x=>+x.toFixed(3))); pos.push([P[i*3],P[i*3+1]-minY,P[i*3+2]].map(x=>+x.toFixed(5))); } }
+  face.meshes[k]={idx,w,pos}; }
+for(const [key,name] of [['jaw','c_jawbonex'],['eye_l','c_eye_l'],['eye_r','c_eye_r'],['head','head']]){ const b=A.bones[A.B[name]]; const p=b.getWorldPosition(new T.Vector3()); face.pivots[key]=[p.x,p.y-minY,p.z]; }
+window.FACE=JSON.stringify(face); window.MATS=[...new Set(parts.map(p=>p[1].material.name))];
+window.DONE=1;
+</script></body></html>

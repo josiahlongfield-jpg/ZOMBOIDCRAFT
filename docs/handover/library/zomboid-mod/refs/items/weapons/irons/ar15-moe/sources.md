@@ -1,0 +1,13 @@
+# items/weapons/irons/ar15-moe
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-magpul-moe-m-lok-handguard-on-a-privatly-assembled-ar-15.jpg | [Magpul MOE M-LOK handguard on a privatly assembled AR-15.jpg](https://commons.wikimedia.org/wiki/File:Magpul_MOE_M-LOK_handguard_on_a_privatly_assembled_AR-15.jpg) | https://www.flickr.com/photos/simonov/ (Mitch Barrie) | CC BY-SA 2.0 | Magpul MOE M-LOK handguard on a privately assembled AR-15 semi-automatic rifle. Rifle specifications:  BCM upper Stag Arms Stag-15 lower rec |
+| 02-ar-15-build-img-9439-5507547759.jpg | [AR-15 Build IMG 9439 (5507547759).jpg](https://commons.wikimedia.org/wiki/File:AR-15_Build_IMG_9439_(5507547759).jpg) | docmonstereyes from USA | CC BY 2.0 | An AR-15 style rifle. Magpul's MOE-brand stock, pistol grip, trigger guard, MBUS rear sight, AFG foregrip, and gen2 PMAG magazines can be se |
+| 03-office-workhorse-18964615192.jpg | [Office workhorse (18964615192).jpg](https://commons.wikimedia.org/wiki/File:Office_workhorse_(18964615192).jpg) | Mitch Barrie from Reno, NV, USA | CC BY-SA 2.0 | The first AR-15 I built sometime around 2006 or so, it has been a reliable performer at our Burro Canyon fun shoots.  Thousands of rounds ha |
+| 04-bushmaster-ar-type.jpg | [Bushmaster (AR Type).jpg](https://commons.wikimedia.org/wiki/File:Bushmaster_(AR_Type).jpg) | U.S. Bureau of Alcohol, Tobacco, Firearms and Explosives | Public domain | Picture of Bushmaster (AR Type) Make: Stag, Stag 15 Caliber: 5.56mm |
+| 06-daytona-skeleton-ar-15-completed-rifle-17551907724.jpg | [Daytona Skeleton AR-15 completed rifle (17551907724).jpg](https://commons.wikimedia.org/wiki/File:Daytona_Skeleton_AR-15_completed_rifle_(17551907724).jpg) | Mitch Barrie from Reno, NV, USA | CC BY-SA 2.0 | Just a quick photo of the rifle, finished this morning.  I'll get better ones later. o Daytona Defense DDT-15 skeleton lower receiver o VLTO |
+| 07-ruger-ar556-free-floating-barrel.jpg | [Ruger AR556 Free Floating barrel.jpg](https://commons.wikimedia.org/wiki/File:Ruger_AR556_Free_Floating_barrel.jpg) | Efeesh | CC BY 4.0 | Ruger AR556 Free Float Model's free floating MLOK rail with Magpul MBUS front sight and angled foregrip |
+| 08-ruger-ar556-free-float-handguard-model.jpg | [Ruger AR556 Free Float Handguard Model.jpg](https://commons.wikimedia.org/wiki/File:Ruger_AR556_Free_Float_Handguard_Model.jpg) | Efeesh | CC BY 4.0 | Ruger AR556 Free Float Handguard Model .300 Blackout with Leupold DeltaPoint Pro Red Dot, Magpul MBUS iron sights, Magpul PMAG 30-round wind |

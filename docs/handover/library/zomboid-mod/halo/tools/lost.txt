@@ -1,0 +1,4 @@
+m70: m70_000.glb m70_005.glb lost in transit (need m70 re-pull)
+m45: collision returned None for all BSPs (no type-5 resource matched) - diagnose on re-pull; fallback = render mesh collision
+ff70_holdout/dup.json points m70_000.glb at m70 (also lost) - restore with m70 re-pull
+m45 collision FIXED 20:5x (resource type 4 not 5); 020/025/090 are 24-tri space volumes, no real geometry lost. PC has an empty m45_collision.zip - real one ships as m45_collision.zip.partNN

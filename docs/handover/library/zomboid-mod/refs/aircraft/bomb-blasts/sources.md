@@ -1,0 +1,12 @@
+# aircraft/bomb-blasts
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-weathermen-bomb-explosion-greenwich-village-nyc-march-6-1970.jpg | [Weathermen bomb explosion-Greenwich Village, NYC March 6, 1970.jpg](https://commons.wikimedia.org/wiki/File:Weathermen_bomb_explosion-Greenwich_Village,_NYC_March_6,_1970.jpg) | Steven Denenberg | CC BY-SA 4.0 | New York City firefighters at the scene of bomb explosion in Greenwich Village on March 6, 1970.  The bomb exploded while being assembled by |
+| 02-bomb-versus-metropolis-atomic-bomb-explosion-superimposed-ov.jpg | [Bomb versus Metropolis. Atomic bomb explosion superimposed over image ](https://commons.wikimedia.org/wiki/File:Bomb_versus_Metropolis._Atomic_bomb_explosion_superimposed_over_image_of_New_York_City._Photograph_of_image_taken_October_3,_1950_-_DPLA_-_b61f57bede22e6882fafc6fbe8d14b0c.jpg) | Department of Energy. Lawrence Berkeley National Laboratory. Public Affairs Depa | Public domain | Digital Preservation File Name and Format: 434-LB-5-XBD201208-00472.TIF |
+| 03-the-wreckage-of-chicago-s-federal-building-after-the-explosi.jpg | [The wreckage of Chicago's Federal Building after the explosion of a bo](https://commons.wikimedia.org/wiki/File:The_wreckage_of_Chicago%27s_Federal_Building_after_the_explosion_of_a_bomb_allegedly_planted_by_the_Industrial_Workers_of_-_NARA_-_533464.jpg) | Unknown authorUnknown author or not provided | Public domain |  |
+| 04-1987a.jpg | [1987A.jpg](https://commons.wikimedia.org/wiki/File:1987A.jpg) | NASA/Hubble; Chun Shing Jason Pun (NASA/GSFC), Robert P. Kirshner (Harvard-Smith | Public domain | This Hubble Space Telescope picture shows Supernova 1987A and its neighborhood. The series of four panels shows the evolution of the SN 1987 |
+| 05-usmc-091215-m-8964d-002.jpg | [USMC-091215-M-8964D-002.jpg](https://commons.wikimedia.org/wiki/File:USMC-091215-M-8964D-002.jpg) | Lance Cpl. Aaron Diamant | Public domain | The explosion caused by the two improvised explosive devices built for the Federal Bureau of Investigation’s Large Vehicle Post-Blast Invest |
+| 06-01-when-tower-two-collapsed-flickr-id-6146012070.jpg | [01 when Tower Two collapsed - Flickr id 6146012070.jpg](https://commons.wikimedia.org/wiki/File:01_when_Tower_Two_collapsed_-_Flickr_id_6146012070.jpg) | Deb | CC BY 2.0 | He was also presented with this beautiful portrait of Sirius.  The text below is from the Finding One Another website: www.findingoneanother |

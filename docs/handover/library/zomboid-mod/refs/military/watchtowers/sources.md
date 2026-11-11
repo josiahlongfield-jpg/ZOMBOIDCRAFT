@@ -1,0 +1,12 @@
+# military/watchtowers
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-san-francisco-ca-usa-alcatraz-guard-tower-2022-3088.jpg | [San Francisco (CA, USA), Alcatraz, Guard Tower -- 2022 -- 3088.jpg](https://commons.wikimedia.org/wiki/File:San_Francisco_(CA,_USA),_Alcatraz,_Guard_Tower_--_2022_--_3088.jpg) | Dietmar Rabich | CC BY-SA 4.0 | Guard Tower, Alcatraz Island, San Francisco, California, USAAlcatraz, the rocky island in San Francisco Bay, transformed from a strategic mi |
+| 02-guantanamo-guard-tower-new-ac.jpg | [Guantanamo guard tower - new, AC.jpg](https://commons.wikimedia.org/wiki/File:Guantanamo_guard_tower_-_new,_AC.jpg) | Sergeant Sara Wood | Public domain | Guantanamo, new guard tower, with air conditioning |
+| 03-the-sun-rising-over-camp-able-sentry-guard-tower-number-six.jpg | [The sun rising over Camp Able Sentry guard tower number six - DPLA - 6](https://commons.wikimedia.org/wiki/File:The_sun_rising_over_Camp_Able_Sentry_guard_tower_number_six_-_DPLA_-_6bd0af3adbd882079dee2db58c5c14c7.jpeg) | Department of Defense. American Forces Information Service. Defense Visual Infor | Public domain | The original finding aid described this photograph as: Subject Operation/Series: ABLE SENTRY Base: Skopje Country: Macedonia (MKD) Scene Cam |
+| 04-afghan-national-army-soldiers-with-the-1st-kandak-4th-brigad.jpg | [Afghan National Army soldiers with the 1st Kandak, 4th Brigade, 201st ](https://commons.wikimedia.org/wiki/File:Afghan_National_Army_soldiers_with_the_1st_Kandak,_4th_Brigade,_201st_Corps_look_for_enemy_activity_from_a_watchtower_outside_Hesarak_village_in_Nangarhar_province,_Afghanistan,_May_15,_2013_130515-A-WI517-096.jpg) | SPC Vang Seng Thao | Public domain | Afghan National Army soldiers with the 1st Kandak, 4th Brigade, 201st Corps look for enemy activity from a watchtower outside Hesarak villag |
+| 05-perimeter-guard-tower-of-bao-loc-base-camp.jpg | [Perimeter guard tower of Bao Loc base camp.jpg](https://commons.wikimedia.org/wiki/File:Perimeter_guard_tower_of_Bao_Loc_base_camp.jpg) | SP4 Carl C. Hansen | Public domain | Perimeter guard tower of Bao Loc base camp. NARA 111-CCV-630-CC53712 |
+| 06-guard-tower-at-can-tho-airfield.jpg | [Guard tower at Can Tho airfield.jpg](https://commons.wikimedia.org/wiki/File:Guard_tower_at_Can_Tho_airfield.jpg) | SP4 Gray | Public domain | Guard tower at Can Tho airfield NARA 111-CCV-130-CC62092 |

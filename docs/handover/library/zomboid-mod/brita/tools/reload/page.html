@@ -1,0 +1,54 @@
+<!doctype html><html><body style="margin:0;background:#dfe3e6">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+<script type="module">
+import * as THREE from 'three';
+const W = 960, H = 540;
+const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true }); r.setSize(W, H); r.setClearColor(0xdfe3e6);
+r.outputColorSpace = THREE.SRGBColorSpace; document.body.appendChild(r.domElement);
+const f32 = b => new Float32Array(Uint8Array.from(atob(b), c => c.charCodeAt(0)).buffer);
+const L = new THREE.TextureLoader();
+const tex = async u => { const t = await L.loadAsync(u); t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; t.magFilter = THREE.NearestFilter; t.anisotropy = 8; return t; };
+const ST = await fetch('static.json').then(x => x.json());
+const P = f32(ST.P), J = f32(ST.J), Wt = f32(ST.W), UV = f32(ST.uv), trA = Array.from(f32(ST.trA)), trB = Array.from(f32(ST.trB));
+const skin = await tex('skin.png');
+let D = null, gunTex = null;
+window.load = async file => { D = await fetch(file).then(x => x.json()); gunTex = await tex('data:image/png;base64,' + D.tex); return Object.keys(D.views.fp).length; };
+function scene(view, fi) {
+  const fr = D.views[view][fi], sc = new THREE.Scene();
+  sc.add(new THREE.HemisphereLight(0xffffff, 0x404030, 0.9));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(0.3, 1, 0.5); sc.add(dl);
+  for (const [name, m] of Object.entries(fr.g)) {
+    const gd = D.groups[name]; const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(f32(gd.p), 3));
+    let mat;
+    if (gd.u) { g.setAttribute('uv', new THREE.BufferAttribute(f32(gd.u), 2)); mat = new THREE.MeshLambertMaterial({ map: gunTex, side: THREE.DoubleSide, alphaTest: 0.1 }); }
+    else { g.setAttribute('color', new THREE.BufferAttribute(f32(gd.c), 3)); mat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }); }
+    g.computeVertexNormals();
+    const mesh = new THREE.Mesh(g, mat); mesh.matrixAutoUpdate = false; mesh.matrix.fromArray(m); sc.add(mesh);
+  }
+  const B = f32(fr.b), nv = P.length / 3, out = new Float32Array(nv * 3);
+  for (let v = 0; v < nv; v++) {
+    const x = P[v * 3], y = P[v * 3 + 1], z = P[v * 3 + 2]; let ox = 0, oy = 0, oz = 0;
+    for (let k = 0; k < 4; k++) {
+      const w = Wt[v * 4 + k]; if (!w) continue; const o = J[v * 4 + k] * 16;
+      ox += w * (B[o] * x + B[o + 4] * y + B[o + 8] * z + B[o + 12]);
+      oy += w * (B[o + 1] * x + B[o + 5] * y + B[o + 9] * z + B[o + 13]);
+      oz += w * (B[o + 2] * x + B[o + 6] * y + B[o + 10] * z + B[o + 14]);
+    }
+    out[v * 3] = ox; out[v * 3 + 1] = oy; out[v * 3 + 2] = oz;
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(out, 3)); g.setAttribute('uv', new THREE.BufferAttribute(UV, 2));
+  g.setIndex(view === 'fp' ? trA : trB); g.computeVertexNormals();
+  sc.add(new THREE.Mesh(g, new THREE.MeshLambertMaterial({ map: skin, side: THREE.DoubleSide })));
+  return sc;
+}
+const camFP = new THREE.PerspectiveCamera(70, W / H, 0.05, 50);
+const camTP = new THREE.PerspectiveCamera(40, W / H, 0.05, 50);
+window.draw = (view, fi, cam) => {
+  const sc = scene(view, fi);
+  if (view === 'fp') r.render(sc, camFP);
+  else { const c = cam || [-0.3, 1.42, 1.25, 0.05, 1.1, 0.15]; camTP.position.set(c[0], c[1], c[2]); camTP.lookAt(c[3], c[4], c[5]); r.render(sc, camTP); }
+  return true;
+};
+window.ready = true;
+</script></body></html>

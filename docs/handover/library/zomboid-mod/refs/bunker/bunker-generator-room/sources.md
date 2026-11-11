@@ -1,0 +1,14 @@
+# bunker/bunker-generator-room
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-trecwn-ww2-decoy-bunker-generator-room-geograph-org-uk-69884.jpg | [Trecwn WW2 decoy bunker, generator room - geograph.org.uk - 6988445.jp](https://commons.wikimedia.org/wiki/File:Trecwn_WW2_decoy_bunker,_generator_room_-_geograph.org.uk_-_6988445.jpg) | Natasha Ceridwen de Chroustchoff | CC BY-SA 2.0 | Trecwn WW2 decoy bunker: generator room |
+| 02-inside-the-generator-room-of-a-starfish-bunker-geograph-org.jpg | [Inside the generator room of a starfish bunker - geograph.org.uk - 438](https://commons.wikimedia.org/wiki/File:Inside_the_generator_room_of_a_starfish_bunker_-_geograph.org.uk_-_4389998.jpg) | Adrian S Pye | CC BY-SA 2.0 | Inside the generator room of a starfish bunker |
+| 03-inside-the-generator-room-of-a-starfish-bunker-geograph-org.jpg | [Inside the generator room of a starfish bunker - geograph.org.uk - 439](https://commons.wikimedia.org/wiki/File:Inside_the_generator_room_of_a_starfish_bunker_-_geograph.org.uk_-_4390001.jpg) | Adrian S Pye | CC BY-SA 2.0 | Inside the generator room of a starfish bunker |
+| 04-3te28-0010-power-room-interior-generator-and-engine.jpg | [3TE28-0010 power room interior - generator and engine.jpg](https://commons.wikimedia.org/wiki/File:3TE28-0010_power_room_interior_-_generator_and_engine.jpg) | Дмитрий Закутный | CC BY 4.0 | Interior of the engine room of diesel locomotive 3TE28-0010. View on the alternator and and diesel engine from the left aisle from the drive |
+| 05-2m62u-0271-power-room-diesel-engine-14d40.jpg | [2M62U-0271 power room - diesel engine 14D40.jpg](https://commons.wikimedia.org/wiki/File:2M62U-0271_power_room_-_diesel_engine_14D40.jpg) | senyka33 | CC BY-SA 4.0 | Машинное отделение тепловоза 2М62У-0271. Дизельный двигатель 2Д49 |
+| 06-diesel-generator.jpg | [Diesel generator.jpg](https://commons.wikimedia.org/wiki/File:Diesel_generator.jpg) | MaciejKa | CC BY-SA 3.0 | Diesel generator on MS Cap San Diego (Hamburg) |
+| 08-d-lmen-kirchspiel-ehem-munitionslager-visbeck-bunker-2020-88.jpg | [Dülmen, Kirchspiel, ehem. Munitionslager Visbeck, Bunker -- 2020 -- 88](https://commons.wikimedia.org/wiki/File:D%C3%BClmen,_Kirchspiel,_ehem._Munitionslager_Visbeck,_Bunker_--_2020_--_8865-72.jpg) | Dietmar Rabich | CC BY-SA 4.0 | Bunker 24 im Ammunition depot in the Dernekamp hamlet, Kirchspiel, Dülmen, North Rhine-Westphalia, GermanyThe Bundeswehr Ammunition Depot, l |
+| 09-kp-vild-switchboard-9261425851.jpg | [KP Vild - Switchboard (9261425851).jpg](https://commons.wikimedia.org/wiki/File:KP_Vild_-_Switchboard_(9261425851).jpg) | Kecko from Northeast corner of, Switzerland | CC BY 2.0 | It is in the first room when you come in, on the wall opposite the dining table. In a small military command and combat bunker from the time |

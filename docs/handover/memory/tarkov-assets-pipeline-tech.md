@@ -1,0 +1,20 @@
+---
+name: tarkov-assets-pipeline-tech
+description: How Tarkov game files are pulled and decoded (UnityPy, Mecanim clips, part assembly, IK hands) for the Tarkov-into-ZomboidCraft pilot (2026-11-06)
+metadata:
+  type: project
+---
+Pilot for [[tarkov-zomboid-scoping]] Route C. LOCAL/PRIVATE ONLY: Tarkov assets never in repo, jar or CI.
+
+(2026-11-08: OneDrive is banned, copies now go to C:\Dev\Zomboidcraft-Desktop\additions\tarkov-pilot\raw, see [[zomboid-pc-storage-rule]].) Getting files: Tarkov bundles sit >7 folders deep under the approved Steam folder, so device_stage_files refuses them. A Remote Control session copies named bundles flat (path with \ -> "__") into C:\Attachments\OneDrive\Desktop\additions\tarkov-pilot\raw\, then stage from there. Manifest Windows.json lists every bundle + Dependencies (compute dep closure before copying). Note: the first 393-file copy vanished from that folder (OneDrive?); later copies stayed.
+
+Decoding (scripts in /mnt/project-files/zomboid-mod/tarkov/tools/, pip UnityPy): bundles are NOT encrypted. Meshes/textures/AudioClips export directly (AudioClip.samples -> wav). Weapon client_assets.bundle holds the rig (Base Human arms + Weapon_root/Weapon_root_anim/weapon + mod_* slots + IK markers + Camera_animated) and ~163 Mecanim AnimationClips; anim.py decodes streamed/dense/constant curves, paths via Avatar.m_TOS, rotations are mostly attribute 4 = Euler degrees. Each clip name has 2 layers (see 2026-11-06 fixes below).
+Handedness: negate x on positions/normals, quat (x,-y,-z,w), flip triangle winding, bindposes S*M*S.
+Assembly: take part prefabs from AssetBundle.m_Container (.prefab). Parts on an identity-rotated slot, on mod_muzzle, rail tactical/mount slots and the lower handguard half need root q = +90X (0.7071,0,0,0.7071); so do stocks on the tube slots (use mod_stock_000 = fully collapsed, he wants no tube visible); foregrip slots don't.
+Hands: hands bundle SkinnedMesh + _bonePaths; raw clip arm data is correct once decoded right; no IK needed (the old IK + mag-follow hack was a workaround for the Euler bug).
+Shots per gun in audio/banks/<gun>.bundle (outdoor/indoor/silenced close/distant x8); handling sounds in the weapon container bundle.
+Preview 2026-11-06: zomboid-mod/tarkov/previews/tarkov-m4a1-pilot.mp4 (Brita M4 vs plain vs kitted turntable, FP shots/reload/inspect with sound). v3 09:55: tarkov-m4a1-pilot-v3.mp4 (reload only, stock collapsed at mod_stock_000, true camera; v2 deleted).
+- 2026-11-06 fixes: Unity Euler channels (attr 4) compose as q=qz*qy*qx; apply ALL clip layers (fewest bones first) and NO IK; FP camera = Camera_animated world quat, forward local -Y, up local +Z, pitched -0.18 rad, FOV 62. Stocks go on mod_stock_000 (collapsed) with the +90 X FIX rotation.
+- RETARGET (2026-11-06 10:15, Josiah asked to splice our survivors into Tarkov clips with no edits): web/index.html zinit/zpose (copy in tarkov/tools/web/). Survivor arms = posing-tool arms.json + holds.json rifle mats (artifact Ur4ZP18eXgMUDALKpCEhyZ files). Her Finger1 pivot = MIDDLE knuckle (PIP), so scale her by Tarkov wrist->PIP / hers (~0.84); wrists aligned, hand frame from wrist->knuckles + index->pinky; elbow 2-bone IK toward Tarkov elbow; fingers laid on Tarkov's D1-D2-D3 curve from the real knuckle line (palm verts beyond it blend in). Thumb rigid-aimed. Preview tarkov/previews/survivor-arms-tarkov-reload.mp4 (kitted, empty reload: mag_out_0, mag_in_0, reload_charge_0). Known: jagged knuckles, bare arms.
+- BODY (10:25): body.py exports skeleton.bundle (79 bones, root 'Skeleton') + parts via MonoBehaviour _bonePaths (bind by bone name, bindposes S*M*S) -> web/data/body/. ex_body_anim.py: character_animations.bundle (1252 clips; TOS from skeleton Avatar). Use idle_aim layer 3, walk_aim_0, Run_Stand_Slow_0 (skip Kaban_* boss clips). Head bone axes: local X=up, Y=forward -> kit/head rotation basis (Z,X,Y). Gun in 3rd person = R palm * (FP RPalm^-1 * FP weapon) from FP idle. Viewer: setupBody/dressBody/poseBody/viewBody in web/index.html; bodyvid.js + bodyseq.json render.
+- In game: [[tarkov-operator-ingame-tech]].

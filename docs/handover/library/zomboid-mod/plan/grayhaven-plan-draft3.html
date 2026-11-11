@@ -1,0 +1,1182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grayhaven County Master Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2eee5; --surface:#fbf9f4; --surface-2:#f6f2e9; --ink:#1f2328; --ink-2:#5b5f66; --ink-3:#8a8d92; --line:#ddd6c7;
+  --void:#d9d3c4; --land:#ece6d5; --farm:#e5ddb9; --farm-2:#ddd3a8; --forest:#cfdab9; --knob:#bfcfa3; --knob-ink:#6f8a55;
+  --water:#9cc0df; --water-edge:#6b9cc6; --water-ink:#3f73a3; --urban:#d8cfc0; --core:#cfc6b8; --sprawl:#e0d8c9; --street:#7c7468;
+  --sea:#86afd6; --shallow:#a9cbe6; --sand:#eadcaa; --cliff:#6e5c49; --seawall:#4d5359; --marsh:#cdd6a8; --marsh-ink:#7b8f5a; --pier:#5a4a3c;
+  --road-i:#c8442f; --road-i-case:#7a2a1d; --road-us:#e3a72a; --road-us-case:#8d6a1c; --road-ky:#ffffff; --road-ky-case:#8c8473; --road-loc:#8c8473;
+  --rail:#34363a; --subway:#13836f; --viaduct:#7d93ab; --mil:#5f6b2c; --mil-fill:rgba(95,107,44,.13); --qz:#c97c12; --fence:#b3261e; --wall:#7d1d17; --navy:#23466e;
+  --city:#7b52d3; --town:#2b2f36; --suburb:#56677c; --port:#2f6fa8; --industry:#4d5359; --facility:#b3261e; --halo:#ece6d5;
+  --accent:#7b52d3; --accent-soft:rgba(123,82,211,.12); --on-accent:#ffffff; --ok:#2f7d4f;
+  --shadow:0 1px 2px rgba(40,30,10,.06),0 4px 16px rgba(40,30,10,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#181b1f; --surface-2:#1d2125; --ink:#e8e4da; --ink-2:#a8a69d; --ink-3:#7a7a74; --line:#2c3036;
+    --void:#0b0c0e; --land:#1c2023; --farm:#252a20; --farm-2:#2b3124; --forest:#1d281e; --knob:#20301f; --knob-ink:#5c7a4c;
+    --water:#1f3d59; --water-edge:#2f5d86; --water-ink:#86b3dc; --urban:#2a2928; --core:#2e2c2b; --sprawl:#242526; --street:#5a554e;
+    --sea:#14283d; --shallow:#1d3a56; --sand:#3d3829; --cliff:#9a8670; --seawall:#8a9096; --marsh:#232c20; --marsh-ink:#5f7448; --pier:#a88c6e;
+    --road-i:#e0634d; --road-i-case:#3a1510; --road-us:#e2b04a; --road-us-case:#3d2e0e; --road-ky:#c9c3b6; --road-ky-case:#0e1012; --road-loc:#7d786d;
+    --rail:#a7a7a2; --subway:#43c9a8; --viaduct:#4f6378; --mil:#a9b765; --mil-fill:rgba(169,183,101,.10); --qz:#e9a640; --fence:#ea5a50; --wall:#ff7a6e; --navy:#7fb0e6;
+    --city:#b69cff; --town:#e8e4da; --suburb:#9fb0c6; --port:#6aa9e0; --industry:#a3a9b0; --facility:#ff6b5f; --halo:#1c2023;
+    --accent:#b69cff; --accent-soft:rgba(182,156,255,.14); --on-accent:#17121f; --ok:#6cc08e;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#181b1f; --surface-2:#1d2125; --ink:#e8e4da; --ink-2:#a8a69d; --ink-3:#7a7a74; --line:#2c3036;
+  --void:#0b0c0e; --land:#1c2023; --farm:#252a20; --farm-2:#2b3124; --forest:#1d281e; --knob:#20301f; --knob-ink:#5c7a4c;
+  --water:#1f3d59; --water-edge:#2f5d86; --water-ink:#86b3dc; --urban:#2a2928; --core:#2e2c2b; --sprawl:#242526; --street:#5a554e;
+  --sea:#14283d; --shallow:#1d3a56; --sand:#3d3829; --cliff:#9a8670; --seawall:#8a9096; --marsh:#232c20; --marsh-ink:#5f7448; --pier:#a88c6e;
+  --road-i:#e0634d; --road-i-case:#3a1510; --road-us:#e2b04a; --road-us-case:#3d2e0e; --road-ky:#c9c3b6; --road-ky-case:#0e1012; --road-loc:#7d786d;
+  --rail:#a7a7a2; --subway:#43c9a8; --viaduct:#4f6378; --mil:#a9b765; --mil-fill:rgba(169,183,101,.10); --qz:#e9a640; --fence:#ea5a50; --wall:#ff7a6e; --navy:#7fb0e6;
+  --city:#b69cff; --town:#e8e4da; --suburb:#9fb0c6; --port:#6aa9e0; --industry:#a3a9b0; --facility:#ff6b5f; --halo:#1c2023;
+  --accent:#b69cff; --accent-soft:rgba(182,156,255,.14); --on-accent:#17121f; --ok:#6cc08e;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+header.top{padding:28px 0 14px}
+.eyebrow{font:600 13px/1 "Barlow Condensed",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font:700 44px/1.02 "Barlow Condensed",sans-serif;letter-spacing:.01em;margin:8px 0 10px;text-transform:uppercase}
+h2{font:700 26px/1.1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.02em;margin:0 0 12px}
+h3{font:600 17px/1.2 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px;color:var(--ink-2)}
+.lede{max-width:780px;color:var(--ink-2);margin:0}
+.lede b{color:var(--ink);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:18px 0 18px}
+.stat{background:var(--surface);padding:10px 12px}
+.stat b{display:block;font:700 24px/1.1 "Barlow Condensed",sans-serif}
+.stat span{font-size:12px;color:var(--ink-2)}
+.atlas{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+.mapwrap{position:relative;background:var(--void);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:1/1;max-height:calc(100vh - 32px);width:100%}
+#map{display:block;width:100%;height:100%;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+#map.panning{cursor:grabbing}
+.editing #map .place{cursor:move}
+.zoomctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.zoomctl button,.chip,.btn{font:600 14px/1 "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.zoomctl button{width:34px;height:34px;font-size:18px;box-shadow:var(--shadow)}
+.zoomctl button:hover,.chip:hover,.btn:hover{border-color:var(--ink-3)}
+.scalebar{position:absolute;left:12px;bottom:12px;font:500 11px/1 "IBM Plex Mono",monospace;color:var(--ink);background:color-mix(in srgb,var(--surface) 85%,transparent);padding:6px 8px;border-radius:6px;border:1px solid var(--line)}
+.scalebar i{display:block;height:6px;border:2px solid var(--ink);border-top:0;margin-top:4px}
+.northarrow{position:absolute;left:12px;top:12px;font:700 13px/1 "Barlow Condensed",sans-serif;color:var(--ink);background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--line);border-radius:6px;padding:5px 8px;text-align:center}
+.editbanner{position:absolute;left:50%;transform:translateX(-50%);top:10px;background:var(--accent);color:var(--on-accent);font:600 12px/1 "IBM Plex Sans",sans-serif;padding:7px 12px;border-radius:999px;display:none;white-space:nowrap}
+.editing .editbanner{display:block}
+.side{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:7px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="false"]{color:var(--ink-3);background:transparent}
+.chip .dot{width:9px;height:9px;border-radius:50%}
+.chip[aria-pressed="false"] .dot{opacity:.35}
+.detail .kind{display:inline-block;font:600 11px/1 "IBM Plex Sans",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:5px;background:var(--accent-soft);color:var(--accent);margin-bottom:8px}
+.detail .kind.new{background:rgba(179,38,30,.12);color:var(--facility)}
+.detail h4{font:700 24px/1.05 "Barlow Condensed",sans-serif;text-transform:uppercase;margin:0 0 6px}
+.detail p{margin:6px 0 0;color:var(--ink-2);font-size:14px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin-top:10px;font-size:13px}
+.kv dt{color:var(--ink-3)}
+.kv dd{margin:0;font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+.empty{color:var(--ink-3);font-size:14px;margin:0}
+.btn{padding:9px 12px;font-size:13px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+textarea{width:100%;min-height:70px;resize:vertical;font:14px/1.4 "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px;margin:8px 0}
+.status{font-size:12px;color:var(--ink-3);margin-top:6px}
+.status.ok{color:var(--ok)}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:12.5px;color:var(--ink-2)}
+.legend div{display:flex;align-items:center;gap:7px;min-width:0}
+.legend svg{flex:none}
+section.block{margin:34px 0}
+.groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+table.places{width:100%;border-collapse:collapse;font-size:13.5px}
+table.places td{padding:7px 6px;border-top:1px solid var(--line);vertical-align:top}
+table.places tr{cursor:pointer}
+table.places tr:hover td{background:var(--surface-2)}
+table.places tr.sel td{background:var(--accent-soft)}
+table.places .nm{font-weight:600}
+table.places .ty{color:var(--ink-2);white-space:nowrap}
+table.places .gr{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);text-align:right;white-space:nowrap}
+.tag{display:inline-block;font:600 10px/1 "IBM Plex Sans",sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:3px 5px;border-radius:4px;margin-left:6px;vertical-align:1px}
+.tag.new{background:rgba(179,38,30,.12);color:var(--facility)}
+.tag.moved{background:var(--accent-soft);color:var(--accent)}
+.refs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ref{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.ref b{display:flex;align-items:center;gap:8px;font:700 17px/1.1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.03em}
+.ref b::before{content:"✓";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 12px/1 "IBM Plex Sans",sans-serif;flex:none}
+.ref p{margin:6px 0 0;color:var(--ink-2);font-size:13.5px}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;counter-increment:s}
+.steps li::before{content:counter(s);display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 14px/1 "Barlow Condensed",sans-serif;margin-bottom:8px}
+.steps b{display:block;margin-bottom:4px}
+.steps p{margin:0;color:var(--ink-2);font-size:14px}
+.qs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.q{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:14px}
+.q b{display:block;margin-bottom:4px}
+.q p{margin:0;color:var(--ink-2);font-size:14px}
+.q .rec{margin-top:8px;font-size:13px;color:var(--ink)}
+footer{color:var(--ink-3);font-size:12.5px;padding:10px 0 40px}
+/* map layers */
+.void{fill:var(--void)}
+.land{fill:var(--land)}
+.farm{fill:var(--farm)}
+.forest{fill:var(--forest)}
+.knob{fill:var(--knob)}
+.knobhatch{fill:url(#hatchKnob)}
+.farmhatch{fill:url(#hatchFarm)}
+.marsh{fill:var(--marsh)}
+.marshhatch{fill:url(#hatchMarsh)}
+.core{fill:var(--core)}
+.sprawl{fill:var(--sprawl)}
+.streets{fill:url(#hatchCity)}
+.streets2{fill:url(#hatchBurb)}
+.sea{fill:var(--sea)}
+.shallow{fill:none;stroke:var(--shallow);stroke-linejoin:round}
+.beach{fill:none;stroke:var(--sand);stroke-linecap:round;stroke-linejoin:round}
+.cliff{fill:none;stroke:var(--cliff);stroke-width:2.6;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.cliffticks{fill:none;stroke:var(--cliff);stroke-width:6;stroke-dasharray:1.2 4;vector-effect:non-scaling-stroke}
+.seawall{fill:none;stroke:var(--seawall);stroke-width:2;vector-effect:non-scaling-stroke}
+.island{fill:var(--land);stroke:var(--cliff);stroke-width:2;vector-effect:non-scaling-stroke}
+.pier{stroke:var(--pier);stroke-linecap:square}
+.ferry{fill:none;stroke:var(--navy);stroke-width:1.4;stroke-dasharray:2 4;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.navy{fill:none;stroke:var(--navy);stroke-width:2;stroke-dasharray:10 5;vector-effect:non-scaling-stroke}
+.ship path{fill:var(--navy);stroke:var(--halo);stroke-width:1}
+.cargo path{fill:var(--seawall);stroke:var(--halo);stroke-width:.8}
+.cargo rect{fill:#c8442f}
+.wreck path{fill:none;stroke:var(--navy);stroke-width:1.6}
+.milarea{fill:var(--mil-fill);stroke:var(--mil);stroke-dasharray:7 4;stroke-width:1.5;vector-effect:non-scaling-stroke}
+.milhatch{fill:url(#hatchMil)}
+.urban{fill:var(--urban)}
+.river{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.river.edge{stroke:var(--water-edge)}
+.river.body{stroke:var(--water)}
+.lake{fill:var(--water);stroke:var(--water-edge);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.grid line{stroke:var(--ink);stroke-opacity:.09;stroke-width:1;vector-effect:non-scaling-stroke}
+.gridlbl{font:600 11px "IBM Plex Mono",monospace;fill:var(--ink-3)}
+.rd{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.rd.i.c{stroke:var(--road-i-case);stroke-width:5.5}
+.rd.i.f{stroke:var(--road-i);stroke-width:3.4}
+.rd.us.c{stroke:var(--road-us-case);stroke-width:4.4}
+.rd.us.f{stroke:var(--road-us);stroke-width:2.6}
+.rd.ky.c{stroke:var(--road-ky-case);stroke-width:3.4}
+.rd.ky.f{stroke:var(--road-ky);stroke-width:1.8}
+.rd.loc.f{stroke:var(--road-loc);stroke-width:1.4;stroke-dasharray:5 3}
+.rl{fill:none;vector-effect:non-scaling-stroke;stroke:var(--rail)}
+.rl.a{stroke-width:1.4}
+.rl.b{stroke-width:5;stroke-dasharray:1.2 5}
+.rl.v{stroke:var(--viaduct);stroke-width:9}
+.sb{fill:none;vector-effect:non-scaling-stroke;stroke:var(--subway);stroke-width:3;stroke-dasharray:7 4;stroke-linejoin:round}
+.mk-st{fill:var(--surface);stroke:var(--rail);stroke-width:2}
+.mk-st-in{fill:var(--rail)}
+.mk-sub{fill:none;stroke:var(--subway);stroke-width:2.6}
+.mk-sub-dot{fill:var(--subway)}
+.lbl .t-st{font-size:12.5px;font-weight:700;fill:var(--ink);letter-spacing:.03em}
+.area-lbl.isle{fill:var(--ink);fill-opacity:.55;font-size:14px;letter-spacing:.34em}
+.fence{fill:none;stroke:var(--fence);stroke-width:2;stroke-dasharray:8 4;vector-effect:non-scaling-stroke}
+.fence2{fill:none;stroke:var(--fence);stroke-width:.8;stroke-opacity:.55;vector-effect:non-scaling-stroke}
+.wall{fill:none;stroke:var(--wall);stroke-width:4;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.walltick{fill:none;stroke:var(--wall);stroke-width:3;stroke-dasharray:2 14;vector-effect:non-scaling-stroke}
+.border{fill:none;stroke:var(--ink);stroke-opacity:.5;stroke-width:1.5;vector-effect:non-scaling-stroke}
+.fill-farm{fill:var(--farm-2);stroke:var(--ink-3);stroke-width:.6}
+.fill-stop{fill:var(--surface);stroke:var(--ink-2);stroke-width:1}
+.lbl text{font-family:"Barlow Condensed",sans-serif;paint-order:stroke;stroke:var(--halo);stroke-width:3.2px;stroke-linejoin:round}
+.lbl .t-city{font-size:17px;font-weight:700;letter-spacing:.06em;fill:var(--ink);text-transform:uppercase}
+.lbl .t-town{font-size:14px;font-weight:700;letter-spacing:.04em;fill:var(--ink);text-transform:uppercase}
+.lbl .t-dist{font-size:13px;font-weight:700;letter-spacing:.05em;fill:var(--city);text-transform:uppercase}
+.lbl .t-minor{font-size:12.5px;font-weight:600;fill:var(--ink-2)}
+.lbl .t-mil{font-size:12.5px;font-weight:600;font-style:italic;fill:var(--mil)}
+.minor-lbl{display:none}
+.zoomed .minor-lbl{display:inline}
+.far .lbl .t-city{font-size:13px}
+.far .lbl .t-town{font-size:11px}
+.far .area-lbl:not(.sea){display:none}
+.far .metro-lbl{font-size:20px;letter-spacing:.3em}
+.far .area-lbl.sea{font-size:12px}
+.metro-lbl{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:30px;letter-spacing:.42em;text-transform:uppercase;fill:var(--ink);fill-opacity:.8;paint-order:stroke;stroke:var(--core);stroke-width:4px}
+.zoomed .metro-lbl{fill-opacity:.18}
+.area-lbl{font-family:"Barlow Condensed",sans-serif;font-weight:600;letter-spacing:.32em;text-transform:uppercase;paint-order:stroke;stroke:var(--halo);stroke-width:3px;stroke-linejoin:round}
+.area-lbl.knobs{fill:var(--knob-ink);font-size:15px}
+.area-lbl.marsh{fill:var(--marsh-ink);font-size:12px;font-style:italic;letter-spacing:.24em}
+.area-lbl.mil{fill:var(--mil);font-size:12px;font-style:italic;letter-spacing:.22em}
+.area-lbl.dist{fill:var(--ink-3);font-size:12px;font-style:italic;letter-spacing:.24em}
+.area-lbl.wall{fill:var(--wall);font-size:11px;letter-spacing:.2em}
+.area-lbl.fence{fill:var(--fence);font-size:11px;letter-spacing:.3em}
+.area-lbl.sea{fill:var(--water-ink);font-size:17px;font-style:italic;letter-spacing:.5em;stroke:var(--sea)}
+.area-lbl.bay{fill:var(--water-ink);font-size:13px;font-style:italic;letter-spacing:.3em;stroke:var(--sea)}
+.area-lbl.navy{fill:var(--navy);font-size:11px;letter-spacing:.3em;stroke:var(--sea)}
+.wlbl{font-family:"Barlow Condensed",sans-serif;font-style:italic;font-weight:500;fill:var(--water-ink);paint-order:stroke;stroke:var(--water);stroke-width:2px}
+.mk-city{fill:var(--city);stroke:#fff;stroke-width:2}
+.mk-dist{fill:var(--city);stroke:var(--halo);stroke-width:1.6}
+.mk-town{fill:var(--town);stroke:var(--halo);stroke-width:2}
+.mk-suburb{fill:var(--suburb);stroke:var(--halo);stroke-width:1.6}
+.mk-port{fill:var(--port);stroke:var(--halo);stroke-width:1.6}
+.mk-ind{fill:var(--industry);stroke:var(--halo);stroke-width:1.6}
+.mk-mil{fill:var(--mil);stroke:var(--halo);stroke-width:1.6}
+.mk-qz{fill:var(--qz);stroke:var(--halo);stroke-width:1.6}
+.mk-fac{fill:var(--facility);stroke:var(--halo);stroke-width:1.6}
+.mk-ring{fill:none;stroke:var(--accent);stroke-width:2.5}
+.mk-ghost{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:3 2}
+.ghostline{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+.cp rect{fill:var(--fence);stroke:var(--halo);stroke-width:1.5}
+.cp path{stroke:#fff;stroke-width:1.6}
+.cp.wallcp rect{fill:var(--wall)}
+.tower{fill:var(--fence);stroke:var(--halo);stroke-width:1}
+.bridge path{fill:none;stroke:var(--ink);stroke-width:1.6}
+.blown path{stroke:var(--fence);stroke-width:2.4;fill:none}
+.blown circle{fill:var(--halo);stroke:var(--fence);stroke-width:1.6}
+.shield text{font:700 9.5px "IBM Plex Sans",sans-serif;text-anchor:middle;dominant-baseline:central}
+.shield.i path{fill:#2b4c9a;stroke:#fff;stroke-width:1.2}
+.shield.i rect{fill:#c8442f}
+.shield.i text{fill:#fff}
+.shield.us path{fill:#fff;stroke:#222;stroke-width:1.2}
+.shield.us text{fill:#111}
+.shield.ky rect{fill:#fff;stroke:#222;stroke-width:1.1}
+.shield.ky text{fill:#111;font-size:8.5px}
+.hit{cursor:pointer}
+.hide-subway .lay-subway,.hide-places .lay-places,.hide-roads .lay-roads,.hide-rail .lay-rail,.hide-mil .lay-mil,.hide-fence .lay-fence,.hide-fill .lay-fill,.hide-grid .lay-grid,.hide-terrain .lay-terrain{display:none}
+@media (max-width:980px){
+  .atlas{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .steps,.refs{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  h1{font-size:34px}
+  .groups,.qs,.steps,.refs{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mapwrap{max-height:76vh}
+  table.places .ty{white-space:normal}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">ZomboidCraft · county plan · draft 3 · island city and trains</div>
+    <h1>Grayhaven County Master Plan</h1>
+    <p class="lede">Draft 3 puts your trains in. Downtown <b>Grayhaven</b> is now an <b>island city</b> at the mouth of the Calder, cut off from the mainland by the river&rsquo;s North and South Arms and reached by bridges. The six <b>subway</b> stops sit on one loop that runs through the middle of the island: Grayhaven Stadium, Broadcast Tower, the Power Station, the Waterfront, Union Station and Mercy General. The other landmarks are scattered between them. The <b>county railway</b> is one loop of about 40 km that reaches every town. It is elevated only on the island, comes down on the bridges, and runs on the ground across the mainland. <b>Union Station</b> is the one place the railway and subway meet. Drag to pan, scroll or pinch to zoom, and tap anything for details. Switch on <b>Edit</b> to drag stops, stations and landmarks, and the lines follow them. I&rsquo;ll read your changes straight from this page.</p>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <section class="atlas" id="atlas">
+    <div class="mapwrap" id="mapwrap">
+      <svg id="map" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of Grayhaven County">
+        <defs>
+          <pattern id="hatchKnob" data-p="12" patternUnits="userSpaceOnUse" viewBox="0 0 12 12" width="12" height="12">
+            <path d="M2 8 L4.5 4.5 L7 8" fill="none" stroke="var(--knob-ink)" stroke-width="1" stroke-opacity=".55"/>
+          </pattern>
+          <pattern id="hatchFarm" data-p="10" patternUnits="userSpaceOnUse" viewBox="0 0 10 10" width="10" height="10">
+            <path d="M0 10 L10 0" stroke="var(--ink)" stroke-opacity=".05" stroke-width="1"/>
+          </pattern>
+          <pattern id="hatchMil" data-p="9" patternUnits="userSpaceOnUse" viewBox="0 0 9 9" width="9" height="9">
+            <path d="M0 9 L9 0" stroke="var(--mil)" stroke-opacity=".22" stroke-width="1"/>
+          </pattern>
+          <pattern id="hatchMarsh" data-p="12" patternUnits="userSpaceOnUse" viewBox="0 0 12 12" width="12" height="12">
+            <path d="M2 9 H7 M4.5 9 V6.5 M3.2 9 L2.6 7.2 M5.8 9 L6.4 7.2" fill="none" stroke="var(--marsh-ink)" stroke-width=".9" stroke-opacity=".7"/>
+          </pattern>
+          <pattern id="hatchCity" data-p="6" patternUnits="userSpaceOnUse" viewBox="0 0 6 6" width="6" height="6">
+            <path d="M0 .5 H6 M.5 0 V6" stroke="var(--street)" stroke-opacity=".55" stroke-width=".8"/>
+          </pattern>
+          <pattern id="hatchBurb" data-p="9" patternUnits="userSpaceOnUse" viewBox="0 0 9 9" width="9" height="9">
+            <path d="M0 .5 H9 M.5 0 V9" stroke="var(--street)" stroke-opacity=".28" stroke-width=".7"/>
+          </pattern>
+          <clipPath id="clipWorld"><rect x="-8192" y="-8192" width="16384" height="16384"/></clipPath>
+        </defs>
+        <g id="world"></g>
+      </svg>
+      <div class="northarrow">▲<br>N</div>
+      <div class="editbanner">Edit mode · drag places to move them</div>
+      <div class="zoomctl">
+        <button id="zin" aria-label="Zoom in">+</button>
+        <button id="zout" aria-label="Zoom out">−</button>
+        <button id="zfit" aria-label="Show whole county" style="font-size:13px">⤢</button>
+      </div>
+      <div class="scalebar" id="scalebar"><span></span><i></i></div>
+    </div>
+
+    <aside class="side">
+      <div class="card detail" id="detail">
+        <p class="empty">Tap a district, port, base or checkpoint on the map for details. Zoom in on Grayhaven to see all its districts.</p>
+      </div>
+      <div class="card">
+        <h3>Layers</h3>
+        <div class="chips" id="layers"></div>
+      </div>
+      <div class="card" id="editcard">
+        <h3>Your changes</h3>
+        <div class="row">
+          <button class="btn primary" id="editbtn" aria-pressed="false">Edit: off</button>
+          <button class="btn" id="copybtn">Copy changes</button>
+        </div>
+        <div id="changes" style="margin-top:10px"></div>
+        <label for="gnote" style="display:block;margin-top:10px;font-size:13px;color:var(--ink-2)">General notes for Claude (new places, names, things to cut)</label>
+        <textarea id="gnote" placeholder="e.g. Add a casino district, make the Megaport even bigger, rename Ashby…"></textarea>
+        <div class="row"><button class="btn" id="gsave">Save note</button></div>
+        <div class="status" id="dbstatus">Connecting…</div>
+      </div>
+      <div class="card">
+        <h3>Key</h3>
+        <div class="legend" id="legend"></div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="block">
+    <h2>Every reference location has a home</h2>
+    <div class="refs">
+      <div class="ref"><b>Port and docks</b><p>The Grayhaven Megaport has post-Panamax cranes, container stacks and giant cargo ships at the quay. There's also the North Terminal, a shipyard with a ship in dry dock, the refinery jetty, the Old Harbor wharves, and fishing harbours at Cape Merrow and Gull Harbor.</p></div>
+      <div class="ref"><b>Downtown and the el</b><p>Downtown, the Financial District and Old Harbor share Grayhaven Island. The railway runs on girders above the island&rsquo;s streets and comes down to the ground once it crosses to the mainland.</p></div>
+      <div class="ref"><b>Skyscraper interiors</b><p>Lobbies, offices, stairwells and rooftops in the Grayhaven towers. Riverside and Ashby have smaller towers.</p></div>
+      <div class="ref"><b>Hospital and police</b><p>Mercy General and the Central Precinct are downtown, and St. Mary's is in Uptown. Riverside and Ashby have their own hospitals, and there are field hospitals in the quarantine zones.</p></div>
+      <div class="ref"><b>Military base and quarantine</b><p>Fort Caldwell has its airfield and tank ranges, and the Navy station is on the cape. The stadium evacuation centre, four quarantine zones and the Grayhaven Blockade round it out.</p></div>
+      <div class="ref"><b>Suburbs</b><p>Westgate, Northside and Southport are inner row-house grids. Pinecrest Estates and Ashby Heights are out along the beltway, and Shady Acres is a trailer park.</p></div>
+      <div class="ref"><b>Small towns</b><p>Kingsbridge, Seabright, Millbrook and Fairview, plus the hamlets of Hollow Creek, Dunmore and Timberline.</p></div>
+      <div class="ref"><b>Countryside farms</b><p>A small valley of farms between Ashby and the mountains, and a few on the plateau by the fort.</p></div>
+      <div class="ref"><b>Subway</b><p>One loop under the island through six stops: the stadium, the tower, the power station, the waterfront, Union Station and Mercy General.</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Every named place</h2>
+    <p class="lede" style="margin-bottom:14px">Each place keeps its type, size and style from the plan, and the buildings inside are generated. The ones tagged <span class="tag new" style="margin:0">new</span> are place types the generator doesn't have yet, so they'd be built as part of this work.</p>
+    <div class="groups" id="groups"></div>
+  </section>
+
+  <section class="block">
+    <h2>How it gets built</h2>
+    <ol class="steps">
+      <li><b>The plan becomes data</b><p>Places, roads, the coastline, rivers, the mountains, the marshes and the military land go into one plan file inside the mod. This page draws from the same data, so what you approve here is what gets generated.</p></li>
+      <li><b>A real sea</b><p>The sea is proper deep water: a sheltered bay for the port, shallows, sandy beaches in the south, cliffs on the cape, seawalls and quays in the city, and two islands. Wrecks lie offshore, and the Navy blockade holds the sea edge.</p></li>
+      <li><b>A hard edge on land</b><p>The world border sits at ±8,192 blocks. A double chain-link Exclusion Zone fence runs just inside it on the land side, with watchtowers and an Army checkpoint wherever a road or railway leaves.</p></li>
+      <li><b>One continuous city</b><p>Grayhaven's districts sit edge to edge on one street grid, so there's no countryside between them. The towers are downtown, then the mid-rises, then the row houses, with factories and the port along the water.</p></li>
+      <li><b>Terrain follows the plan</b><p>The city is flat along the bay. The mountains rise steep and forested in the west, with the dam, the reservoir and the lab up there. The farm valley rolls between them.</p></li>
+      <li><b>Track and stations</b><p>The world lays the track bed for the county loop and the subway tunnels to the size agreed with the train work: a 6-block bed, 6 blocks of clearance, and platforms level with the car floor. Every station gets a call button.</p></li>
+      <li><b>Generated buildings</b><p>Each place runs its generator: downtowns, row houses, ports, factories, towns and bases. Every building gets detailed interiors and themed loot. That work is next.</p></li>
+    </ol>
+  </section>
+
+  <section class="block">
+    <h2>Your calls</h2>
+    <div class="qs">
+      <div class="q"><b>Are the subway stops where you want them?</b><p>The six stops are at least about 600 blocks apart, with Union Station in the middle and the Waterfront on the east shore. Drag any of them, and the tunnel follows.</p><p class="rec">A lap of the subway is about 5 km, roughly five minutes on board.</p></div>
+      <div class="q"><b>Is the railway loop right?</b><p>It leaves Union Station north over the North Arm, runs out through Uptown, Pinecrest and Fort Caldwell, round the west through Riverside, Millbrook, Dunmore, Fairview and Ashby, back along the south through Hollow Creek, Kingsbridge, Seabright and the airport, and in over the South Arm. That&rsquo;s 14 stations plus Union Station.</p><p class="rec">Drag stations to reroute it, or leave a note for a stop to add or cut.</p></div>
+      <div class="q"><b>Is 16 km square the right size?</b><p>That's about an hour's walk edge to edge, close to the size of Zomboid's map. At this size, Grayhaven alone is about 7 by 9 km.</p><p class="rec">I'd keep 16 km and spend the effort on detail.</p></div>
+      <div class="q"><b>Are the names right?</b><p>All the names are made up: Grayhaven, Riverside, Ashby, Seabright, Fort Caldwell, Ravenrock. Rename anything you like in the notes.</p><p class="rec">The names cost nothing to change until the plan goes into the generator.</p></div>
+      <div class="q"><b>Where do you start?</b><p>Zomboid lets you pick a starting town. We could offer Riverside, Ashby, Kingsbridge or Seabright, or always start in the same one.</p><p class="rec">I'd offer a choice, with Grayhaven itself too dangerous to start in.</p></div>
+      <div class="q"><b>Same buildings in every world?</b><p>With a fixed internal seed, every world is the identical county, so you and your friends learn the same streets and I can hand-tune spots. Otherwise the layout stays fixed but the buildings reshuffle each world.</p><p class="rec">I'd make every world identical.</p></div>
+    </div>
+  </section>
+  <footer>Coordinates are Minecraft blocks (1 block = 1 m), with x running east and z running south, and 0,0 is the centre of the county. Grid squares are 1,024 blocks, lettered A–P west to east and numbered 1–16 north to south.</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const B = 8192, FENCE = 7950;
+const svg = document.getElementById('map');
+const world = document.getElementById('world');
+
+/* ---------------- plan data ---------------- */
+const KINDS = {
+  city:{label:'City', order:0},
+  district:{label:'City district', order:1},
+  town:{label:'Town', order:2},
+  hamlet:{label:'Hamlet', order:3},
+  suburb:{label:'Neighbourhood', order:4},
+  port:{label:'Port', order:5},
+  industry:{label:'Industry', order:6},
+  military:{label:'Military', order:7},
+  quarantine:{label:'Quarantine zone', order:8},
+  facility:{label:'Facility', order:9},
+  landmark:{label:'Landmark', order:10},
+  station:{label:'Station', order:11}
+};
+const P = [
+  // Grayhaven, inside the Blockade
+  {id:'gh-cbd', name:'Downtown', kind:'district', gen:'DOWNTOWN · metro', x:3350, z:-1250, lp:'t', note:'The heart of Grayhaven Island: the tallest towers in the county, the elevated railway on its girders overhead, and the densest horde in the county.'},
+  {id:'gh-fin', name:'Financial District', kind:'district', gen:'DOWNTOWN · metro', x:3450, z:-700, lp:'b', note:'Bank towers, the stock exchange and glass plazas on the south of the island, with the railway viaduct threading between them.'},
+  {id:'gh-old', name:'Old Harbor', kind:'district', gen:'DOWNTOWN · old_city', x:3550, z:-2250, note:'The old brick waterfront on the island&rsquo;s north shore, with warehouse lofts, wharves, the customs house and the ferry pier.'},
+  {id:'gh-mid', name:'Midtown', kind:'district', gen:'DOWNTOWN · city', x:2100, z:-2550, lp:'l', note:'Mid-rise offices, hotels, a convention centre and the theatre row, where the interstates meet.'},
+  {id:'gh-up', name:'Uptown', kind:'district', gen:'DOWNTOWN · city', x:1900, z:-3850, lp:'l', note:'Apartment towers, department stores, St. Mary’s Medical Center and the university.'},
+  {id:'gh-east', name:'Eastside', kind:'district', gen:'DOWNTOWN · old_city', x:3450, z:650, lp:'l', note:'The docklands: tenements, dockside bars, a seamen’s mission and the union hall, right up against the Megaport fence.'},
+  {id:'westgate', name:'Westgate', kind:'suburb', gen:'SUBURB · old_grid', x:900, z:-1650, lp:'l', note:'Row houses, corner stores and churches on a tight grid along the river.'},
+  {id:'northside', name:'Northside', kind:'suburb', gen:'SUBURB · old_grid', x:600, z:-3150, lp:'l', note:'Brick walk-ups and the old car plant, with laundromats and diners on every corner.'},
+  {id:'southport', name:'Southport', kind:'suburb', gen:'SUBURB · old_grid', x:2200, z:1150, note:'Workers’ row houses between the rail yards and the docks.'},
+  {id:'stadium', name:'Grayhaven Stadium', kind:'landmark', isNew:true, sub:true, gen:'new: stadium, true scale', x:2400, z:-1100, lp:'b', note:'Subway stop. A 70,000-seat football bowl at the west end of the island, with three tiers, concourses, suites and huge parking lots. It was the city&rsquo;s evacuation centre: cots on the field, FEMA trucks in the lots, helicopters on the roof. It fell on day four.'},
+  {id:'union', name:'Union Station', kind:'station', isNew:true, rail:true, sub:true, gen:'new: grand terminal', x:3050, z:-1150, lp:'b', note:'The one place the railway and the subway meet, right in the middle of the island. A grand waiting hall with departure boards, the elevated platforms under an iron train shed, and the subway platform below.'},
+  {id:'tower', name:'Broadcast Tower', kind:'landmark', isNew:true, sub:true, gen:'new: broadcast tower', x:3100, z:-2050, note:'Subway stop. The tallest thing in the county, about 300 blocks high: stairs and a lift up to an observation deck, with a radio room at the top.'},
+  {id:'power', name:'Power Station', kind:'landmark', isNew:true, sub:true, gen:'new: power station', x:3850, z:-1800, note:'Subway stop. The turbine hall, cooling water intakes on the bay and the substation you bring back online to light the subway.'},
+  {id:'waterfront', name:'Waterfront', kind:'landmark', isNew:true, sub:true, gen:'new: waterfront', x:3600, z:-950, lp:'l', note:'Subway stop on the island&rsquo;s east shore: the ferry terminal, the aquarium, a pier with a Ferris wheel and rides, and the harbour boardwalk.'},
+  {id:'mercy', name:'Mercy General Hospital', kind:'landmark', isNew:true, sub:true, gen:'new: hospital', x:2850, z:-400, lp:'b', note:'Subway stop. ER, wards, ICU, morgue, a helipad on the roof, a parking garage, and overrun triage tents outside.'},
+  {id:'university', name:'State University', kind:'landmark', isNew:true, gen:'new: university', x:2650, z:-1700, lp:'l', note:'The quad, the library, lecture halls, dorm towers and the science building tied to the Ridgeview Labs story.'},
+  {id:'park', name:'City Park and Museum', kind:'landmark', isNew:true, gen:'new: park and museum', x:3400, z:-1600, note:'The natural history museum with its dinosaur hall, and a park with a lake, a boathouse and a bandstand.'},
+  {id:'civic', name:'Civic Centre', kind:'landmark', isNew:true, gen:'new: civic centre', x:2750, z:-850, note:'The domed city hall, police headquarters, the courthouse and the plaza between them.'},
+  {id:'mall', name:'Grayhaven Mall', kind:'landmark', isNew:true, gen:'new: mall', x:3250, z:-300, lp:'b', note:'Three levels round a glass atrium, a food court, department stores, a cinema and multi-storey parking.'},
+  {id:'arena', name:'Harbor Arena', kind:'landmark', isNew:true, gen:'new: arena', x:3750, z:-450, note:'The indoor basketball and hockey arena, used as a field morgue.'},
+  {id:'ballpark', name:'Ballpark', kind:'landmark', isNew:true, gen:'new: ballpark', x:2500, z:-550, lp:'l', note:'A 35,000-seat baseball stadium beside the South Arm.'},
+  {id:'market', name:'Old Market', kind:'landmark', isNew:true, gen:'new: market hall', x:3850, z:-2150, note:'The covered market hall and narrow streets of stalls in Old Harbor, with food stores to loot.'},
+  {id:'foundry', name:'Foundry Row', kind:'industry', isNew:true, gen:'new: industrial district', x:1300, z:1950, note:'Steelworks, factories, warehouses and the main rail yards, with smokestacks you can see from anywhere in the city.'},
+  {id:'term-n', name:'North Terminal', kind:'port', gen:'PORT · container', x:3650, z:-3200, note:'The older container terminal: cranes, reefer stacks and a car carrier at the quay.'},
+  {id:'megaport', name:'Grayhaven Megaport', kind:'port', gen:'PORT · container (huge)', x:4450, z:1850, lp:'b', note:'The biggest port on the coast: a mile of quay, rows of post-Panamax cranes, container stacks five high and 400-metre cargo ships moored where they were abandoned.'},
+  // the county railway's stations
+  {id:'st-uptown', name:'Uptown station', kind:'station', rail:true, isNew:true, gen:'new: city station', x:2150, z:-3650, lp:'l', note:'A brick city station with a platform canopy, on the line north out of Grayhaven.'},
+  {id:'st-pinecrest', name:'Pinecrest station', kind:'station', rail:true, isNew:true, gen:'new: depot', x:550, z:-5050, note:'A commuter halt by the beltway, with a park-and-ride lot.'},
+  {id:'st-fort', name:'Fort Caldwell siding', kind:'station', rail:true, isNew:true, gen:'new: military siding', x:-2350, z:-5250, note:'A military siding behind the post&rsquo;s gate, with loading docks, flatcars of vehicles and a guard post.'},
+  {id:'st-riverside', name:'Riverside station', kind:'station', rail:true, isNew:true, gen:'new: depot', x:-2450, z:-2300, note:'The old mill city&rsquo;s depot, with a waiting room, ticket window and freight shed.'},
+  {id:'st-millbrook', name:'Millbrook station', kind:'station', rail:true, isNew:true, gen:'new: depot', x:-4750, z:-1000, lp:'l', note:'A small brick depot below the dam, beside the textile mill.'},
+  {id:'st-dunmore', name:'Dunmore halt', kind:'station', rail:true, isNew:true, gen:'new: halt', x:-5850, z:1150, note:'A request stop with a shelter and a grain elevator siding.'},
+  {id:'st-fairview', name:'Fairview station', kind:'station', rail:true, isNew:true, gen:'new: depot', x:-5150, z:3300, lp:'l', note:'The farm valley&rsquo;s depot, with stock pens and a feed mill siding.'},
+  {id:'st-ashby', name:'Ashby station', kind:'station', rail:true, isNew:true, gen:'new: depot', x:-2700, z:2650, note:'The county seat&rsquo;s station, with a platform canopy and a freight yard.'},
+  {id:'st-hollow', name:'Hollow Creek halt', kind:'station', rail:true, isNew:true, gen:'new: halt', x:-1650, z:5100, note:'A wooden platform and shelter by the covered bridge.'},
+  {id:'st-kings', name:'Kingsbridge station', kind:'station', rail:true, isNew:true, gen:'new: depot', x:1100, z:6250, note:'A commuter station off the courthouse square.'},
+  {id:'st-seabright', name:'Seabright station', kind:'station', rail:true, isNew:true, gen:'new: depot', x:3500, z:5550, lp:'l', note:'The beach town&rsquo;s station, a short walk from the boardwalk.'},
+  {id:'st-airport', name:'Airport station', kind:'station', rail:true, isNew:true, gen:'new: city station', x:1500, z:3700, lp:'l', note:'Platforms under the terminal, with a covered walkway to departures.'},
+  {id:'st-foundry', name:'Foundry Row station', kind:'station', rail:true, isNew:true, gen:'new: city station', x:1550, z:1650, lp:'l', note:'A sooty station among the steelworks and the rail yards.'},
+  {id:'st-southport', name:'Southport station', kind:'station', rail:true, isNew:true, gen:'new: city station', x:2350, z:850, note:'The last stop on the mainland before the line climbs onto the South Arm bridge.'},
+  // the bay beyond the wall
+  {id:'shipyard', name:'Pelican Point Shipyard', kind:'industry', isNew:true, gen:'new: shipyard & dry docks', x:5900, z:2000, note:'Dry docks with a half-built container ship, slipways, gantry cranes and fabrication sheds.'},
+  {id:'refinery', name:'Pelican Point Refinery', kind:'industry', gen:'PORT · industrial', x:6900, z:2150, note:'Tank farms, flare stacks and a tanker jetty at the tip of the peninsula. One tank is still burning.'},
+  {id:'airport', name:'Grayhaven International Airport', kind:'facility', isNew:true, gen:'new: airport', x:1700, z:3950, note:'Two runways, a terminal with jet bridges, airliners parked where they stopped, cargo hangars and a crashed jet off the end of runway two.'},
+  {id:'pinecrest', name:'Pinecrest Estates', kind:'suburb', gen:'SUBURB · estates', x:200, z:-5300, lp:'l', note:'Cul-de-sacs and big lawns off the beltway, north of the wall.'},
+  {id:'shadyacres', name:'Shady Acres', kind:'suburb', gen:'SUBURB · trailer_park', x:-300, z:2950, lp:'l', note:'A trailer park by the beltway, under the airport flight path.'},
+  {id:'qz-westgate', name:'Westgate Checkpoint Camp', kind:'quarantine', gen:'MILITARY · quarantine', x:-1500, z:-1500, lp:'l', note:'The holding camp for anyone trying to get into Grayhaven, with pens, tents and a screening tent.'},
+  // the coast
+  {id:'naval', name:'Naval Station Merrow Point', kind:'military', gen:'MILITARY · army_base + piers', x:5600, z:-4850, note:'Navy piers with a destroyer and a half-sunk patrol boat, barracks, an armory and a helipad.'},
+  {id:'capemerrow', name:'Cape Merrow', kind:'hamlet', gen:'PORT · fishing', x:6250, z:-5150, note:'A fishing village on the cape, with boat sheds, net lofts, a chapel and a bait shop.'},
+  {id:'lighthouse', name:'Cape Merrow Lighthouse', kind:'landmark', isNew:true, gen:'new: lighthouse', x:6750, z:-5150, lp:'b', note:'A tall white lighthouse on the cliffs with a keeper’s cottage. Its lamp still turns at night.'},
+  {id:'ravenrock', name:'Ravenrock Penitentiary', kind:'facility', isNew:true, gen:'new: island prison', x:6600, z:-1500, lp:'b', note:'A maximum-security prison on a rock in the middle of the bay. The causeway was blown, and the cells were never opened.'},
+  {id:'seabright', name:'Seabright', kind:'town', gen:'TOWN · main_street', x:3900, z:5800, lp:'l', note:'A beach town with motels, surf shops, ice-cream parlours and a main street running down to the sand.'},
+  {id:'boardwalk', name:'Seabright Boardwalk', kind:'facility', isNew:true, gen:'new: boardwalk & pier', x:4550, z:6050, note:'A wooden boardwalk with arcades and a long pier with a Ferris wheel, a carousel and a rollercoaster at the end.'},
+  {id:'qz-seabright', name:'Seabright Field Hospital', kind:'quarantine', gen:'MILITARY · quarantine', x:3100, z:6500, lp:'l', note:'FEMA tents behind the dunes, with an aid station and a helipad.'},
+  {id:'gullharbor', name:'Gull Harbor', kind:'hamlet', gen:'PORT · fishing', x:4650, z:7500, lp:'l', note:'A fishing harbour with trawlers, a cannery and a breakwater.'},
+  {id:'hollis', name:'Hollis Island Quarantine Station', kind:'facility', isNew:true, gen:'new: island quarantine', x:6400, z:6200, lp:'b', note:'An old quarantine hospital the Army reopened for the first cases. It went quiet in week one.'},
+  // inland cities and towns
+  {id:'riverside', name:'Riverside', kind:'city', gen:'DOWNTOWN · old_city', x:-2600, z:-1950, lp:'t', note:'An old mill city on the Calder, with a brick downtown, a courthouse, a hospital and the railway bridge.'},
+  {id:'qz-riverside', name:'Riverside Quarantine Zone', kind:'quarantine', gen:'MILITARY · quarantine', x:-3500, z:-2850, lp:'l', note:'A sports-field camp with holding pens and a burn pit.'},
+  {id:'ashby', name:'Ashby', kind:'city', gen:'DOWNTOWN · city', x:-3000, z:2300, lp:'l', note:'The inland county seat: a compact downtown, Ashby General Hospital, the sheriff’s office and the high school.'},
+  {id:'ashby-hts', name:'Ashby Heights', kind:'suburb', gen:'SUBURB · estates', x:-1800, z:3300, note:'Newer estates on the hill east of Ashby.'},
+  {id:'qz-ashby', name:'Ashby Quarantine Zone', kind:'quarantine', gen:'MILITARY · quarantine', x:-3800, z:1250, lp:'l', note:'The fairground turned screening station, with a tent city on the showground.'},
+  {id:'kingsbridge', name:'Kingsbridge', kind:'town', gen:'TOWN · county_seat', x:800, z:6400, note:'A commuter town south of the airport, with a courthouse square, a mall and a high school.'},
+  {id:'millbrook', name:'Millbrook', kind:'town', gen:'TOWN · mill_town', x:-5000, z:-1300, note:'A mill town below the dam, with a textile mill, rows of workers’ houses and a lumber yard.'},
+  {id:'fairview', name:'Fairview', kind:'town', gen:'TOWN · county_seat', x:-5400, z:3600, lp:'t', note:'The farm valley’s town, with a feed store, a grain elevator, a livestock auction and a fairground.'},
+  {id:'hollowcreek', name:'Hollow Creek', kind:'hamlet', gen:'TOWN · hamlet', x:-1400, z:5400, lp:'l', note:'A creekside hamlet with a covered bridge, a church and a general store.'},
+  {id:'dunmore', name:'Dunmore', kind:'hamlet', gen:'TOWN · hamlet', x:-6100, z:1300, note:'A crossroads at the foot of the mountains, with a church, a gas station and a grain elevator.'},
+  {id:'timberline', name:'Timberline', kind:'hamlet', gen:'TOWN · hamlet', x:-7200, z:5600, note:'A logging hamlet deep in the mountains, with a sawmill and a ranger station.'},
+  {id:'guard', name:'National Guard Depot', kind:'military', gen:'MILITARY · depot', x:-4600, z:4700, note:'Guard trucks and supply crates on the Timberline road.'},
+  // Fort Caldwell and the mountains
+  {id:'fort', name:'Fort Caldwell Main Post', kind:'military', gen:'MILITARY · army_base', x:-2700, z:-5900, note:'Barracks, motor pools, the PX and the armory. The biggest gun cache in the county.'},
+  {id:'airfield', name:'Caldwell Army Airfield', kind:'facility', isNew:true, gen:'new: airfield', x:-1300, z:-6900, note:'A military runway, hangars, a control tower and crashed transport helicopters.'},
+  {id:'ranges', name:'Caldwell Tank Ranges', kind:'facility', isNew:true, gen:'new: firing range', x:-3000, z:-7300, note:'Open firing ranges with burnt-out armor, berms and observation towers.'},
+  {id:'munitions', name:'Munitions Depot', kind:'military', gen:'MILITARY · depot', x:-3900, z:-6600, note:'Earth-covered bunkers, ammo crates and a fuel farm.'},
+  {id:'lab', name:'Ridgeview Labs', kind:'facility', isNew:true, gen:'new: research lab', x:-6600, z:-6000, note:'A fenced research compound high in the mountains, with labs below ground. Maybe where it started.'},
+  {id:'camp', name:'Camp Black Pine', kind:'facility', isNew:true, gen:'new: summer camp', x:-6600, z:-3250, lp:'t', note:'A lakeside summer camp with cabins, a mess hall, canoes and a campfire ring.'},
+  {id:'dam', name:'Black Pine Dam', kind:'landmark', isNew:true, gen:'new: dam', x:-5400, z:-2350, note:'A concrete dam holding back the reservoir, with a power house and spillway over the Calder.'}
+];
+const PI = {}; P.forEach(p => { p.ox = p.x; p.oz = p.z; PI[p.id] = p; });
+
+// the sea, outlined clockwise from the north edge: everything east of the coast
+const SEA = [[4600,-8400],[4700,-7200],[5000,-6200],[5900,-5700],[6900,-5300],[6600,-4700],[5600,-4300],[4900,-3900],[4300,-3300],[4200,-2500],[4000,-1700],[3700,-1000],[3900,-400],[4200,300],[4600,900],[5400,1300],[6400,1500],[7400,1700],[7300,2300],[6400,2700],[5600,3300],[5000,4300],[4700,5300],[4800,6400],[5200,7400],[5600,8400],[8600,8400],[8600,-8400]];
+const ISLANDS = [
+  {id:'ravenrock-i', name:'Ravenrock Island', x:6600, z:-1500, rx:560, rz:360, cliff:true},
+  {id:'hollis-i', name:'Hollis Island', x:6400, z:6200, rx:420, rz:280, cliff:false}
+];
+const RIVERS = [
+  {id:'calder-up', name:'Calder River', w:90, lbl:[0.3], pts:[[-5400,-2350],[-4800,-1800],[-3800,-1550],[-2600,-1450],[-1400,-1200],[-200,-950]]},
+  {id:'calder', name:'Calder River', w:180, lbl:[0.25], pts:[[-200,-950],[900,-1050],[1500,-980],[1900,-1000]]},
+  {id:'north-arm', name:'North Arm', w:260, lbl:[0.55], pts:[[1900,-1000],[2150,-1700],[2600,-2300],[3200,-2480],[3900,-2500],[4500,-2500]]},
+  {id:'south-arm', name:'South Arm', w:260, lbl:[0.55], pts:[[1900,-1000],[2200,-350],[2700,-20],[3300,20],[3900,20],[4400,40]]},
+  {id:'hollow', name:'Hollow Creek', w:45, lbl:[0.35], pts:[[-1200,8400],[-1100,6600],[-1500,5400],[-2400,4000],[-2600,2900],[-2600,1400],[-2000,0],[-1400,-1200]]}
+];
+const LAKES = [
+  {id:'reservoir', name:'Black Pine Reservoir', x:-6400, z:-2600, rx:1000, rz:420}
+];
+const ROADS = [
+  {id:'i88', name:'I-88', cls:'i', shield:'88', sAt:[0.18,0.55], pts:[[-8400,-4000],[-6800,-3900],[-5400,-3700],[-4200,-3400],[-2800,-3250],[-1400,-3300],[0,-3000],'gh-mid','gh-cbd']},
+  {id:'i95', name:'I-95', cls:'i', shield:'95', sAt:[0.12,0.62,0.86], pts:[[3300,-8400],[3100,-6700],[2700,-5300],'gh-up','gh-mid',[2700,-1650],[2750,-600],[2500,250],'southport',[2350,2500],[2400,3400],[2100,4600],[1500,5700],'kingsbridge',[900,7300],[1000,8400]]},
+  {id:'i495', name:'I-495 Beltway', cls:'i', shield:'495', sAt:[0.3,0.75], pts:[[3050,-6300],[1400,-5800],'pinecrest',[-1300,-4400],[-1700,-2600],[-1600,-400],[-1300,1500],[-600,2400],[600,3300],'airport',[2400,3400]]},
+  {id:'us1', name:'US-1 Shore Road', cls:'us', shield:'1', sAt:[0.06,0.42,0.8], pts:[[4300,-8400],[4400,-7000],[4600,-6200],[5200,-5600],'capemerrow','naval',[4600,-4300],'term-n','gh-old','gh-cbd',[3300,-950],'gh-fin','gh-east','megaport',[5100,2500],'shipyard',[5450,3050],[4750,4200],'seabright',[4200,6700],'gullharbor',[5000,8400]]},
+  {id:'rt12', name:'Route 12 River Road', cls:'ky', shield:'12', sAt:[0.35,0.78], pts:['gh-cbd','westgate',[-500,-1300],'qz-westgate','riverside','millbrook',[-6200,-1600],[-8400,-1700]]},
+  {id:'rt31', name:'Route 31', cls:'ky', shield:'31', sAt:[0.2,0.7], pts:['riverside',[-3200,-300],'qz-ashby','ashby',[-2300,4000],'hollowcreek',[-1100,6800],[-1000,8400]]},
+  {id:'rt7', name:'Route 7', cls:'ky', shield:'7', sAt:[0.5], pts:['ashby',[-4200,2000],'dunmore',[-7400,1500],[-8400,1400]]},
+  {id:'rt16', name:'Route 16', cls:'ky', shield:'16', sAt:[0.5], pts:['ashby',[-4300,3200],'fairview','guard',[-5800,5600],'timberline',[-7600,6600],[-8400,6900]]},
+  {id:'rt4', name:'Route 4', cls:'ky', shield:'4', sAt:[0.4], pts:['riverside','qz-riverside',[-3000,-4300],'fort',[-2400,-7600],[-2200,-8400]]},
+  {id:'rt22', name:'Route 22', cls:'ky', shield:'22', sAt:[0.5], pts:['fort',[-4300,-5000],[-5600,-4200],'camp']},
+  {id:'rt9', name:'Route 9', cls:'ky', shield:'9', sAt:[0.5], pts:['ashby','ashby-hts','shadyacres',[-600,2400]]},
+  {id:'rt20', name:'Route 20', cls:'ky', shield:'20', sAt:[0.3,0.75], pts:['hollowcreek',[-300,6200],'kingsbridge',[2200,6100],'qz-seabright','seabright']},
+  {id:'refrd', name:'Refinery Road', cls:'ky', shield:'5', sAt:[0.5], pts:['shipyard','refinery']},
+  {id:'causeway', name:'Ravenrock Causeway (blown)', cls:'ky', blownAt:0.55, pts:[[6250,-4550],[6500,-3200],'ravenrock']},
+  {id:'labrd', name:'Restricted access road', cls:'loc', pts:[[-5600,-4200],[-6000,-5200],'lab']},
+  {id:'tanktrail', name:'Fort Caldwell tank trail', cls:'loc', pts:['fort','airfield','ranges','munitions',[-3500,-5800]]},
+  {id:'damrd', name:'Dam road', cls:'loc', pts:['dam',[-5200,-1500]]},
+  {id:'stadrd', name:'Stadium Boulevard', cls:'loc', pts:['westgate',[1700,-1250],'stadium','union']},
+  {id:'foundryrd', name:'Foundry Road', cls:'loc', pts:['southport','foundry',[-600,2400]]},
+  {id:'northrd', name:'Northside Avenue', cls:'loc', pts:['northside','gh-up']},
+  {id:'qzsb', name:'Field hospital access', cls:'loc', pts:['seabright','qz-seabright']},
+  {id:'bwrd', name:'Boardwalk', cls:'loc', pts:['seabright','boardwalk']},
+  {id:'lhrd', name:'Lighthouse road', cls:'loc', pts:['capemerrow','lighthouse']}
+];
+const FERRIES = [
+  {id:'f-raven', name:'Prison boat (Old Harbor to Ravenrock)', pts:['gh-old',[4800,-2100],[5900,-1700],'ravenrock']},
+  {id:'f-hollis', name:'Quarantine launch (Seabright pier to Hollis Island)', pts:[[5200,6050],[5800,6100],'hollis']}
+];
+// quays and piers, drawn from each place so they move with it: [dx0, dz0, dx1, dz1, width in blocks]
+const PIERS = [
+  {at:'megaport', s:[[-300,-850],[900,-500],90]}, {at:'megaport', s:[[300,-1000],[600,-1500],70]}, {at:'megaport', s:[[750,-850],[1050,-1300],70]}, {at:'megaport', s:[[-150,-900],[-120,-1350],70]},
+  {at:'term-n', s:[[500,-350],[900,-650],70]}, {at:'term-n', s:[[550,50],[850,-150],60]},
+  {at:'gh-old', s:[[500,150],[850,100],25]}, {at:'gh-old', s:[[450,450],[800,420],25]}, {at:'gh-old', s:[[580,-150],[950,-230],25]},
+  {at:'gh-east', s:[[700,-250],[1050,-450],30]},
+  {at:'shipyard', s:[[-300,-450],[-250,-850],60]}, {at:'shipyard', s:[[100,-450],[150,-850],60]},
+  {at:'refinery', s:[[200,-400],[350,-900],25]},
+  {at:'naval', s:[[0,450],[60,800],30]}, {at:'naval', s:[[300,350],[360,700],30]}, {at:'naval', s:[[-280,560],[-230,900],30]},
+  {at:'capemerrow', s:[[0,-280],[0,-560],15]}, {at:'capemerrow', s:[[300,-260],[320,-500],15]},
+  {at:'gullharbor', s:[[480,0],[800,0],15]}, {at:'gullharbor', s:[[450,250],[780,350],15]},
+  {at:'boardwalk', s:[[200,0],[950,0],20]}
+];
+// the big ships at the quays and at anchor: x, z, heading in degrees, length in blocks
+const SHIPS = [[4750,1120,-15,400],[5200,1280,-15,360],[4120,-3500,-50,300],[5700,800,-10,330],[6800,-300,25,380],[7600,-2600,40,340],[5830,1150,-85,280]];
+const RAIL = [
+  {id:'loop', name:'County railway loop', closed:true, pts:['union',[2950,-1750],[2850,-2700],'st-uptown',[1300,-4400],'st-pinecrest',[-900,-5300],'st-fort',[-2700,-4000],'st-riverside',[-3600,-1500],'st-millbrook',[-5500,-200],'st-dunmore',[-5800,2300],'st-fairview',[-4000,3100],'st-ashby',[-2200,3900],'st-hollow',[-300,5800],'st-kings',[2300,6200],'st-seabright',[2600,4600],'st-airport',[1400,2700],'st-foundry',[1900,1300],'st-southport',[2800,250],[3150,-550]]}
+];
+const SUBWAY = [
+  {id:'subway', name:'Grayhaven Subway', closed:true, pts:['stadium','tower','power','waterfront','union','mercy']}
+];
+const WALL = [[4980,-3920],[3000,-4600],[1100,-4700],[-500,-3300],[-700,-1000],[-500,1300],[700,2600],[2700,3000],[4500,2500],[5000,1100]];
+// the walled city: the wall plus the bay shore it meets
+const CORE = WALL.concat([[4600,900],[4200,300],[3900,-400],[3700,-1000],[4000,-1700],[4200,-2500],[4300,-3300],[4900,-3900]]);
+const SPRAWL = [[4700,-6600],[2600,-6700],[600,-6300],[-1900,-5000],[-2300,-2700],[-2300,600],[-1700,2900],[-300,4300],[1300,4900],[2600,4500],[3600,4000],[5200,3700],[6200,3000],[6400,2200],[5200,1500]];
+const TOWNS_URBAN = [['riverside',800],['ashby',900],['kingsbridge',520],['seabright',480],['millbrook',380]];
+const MIL_AREAS = [
+  {id:'caldwell', name:'Fort Caldwell Military Reservation', lbl:[-2300,-5050], pts:[[-4400,-7900],[-500,-7900],[0,-6300],[-800,-5200],[-2200,-4800],[-3800,-5000],[-4500,-6000]]}
+];
+const MOUNTAINS = [[-8192,-8192],[-4500,-8192],[-4700,-6800],[-5200,-5200],[-4900,-3900],[-5300,-3000],[-7600,-2000],[-6800,-600],[-6700,1800],[-6400,3200],[-6800,5000],[-6200,6800],[-6600,8192],[-8192,8192]];
+const FOREST = [
+  [[-8192,-8192],[-4100,-8192],[-4300,-6800],[-4700,-5200],[-4400,-3800],[-4900,-2900],[-7300,-1700],[-6400,-500],[-6300,1800],[-6000,3200],[-6400,5000],[-5800,6800],[-6200,8192],[-8192,8192]],
+  [[3200,-8192],[4700,-8192],[4900,-6400],[3600,-6200]],
+  [[-4200,5800],[-1800,6000],[-1500,8192],[-5600,8192]]
+];
+const MARSH = [[2500,4300],[3600,4000],[4800,4400],[4500,5000],[3300,5000],[2500,4800]];
+const FARM = [
+  [[-6700,600],[-4600,400],[-4100,1500],[-4300,3000],[-3000,4200],[-2600,5600],[-4200,5800],[-6200,6600],[-6800,5000],[-6400,3200]],
+  [[-500,-8192],[3000,-8192],[2900,-7000],[1400,-6600],[0,-6600]],
+  [[-1000,5600],[300,5500],[1800,7600],[1600,8192],[-1200,8192]]
+];
+const DISTRICTS = [
+  {t:'Black Pine|Mountains', x:-6550, z:-4550, cls:'knobs'}, {t:'Farm valley', x:-5900, z:2700, cls:'dist'}, {t:'North Plateau', x:1400, z:-7200, cls:'dist'}
+];
+const WRECKS = [[7600,4200,30],[7800,-6200,60],[7200,7400,10]];
+
+/* ---------------- geometry ---------------- */
+const hypot = Math.hypot;
+function pt(v){ if (typeof v === 'string'){ const p = PI[v]; return [p.x, p.z]; } return v; }
+function smooth(raw, n, closed){
+  const pts = raw.map(pt); if (pts.length < 3) return pts;
+  const L = pts.length, out = [];
+  const at = i => closed ? pts[(i + L) % L] : pts[Math.max(0, Math.min(L-1, i))];
+  const segs = closed ? L : L - 1;
+  for (let i = 0; i < segs; i++){
+    const p0 = at(i-1), p1 = at(i), p2 = at(i+1), p3 = at(i+2);
+    for (let j = 0; j < n; j++){
+      const t = j/n, t2 = t*t, t3 = t2*t;
+      const f = k => 0.5*((2*p1[k]) + (-p0[k]+p2[k])*t + (2*p0[k]-5*p1[k]+4*p2[k]-p3[k])*t2 + (-p0[k]+3*p1[k]-3*p2[k]+p3[k])*t3);
+      out.push([f(0), f(1)]);
+    }
+  }
+  if (!closed) out.push(pts[L-1]);
+  return out;
+}
+function pathD(pts, close){ let d = 'M' + pts.map(p => p[0].toFixed(0) + ' ' + p[1].toFixed(0)).join('L'); return close ? d + 'Z' : d; }
+function lenOf(pts){ let s = 0; for (let i = 1; i < pts.length; i++) s += hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1]); return s; }
+function along(pts, f){
+  const total = lenOf(pts); let target = total*f, s = 0;
+  for (let i = 1; i < pts.length; i++){
+    const l = hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1]);
+    if (s + l >= target){ const t = (target - s)/(l||1); return [pts[i-1][0] + (pts[i][0]-pts[i-1][0])*t, pts[i-1][1] + (pts[i][1]-pts[i-1][1])*t, Math.atan2(pts[i][1]-pts[i-1][1], pts[i][0]-pts[i-1][0])]; }
+    s += l;
+  }
+  const a = pts[pts.length-1]; return [a[0], a[1], 0];
+}
+function segX(a, b, c, d){
+  const r1 = b[0]-a[0], r2 = b[1]-a[1], s1 = d[0]-c[0], s2 = d[1]-c[1];
+  const den = r1*s2 - r2*s1; if (Math.abs(den) < 1e-9) return null;
+  const t = ((c[0]-a[0])*s2 - (c[1]-a[1])*s1)/den, u = ((c[0]-a[0])*r2 - (c[1]-a[1])*r1)/den;
+  if (t < 0 || t > 1 || u < 0 || u > 1) return null;
+  return [a[0]+r1*t, a[1]+r2*t, Math.atan2(r2, r1)];
+}
+function crossings(A, Bp){
+  const out = [];
+  for (let i = 1; i < A.length; i++) for (let j = 1; j < Bp.length; j++){
+    const x = segX(A[i-1], A[i], Bp[j-1], Bp[j]); if (x) out.push(x);
+  }
+  return out;
+}
+function inPoly(x, z, poly){
+  let c = false;
+  for (let i = 0, j = poly.length-1; i < poly.length; j = i++){
+    const a = poly[i], b = poly[j];
+    if ((a[1] > z) !== (b[1] > z) && x < (b[0]-a[0])*(z-a[1])/(b[1]-a[1]) + a[0]) c = !c;
+  }
+  return c;
+}
+function polyArea(poly){ let s = 0; for (let i = 0, j = poly.length-1; i < poly.length; j = i++) s += (poly[j][0] + poly[i][0])*(poly[j][1] - poly[i][1]); return Math.abs(s/2); }
+function distSeg(p, a, b){
+  const dx = b[0]-a[0], dz = b[1]-a[1], l2 = dx*dx + dz*dz;
+  let t = l2 ? ((p[0]-a[0])*dx + (p[1]-a[1])*dz)/l2 : 0; t = Math.max(0, Math.min(1, t));
+  return hypot(p[0]-a[0]-t*dx, p[1]-a[1]-t*dz);
+}
+function distLine(p, pts){ let m = Infinity; for (let i = 1; i < pts.length; i++) m = Math.min(m, distSeg(p, pts[i-1], pts[i])); return m; }
+function rng(seed){ let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0)/4294967296; }; }
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function gridRef(x, z){ const c = 'ABCDEFGHIJKLMNOP'[Math.max(0, Math.min(15, Math.floor((x+B)/1024)))]; return c + (Math.max(0, Math.min(15, Math.floor((z+B)/1024))) + 1); }
+
+const COAST = smooth(SEA.slice(0, SEA.length - 2), 10, false);
+const SEA_S = COAST.concat([[8600,8400],[8600,-8400]]);
+const inIsland = (x, z, pad) => ISLANDS.some(i => ((x-i.x)/(i.rx+pad))**2 + ((z-i.z)/(i.rz+pad))**2 < 1);
+const inSea = (x, z) => inPoly(x, z, SEA_S) && !inIsland(x, z, 0);
+function coastX(z){ for (let i = 1; i < COAST.length; i++){ const a = COAST[i-1], b = COAST[i]; if ((a[1]-z)*(b[1]-z) <= 0 && a[1] !== b[1]) return a[0] + (b[0]-a[0])*(z-a[1])/(b[1]-a[1]); } return 0; }
+const FENCE_LINE = [[coastX(-FENCE) - 40, -FENCE], [-FENCE, -FENCE], [-FENCE, FENCE], [coastX(FENCE) - 40, FENCE]];
+const NAVY_LINE = [[coastX(-FENCE) + 400, -FENCE], [FENCE, -FENCE], [FENCE, FENCE], [coastX(FENCE) + 400, FENCE]];
+const WALL_S = smooth(WALL, 8);
+const RIVER_S = RIVERS.map(r => ({...r, s: smooth(r.pts, 10)}));
+const ISLE = (() => { const n = RIVER_S.find(r => r.id === 'north-arm').s, so = RIVER_S.find(r => r.id === 'south-arm').s; return n.concat(so.slice().reverse()); })();
+const onIsland = (x, z) => inPoly(x, z, ISLE) && !inSea(x, z) && !RIVER_S.some(r => r.id.endsWith('-arm') && distLine([x,z], r.s) < r.w/2);
+function islandArea(){ let n = 0; for (let x = 1800; x < 4600; x += 50) for (let z = -2700; z < 300; z += 50) if (onIsland(x, z)) n++; return n*2500/1e6; }
+const loopS = r => { const s = smooth(r.pts, 10, r.closed); return r.closed ? s.concat([s[0]]) : s; };
+function inWater(x, z, pad){
+  for (const r of RIVER_S) if (distLine([x,z], r.s) < r.w/2 + pad) return true;
+  for (const l of LAKES) if (((x-l.x)/(l.rx+pad))**2 + ((z-l.z)/(l.rz+pad))**2 < 1) return true;
+  if (inSea(x, z) || (!inIsland(x, z, 0) && distLine([x,z], COAST) < pad)) return true;
+  return false;
+}
+
+/* ---------------- view ---------------- */
+let view = {cx:0, cz:0, w:2*B*1.02}, k = 1;
+function rect(){ return svg.getBoundingClientRect(); }
+function clampView(){
+  view.w = Math.max(500, Math.min(2*B*1.06, view.w));
+  const lim = B - Math.min(view.w/2, B) + view.w*0.03;
+  view.cx = Math.max(-lim, Math.min(lim, view.cx)); view.cz = Math.max(-lim, Math.min(lim, view.cz));
+}
+function applyView(){
+  clampView();
+  const r = rect(); const h = view.w*((r.height || 1)/(r.width || 1));
+  svg.setAttribute('viewBox', `${view.cx - view.w/2} ${view.cz - h/2} ${view.w} ${h}`);
+  k = view.w/(r.width || 1);
+  updateScale();
+}
+window.__setView = (cx, cz, w) => { view.cx = cx; view.cz = cz; view.w = w; applyView(); };
+function toWorld(cx, cy){ const r = rect(); const h = view.w*r.height/r.width; return [view.cx - view.w/2 + (cx - r.left)*k, view.cz - h/2 + (cy - r.top)*k]; }
+function zoomAt(f, cx, cy){
+  const before = toWorld(cx, cy); view.w *= f; clampView();
+  k = view.w/rect().width; const after = toWorld(cx, cy);
+  view.cx += before[0] - after[0]; view.cz += before[1] - after[1]; applyView();
+}
+function updateScale(){
+  for (const el of world.querySelectorAll('[data-s]')) el.setAttribute('transform', `translate(${el.dataset.x} ${el.dataset.z}) scale(${k})${el.dataset.r ? ' rotate(' + el.dataset.r + ')' : ''}`);
+  for (const el of world.querySelectorAll('[data-w]')) el.setAttribute('stroke-width', Math.max(+el.dataset.w, +el.dataset.min*k));
+  for (const el of world.querySelectorAll('[data-fs]')){ el.setAttribute('font-size', +el.dataset.fs*k); el.setAttribute('letter-spacing', (+el.dataset.ls || 0)*k); }
+  for (const p of svg.querySelectorAll('pattern[data-p]')){ const s = +p.dataset.p*k; p.setAttribute('width', s); p.setAttribute('height', s); }
+  svg.classList.toggle('zoomed', k < 11);
+  svg.classList.toggle('far', k > 30);
+  const sb = document.getElementById('scalebar'); const target = 110*k;
+  const nice = [100,250,500,1000,2000,4000].reduce((a, b) => Math.abs(b-target) < Math.abs(a-target) ? b : a);
+  sb.firstChild.textContent = nice >= 1000 ? (nice/1000) + ' km · ' + nice.toLocaleString() + ' blocks' : nice + ' blocks';
+  sb.querySelector('i').style.width = (nice/k) + 'px';
+}
+
+/* ---------------- edits (shared db) ---------------- */
+const edits = {}; let general = ''; let db = null, canWrite = true;
+let selected = null, editMode = false;
+function applyEdits(){
+  P.forEach(p => { const e = edits[p.id]; if (e && typeof e.x === 'number' && typeof e.z === 'number'){ p.x = e.x; p.z = e.z; } else { p.x = p.ox; p.z = p.oz; } });
+}
+const isMoved = p => Math.abs(p.x - p.ox) > 1 || Math.abs(p.z - p.oz) > 1;
+
+/* ---------------- render ---------------- */
+const g = (x, z, inner, cls, r, feat) => `<g ${cls ? `class="${cls}" ` : ''}${feat ? `data-feat="${feat}" ` : ''}data-s data-x="${x|0}" data-z="${z|0}"${r !== undefined ? ` data-r="${(+r).toFixed(0)}"` : ''}>${inner}</g>`;
+let lastNet = null;
+function render(){
+  const h = [];
+  const seaD = pathD(SEA_S, true);
+  // land, mountains, farms, the city
+  h.push(`<g class="lay-terrain"><rect class="void" x="-${B*1.2}" y="-${B*1.2}" width="${B*2.4}" height="${B*2.4}"/>`);
+  h.push(`<g clip-path="url(#clipWorld)"><rect class="land" x="-${B}" y="-${B}" width="${2*B}" height="${2*B}"/>`);
+  FARM.forEach(f => h.push(`<path class="farm" d="${pathD(f, true)}"/><path class="farmhatch" d="${pathD(f, true)}"/>`));
+  const md = pathD(smooth(MOUNTAINS, 6, true), true);
+  h.push(`<path class="knob" d="${md}"/>`);
+  FOREST.forEach(f => h.push(`<path class="forest" d="${pathD(smooth(f, 5, true), true)}" fill-opacity=".7"/>`));
+  h.push(`<path class="knobhatch" d="${md}"/>`);
+  const mars = pathD(smooth(MARSH, 6, true), true);
+  h.push(`<path class="marsh hit" data-feat="marsh" d="${mars}"/><path class="marshhatch" d="${mars}" pointer-events="none"/>`);
+  const sp = pathD(smooth(SPRAWL, 6, true), true), cd = pathD(CORE, true);
+  h.push(`<path class="sprawl" d="${sp}"/><path class="streets2" d="${sp}"/>`);
+  TOWNS_URBAN.forEach(([id, r]) => { const p = PI[id]; h.push(`<circle class="sprawl" cx="${p.x}" cy="${p.z}" r="${r*1.5}"/><circle class="streets2" cx="${p.x}" cy="${p.z}" r="${r*1.5}"/><circle class="core" cx="${p.x}" cy="${p.z}" r="${r}"/><circle class="streets" cx="${p.x}" cy="${p.z}" r="${r}"/>`); });
+  h.push(`<path class="core" d="${cd}"/><path class="streets" d="${cd}"/>`);
+  P.forEach(p => { if (p.kind === 'district' || p.kind === 'station' || TOWNS_URBAN.some(t => t[0] === p.id)) return; const r = {city:560, town:380, hamlet:200, suburb:320, port:340, industry:380, military:420, quarantine:220, facility:300, landmark:160}[p.kind]; h.push(`<circle class="urban" cx="${p.x}" cy="${p.z}" r="${r}"/>`); });
+  coastRuns('beach').forEach(run => h.push(`<path class="beach" d="${pathD(run)}" data-w="180" data-min="4"/>`));
+  h.push(`</g></g>`);
+  // military land
+  h.push(`<g class="lay-mil" clip-path="url(#clipWorld)">`);
+  MIL_AREAS.forEach(a => { const d = pathD(smooth(a.pts, 6, true), true); h.push(`<path class="milarea hit" data-feat="mil:${a.id}" d="${d}"/><path class="milhatch" d="${d}" pointer-events="none"/>`); });
+  h.push(`</g>`);
+  // water: rivers, then the sea over their mouths, then islands, coast and quays
+  h.push(`<g class="lay-terrain" clip-path="url(#clipWorld)">`);
+  RIVER_S.forEach(r => h.push(`<path class="river edge" d="${pathD(r.s)}" data-w="${r.w+30}" data-min="${r.w > 120 ? 4.4 : 2.8}"/>`));
+  RIVER_S.forEach(r => h.push(`<path class="river body" d="${pathD(r.s)}" data-w="${r.w}" data-min="${r.w > 120 ? 3 : 1.8}"/>`));
+  LAKES.forEach(l => h.push(`<ellipse class="lake hit" data-feat="lake:${l.id}" cx="${l.x}" cy="${l.z}" rx="${l.rx}" ry="${l.rz}"/>`));
+  h.push(`<clipPath id="clipSea"><path d="${seaD}"/></clipPath>`);
+  h.push(`<path class="sea hit" data-feat="sea" d="${seaD}"/>`);
+  h.push(`<path class="shallow" clip-path="url(#clipSea)" d="${pathD(COAST)}" data-w="420" data-min="8" pointer-events="none"/>`);
+  ISLANDS.forEach(i => h.push(`<ellipse class="shallow" cx="${i.x}" cy="${i.z}" rx="${i.rx + 120}" ry="${i.rz + 120}" stroke-width="240" pointer-events="none"/><ellipse class="island hit" data-feat="island:${i.id}" cx="${i.x}" cy="${i.z}" rx="${i.rx}" ry="${i.rz}"/>`));
+  coastRuns('cliff').forEach(run => h.push(`<path class="cliff" d="${pathD(run)}"/><path class="cliffticks" d="${pathD(run)}"/>`));
+  coastRuns('seawall').forEach(run => h.push(`<path class="seawall" d="${pathD(run)}"/>`));
+  PIERS.forEach(pr => { const p = PI[pr.at], s = pr.s; h.push(`<line class="pier" x1="${p.x + s[0][0]}" y1="${p.z + s[0][1]}" x2="${p.x + s[1][0]}" y2="${p.z + s[1][1]}" data-w="${s[2]}" data-min="2.4"/>`); });
+  h.push(`</g>`);
+  // ships
+  h.push(`<g class="lay-terrain">`);
+  SHIPS.forEach(([x, z, r, len]) => h.push(`<g class="cargo hit" data-feat="ship" transform="translate(${x} ${z}) rotate(${r})"><path d="M${-len/2} -${len/14} L${len*0.42} -${len/14} L${len/2} 0 L${len*0.42} ${len/14} L${-len/2} ${len/14} Z"/>${[0.1,0.25,0.4,0.55,0.7].map(f => `<rect x="${-len/2 + len*f}" y="${-len/20}" width="${len*0.12}" height="${len/10}" fill-opacity=".75"/>`).join('')}</g>`));
+  WRECKS.forEach(w => h.push(g(w[0], w[1], `<path d="M-8 1 L6 1 L8 -2 M-2 1 L-2 -4 M2 1 L3 -3"/>`, 'wreck hit', w[2], 'wreck')));
+  h.push(`</g>`);
+  // grid
+  h.push(`<g class="lay-grid">`);
+  for (let i = -8; i <= 8; i++){ const v = i*1024; h.push(`<line x1="${v}" y1="${-B}" x2="${v}" y2="${B}"/><line x1="${-B}" y1="${v}" x2="${B}" y2="${v}"/>`); }
+  for (let i = 0; i < 16; i++){
+    h.push(g(-B + i*1024 + 512, -B, `<text class="gridlbl" y="14" text-anchor="middle">${'ABCDEFGHIJKLMNOP'[i]}</text>`));
+    h.push(g(-B, -B + i*1024 + 512, `<text class="gridlbl" x="6" y="4">${i+1}</text>`));
+  }
+  h.push(`<rect class="border" x="-${B}" y="-${B}" width="${2*B}" height="${2*B}"/></g>`);
+
+  const roadsS = ROADS.map(r => ({...r, s: smooth(r.pts, 10)}));
+  const railS = RAIL.map(r => ({...r, s: loopS(r)}));
+  const subS = SUBWAY.map(r => ({...r, s: loopS(r)}));
+
+  // generated fill preview
+  h.push(`<g class="lay-fill">`);
+  fillPreview(roadsS).forEach(f => h.push(f.t === 'farm'
+    ? g(f.x, f.z, `<rect class="fill-farm" x="-3" y="-2.2" width="6" height="4.4"/>`, '', f.r)
+    : g(f.x, f.z, `<circle class="fill-stop" r="2.2"/>`)));
+  h.push(`</g>`);
+
+  // roads, rail, ferries
+  h.push(`<g class="lay-roads" clip-path="url(#clipWorld)">`);
+  FERRIES.forEach(f => h.push(`<path class="ferry hit" data-feat="ferry:${f.id}" d="${pathD(smooth(f.pts, 8))}"/>`));
+  for (const cls of ['loc','ky','us','i']){
+    roadsS.filter(r => r.cls === cls && cls !== 'loc').forEach(r => h.push(`<path class="rd ${cls} c" d="${pathD(r.s)}"/>`));
+    roadsS.filter(r => r.cls === cls).forEach(r => h.push(`<path class="rd ${cls} f hit" data-feat="road:${r.id}" d="${pathD(r.s)}"/>`));
+  }
+  h.push(`</g><g class="lay-rail" clip-path="url(#clipWorld)">`);
+  railS.forEach(r => { let run = null; const runs = []; r.s.forEach(p => { if (onIsland(p[0], p[1]) || inWater(p[0], p[1], 0)){ if (!run){ run = []; runs.push(run); } run.push(p); } else run = null; }); runs.filter(x => x.length > 1).forEach(x => h.push(`<path class="rl v" d="${pathD(x)}" pointer-events="none"/>`)); });
+  railS.forEach(r => { const d = pathD(r.s); h.push(`<path class="rl a hit" data-feat="rail:${r.id}" d="${d}"/><path class="rl b" d="${d}" pointer-events="none"/>`); });
+  h.push(`</g><g class="lay-subway" clip-path="url(#clipWorld)">`);
+  subS.forEach(r => h.push(`<path class="sb hit" data-feat="subway:${r.id}" d="${pathD(r.s)}"/>`));
+  h.push(`</g>`);
+
+  // bridges, blown spans and checkpoints
+  const bridges = [], blown = [], cps = [];
+  [...roadsS, ...railS].forEach(r => {
+    if (r.cls === 'loc') return;
+    RIVER_S.forEach(rv => crossings(r.s, rv.s).forEach(x => bridges.push({x:x[0], z:x[1], ang:x[2]})));
+    if (r.blownAt){ const a = along(r.s, r.blownAt); blown.push({x:a[0], z:a[1], road:r.name}); }
+    crossings(r.s, FENCE_LINE).forEach(x => cps.push({x:x[0], z:x[1], on:'fence', road:r.name, rail:!r.cls}));
+    crossings(r.s, WALL_S).forEach(x => cps.push({x:x[0], z:x[1], on:'wall', road:r.name, rail:!r.cls}));
+  });
+  lastNet = {cps, blown};
+  h.push(`<g class="lay-roads">`);
+  bridges.forEach(b => h.push(g(b.x, b.z, `<path d="M-6 -5 Q0 -2.5 6 -5 M-6 5 Q0 2.5 6 5"/>`, 'bridge', b.ang*180/Math.PI)));
+  h.push(`</g>`);
+
+  // fence, navy line, wall
+  h.push(`<g class="lay-fence">`);
+  h.push(`<path class="fence2" d="${pathD(FENCE_LINE.map(([x, z]) => [x === -FENCE ? x + 60 : x, Math.abs(z) === FENCE ? z - Math.sign(z)*60 : z]))}"/>`);
+  h.push(`<path class="fence hit" data-feat="fence" d="${pathD(FENCE_LINE)}"/>`);
+  h.push(`<path class="navy hit" data-feat="navy" d="${pathD(NAVY_LINE)}"/>`);
+  const wd = pathD(WALL_S);
+  h.push(`<path class="wall hit" data-feat="wall" d="${wd}"/><path class="walltick" d="${wd}"/>`);
+  const fl = FENCE_LINE, fenceLen = lenOf(fl);
+  for (let s = 500; s < fenceLen - 300; s += 1300){
+    const a = along(fl, s/fenceLen);
+    if (cps.some(c => c.on === 'fence' && hypot(c.x-a[0], c.z-a[1]) < 500) || inWater(a[0], a[1], 0)) continue;
+    h.push(g(a[0], a[1], `<rect class="tower" x="-2.5" y="-2.5" width="5" height="5"/>`));
+  }
+  const nl = NAVY_LINE, navyLen = lenOf(nl);
+  for (let s = 900; s < navyLen; s += 2600){ const a = along(nl, s/navyLen); h.push(g(a[0], a[1], `<path d="M-9 -2 L7 -2 L10 0 L7 2 L-9 2 Z M-3 -4.5 H2 V-2 H-3 Z"/>`, 'ship hit', a[2]*180/Math.PI, 'navy')); }
+  cps.forEach((c, i) => h.push(g(c.x, c.z, `<rect x="-6" y="-6" width="12" height="12" rx="2"/><path d="M-3.5 0H3.5"/>`, `cp ${c.on === 'wall' ? 'wallcp' : ''} hit`, undefined, `cp:${i}`)));
+  blown.forEach((b, i) => h.push(g(b.x, b.z, `<circle r="7"/><path d="M-4 -4L4 4M4 -4L-4 4"/>`, 'blown hit', undefined, `blown:${i}`)));
+  h.push(`</g>`);
+
+  // labels
+  h.push(`<g class="lay-terrain" pointer-events="none">`);
+  h.push(g(1100, -150, `<text class="metro-lbl" text-anchor="middle">Grayhaven</text>`));
+  h.push(g(3150, -1420, `<text class="area-lbl isle" text-anchor="middle">Grayhaven Island</text>`));
+  h.push(g(3700, 4750, `<text class="area-lbl marsh" text-anchor="middle">Calder Marshes</text>`));
+  DISTRICTS.forEach(d => h.push(g(d.x, d.z, d.t.split('|').map((t, i) => `<text class="area-lbl ${d.cls}" text-anchor="middle" y="${i*20}">${esc(t)}</text>`).join(''))));
+  h.push(g(6400, 4400, `<text class="area-lbl sea" text-anchor="middle">Atlantic</text><text class="area-lbl sea" text-anchor="middle" y="22">Ocean</text>`));
+  h.push(g(5600, -2600, `<text class="area-lbl bay" text-anchor="middle">Grayhaven Bay</text>`, '', -8));
+  RIVER_S.forEach(r => (r.lbl || []).forEach((f, n) => {
+    const s = r.s[0][0] > r.s[r.s.length-1][0] ? r.s.slice().reverse() : r.s;
+    const slice = s.filter((p, i) => { const t = i/(s.length-1); return t >= f-0.08 && t <= f+0.16; });
+    if (slice.length < 2) return;
+    const pid = `rp-${r.id}-${n}`;
+    h.push(`<path id="${pid}" d="${pathD(slice)}" fill="none"/><text class="wlbl" data-fs="12.5" data-ls="2" dy="${r.w > 120 ? 4 : -4}"><textPath href="#${pid}" startOffset="5%">${esc(r.name)}</textPath></text>`);
+  }));
+  LAKES.forEach(l => h.push(g(l.x, l.z, `<text class="wlbl" font-size="11" text-anchor="middle" dy="4">${esc(l.name)}</text>`)));
+  h.push(`</g><g class="lay-mil" pointer-events="none">`);
+  MIL_AREAS.forEach(a => h.push(g(a.lbl[0], a.lbl[1], `<text class="area-lbl mil" text-anchor="middle">${esc(a.name)}</text>`)));
+  h.push(`</g><g class="lay-fence" pointer-events="none">`);
+  h.push(g(-1150, -2200, `<text class="area-lbl wall" text-anchor="middle" dy="-8">Grayhaven Blockade</text>`, '', -80));
+  h.push(g(-2000, FENCE, `<text class="area-lbl fence" text-anchor="middle" dy="-8">Exclusion Zone fence</text>`));
+  h.push(g(-FENCE, 1000, `<text class="area-lbl fence" text-anchor="middle" dy="-8">Exclusion Zone fence</text>`, '', -90));
+  h.push(g(FENCE, 900, `<text class="area-lbl navy" text-anchor="middle" dy="-8">Navy blockade</text>`, '', 90));
+  h.push(`</g>`);
+
+  // shields
+  h.push(`<g class="lay-roads" pointer-events="none">`);
+  roadsS.forEach(r => (r.sAt || []).forEach(f => {
+    const a = along(r.s, f), t = esc(r.shield);
+    if (r.cls === 'i') h.push(g(a[0], a[1], `<path d="M-10 -8 H10 V1 Q10 7 0 10 Q-10 7 -10 1Z"/><rect x="-10" y="-8" width="20" height="4"/><text y="2">${t}</text>`, 'shield i'));
+    else if (r.cls === 'us') h.push(g(a[0], a[1], `<path d="M-10 -8 H10 Q10 -2 8 2 Q4 9 0 10 Q-4 9 -8 2 Q-10 -2 -10 -8Z"/><text y="0.5">${t}</text>`, 'shield us'));
+    else { const w = Math.max(16, t.length*6 + 6); h.push(g(a[0], a[1], `<rect x="${-w/2}" y="-6.5" width="${w}" height="13" rx="6.5"/><text y="0.5">${t}</text>`, 'shield ky')); }
+  }));
+  h.push(`</g>`);
+
+  // places
+  h.push(`<g class="lay-places">`);
+  P.filter(isMoved).forEach(p => h.push(`<line class="ghostline" x1="${p.ox}" y1="${p.oz}" x2="${p.x}" y2="${p.z}"/>` + g(p.ox, p.oz, `<circle class="mk-ghost" r="5"/>`)));
+  P.slice().sort((a, b) => KINDS[b.kind].order - KINDS[a.kind].order).forEach(p => {
+    let shape;
+    if (p.kind === 'city') shape = `<circle class="mk-city" r="8"/><circle r="2.6" fill="#fff"/>`;
+    else if (p.kind === 'district') shape = `<circle class="mk-dist" r="5.5"/>`;
+    else if (p.kind === 'town') shape = `<circle class="mk-town" r="6"/>`;
+    else if (p.kind === 'hamlet') shape = `<circle class="mk-town" r="4"/>`;
+    else if (p.kind === 'suburb') shape = `<rect class="mk-suburb" x="-4.5" y="-4.5" width="9" height="9" rx="2"/>`;
+    else if (p.kind === 'port') shape = `<rect class="mk-port" x="-5.5" y="-5.5" width="11" height="11" transform="rotate(45)"/>`;
+    else if (p.kind === 'industry') shape = `<path class="mk-ind" d="M-6 6 V-1 L-2 -4 V-1 L2 -4 V-1 L6 -4 V6 Z"/>`;
+    else if (p.kind === 'military') shape = `<rect class="mk-mil" x="-6" y="-6" width="12" height="12"/><path d="M-3.5 0H3.5M0 -3.5V3.5" stroke="var(--halo)" stroke-width="1.6"/>`;
+    else if (p.kind === 'quarantine') shape = `<path class="mk-qz" d="M0 -7L7 6H-7Z"/>`;
+    else if (p.kind === 'station') shape = p.sub ? `<rect class="mk-st" x="-8" y="-6" width="16" height="12" rx="3"/><path class="mk-st-in" d="M-4.5 -2.5H4.5V1H-4.5Z"/><circle class="mk-sub" r="12"/>` : `<rect class="mk-st" x="-6" y="-4.5" width="12" height="9" rx="2"/><path class="mk-st-in" d="M-3 -1.5H3V1.5H-3Z"/>`;
+    else if (p.kind === 'landmark') shape = `<path class="mk-fac" d="M0 -8L2.3 -2.5L8 -2.5L3.4 1.2L5.2 7L0 3.5L-5.2 7L-3.4 1.2L-8 -2.5L-2.3 -2.5Z"/>`;
+    else shape = `<rect class="mk-fac" x="-5.5" y="-5.5" width="11" height="11" rx="1.5"/>`;
+    const ring = p.sub && p.kind !== 'station' ? `<circle class="mk-sub" r="12"/>` : '';
+    const cls = p.kind === 'station' ? 't-st' : p.kind === 'city' ? 't-city' : p.kind === 'town' ? 't-town' : p.kind === 'district' ? 't-dist' : ['military','quarantine','facility','landmark'].includes(p.kind) ? 't-mil' : 't-minor';
+    const always = p.kind === 'city' || p.kind === 'town' || p.id === 'megaport' || p.id === 'union';
+    let tx = 11, ty = 4.5, anchor = 'start';
+    if (p.lp === 'l'){ tx = -11; anchor = 'end'; }
+    if (p.lp === 't'){ tx = 0; ty = -12; anchor = 'middle'; }
+    if (p.lp === 'b'){ tx = 0; ty = 21; anchor = 'middle'; }
+    const sel = selected === p.id ? `<circle class="mk-ring" r="14"/>` : '';
+    h.push(`<g class="place hit lbl" data-id="${p.id}" data-s data-x="${p.x}" data-z="${p.z}">${sel}<circle r="13" fill="transparent"/>${ring}${shape}<text class="${cls} ${!always && selected !== p.id ? 'minor-lbl' : ''}" x="${tx}" y="${ty}" text-anchor="${anchor}">${esc(p.name)}</text></g>`);
+  });
+  h.push(`</g>`);
+  world.innerHTML = h.join('');
+  updateScale();
+  stats(roadsS, cps);
+}
+
+/** Runs of coastline by kind: sandy beach in the south, cliffs on the cape, quays and seawalls around the bay. */
+function coastKind(x, z){
+  if (x > 5200 && z < -4000 && z > -6000) return 'cliff';
+  if (z > 3100 || z < -6300) return 'beach';
+  if (z > -4100 && z < 3100) return 'seawall';
+  return 'plain';
+}
+function coastRuns(kind){
+  const runs = []; let cur = null;
+  for (let i = 0; i < COAST.length; i++){
+    const [x, z] = COAST[i];
+    if (Math.abs(z) > B + 100) { cur = null; continue; }
+    if (coastKind(x, z) === kind){ if (!cur){ cur = []; runs.push(cur); } cur.push(COAST[i]); } else cur = null;
+  }
+  if (kind === 'cliff') ISLANDS.filter(i => i.cliff).forEach(i => { const r = []; for (let a = 0; a <= 64; a++){ const t = a/64*Math.PI*2; r.push([i.x + i.rx*Math.cos(t), i.z + i.rz*Math.sin(t)]); } runs.push(r); });
+  return runs.filter(r => r.length > 1);
+}
+
+function fillPreview(roadsS){
+  const out = []; const r = rng(4242);
+  const nearPlace = (x, z, d) => P.some(p => hypot(p.x-x, p.z-z) < d);
+  const urban = (x, z) => inPoly(x, z, SPRAWL) || TOWNS_URBAN.some(([id, rad]) => hypot(PI[id].x-x, PI[id].z-z) < rad*1.5);
+  const blocked = (x, z) => MIL_AREAS.some(a => inPoly(x, z, a.pts)) || inWater(x, z, 140) || Math.abs(x) > FENCE-150 || Math.abs(z) > FENCE-150 || inPoly(x, z, MARSH) || urban(x, z);
+  for (let gx = -B + 500; gx < B; gx += 820) for (let gz = -B + 500; gz < B; gz += 820){
+    const x = gx + (r()-0.5)*520, z = gz + (r()-0.5)*520, roll = r();
+    if (blocked(x, z) || nearPlace(x, z, 650)) continue;
+    const farm = FARM.some(f => inPoly(x, z, f)), mtn = inPoly(x, z, MOUNTAINS);
+    if ((farm && roll < 0.62) || (mtn && roll < 0.12) || (!farm && !mtn && roll < 0.18)) out.push({t:'farm', x, z, r:(r()-0.5)*50});
+  }
+  roadsS.filter(rd => (rd.cls === 'ky' || rd.cls === 'us') && !rd.blownAt).forEach(rd => {
+    const L = lenOf(rd.s); let side = 1;
+    for (let s = 600; s < L - 300; s += 800 + r()*600){
+      const a = along(rd.s, s/L); const x = a[0] - Math.sin(a[2])*130*side, z = a[1] + Math.cos(a[2])*130*side; side = -side;
+      if (blocked(x, z) || nearPlace(x, z, 650)) continue;
+      out.push({t:'stop', x, z});
+    }
+  });
+  return out;
+}
+
+function stats(roadsS, cps){
+  const hw = roadsS.filter(r => r.cls !== 'loc' && !r.blownAt).reduce((s, r) => s + lenOf(r.s.filter(p => Math.abs(p[0]) <= B && Math.abs(p[1]) <= B)), 0);
+  const coast = lenOf(COAST.filter(p => Math.abs(p[1]) <= B));
+  const core = polyArea(CORE)/1e6;
+  const railLen = RAIL.reduce((a, r) => a + lenOf(loopS(r)), 0), subLen = SUBWAY.reduce((a, r) => a + lenOf(loopS(r)), 0);
+  const items = [
+    ['16.4 km', 'each side, 16,384 blocks'],
+    ['~' + islandArea().toFixed(1) + ' km²', 'of island city'],
+    [P.length, 'named places'],
+    [Math.round(railLen/1000) + ' km', 'railway loop, ' + P.filter(p => p.rail).length + ' stations'],
+    [(subLen/1000).toFixed(1) + ' km', 'subway loop, ' + P.filter(p => p.sub).length + ' stops'],
+    [cps.length, 'Army checkpoints']
+  ];
+  document.getElementById('stats').innerHTML = items.map(i => `<div class="stat"><b>${i[0]}</b><span>${i[1]}</span></div>`).join('');
+}
+
+/* ---------------- detail panel ---------------- */
+function showPlace(p){
+  selected = p.id;
+  const c = PI['gh-cbd'], d = hypot(p.x-c.x, p.z-c.z), e = edits[p.id] || {}, moved = isMoved(p);
+  const inCity = p.kind === 'district' || inPoly(p.x, p.z, CORE);
+  let html = `<span class="kind ${p.isNew ? 'new' : ''}">${esc(KINDS[p.kind].label)}${p.isNew ? ' · new type' : ''}</span>
+    <h4>${esc(p.name)}</h4>
+    <p>${esc(p.note)}</p>
+    <dl class="kv">
+      <dt>Generator</dt><dd>${esc(p.gen)}</dd>
+      <dt>Grid</dt><dd>${gridRef(p.x, p.z)}${onIsland(p.x, p.z) ? ' · on the island' : inCity ? ' · inside the wall' : ''}</dd>
+      ${p.rail || p.sub ? `<dt>Trains</dt><dd>${[p.rail ? 'railway station' : '', p.sub ? 'subway stop' : ''].filter(Boolean).join(' · ')}</dd>` : ''}
+      <dt>Coords</dt><dd>x ${Math.round(p.x)} · z ${Math.round(p.z)}${moved ? ' (moved)' : ''}</dd>
+      ${p.id !== 'gh-cbd' ? `<dt>To Downtown</dt><dd>${(d/1000).toFixed(1)} km · ~${Math.round(d/4.3/60)} min walk</dd>` : ''}
+    </dl>`;
+  if (editMode){
+    html += `<label for="pnote" style="display:block;margin-top:12px;font-size:13px;color:var(--ink-2)">Note on this place</label>
+      <textarea id="pnote" placeholder="Bigger? Different style? Rename? Cut it?">${esc(e.note || '')}</textarea>
+      <div class="row"><button class="btn" id="psave">Save note</button>${moved ? '<button class="btn" id="preset">Put it back</button>' : ''}</div>`;
+  }
+  document.getElementById('detail').innerHTML = html;
+  if (editMode){
+    document.getElementById('psave').onclick = () => saveEdit(p.id, {note: document.getElementById('pnote').value.trim()});
+    const rb = document.getElementById('preset'); if (rb) rb.onclick = () => { p.x = p.ox; p.z = p.oz; saveEdit(p.id, {x:null, z:null}); render(); showPlace(p); };
+  }
+  document.querySelectorAll('table.places tr').forEach(tr => tr.classList.toggle('sel', tr.dataset.id === p.id));
+}
+function showFeature(f){
+  selected = null;
+  const [t, id] = f.split(':');
+  let title = '', kind = '', body = '';
+  if (t === 'road'){ const r = ROADS.find(x => x.id === id); kind = {i:'Interstate', us:'US highway', ky:'State road', loc:'Local road'}[r.cls]; title = r.name;
+    body = r.blownAt ? 'The Army blew a span out of the causeway to cut the prison off. You can see the far side, but you can’t walk there.' : r.id === 'i495' ? 'The beltway around the outside of the wall, six lanes, jammed solid where the evacuation stalled.' : r.cls === 'i' ? 'Elevated through the city, six lanes, jammed with abandoned cars near the checkpoints.' : r.cls === 'us' ? 'The shore road through the docks, the city and every harbour and beach town.' : r.cls === 'ky' ? 'A two-lane road with gas stations, diners and the odd farm.' : 'A city street or service road.'; }
+  else if (t === 'rail'){ const r = RAIL.find(x => x.id === id); kind = 'Railway'; title = r.name; body = 'One loop round the county, run by a robot conductor with no driver. It is elevated on girders through the island city, crosses the North and South Arms on bridges, and runs at ground level everywhere on the mainland, with level crossings, cuttings and wrecked trains. Call it from any station, but the flare brings the zombies. Drag a station and the line follows.'; }
+  else if (t === 'subway'){ kind = 'Subway'; title = 'Grayhaven Subway'; body = 'One underground loop under the island through its six stops, cutting through the middle at Union Station. The call button sets off a siren that draws zombies down into the station. Drag a stop and the tunnel follows.'; }
+  else if (t === 'ferry'){ const r = FERRIES.find(x => x.id === id); kind = 'Boat route'; title = r.name; body = 'The only way across. A boat might still be tied up at the dock.'; }
+  else if (t === 'mil'){ kind = 'Military land'; title = 'Fort Caldwell Military Reservation'; body = 'Fenced Army land on the north plateau, with the main post, the airfield, tank ranges and the munitions depot. Route 4 runs through it.'; }
+  else if (t === 'lake'){ kind = 'Lake'; title = 'Black Pine Reservoir'; body = 'A dammed lake in the mountains, with the summer camp on its north shore and the dam at its east end.'; }
+  else if (t === 'marsh'){ kind = 'Wetland'; title = 'Calder Marshes'; body = 'Reed beds and tidal creeks between the airport and the beaches. Fog sits here every morning.'; }
+  else if (t === 'sea'){ kind = 'Sea'; title = 'Atlantic Ocean'; body = 'A sheltered bay for the port, deep water beyond it, wrecks offshore, and the Navy blockade at the edge of the world.'; }
+  else if (t === 'ship'){ kind = 'Ship'; title = 'Container ship'; body = 'A 300 to 400 metre cargo ship, moored or drifting where its crew left it. You can climb aboard and search the decks, the crew quarters and the bridge.'; }
+  else if (t === 'island'){ const i = ISLANDS.find(x => x.id === id); kind = 'Island'; title = i.name; body = i.cliff ? 'A black rock with sheer cliffs in the middle of the bay, home to Ravenrock Penitentiary.' : 'A low, grassy island with the old quarantine station and a jetty.'; }
+  else if (t === 'fence'){ kind = 'World edge'; title = 'Exclusion Zone fence'; body = 'Two chain-link fences with razor wire, a patrol track between them and watchtowers along the line. The world border sits just beyond it. Every road out ends at an Army checkpoint.'; }
+  else if (t === 'navy'){ kind = 'World edge'; title = 'Navy blockade'; body = 'Warships hold a line offshore at the edge of the world. Searchlights sweep the water at night.'; }
+  else if (t === 'wreck'){ kind = 'Wreck'; title = 'Shipwreck'; body = 'A boat that tried to run the blockade. Its hold might be worth a swim.'; }
+  else if (t === 'wall'){ kind = 'Military'; title = 'Grayhaven Blockade'; body = 'A concrete and shipping-container wall around the whole inner city, with checkpoints where the highways and railways pass through. Inside is the worst of it, and the best loot.'; }
+  else if (t === 'cp'){ const c = lastNet.cps[+id]; kind = c.on === 'wall' ? 'Blockade checkpoint' : 'Exclusion Zone checkpoint'; title = c.road; body = c.rail ? 'A rail gate with a derailed train and sandbagged guard posts.' : c.on === 'wall' ? 'A gated gap in the Blockade wall with Humvees, barriers and a holding pen.' : 'An Army checkpoint at the county edge, with concrete barriers, a gate, abandoned queues of cars and a tent camp.'; }
+  else if (t === 'blown'){ const b = lastNet.blown[+id]; kind = 'Blown span'; title = b.road; body = 'Blown by the Army to cut the island off.'; }
+  document.getElementById('detail').innerHTML = `<span class="kind">${esc(kind)}</span><h4>${esc(title)}</h4><p>${esc(body)}</p>`;
+  document.querySelectorAll('table.places tr').forEach(tr => tr.classList.remove('sel'));
+}
+
+/* ---------------- interaction ---------------- */
+const ptrs = new Map(); let gesture = null;
+svg.addEventListener('pointerdown', ev => {
+  svg.setPointerCapture(ev.pointerId);
+  ptrs.set(ev.pointerId, {x:ev.clientX, y:ev.clientY});
+  if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; gesture = {type:'pinch', d:hypot(a.x-b.x, a.y-b.y)}; return; }
+  const placeEl = ev.target.closest('.place'), featEl = ev.target.closest('[data-feat]');
+  if (editMode && placeEl && canWrite) gesture = {type:'drag', id:placeEl.dataset.id, sx:ev.clientX, sy:ev.clientY, moved:false};
+  else gesture = {type:'pan', sx:ev.clientX, sy:ev.clientY, cx:view.cx, cz:view.cz, moved:false, place: placeEl && placeEl.dataset.id, feat: featEl && featEl.dataset.feat};
+});
+let raf = 0;
+svg.addEventListener('pointermove', ev => {
+  if (!ptrs.has(ev.pointerId)) return;
+  ptrs.set(ev.pointerId, {x:ev.clientX, y:ev.clientY});
+  if (!gesture) return;
+  if (gesture.type === 'pinch' && ptrs.size === 2){
+    const [a, b] = [...ptrs.values()]; const d = hypot(a.x-b.x, a.y-b.y);
+    if (d > 0){ zoomAt(gesture.d/d, (a.x+b.x)/2, (a.y+b.y)/2); gesture.d = d; }
+    return;
+  }
+  const dx = ev.clientX - gesture.sx, dy = ev.clientY - gesture.sy;
+  if (Math.abs(dx) + Math.abs(dy) > 4) gesture.moved = true;
+  if (gesture.type === 'pan' && gesture.moved){
+    svg.classList.add('panning'); view.cx = gesture.cx - dx*k; view.cz = gesture.cz - dy*k; applyView();
+  } else if (gesture.type === 'drag' && gesture.moved){
+    const p = PI[gesture.id], w = toWorld(ev.clientX, ev.clientY);
+    p.x = Math.round(Math.max(-FENCE+200, Math.min(FENCE-200, w[0]))); p.z = Math.round(Math.max(-FENCE+200, Math.min(FENCE-200, w[1])));
+    if (!raf) raf = requestAnimationFrame(() => { raf = 0; render(); });
+  }
+});
+function endPointer(ev){
+  ptrs.delete(ev.pointerId);
+  svg.classList.remove('panning');
+  if (!gesture) return;
+  const gs = gesture;
+  if (gs.type === 'pinch'){ if (ptrs.size === 0) gesture = null; return; }
+  gesture = null;
+  if (gs.type === 'drag'){
+    const p = PI[gs.id];
+    if (gs.moved) saveEdit(p.id, {x:p.x, z:p.z});
+    showPlace(p); render();
+  } else if (!gs.moved){
+    if (gs.place){ showPlace(PI[gs.place]); render(); }
+    else if (gs.feat){ showFeature(gs.feat); render(); }
+  }
+}
+svg.addEventListener('pointerup', endPointer);
+svg.addEventListener('pointercancel', endPointer);
+svg.addEventListener('wheel', ev => { ev.preventDefault(); zoomAt(Math.exp(ev.deltaY*0.0015), ev.clientX, ev.clientY); }, {passive:false});
+document.getElementById('zin').onclick = () => { const r = rect(); zoomAt(0.6, r.left + r.width/2, r.top + r.height/2); };
+document.getElementById('zout').onclick = () => { const r = rect(); zoomAt(1/0.6, r.left + r.width/2, r.top + r.height/2); };
+document.getElementById('zfit').onclick = () => { view = {cx:0, cz:0, w:2*B*1.02}; applyView(); };
+window.addEventListener('resize', applyView);
+
+/* layers */
+const LAYERS = [['places','Places','var(--city)'],['roads','Roads','var(--road-i)'],['rail','Railway','var(--rail)'],['subway','Subway','var(--subway)'],['mil','Military land','var(--mil)'],['fence','Walls & blockades','var(--fence)'],['fill','Farms & stops','var(--farm-2)'],['terrain','Terrain & sea','var(--sea)'],['grid','Grid','var(--ink-3)']];
+const lay = document.getElementById('layers');
+lay.innerHTML = LAYERS.map(l => `<button class="chip" data-l="${l[0]}" aria-pressed="true"><span class="dot" style="background:${l[2]}"></span>${l[1]}</button>`).join('');
+lay.addEventListener('click', ev => { const b = ev.target.closest('.chip'); if (!b) return; const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); svg.classList.toggle('hide-' + b.dataset.l, !on); });
+
+/* legend */
+const sw = inner => `<svg width="26" height="14" viewBox="0 0 26 14">${inner}</svg>`;
+const LEG = [
+  [sw('<rect x="1" y="1" width="24" height="12" fill="var(--core)"/><path d="M1 4H25M1 8H25M1 12H25M5 1V13M10 1V13M15 1V13M20 1V13" stroke="var(--street)" stroke-opacity=".6" stroke-width=".7"/>'), 'Dense city'],
+  [sw('<rect x="1" y="1" width="24" height="12" fill="var(--sprawl)"/><path d="M1 6H25M1 11H25M8 1V13M16 1V13" stroke="var(--street)" stroke-opacity=".35" stroke-width=".7"/>'), 'Suburbs'],
+  [sw('<path d="M2 7H24" stroke="var(--road-i-case)" stroke-width="5.5"/><path d="M2 7H24" stroke="var(--road-i)" stroke-width="3.4"/>'), 'Interstate'],
+  [sw('<path d="M2 7H24" stroke="var(--road-us-case)" stroke-width="4.4"/><path d="M2 7H24" stroke="var(--road-us)" stroke-width="2.6"/>'), 'US highway'],
+  [sw('<path d="M2 7H24" stroke="var(--road-ky-case)" stroke-width="3.4"/><path d="M2 7H24" stroke="var(--road-ky)" stroke-width="1.8"/>'), 'State road'],
+  [sw('<path d="M2 7H24" stroke="var(--rail)" stroke-width="1.4"/><path d="M2 7H24" stroke="var(--rail)" stroke-width="5" stroke-dasharray="1.2 5"/>'), 'Railway'],
+  [sw('<path d="M2 7H24" stroke="var(--viaduct)" stroke-width="7"/><path d="M2 7H24" stroke="var(--rail)" stroke-width="1.4"/>'), 'Elevated railway'],
+  [sw('<path d="M2 7H24" stroke="var(--subway)" stroke-width="3" stroke-dasharray="6 3"/>'), 'Subway (underground)'],
+  [sw('<rect x="7" y="2.5" width="12" height="9" rx="2" fill="var(--surface)" stroke="var(--rail)" stroke-width="1.6"/><path d="M10 5.5H16V8.5H10Z" fill="var(--rail)"/>'), 'Railway station'],
+  [sw('<circle cx="13" cy="7" r="5.5" fill="none" stroke="var(--subway)" stroke-width="2"/>'), 'Subway stop (ring)'],
+  [sw('<path d="M2 7H24" stroke="var(--wall)" stroke-width="4"/>'), 'Blockade wall'],
+  [sw('<path d="M2 7H24" stroke="var(--fence)" stroke-width="2" stroke-dasharray="6 3"/>'), 'Exclusion Zone fence'],
+  [sw('<path d="M2 7H24" stroke="var(--navy)" stroke-width="2" stroke-dasharray="7 3"/>'), 'Navy blockade'],
+  [sw('<rect x="7" y="1" width="12" height="12" rx="2" fill="var(--fence)"/><path d="M9.5 7H16.5" stroke="#fff" stroke-width="1.6"/>'), 'Checkpoint'],
+  [sw('<rect x="1" y="1" width="24" height="12" fill="var(--sea)"/><path d="M3 7 L19 7 L23 4 M3 7 V5" stroke="none"/><path d="M3 5 H19 L23 7 L19 9 H3 Z" fill="var(--seawall)"/><rect x="6" y="6" width="3" height="2" fill="#c8442f"/><rect x="11" y="6" width="3" height="2" fill="#c8442f"/>'), 'Cargo ship'],
+  [sw('<path d="M2 7H24" stroke="var(--pier)" stroke-width="4"/>'), 'Quay or pier'],
+  [sw('<circle cx="13" cy="7" r="5.5" fill="var(--city)" stroke="var(--halo)" stroke-width="1.4"/>'), 'City district'],
+  [sw('<circle cx="13" cy="7" r="6" fill="var(--city)" stroke="#fff" stroke-width="1.6"/><circle cx="13" cy="7" r="2" fill="#fff"/>'), 'City'],
+  [sw('<circle cx="13" cy="7" r="5" fill="var(--town)"/>'), 'Town or hamlet'],
+  [sw('<rect x="8.5" y="2.5" width="9" height="9" rx="2" fill="var(--suburb)"/>'), 'Neighbourhood'],
+  [sw('<rect x="9" y="3" width="8" height="8" fill="var(--port)" transform="rotate(45 13 7)"/>'), 'Port'],
+  [sw('<path d="M7 13 V6 L11 3 V6 L15 3 V6 L19 3 V13 Z" fill="var(--industry)"/>'), 'Industry'],
+  [sw('<rect x="7.5" y="1.5" width="11" height="11" fill="var(--mil)"/>'), 'Military site'],
+  [sw('<path d="M13 1L19.5 13H6.5Z" fill="var(--qz)"/>'), 'Quarantine zone'],
+  [sw('<rect x="8" y="2" width="10" height="10" rx="1.5" fill="var(--facility)"/>'), 'Facility (new type)'],
+  [sw('<rect x="1" y="1" width="24" height="12" fill="var(--knob)"/><path d="M6 10L9 5L12 10M15 10L18 5L21 10" fill="none" stroke="var(--knob-ink)"/>'), 'Mountains and forest'],
+  [sw('<rect x="9" y="4" width="8" height="6" fill="var(--farm-2)" stroke="var(--ink-3)" stroke-width=".7"/>'), 'Farm (generated)'],
+  [sw('<circle cx="13" cy="7" r="3" fill="var(--surface)" stroke="var(--ink-2)"/>'), 'Roadside stop (generated)']
+];
+document.getElementById('legend').innerHTML = LEG.map(l => `<div>${l[0]}<span>${l[1]}</span></div>`).join('');
+
+/* places list */
+const GROUPS = [
+  ['Grayhaven Island', ['union','stadium','tower','power','waterfront','mercy','gh-cbd','gh-fin','gh-old','university','park','civic','mall','arena','ballpark','market']],
+  ['Grayhaven mainland, inside the wall', ['gh-mid','gh-up','gh-east','westgate','northside','southport','foundry','term-n','megaport']],
+  ['Railway stations', ['st-uptown','st-pinecrest','st-fort','st-riverside','st-millbrook','st-dunmore','st-fairview','st-ashby','st-hollow','st-kings','st-seabright','st-airport','st-foundry','st-southport']],
+  ['Around the city and the bay', ['shipyard','refinery','airport','pinecrest','shadyacres','qz-westgate','naval','capemerrow','lighthouse','ravenrock']],
+  ['Riverside, Ashby and the towns', ['riverside','qz-riverside','ashby','ashby-hts','qz-ashby','kingsbridge','seabright','boardwalk','qz-seabright','gullharbor','hollis','millbrook','fairview','hollowcreek','dunmore','timberline']],
+  ['Fort Caldwell and the mountains', ['fort','airfield','ranges','munitions','guard','lab','camp','dam']]
+];
+function renderList(){
+  document.getElementById('groups').innerHTML = GROUPS.map(([title, ids]) => {
+    const rows = ids.map(id => PI[id]).map(p => `<tr data-id="${p.id}" class="${selected === p.id ? 'sel' : ''}"><td class="nm">${esc(p.name)}${p.isNew ? '<span class="tag new">new</span>' : ''}${isMoved(p) ? '<span class="tag moved">moved</span>' : ''}${edits[p.id] && edits[p.id].note ? '<span class="tag moved">note</span>' : ''}</td><td class="ty">${esc(p.gen)}</td><td class="gr">${gridRef(p.x, p.z)}</td></tr>`).join('');
+    return `<div class="card"><h3>${esc(title)}</h3><table class="places"><tbody>${rows}</tbody></table></div>`;
+  }).join('');
+}
+document.getElementById('groups').addEventListener('click', ev => {
+  const tr = ev.target.closest('tr'); if (!tr) return;
+  const p = PI[tr.dataset.id];
+  view.cx = p.x; view.cz = p.z; view.w = Math.min(view.w, 4200); applyView();
+  showPlace(p); render();
+  document.getElementById('atlas').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+/* edit mode + changes */
+const editbtn = document.getElementById('editbtn');
+editbtn.onclick = () => {
+  editMode = !editMode; editbtn.textContent = editMode ? 'Edit: on' : 'Edit: off'; editbtn.setAttribute('aria-pressed', editMode);
+  document.body.classList.toggle('editing', editMode);
+  if (selected) showPlace(PI[selected]);
+};
+function changeLines(){
+  const lines = [];
+  P.forEach(p => {
+    const e = edits[p.id] || {}, parts = [];
+    if (isMoved(p)) parts.push(`moved from x ${p.ox}, z ${p.oz} to x ${Math.round(p.x)}, z ${Math.round(p.z)} (${gridRef(p.x, p.z)})`);
+    if (e.note) parts.push(`note: "${e.note}"`);
+    if (parts.length) lines.push(`${p.name}: ${parts.join('; ')}`);
+  });
+  if (general.trim()) lines.push(`General: ${general.trim()}`);
+  return lines;
+}
+function renderChanges(){
+  const lines = changeLines();
+  document.getElementById('changes').innerHTML = lines.length ? `<ul style="margin:0;padding-left:18px;font-size:13px;color:var(--ink-2)">${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>` : `<p class="empty" style="font-size:13px">No changes yet. Switch on Edit, then drag a place or tap one to leave a note.</p>`;
+}
+document.getElementById('copybtn').onclick = async () => {
+  const txt = changeLines().join('\n') || 'No changes.';
+  try { await navigator.clipboard.writeText(txt); setStatus('Copied. Paste it in our chat if you like.', true); } catch(e){ setStatus('Copy failed. Select the list above instead.'); }
+};
+const gnote = document.getElementById('gnote');
+document.getElementById('gsave').onclick = async () => {
+  general = gnote.value;
+  if (!db || !canWrite){ setStatus('Saved in this browser only. Use Copy changes to send it.'); renderChanges(); return; }
+  try { await db.doc('general/notes').set({text: general, at: new Date().toISOString()}); setStatus('Note saved. I can read it from here.', true); }
+  catch(e){ writeFailed(e); }
+  renderChanges();
+};
+function setStatus(t, ok){ const s = document.getElementById('dbstatus'); s.textContent = t; s.classList.toggle('ok', !!ok); }
+function writeFailed(e){
+  if (e && e.code === 'invalid_argument'){ canWrite = false; setStatus('This copy is view-only, so changes stay in your browser. Use Copy changes.'); }
+  else setStatus('Couldn’t save just now. Your change is still shown here; try again in a moment.');
+}
+const chains = {};
+function saveEdit(id, patch){
+  const cur = Object.assign({}, edits[id] || {}, patch);
+  if (cur.x === null){ delete cur.x; delete cur.z; }
+  const empty = cur.x === undefined && !cur.note;
+  if (empty) delete edits[id]; else edits[id] = cur;
+  renderList(); renderChanges();
+  if (!db || !canWrite){ setStatus('Saved in this browser only. Use Copy changes to send it.'); return; }
+  const ref = db.collection('edits').doc(id);
+  const body = {at: new Date().toISOString()}; if (cur.x !== undefined){ body.x = cur.x; body.z = cur.z; } if (cur.note) body.note = cur.note;
+  chains[id] = (chains[id] || Promise.resolve()).then(() => empty ? ref.delete() : ref.set(body)).then(() => setStatus('Saved. I can read your changes from here.', true)).catch(writeFailed);
+}
+
+/* boot */
+renderList(); renderChanges(); render(); applyView();
+(async () => {
+  try { db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch(e){ db = null; }
+  if (!db){ setStatus('Changes stay in this browser here. Use Copy changes to send them to me.'); return; }
+  setStatus('Connected. Changes you make are saved for me to read.', true);
+  db.collection('edits').onSnapshot(snap => {
+    Object.keys(edits).forEach(k => delete edits[k]);
+    snap.docs.forEach(d => { if (d.exists && PI[d.id]) edits[d.id] = Object.assign({}, d.data()); });
+    if (gesture && gesture.type === 'drag') return;
+    applyEdits(); render(); renderList(); renderChanges();
+    if (selected && (!document.activeElement || document.activeElement.id !== 'pnote')) showPlace(PI[selected]);
+  }, () => setStatus('Lost the connection, so changes now stay in this browser.'));
+  db.doc('general/notes').onSnapshot(s => {
+    const t = s.exists ? (s.data().text || '') : '';
+    general = t; if (document.activeElement !== gnote) gnote.value = t; renderChanges();
+  }, () => {});
+})();
+})();
+</script>
+</body>
+</html>

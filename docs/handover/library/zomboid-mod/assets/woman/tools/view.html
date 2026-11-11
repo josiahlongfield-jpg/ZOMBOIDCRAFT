@@ -1,0 +1,47 @@
+<!doctype html><html><body style="margin:0;background:#1a1c20"><div id="v" style="width:900px;height:1000px"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as T from 'three';
+const q=new URLSearchParams(location.search);
+// read the .zsk exactly as the game will
+const hash=s=>{let h=0;for(const c of s)h=(Math.imul(31,h)+c.charCodeAt(0))|0;return h;};
+let raw=new Uint8Array(await (await fetch('out/woman.zsk')).arrayBuffer());
+{ let x=(0x3C6EF372^hash('woman'))|0; if(!x)x=1; for(let i=0;i<raw.length;i+=4){ x^=x<<13; x^=x>>>17; x^=x<<5; for(let j=0;j<4&&i+j<raw.length;j++) raw[i+j]^=(x>>>(24-8*j))&255; } }
+raw=new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer());
+const dv=new DataView(raw.buffer); let o=0;
+const i32=()=>{const v=dv.getInt32(o);o+=4;return v}, f32=()=>{const v=dv.getFloat32(o);o+=4;return v}, i8=()=>dv.getInt8(o++), u8=()=>dv.getUint8(o++), i16=()=>{const v=dv.getInt16(o);o+=2;return v}, u16=()=>{const v=dv.getUint16(o);o+=2;return v};
+const utf=()=>{const n=u16(); const s=new TextDecoder().decode(raw.subarray(o,o+n)); o+=n; return s;};
+o=8; const groups=[]; const ng=i32();
+for(let g=0;g<ng;g++){ const mesh=utf(),piece=utf(),tex=utf(),flags=i8(),n=i32(); const P=new Float32Array(n*3),N=new Float32Array(n*3),UV=new Float32Array(n*2),J=new Uint8Array(n*4),W=new Float32Array(n*4);
+  for(let v=0;v<n;v++){ P[v*3]=f32();P[v*3+1]=f32();P[v*3+2]=f32(); N[v*3]=i8()/127;N[v*3+1]=i8()/127;N[v*3+2]=i8()/127; UV[v*2]=u16()/65535; UV[v*2+1]=u16()/65535; for(let k=0;k<4;k++)J[v*4+k]=u8(); for(let k=0;k<4;k++)W[v*4+k]=u8()/255; }
+  const nt=i32(); const I=new Uint32Array(nt*3); for(let i=0;i<nt*3;i++) I[i]=i32(); groups.push({mesh,piece,tex,flags,n,P,N,UV,J,W,I}); }
+const texs={}; const ntx=i32(); for(let t=0;t<ntx;t++){ const k=utf(), n=i32(); texs[k]=new Blob([raw.slice(o,o+n)]); o+=n; }
+const nb=i32(); const bones=[]; for(let b=0;b<nb;b++){ const name=utf(),par=i8(); const m=[]; for(let k=0;k<12;k++) m.push(f32()); bones.push({name,par,inv:new T.Matrix4().set(m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9],m[10],m[11],0,0,0,1)}); }
+const nf=i32(); const face={}; for(let f=0;f<nf;f++){ const name=utf(),idx=i8(),p=[f32(),f32(),f32()]; face[name]={idx,p}; }
+const nc=i32(); const clips={}; for(let c=0;c<nc;c++){ const name=utf(),frames=i32(),fps=f32(),cb=i32(); const d=new Float32Array(frames*cb*7); for(let i=0;i<frames*cb;i++){ for(let k=0;k<4;k++) d[i*7+3+k]=i16()/32767; for(let k=0;k<3;k++) d[i*7+k]=i16()/1000; } clips[name]={frames,fps,cb,d}; }
+window.INFO=JSON.stringify({groups:groups.map(g=>g.mesh+':'+g.n),bones:nb,face:Object.keys(face),clips:Object.fromEntries(Object.entries(clips).map(([k,c])=>[k,c.frames]))});
+// scene
+const r=new T.WebGLRenderer({antialias:true}); r.setSize(900,1000); document.getElementById('v').appendChild(r.domElement); r.outputColorSpace=T.SRGBColorSpace;
+const s=new T.Scene(); s.background=new T.Color(0x1a1c20); s.add(new T.HemisphereLight(0xdfe6f0,0x2a2622,1.2)); const k=new T.DirectionalLight(0xfff1e0,2.2); k.position.set(-2,5,4); s.add(k);
+const cam=new T.PerspectiveCamera(30,0.9,0.05,100);
+const loader=new T.TextureLoader(); const tmap={}; for(const kk in texs){ const t=await loader.loadAsync(URL.createObjectURL(texs[kk])); t.colorSpace=T.SRGBColorSpace; t.flipY=false; tmap[kk]=t; }
+const show=(q.get('show')||'body,bra,stockings,heels,hair').split(',');
+const objs=[];
+for(const g of groups){ if(!show.includes(g.piece)) continue; const geo=new T.BufferGeometry(); geo.setAttribute('position',new T.BufferAttribute(new Float32Array(g.P),3)); geo.setAttribute('normal',new T.BufferAttribute(new Float32Array(g.N),3)); geo.setAttribute('uv',new T.BufferAttribute(g.UV,2)); geo.setIndex(new T.BufferAttribute(g.I,1));
+  const mat=new T.MeshStandardMaterial({map:tmap[g.tex],roughness:0.7,side:(g.flags&1)?T.DoubleSide:T.FrontSide,alphaTest:(g.flags&2)?0.45:0}); const m=new T.Mesh(geo,mat); s.add(m); objs.push({g,m}); }
+// pose = game's math: skin_b = G_b * inv_b; face bones: skin_head * T(p) R T(-p)
+function pose(clip,t,jaw,lid){ const c=clips[clip]; const f=Math.min(c.frames-1,(t*c.fps)%(c.frames)); const f0=Math.floor(f),f1=Math.min(c.frames-1,f0+1),a=f-f0;
+  const skin=bones.map(()=>new T.Matrix4());
+  for(let b=0;b<c.cb;b++){ const i0=(f0*c.cb+b)*7,i1=(f1*c.cb+b)*7; const p=new T.Vector3(c.d[i0]*(1-a)+c.d[i1]*a,c.d[i0+1]*(1-a)+c.d[i1+1]*a,c.d[i0+2]*(1-a)+c.d[i1+2]*a);
+    const q0=new T.Quaternion(c.d[i0+3],c.d[i0+4],c.d[i0+5],c.d[i0+6]).normalize(), q1=new T.Quaternion(c.d[i1+3],c.d[i1+4],c.d[i1+5],c.d[i1+6]).normalize();
+    skin[b].compose(p,q0.slerp(q1,a),new T.Vector3(1,1,1)).multiply(bones[b].inv); }
+  const head=bones.findIndex(b=>b.name==='mixamorigHead');
+  for(const [name,ang] of [['jaw',jaw],['lid_l',lid],['lid_r',lid]]){ const F=face[name]; if(!F) continue; const p=F.p;
+    skin[F.idx].copy(skin[head]).multiply(new T.Matrix4().makeTranslation(p[0],p[1],p[2])).multiply(new T.Matrix4().makeRotationX(ang*Math.PI/180)).multiply(new T.Matrix4().makeTranslation(-p[0],-p[1],-p[2])); }
+  const v=new T.Vector3(),acc=new T.Vector3(),tmp=new T.Vector3();
+  for(const {g,m} of objs){ const pos=m.geometry.attributes.position;
+    for(let i=0;i<g.n;i++){ acc.set(0,0,0); for(let kk=0;kk<4;kk++){ const w=g.W[i*4+kk]; if(!w) continue; tmp.set(g.P[i*3],g.P[i*3+1],g.P[i*3+2]).applyMatrix4(skin[g.J[i*4+kk]]).multiplyScalar(w); acc.add(tmp);} pos.setXYZ(i,acc.x,acc.y,acc.z); }
+    pos.needsUpdate=true; m.geometry.computeVertexNormals(); } }
+window.shot=(clip,t,jaw,lid,cx,cy,cz,tx,ty,tz)=>{ pose(clip,t,jaw,lid); cam.position.set(cx,cy,cz); cam.lookAt(tx,ty,tz); r.render(s,cam); };
+window.DONE=1;
+</script></body></html>

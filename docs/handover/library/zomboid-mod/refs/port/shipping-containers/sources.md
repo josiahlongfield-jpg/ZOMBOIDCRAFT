@@ -1,0 +1,15 @@
+# port/shipping-containers
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-container-china-shipping-cclu-657706-7-1-bad-wilhelmsh-he-ka.jpg | [Container China Shipping CCLU 657706 7, 1, Bad Wilhelmshöhe, Kassel.jp](https://commons.wikimedia.org/wiki/File:Container_China_Shipping_CCLU_657706_7,_1,_Bad_Wilhelmsh%C3%B6he,_Kassel.jpg) | GeorgDerReisende | CC BY-SA 4.0 | am 8. September 2021 hielt ein Containerzug im Bahnhof Kassel-Wilhelmshöhe, ich habe einige Waggons und Container fotografiert: hier der 45G |
+| 02-container-48t9-wcgu-000373-4-no-2-pictures-taken-in-japan.png | [Container 【 48T9 】 WCGU 000373(4)---No,2 【 Pictures taken in Japan 】.p](https://commons.wikimedia.org/wiki/File:Container_%E3%80%90_48T9_%E3%80%91_WCGU_000373(4)---No,2_%E3%80%90_Pictures_taken_in_Japan_%E3%80%91.png) | Gazouya-japan | CC BY-SA 4.0 | 2011.10.26 【神奈川／本牧埠頭地区】 |
+| 03-container-42b6-nrsu-968001-4-no-2-pictures-taken-in-japan.jpg | [Container 【 42B6 】 NRSU 968001(4)---No,2 【 Pictures taken in Japan 】.j](https://commons.wikimedia.org/wiki/File:Container_%E3%80%90_42B6_%E3%80%91_NRSU_968001(4)---No,2_%E3%80%90_Pictures_taken_in_Japan_%E3%80%91.jpg) | Gazouya-japan | CC BY-SA 4.0 | 2008,10,18 【兵庫／神戸PI】 |
+| 04-containerverriegelung.jpg | [Containerverriegelung.JPG](https://commons.wikimedia.org/wiki/File:Containerverriegelung.JPG) | Kassander der Minoer | CC BY-SA 3.0 | Rost an einer Container-Befestigung. – Verriegelung an einem Trailer (LKW-Sattelauflieger) für Container mit Handrad und Sicherung im Contai |
+| 05-white-volvo-fm-with-speed-branding-and-maersk-containers.jpg | [White Volvo FM with Speed branding and Maersk containers.jpg](https://commons.wikimedia.org/wiki/File:White_Volvo_FM_with_Speed_branding_and_Maersk_containers.jpg) | Kotivalo | CC BY-SA 4.0 | Driving in Vuosaari harbour, Helsinki |
+| 06-jnrcontainerc1011853-ichinoseki-20100501.jpg | [JNRContainerC1011853 Ichinoseki 20100501.jpg](https://commons.wikimedia.org/wiki/File:JNRContainerC1011853_Ichinoseki_20100501.jpg) | Olegushka | CC0 | 東日本旅客鉄道・東北本線一ノ関駅構内の旧国鉄コンテナC10 11853 |
+| 07-shipping-container-stacks-port-of-rotterdam-2017-5.jpg | [Shipping container stacks - Port of Rotterdam - 2017 - 5.jpg](https://commons.wikimedia.org/wiki/File:Shipping_container_stacks_-_Port_of_Rotterdam_-_2017_-_5.jpg) | AgainErick | CC BY-SA 4.0 | Shipping container stacks - Port of Rotterdam - 2017 |
+| 08-shipping-container-stacks-port-of-rotterdam-2017-3.jpg | [Shipping container stacks - Port of Rotterdam - 2017 - 3.jpg](https://commons.wikimedia.org/wiki/File:Shipping_container_stacks_-_Port_of_Rotterdam_-_2017_-_3.jpg) | AgainErick | CC BY-SA 4.0 | Shipping container stacks - Port of Rotterdam - 2017 |
+| 09-shipping-container-stacks-port-of-rotterdam-2017-1.jpg | [Shipping container stacks - Port of Rotterdam - 2017 - 1.jpg](https://commons.wikimedia.org/wiki/File:Shipping_container_stacks_-_Port_of_Rotterdam_-_2017_-_1.jpg) | AgainErick | CC BY-SA 4.0 | Shipping container stacks - Port of Rotterdam - 2017 |

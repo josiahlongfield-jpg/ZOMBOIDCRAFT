@@ -1,0 +1,457 @@
+{
+ "id": "tarkov_mdr762",
+ "name": "DT MDR 7.62x51 (kitted)",
+ "anchor": "battle_rifle",
+ "anchorMesh": "pbr_battle_rifle",
+ "calibre": "7.62x51mm",
+ "suppressed": true,
+ "fp": "operator_tarkov_mdr762",
+ "sight": "scope_base_trijicon_acog_ta01nsn_4x32_LOD0",
+ "zoom": 4.0,
+ "reload": [
+  3.133,
+  4.367
+ ],
+ "stats": {
+  "damage": 20.0,
+  "hipSpread": 2.6,
+  "aimSpread": 0.18,
+  "recoil": 1.6,
+  "range": 180.0,
+  "fireDelayTicks": 4,
+  "magazineSize": 20,
+  "selectFire": false
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "laser",
+  "foregrip"
+ ],
+ "rail": {
+  "laser": {
+   "bone": "tactical_all_insight_la5_LOD0",
+   "at": [
+    -0.0238,
+    -0.0439,
+    0.0073
+   ],
+   "dir": [
+    -0.0001,
+    -0.9998,
+    -0.0186
+   ],
+   "third": [
+    -0.1563,
+    -0.0168,
+    0.531
+   ]
+  }
+ },
+ "grip": "foregrip_all_tango_down_stubby_bgv_mk46k_LOD0",
+ "guard": null,
+ "holds": {
+  "foregrip_all_tango_down_stubby_bgv_mk46k_LOD0": {
+   "palm": [
+    -0.04815,
+    0.09973,
+    0.04586,
+    0.72451,
+    -0.65778,
+    -0.14676,
+    0.14449
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.46491,
+     -0.1769,
+     0.08644,
+     0.86319
+    ],
+    "Base HumanLDigit12": [
+     -0.03382,
+     0.11462,
+     -0.25193,
+     0.96034
+    ],
+    "Base HumanLDigit13": [
+     -0.07426,
+     0.04382,
+     -0.35974,
+     0.92906
+    ],
+    "Base HumanLDigit21": [
+     0.10596,
+     0.17837,
+     -0.35359,
+     0.9121
+    ],
+    "Base HumanLDigit22": [
+     0.02253,
+     0.00022,
+     -0.46581,
+     0.8846
+    ],
+    "Base HumanLDigit23": [
+     0.00018,
+     0.00055,
+     -0.44578,
+     0.89514
+    ],
+    "Base HumanLDigit31": [
+     0.07965,
+     0.10898,
+     -0.43663,
+     0.88946
+    ],
+    "Base HumanLDigit32": [
+     0.01223,
+     -0.03278,
+     -0.51295,
+     0.8577
+    ],
+    "Base HumanLDigit33": [
+     -0.01167,
+     -0.02824,
+     -0.48973,
+     0.87134
+    ],
+    "Base HumanLDigit41": [
+     0.0205,
+     0.1053,
+     -0.42355,
+     0.8995
+    ],
+    "Base HumanLDigit42": [
+     -0.02016,
+     0.00583,
+     -0.56475,
+     0.82499
+    ],
+    "Base HumanLDigit43": [
+     -0.0411,
+     0.02114,
+     -0.48441,
+     0.87362
+    ],
+    "Base HumanLDigit51": [
+     -0.02462,
+     0.08491,
+     -0.39422,
+     0.91475
+    ],
+    "Base HumanLDigit52": [
+     -0.06671,
+     0.0567,
+     -0.6369,
+     0.76596
+    ],
+    "Base HumanLDigit53": [
+     -0.04809,
+     -0.01055,
+     -0.41581,
+     0.90812
+    ]
+   }
+  }
+ },
+ "alt": [
+  {
+   "sight": "scope_base_trijicon_rmr_LOD0",
+   "zoom": 0,
+   "reticleMoa": 85,
+   "aim": [
+    -4.5e-05,
+    0.037702,
+    0.105924,
+    0.0,
+    -0.0,
+    -0.0,
+    1.0
+   ]
+  }
+ ],
+ "tarkov": {
+  "base": "5dcbd56fdbd3d91b3e5468d5",
+  "aimPath": "/mod_scope/mod_scope",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "5dcbd56fdbd3d91b3e5468d5",
+    "bone": "weapon_dt_mdr_556x45_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.012645,
+     -0.707107,
+     -0.0,
+     -0.0,
+     0.707107
+    ],
+    "bones": [
+     "bolt_LOD0",
+     "bolt_release_LOD0",
+     "charge_000_LOD0",
+     "charge_001_LOD0",
+     "charge_002_LOD0",
+     "charge_011_LOD0",
+     "charge_012_LOD0",
+     "weapon_deflector 1",
+     "weapon_deflector_button",
+     "weapon_dt_mdr_556x45_LOD0",
+     "release_000_LOD0",
+     "release_001_LOD0",
+     "release_002_LOD0",
+     "release_switch_LOD0",
+     "selector_LOD0",
+     "trigger_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5dcbd6dddbd3d91b3e5468de",
+    "bone": "pistolgrip_mdr_dt_mdr_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "pistolgrip_mdr_dt_mdr_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5a3501acc4a282000d72293a",
+    "bone": "mag_ar10_magpul_pmag_sr_gen_3_762x51_20_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_ar10_magpul_pmag_sr_gen_3_762x51_20_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_handguard",
+    "item": "5dcbd6b46ec07c0c4347a564",
+    "bone": "handguard_mdr_dt_mdr_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "handguard_mdr_dt_mdr_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_mount_000",
+    "item": "5b7be4895acfc400170e2dd5",
+    "bone": "mount_m_lok_magpul_4,1_inch_picatinny_rail_section_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_m_lok_magpul_4,1_inch_picatinny_rail_section_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_mount_000/mod_foregrip",
+    "item": "558032614bdc2de7118b4585",
+    "bone": "foregrip_all_tango_down_stubby_bgv_mk46k_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "foregrip_all_tango_down_stubby_bgv_mk46k_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_tactical",
+    "item": "5c06595c0db834001a66af6c",
+    "bone": "tactical_all_insight_la5_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "switch_000_LOD0",
+     "tactical_all_insight_la5_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5dcbe9431e1f4616d354987e",
+    "bone": "barrel_mdr_dt_406mm_762x51_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "barrel_mdr_dt_406mm_762x51_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "612e0d3767085e45ef14057f",
+    "bone": "muzzle_all_awc_psr_muzzle_brake_762x51_LOD0",
+    "at": [
+     0.0,
+     1e-06,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "muzzle_all_awc_psr_muzzle_brake_762x51_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle/mod_muzzle",
+    "item": "63877c99e785640d436458ea",
+    "bone": "silencer_base_awc_thor_psr_xl_multi_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "silencer_base_awc_thor_psr_xl_multi_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_scope",
+    "item": "59db7eed86f77461f8380365",
+    "bone": "mount_all_trijicon_ta51_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.707107,
+     0.0,
+     0.0,
+     0.707107
+    ],
+    "bones": [
+     "mount_all_trijicon_ta51_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope",
+    "item": "5c05293e0db83400232fff80",
+    "bone": "scope_base_trijicon_acog_ta01nsn_4x32_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "backLens",
+     "linza",
+     "scope_base_trijicon_acog_ta01nsn_4x32_glass_LOD0",
+     "scope_base_trijicon_acog_ta01nsn_4x32_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope/mod_mount",
+    "item": "5a33bab6c4a28200741e22f8",
+    "bone": "mount_acog_trijicon_rm35_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_acog_trijicon_rm35_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_scope/mod_scope/mod_mount/mod_scope",
+    "item": "5a32aa8bc4a2826c6e06d737",
+    "bone": "scope_base_trijicon_rmr_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "linza",
+     "scope_base_trijicon_rmr_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_sight_rear",
+    "item": "5dfa3d7ac41b2312ea33362a",
+    "bone": "sight_rear_all_kac_folding_micro_sight_base_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "sight_rear_all_kac_folding_micro_sight_base_LOD0",
+     "sight_rear_all_kac_folding_micro_sight_unfolded_LOD0"
+    ]
+   }
+  ]
+ }
+}

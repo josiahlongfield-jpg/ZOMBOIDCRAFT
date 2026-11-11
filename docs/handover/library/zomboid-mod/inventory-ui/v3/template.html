@@ -1,0 +1,841 @@
+<title>ZomboidCraft Inventory</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Barlow+Condensed:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&display=swap">
+<style>
+/* Layout: a 16:9 game frame. The real city render sits blurred behind three kit panels (gear | carried | nearby), lit by a torch that follows the cursor. One dark look on purpose: it is a game screen. */
+:root{
+  color-scheme:dark;
+  --page:#0e0f0d; --page-fg:#d8d3c2; --page-dim:#8c887a; --page-line:#272822;
+  --ink:#e6dcc0; --ink-dim:#a59d82; --ink-faint:rgba(230,220,192,.35);
+  --brass:#b8924a; --brass-hi:#e2c27a; --blood:#a8321f; --ok:#7fbf4d; --warn:#d9a33a; --ghost:#4dff6e;
+  --slot:rgba(8,9,6,.58);
+  --f-stencil:"Allerta Stencil","Arial Narrow",sans-serif;
+  --f-body:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-data:"JetBrains Mono",ui-monospace,monospace;
+  --f-hand:"Permanent Marker","Comic Sans MS",cursive;
+  --slot-size:50px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--page);color:var(--page-fg);font-family:var(--f-body);font-size:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header.top h1{font:400 clamp(26px,4vw,38px) var(--f-stencil);margin:0;letter-spacing:.05em}
+header.top p{margin:4px 0 0;color:var(--page-dim);max-width:70ch;line-height:1.35}
+.tips{display:flex;flex-wrap:wrap;gap:4px 18px;color:var(--page-dim);font-size:15px}
+.tips b{color:var(--page-fg);font-weight:600}
+
+/* ===== frame ===== */
+.game{position:relative;aspect-ratio:16/9;min-height:640px;max-width:100%;overflow:hidden;user-select:none;-webkit-user-select:none;background:#07080a;border-radius:4px;color:var(--ink);font-family:var(--f-body);cursor:default;--mx:50%;--my:40%}
+.bg{position:absolute;inset:-30px;background-size:cover;background-position:center 60%;filter:blur(6px) brightness(.5) saturate(.9) contrast(1.05);transform:translate(var(--px,0),var(--py,0)) scale(1.04);transition:transform .25s ease-out}
+#rain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.55}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:20;background:radial-gradient(ellipse 75% 70% at 50% 45%,transparent 45%,rgba(0,0,0,.55) 100%)}
+.torch{position:absolute;inset:0;pointer-events:none;z-index:19;mix-blend-mode:soft-light;background:radial-gradient(circle 340px at var(--mx) var(--my),rgba(255,214,150,.55),rgba(255,214,150,.1) 45%,rgba(0,0,0,.18) 100%)}
+.grain{position:absolute;inset:-50%;pointer-events:none;z-index:21;opacity:.09;background-size:180px;animation:grain 1s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-4%)}60%{transform:translate(-4%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+@media (prefers-reduced-motion:reduce){.grain{animation:none}.bg{transition:none}}
+
+.hud{position:absolute;inset:44px 18px 16px;display:grid;grid-template-columns:360px 1fr 1fr;gap:16px;z-index:5}
+
+/* ===== kit panel: canvas, leather binding, stitching, rivets ===== */
+.kit{position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;border-radius:6px;
+  background:linear-gradient(180deg,rgba(255,240,200,.05),rgba(0,0,0,.25) 70%,rgba(0,0,0,.45)),var(--tex) 0 0/256px,#3e4029;
+  box-shadow:0 0 0 3px #1b1610,0 0 0 4px rgba(255,230,180,.08),0 18px 40px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,240,210,.12),inset 0 0 40px rgba(0,0,0,.45)}
+.kit::before{content:"";position:absolute;inset:7px;border:1.5px dashed rgba(214,196,150,.32);border-radius:3px;pointer-events:none}
+.kit::after{content:"";position:absolute;inset:4px;pointer-events:none;background:
+  radial-gradient(circle at 5px 5px,var(--brass-hi) 0 1.5px,var(--brass) 2px,#4b3a1a 3.5px,transparent 4px) top left/12px 12px no-repeat,
+  radial-gradient(circle at 7px 5px,var(--brass-hi) 0 1.5px,var(--brass) 2px,#4b3a1a 3.5px,transparent 4px) top right/12px 12px no-repeat,
+  radial-gradient(circle at 5px 7px,var(--brass-hi) 0 1.5px,var(--brass) 2px,#4b3a1a 3.5px,transparent 4px) bottom left/12px 12px no-repeat,
+  radial-gradient(circle at 7px 7px,var(--brass-hi) 0 1.5px,var(--brass) 2px,#4b3a1a 3.5px,transparent 4px) bottom right/12px 12px no-repeat}
+.kit.metal{--tex:var(--t-metal);background-color:#33373a}
+.kit.wood{--tex:var(--t-wood);background-color:#3d2a1a}
+.kit.concrete{--tex:var(--t-concrete);background-color:#38383a}
+.kit.canvas{--tex:var(--t-canvas)}
+.kit.metal::before{border-style:solid;border-color:rgba(0,0,0,.4);box-shadow:0 0 0 1px rgba(255,255,255,.05)}
+
+.khead{position:relative;display:flex;align-items:center;gap:10px;padding:16px 18px 6px;min-height:52px}
+.stencil{font:400 22px var(--f-stencil);letter-spacing:.14em;text-transform:uppercase;color:rgba(232,222,196,.82);text-shadow:0 0 6px rgba(232,222,196,.25),0 1px 0 rgba(0,0,0,.6);transform:rotate(-.6deg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.tape{position:relative;flex:none;font:400 15px var(--f-hand);color:#1d1b16;padding:3px 12px 2px;background:var(--t-paper) 0 0/180px,#cdbf98;box-shadow:0 2px 3px rgba(0,0,0,.45);transform:rotate(1.6deg);clip-path:polygon(2% 8%,6% 0,14% 6%,25% 1%,38% 7%,52% 0,66% 6%,80% 1%,92% 7%,100% 3%,98% 92%,92% 100%,80% 94%,66% 100%,52% 93%,38% 100%,25% 94%,12% 100%,4% 93%,0 98%);white-space:nowrap}
+.tape.red{color:#7a1a10}
+.kbody{position:relative;flex:1;min-height:0;padding:4px 18px 16px;display:flex;flex-direction:column;gap:10px}
+
+/* tabs that stick up above the panel, like Minecraft's creative tabs */
+.tabs{position:absolute;left:14px;right:14px;top:-38px;display:flex;gap:4px;z-index:2}
+.tab{position:relative;width:46px;height:40px;border:0;padding:0;cursor:pointer;border-radius:6px 6px 0 0;display:grid;place-items:center;
+  background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.55)),var(--t-canvas) 0 0/256px,#2e3020;box-shadow:0 0 0 2px #1b1610,inset 0 1px 0 rgba(255,240,210,.12);filter:brightness(.7)}
+.tab img{width:34px;height:34px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.7))}
+.tab[aria-selected="true"]{height:44px;margin-top:-4px;filter:none;background:linear-gradient(180deg,rgba(255,240,200,.06),rgba(255,240,200,.02)),var(--t-canvas) 0 0/256px,#3e4029;box-shadow:0 -2px 0 2px #1b1610,inset 0 1px 0 rgba(255,240,210,.14)}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:8px;background:inherit}
+.tab:hover{filter:brightness(1.05)}
+.tab:focus-visible{outline:2px solid var(--brass-hi);outline-offset:2px}
+.tab.metal{--x:1}.tab.benchtab{margin-left:10px;width:72px;display:flex;flex-direction:column;justify-content:center;gap:0;font:400 9px var(--f-stencil);letter-spacing:.14em;color:var(--brass-hi);filter:none;text-transform:uppercase}
+.tab.benchtab img{width:58px;height:26px;object-fit:cover}
+
+/* slots */
+.grid{display:grid;grid-template-columns:repeat(var(--cols,6),var(--slot-size));gap:4px;align-content:start}
+.slot{position:relative;width:var(--slot-size);height:var(--slot-size);border-radius:4px;background:var(--slot);
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.85),inset 0 -1px 0 rgba(255,240,210,.07),0 1px 0 rgba(255,240,210,.06);cursor:pointer;display:grid;place-items:center}
+.kit.metal .slot{background:rgba(0,0,0,.5);box-shadow:inset 0 2px 5px rgba(0,0,0,.9),inset 0 0 0 1px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.08)}
+.slot:hover{box-shadow:inset 0 3px 6px rgba(0,0,0,.85),0 0 0 1px rgba(226,194,122,.7),0 0 12px rgba(226,194,122,.25)}
+.slot img.it{width:44px;height:44px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.75));pointer-events:none;transition:transform .12s}
+.slot:hover img.it{transform:translateY(-2px) scale(1.06)}
+.slot .qty{position:absolute;right:3px;bottom:1px;font:700 12px var(--f-data);color:#fff;text-shadow:1px 1px 0 #000,0 0 3px #000;pointer-events:none}
+.slot .dur{position:absolute;left:6px;right:6px;bottom:4px;height:3px;background:#000;pointer-events:none}
+.slot .dur i{display:block;height:2px}
+.slot .ghosticon{width:38px;height:38px;filter:brightness(0) invert(.9);opacity:.16;pointer-events:none}
+.slot .lbl{position:absolute;top:-1px;left:0;right:0;text-align:center;font:600 9px var(--f-data);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);pointer-events:none}
+.slot.bad{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.slot.sel{box-shadow:inset 0 3px 6px rgba(0,0,0,.85),0 0 0 2px var(--brass-hi),0 0 14px rgba(226,194,122,.45)}
+.slot.sel::after{content:"";position:absolute;inset:-5px;border:2px solid var(--brass);border-radius:6px;pointer-events:none}
+
+/* gear */
+.doll{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:var(--slot-size) 1fr var(--slot-size);gap:10px}
+.eqcol{display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.eqcol .slot .lbl{top:auto;bottom:-13px}
+.mirror{position:relative;border-radius:4px;overflow:hidden;background:radial-gradient(ellipse at 45% 35%,#3a3a30,#15160f 70%,#0b0c09);box-shadow:inset 0 4px 14px rgba(0,0,0,.9),inset 0 0 0 1px rgba(0,0,0,.7),0 1px 0 rgba(255,240,210,.07)}
+#doll{position:absolute;inset:0;width:100%;height:100%}
+.mirror .floor{position:absolute;left:10%;right:10%;bottom:6%;height:14px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.7),transparent 70%)}
+.loadtag{display:flex;align-items:center;gap:10px}
+.loadtag .tape{font-size:16px}
+.loadbar{flex:1;height:10px;border-radius:2px;background:rgba(0,0,0,.6);box-shadow:inset 0 1px 3px #000;overflow:hidden}
+.loadbar i{display:block;height:100%;background:linear-gradient(180deg,#9fd46a,#5e9a33);transition:width .3s}
+.loadbar i.warn{background:linear-gradient(180deg,#f0c35a,#b07d1c)}.loadbar i.bad{background:linear-gradient(180deg,#d65a3c,#8a2414)}
+.moodles{display:flex;gap:6px;min-height:34px;align-items:center}
+.moodle{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:700 10px var(--f-data);color:#fff;text-align:center;line-height:1;
+  background:radial-gradient(circle at 40% 35%,#d9563a,#7a1d10);box-shadow:0 0 0 2px rgba(0,0,0,.6),0 0 10px rgba(217,86,58,.5)}
+.moodle.y{background:radial-gradient(circle at 40% 35%,#e3b24a,#86600f);box-shadow:0 0 0 2px rgba(0,0,0,.6),0 0 10px rgba(227,178,74,.4)}
+.moodle-txt{font:500 14px var(--f-body);color:var(--ink-dim)}
+
+/* carried */
+.section-lbl{display:flex;align-items:baseline;gap:8px;font:400 13px var(--f-stencil);letter-spacing:.14em;color:rgba(232,222,196,.6);text-transform:uppercase}
+.section-lbl span{font:12px var(--f-data);letter-spacing:0;color:var(--ink-dim);text-transform:none;margin-left:auto}
+.capline{height:4px;border-radius:2px;background:rgba(0,0,0,.6);overflow:hidden;margin-top:-4px}
+.capline i{display:block;height:100%}
+.belt{margin-top:auto;padding:10px 10px 8px;border-radius:4px;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.45)),var(--t-webbing) 0 0/256px,#30331f;box-shadow:0 0 0 2px #15130d,inset 0 1px 0 rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.5)}
+.belt .grid{--cols:9;gap:3px;--slot-size:40px}
+.belt .slot img.it{width:34px;height:34px}
+.belt .slot .k{position:absolute;left:3px;top:1px;font:700 10px var(--f-data);color:rgba(230,220,190,.45);pointer-events:none}
+.empty-bag{padding:22px 4px;color:var(--ink-dim);font-style:italic}
+
+/* nearby */
+.lootbtns{display:flex;gap:8px;margin-top:auto}
+.btn{font:400 14px var(--f-stencil);letter-spacing:.12em;text-transform:uppercase;color:#1d1b16;border:0;cursor:pointer;padding:7px 14px 6px;background:var(--t-paper) 0 0/180px,#cdbf98;box-shadow:0 2px 4px rgba(0,0,0,.5);clip-path:polygon(0 6%,4% 0,96% 4%,100% 0,99% 94%,96% 100%,3% 96%,0 100%)}
+.btn:hover,.btn:focus-visible{background-color:#e8d9ae;outline:none;filter:brightness(1.1)}
+
+/* cursor item, tooltip, menu, toast */
+.held{position:fixed;z-index:100;pointer-events:none;width:52px;height:52px;transform:translate(-50%,-50%) rotate(-6deg);filter:drop-shadow(0 10px 8px rgba(0,0,0,.7))}
+.held b{position:absolute;right:0;bottom:0;font:700 12px var(--f-data);color:#fff;text-shadow:1px 1px 0 #000}
+.tip{position:fixed;z-index:90;pointer-events:none;max-width:260px;padding:8px 11px 9px;border-radius:3px;background:rgba(14,12,9,.94);box-shadow:0 0 0 1px #000,0 0 0 2px rgba(184,146,74,.55),0 10px 24px rgba(0,0,0,.6);font:500 14px var(--f-body);color:var(--ink);line-height:1.25}
+.tip .t{font-weight:700;font-size:16px}
+.tip .c{font:11px var(--f-data);color:var(--brass-hi);text-transform:uppercase;letter-spacing:.06em}
+.tip .d{color:var(--ink-dim);margin-top:4px}
+.tip .r{display:flex;justify-content:space-between;gap:14px;font:12px var(--f-data);margin-top:3px}
+.tip .h{font:11px var(--f-data);color:rgba(230,220,190,.4);margin-top:6px}
+.menu{position:absolute;z-index:60;min-width:180px;padding:5px 0;border-radius:3px;background:rgba(14,12,9,.96);box-shadow:0 0 0 1px #000,0 0 0 2px rgba(184,146,74,.45),0 12px 26px rgba(0,0,0,.7)}
+.menu .mh{font:400 12px var(--f-stencil);letter-spacing:.1em;color:var(--brass-hi);padding:4px 12px 5px;text-transform:uppercase}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--ink);font:500 15px var(--f-body);padding:5px 12px;cursor:pointer}
+.menu button:hover,.menu button:focus-visible{background:rgba(184,146,74,.25);outline:none}
+.menu hr{border:0;border-top:1px solid rgba(255,255,255,.08);margin:4px 0}
+.toast{position:absolute;left:50%;top:12px;transform:translateX(-50%) rotate(-1deg);z-index:70;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.toast .tape{font-size:16px;padding:5px 16px 4px}
+.hint{position:absolute;left:18px;top:12px;z-index:6;font:12px var(--f-data);color:rgba(230,220,190,.45)}
+
+/* ===== weapon bench ===== */
+.bench{position:absolute;top:44px;bottom:16px;right:18px;left:394px;z-index:8;display:grid;grid-template-columns:1fr 300px;gap:16px}
+.stage{position:relative;border-radius:6px;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#1d2330,#0a0c12 72%);box-shadow:0 0 0 3px #10141c,0 0 0 4px rgba(120,160,255,.08),0 18px 40px rgba(0,0,0,.7),inset 0 0 60px rgba(0,0,0,.6)}
+.stage::before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(77,255,110,.035) 1px,transparent 1px) 0 0/100% 32px,linear-gradient(90deg,rgba(77,255,110,.035) 1px,transparent 1px) 0 0/32px 100%;mask-image:radial-gradient(ellipse at 50% 55%,#000 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse at 50% 55%,#000 30%,transparent 75%)}
+#gun{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+.stage .khead{position:absolute;left:0;right:0;top:0;z-index:4}
+.stage .stencil{color:rgba(205,225,255,.8)}
+.stage .tape{transform:rotate(-1.4deg)}
+.leads{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.sock{position:absolute;transform:translate(-50%,-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.sock .tag{padding:3px 8px 4px;border-radius:2px;background:rgba(6,14,9,.82);box-shadow:0 0 0 1px rgba(77,255,110,.45);font:700 10px var(--f-data);letter-spacing:.1em;text-transform:uppercase;color:#bfffcb;text-align:center;white-space:nowrap}
+.sock .tag em{display:block;font:600 13px var(--f-body);letter-spacing:0;text-transform:none;font-style:normal;color:var(--ghost)}
+.sock.full .tag{background:rgba(14,12,9,.88);box-shadow:0 0 0 1px rgba(226,194,122,.6);color:var(--ink)}
+.sock.full .tag em{color:var(--brass-hi)}
+.sock.fits .tag{box-shadow:0 0 0 2px var(--ghost),0 0 16px rgba(77,255,110,.6)}
+.sock.nofit{opacity:.25}
+.stage-note{position:absolute;left:16px;right:16px;bottom:12px;z-index:3;font:12px var(--f-data);color:rgba(190,215,255,.45)}
+.side{display:flex;flex-direction:column;gap:16px;min-height:0}
+.side .kit{flex:none}.side .kit.grow{flex:1}
+.stats{display:flex;flex-direction:column;gap:7px}
+.stat{display:grid;grid-template-columns:82px 1fr 52px;gap:8px;align-items:center;font:12px var(--f-data)}
+.stat .sb{position:relative;height:6px;border-radius:1px;background:rgba(0,0,0,.6);box-shadow:inset 0 1px 2px #000}
+.stat .sb i{position:absolute;inset:0 auto 0 0;background:rgba(230,220,192,.55)}
+.stat .sb s{position:absolute;top:0;bottom:0;background:var(--ok);text-decoration:none}
+.stat .sb s.neg{background:var(--blood)}
+.stat .v{text-align:right;font-variant-numeric:tabular-nums}.stat .v.up{color:var(--ok)}.stat .v.dn{color:#e06a50}
+.fine{font:11px var(--f-data);color:var(--ink-dim)}
+
+/* notes */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.note{background:#171814;border:1px solid var(--page-line);padding:14px 16px;border-radius:4px;min-width:0}
+.note h3{margin:0 0 6px;font:400 17px var(--f-stencil);letter-spacing:.06em}
+.note li,.note p{color:#b6b2a3;line-height:1.4;margin:0}
+.note ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+
+@media (max-width:1100px){
+  .game{aspect-ratio:auto;min-height:0}
+  .hud{position:relative;inset:auto;grid-template-columns:1fr;padding:56px 12px 16px;gap:60px}
+  .doll{height:420px;flex:none}
+  .bench{position:absolute;inset:0;grid-template-columns:1fr;overflow:auto;background:rgba(5,6,8,.94);padding:44px 12px 16px}
+  .stage{height:420px}
+  .hint{display:none}
+}
+@media (max-width:460px){:root{--slot-size:42px}.belt .grid{--slot-size:32px}.slot img.it{width:36px;height:36px}.belt .slot img.it{width:28px;height:28px}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>ZomboidCraft Inventory</h1>
+    <p>Mockup 3. Built on Minecraft's slot inventory and restyled as a worn field kit over the city at night. Every item picture is rendered live from the mod's actual 3D models where they exist.</p>
+  </header>
+  <div class="tips">
+    <span><b>Click</b> to pick up and place, like Minecraft</span>
+    <span><b>Shift-click</b> moves to the other side</span>
+    <span><b>Right-click</b> for options (places one item while holding a stack)</span>
+    <span><b>1–9</b> picks what's in your hand</span>
+    <span><b>Rifle tab</b> opens the weapon bench</span>
+  </div>
+
+  <div class="game" id="game">
+    <div class="bg" id="bg"></div>
+    <canvas id="rain"></canvas>
+    <div class="hint" id="hint">Inventory · E to close</div>
+
+    <div class="hud" id="hud">
+      <section class="kit canvas" aria-label="Gear">
+        <div class="khead"><span class="stencil">Survivor</span><span class="tape" style="margin-left:auto">Day 4 · 21:40</span></div>
+        <div class="kbody">
+          <div class="doll">
+            <div class="eqcol" id="eqL"></div>
+            <div class="mirror"><canvas id="doll" aria-label="Your character"></canvas><div class="floor"></div></div>
+            <div class="eqcol" id="eqR"></div>
+          </div>
+          <div class="loadtag"><span class="tape" id="loadTxt">0 / 8 kg</span><span class="loadbar"><i id="loadBar"></i></span></div>
+          <div class="moodles" id="moodles"></div>
+        </div>
+      </section>
+
+      <section class="kit canvas" aria-label="Carried" id="carried">
+        <div class="tabs" id="ptabs" role="tablist"></div>
+        <div class="khead"><span class="stencil" id="bagName">Backpack</span><span class="tape" id="bagTape" style="margin-left:auto">18 kg</span></div>
+        <div class="kbody">
+          <div class="capline"><i id="bagCap"></i></div>
+          <div id="bagGrid"></div>
+          <div class="section-lbl">Pockets <span id="pocketW"></span></div>
+          <div class="grid" id="pockets" style="--cols:4"></div>
+          <div class="belt">
+            <div class="section-lbl" style="margin-bottom:6px">Belt &amp; hands <span>1–9 to draw</span></div>
+            <div class="grid" id="hotbar"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="kit metal" aria-label="Nearby" id="nearby">
+        <div class="tabs" id="ltabs" role="tablist"></div>
+        <div class="khead"><span class="stencil" id="lootName">Shelf</span><span class="tape" id="lootTape" style="margin-left:auto">Gun shop</span></div>
+        <div class="kbody">
+          <div id="lootGrid"></div>
+          <div class="lootbtns"><button class="btn" id="takeAll">Take all</button><button class="btn" id="dropBag">Empty bag here</button></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="bench" id="bench" hidden>
+      <section class="stage" aria-label="Weapon bench">
+        <div class="khead"><span class="stencil" id="gunName">Assault rifle</span><span class="tape" id="gunCond">Condition 82%</span><button class="btn" id="benchClose" style="margin-left:auto">Back to kit</button></div>
+        <canvas id="gun" aria-label="The rifle, drag to turn"></canvas>
+        <svg class="leads" id="leads"></svg>
+        <div id="socks"></div>
+        <div class="stage-note">Green parts are empty sockets. Pick up a part and click its socket to fit it. Click a fitted part to take it off. Drag the gun to turn it.</div>
+      </section>
+      <div class="side">
+        <section class="kit canvas" aria-label="Handling">
+          <div class="khead"><span class="stencil">Handling</span></div>
+          <div class="kbody"><div class="stats" id="stats"></div><div class="fine">Placeholder numbers. Every value goes in the settings menu.</div></div>
+        </section>
+        <section class="kit metal grow" aria-label="Parts on hand">
+          <div class="khead"><span class="stencil">Parts</span><span class="tape" style="margin-left:auto">On you + nearby</span></div>
+          <div class="kbody"><div class="grid" id="parts" style="--cols:5"></div></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="torch"></div>
+    <div class="vignette"></div>
+    <div class="grain" id="grain"></div>
+    <div class="menu" id="menu" hidden role="menu"></div>
+    <div class="toast" id="toast"><span class="tape" id="toastTxt"></span></div>
+  </div>
+
+  <div class="notes">
+    <div class="note"><h3>Minecraft underneath</h3><ul>
+      <li>Same slot grid, click to pick up and place, shift-click, right-click to drop one, hotbar keys, durability bars and the character that turns to watch your cursor.</li>
+      <li>Creative-style tabs along the top switch between bags and nearby containers.</li>
+    </ul></div>
+    <div class="note"><h3>Zomboid on top</h3><ul>
+      <li>Every bag has slots and a weight limit, and cuts what its contents weigh on you. Over 8 kg brings Heavy Load.</li>
+      <li>School pack 7 kg, hiking pack 18, rucksack 28, duffel 24 (carried in the other hand), plate carrier 5, fanny pack 2.</li>
+    </ul></div>
+    <div class="note"><h3>Mood</h3><ul>
+      <li>The world stays visible behind the kit, blurred and dark, with rain on the lens. A torch glow follows your cursor.</li>
+      <li>Panels change material with what you open: canvas for bags, scratched steel for shelves, wood for counters, wet concrete for the floor.</li>
+    </ul></div>
+    <div class="note"><h3>Weapon bench</h3><p>Only the bare gun body is solid. Each empty socket is a green see-through part with a crosshair, and turns solid once a part is fitted. Magazine and stock come off too.</p></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const A=/*ASSETS*/null;
+const $=s=>document.querySelector(s);
+const game=$("#game");
+// textures into CSS
+game.style.setProperty("--t-canvas",`url(${A.canvas})`);game.style.setProperty("--t-metal",`url(${A.metal})`);game.style.setProperty("--t-wood",`url(${A.wood})`);
+game.style.setProperty("--t-concrete",`url(${A.concrete})`);game.style.setProperty("--t-webbing",`url(${A.webbing})`);game.style.setProperty("--t-paper",`url(${A.paper})`);
+$("#bg").style.backgroundImage=`url(${A.backdrop})`;
+(function grain(){const c=document.createElement("canvas");c.width=c.height=180;const x=c.getContext("2d"),d=x.createImageData(180,180);for(let i=0;i<d.data.length;i+=4){const v=Math.random()*255;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255;}x.putImageData(d,0,0);$("#grain").style.backgroundImage=`url(${c.toDataURL()})`;})();
+const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ================= three.js basics ================= */
+function noiseTex(hex,amt=18,size=16,seed=1){
+  const c=document.createElement("canvas");c.width=c.height=size;const x=c.getContext("2d");
+  const col=new THREE.Color(hex);let s=seed*9301+49297;const rnd=()=>((s=(s*9301+49297)%233280)/233280);
+  for(let i=0;i<size;i++)for(let j=0;j<size;j++){const d=(rnd()-.5)*amt/255;x.fillStyle=`rgb(${Math.max(0,Math.min(255,(col.r+d)*255))|0},${Math.max(0,Math.min(255,(col.g+d)*255))|0},${Math.max(0,Math.min(255,(col.b+d)*255))|0})`;x.fillRect(i,j,1,1);}
+  const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.minFilter=THREE.NearestFilter;return t;
+}
+function canvasTex(w,h,draw){const c=document.createElement("canvas");c.width=w;c.height=h;draw(c.getContext("2d"),w,h);const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.minFilter=THREE.NearestFilter;return t;}
+const matCache={};
+function mat(hex,amt=16,extra={}){const k=hex+amt+JSON.stringify(extra);return matCache[k]||(matCache[k]=new THREE.MeshLambertMaterial({map:noiseTex(hex,amt,16,hex.length+amt),...extra}));}
+const plaidMat=new THREE.MeshLambertMaterial({map:canvasTex(16,16,(x)=>{x.fillStyle="#6e2534";x.fillRect(0,0,16,16);x.fillStyle="rgba(20,10,10,.55)";for(let i=0;i<16;i+=6){x.fillRect(i,0,2,16);x.fillRect(0,i,16,2);}x.fillStyle="rgba(230,190,160,.18)";for(let i=3;i<16;i+=6){x.fillRect(i,0,1,16);x.fillRect(0,i,16,1);}for(let i=0;i<60;i++){x.fillStyle=`rgba(0,0,0,${Math.random()*.15})`;x.fillRect(Math.random()*16|0,Math.random()*16|0,1,1);}})});
+const denimMat=new THREE.MeshLambertMaterial({map:canvasTex(16,16,(x)=>{for(let i=0;i<16;i++)for(let j=0;j<16;j++){const v=((i+j)%3===0)?.82:1;x.fillStyle=`rgb(${48*v|0},${66*v|0},${96*v|0})`;x.fillRect(i,j,1,1);}x.fillStyle="rgba(200,190,170,.18)";x.fillRect(5,4,6,3);})});
+function box(from,to,m){const g=new THREE.BoxGeometry(to[0]-from[0],to[1]-from[1],to[2]-from[2]);const mesh=new THREE.Mesh(g,m);mesh.position.set((from[0]+to[0])/2,(from[1]+to[1])/2,(from[2]+to[2])/2);return mesh;}
+function cyl(z1,z2,r,cx,cy,m){const g=new THREE.Group();g.add(box([cx-r,cy-r*.42,z1],[cx+r,cy+r*.42,z2],m),box([cx-r*.42,cy-r,z1],[cx+r*.42,cy+r,z2],m),box([cx-r*.78,cy-r*.78,z1],[cx+r*.78,cy+r*.78,z2],m));return g;}
+function vcyl(y1,y2,r,cx,cz,m){const g=new THREE.Group();g.add(box([cx-r,y1,cz-r*.42],[cx+r,y2,cz+r*.42],m),box([cx-r*.42,y1,cz-r],[cx+r*.42,y2,cz+r],m),box([cx-r*.78,y1,cz-r*.78],[cx+r*.78,y2,cz+r*.78],m));return g;}
+function lights(scene,warm=1){scene.add(new THREE.HemisphereLight(0xd8dcd0,0x2a2620,.7*warm));const d=new THREE.DirectionalLight(0xffe6c4,.85*warm);d.position.set(4,9,8);scene.add(d);const r=new THREE.DirectionalLight(0x8fb0d8,.4);r.position.set(-7,2,-5);scene.add(r);}
+const texCache={};
+function mcTex(uri){if(texCache[uri])return texCache[uri];const t=new THREE.TextureLoader().load(uri,()=>{iconCache.clear?.();});t.magFilter=THREE.NearestFilter;t.minFilter=THREE.NearestFilter;return texCache[uri]=t;}
+// Minecraft JSON model -> three.js, in model pixel space
+function mcModel(model,matFor,partsMap){
+  const root=new THREE.Group(),m=matFor?null:new THREE.MeshLambertMaterial({map:mcTex(model.tex),alphaTest:.1});
+  model.elements.forEach((e,idx)=>{
+    const [fx,fy,fz]=e.from,[tx,ty,tz]=e.to,pos=[],uv=[],ind=[];
+    const F={north:[[tx,ty,fz],[fx,ty,fz],[tx,fy,fz],[fx,fy,fz]],south:[[fx,ty,tz],[tx,ty,tz],[fx,fy,tz],[tx,fy,tz]],east:[[tx,ty,tz],[tx,ty,fz],[tx,fy,tz],[tx,fy,fz]],west:[[fx,ty,fz],[fx,ty,tz],[fx,fy,fz],[fx,fy,tz]],up:[[fx,ty,fz],[tx,ty,fz],[fx,ty,tz],[tx,ty,tz]],down:[[fx,fy,tz],[tx,fy,tz],[fx,fy,fz],[tx,fy,fz]]};
+    Object.entries(e.faces).forEach(([dir,f])=>{const v=F[dir];if(!v)return;const b=pos.length/3;const [u1,v1,u2,v2]=f.uv.map(x=>x/16);const uvs=[[u1,1-v1],[u2,1-v1],[u1,1-v2],[u2,1-v2]];v.forEach((p,i)=>{pos.push(...p);uv.push(...uvs[i]);});ind.push(b,b+2,b+1,b+1,b+2,b+3);});
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(uv,2));g.setIndex(ind);g.computeVertexNormals();
+    const mesh=new THREE.Mesh(g,m||matFor(idx));let node=mesh;
+    if(e.rotation){const r=e.rotation,o=r.origin,piv=new THREE.Group();piv.position.set(...o);mesh.position.set(-o[0],-o[1],-o[2]);piv.add(mesh);piv.rotation[r.axis]=THREE.MathUtils.degToRad(r.angle);node=piv;}
+    root.add(node);if(partsMap)partsMap[idx]=node;
+  });
+  return root;
+}
+
+/* ================= rifle parts ================= */
+const SIGHT=new Set([43,44,45,46,51,52,53,54,55,56,57]),MUZZLE=new Set([48,49,50]),MAG=new Set([58,59,60,61]),STOCK=new Set([9,10,11,12,13,14,15,16,17,18,19]);
+function partMesh(kind){
+  const g=new THREE.Group(),dark=mat("#26292b",14),mid=mat("#3c4043",14),lite=mat("#5b6064",12);
+  switch(kind){
+    case"reddot":g.add(box([7.55,9.66,13.3],[8.45,9.92,15.2],mid),box([7.6,9.92,13.5],[7.78,11.1,14.9],dark),box([8.22,9.92,13.5],[8.4,11.1,14.9],dark),box([7.6,10.95,13.5],[8.4,11.15,14.9],dark),box([7.6,9.92,14.6],[8.4,10.2,15.3],dark),box([7.78,10.1,13.55],[8.22,10.95,13.6],new THREE.MeshLambertMaterial({color:0x6cc3c8,transparent:true,opacity:.45})),box([7.96,10.45,14.5],[8.04,10.53,14.56],new THREE.MeshBasicMaterial({color:0xff3322})),box([8.4,10.2,14],[8.62,10.6,14.4],mid));break;
+    case"scope":g.add(cyl(12.3,16.3,.42,8,10.55,dark),cyl(11.7,12.5,.55,8,10.55,mid),cyl(16.1,17,.5,8,10.55,mid),box([7.65,9.66,12.8],[8.35,10.15,13.3],mid),box([7.65,9.66,15.1],[8.35,10.15,15.6],mid),box([7.5,10.9,13.8],[8.5,11.15,14.6],lite),box([7.7,10.25,11.68],[8.3,10.85,11.72],new THREE.MeshLambertMaterial({color:0x334a66,transparent:true,opacity:.8})));break;
+    case"suppressor":g.add(cyl(-9.2,-.3,.62,8,8.86,dark),cyl(-9.25,-8.9,.66,8,8.86,mid),cyl(-1,-.3,.66,8,8.86,mid));break;
+    case"oilfilter":g.add(cyl(-1.2,-.3,.3,8,8.86,lite),cyl(-6.4,-1.2,1.05,8,8.86,mat("#2e5b8c",22)),cyl(-6.6,-6.3,.7,8,8.86,mid),box([7.0,8.2,-5],[7.06,9.5,-2.6],mat("#e8e2d0",10)));break;
+    case"comp":g.add(cyl(-3,-.3,.42,8,8.86,dark));[-2.6,-1.9,-1.2].forEach(z=>g.add(box([7.5,9.15,z],[8.5,9.3,z+.35],mat("#0e0e0e",0))));break;
+    case"grip":g.add(box([7.6,7.55,6.4],[8.4,7.86,8.1],mid),box([7.65,4.8,6.7],[8.35,7.55,7.7],dark),box([7.6,4.6,6.6],[8.4,4.9,7.8],mid));break;
+    case"light":g.add(box([7.6,7.5,5.6],[8.4,7.86,7.6],mid),cyl(4.6,7.6,.4,8,7.05,dark),box([7.7,6.75,4.55],[8.3,7.35,4.6],new THREE.MeshBasicMaterial({color:0xfff2b0})));break;
+    case"drum":g.add(box([7.65,5.6,11.5],[8.35,7.66,13.2],dark),cyl(10.2,14.2,1.75,8,3.9,dark),box([7.2,2.2,10.6],[8.8,5.8,13.8],mid));break;
+    case"pad":g.add(box([7.42,6.25,25.43],[8.58,9.32,26.2],mat("#1d1d1b",8)));break;
+  }
+  return g;
+}
+const GHOST={};function ghostMat(k){return GHOST[k]||(GHOST[k]=new THREE.MeshBasicMaterial({color:0x39e05a,transparent:true,opacity:.2,depthWrite:false}));}
+// builds the rifle in model space for a given set of fitted parts; ghosts=true adds the green empties
+function buildRifle(fit,ghosts,partsOut){
+  const g=new THREE.Group(),M=A.models.assault_rifle;
+  const solid={},gh={};
+  g.add(mcModel(M,null,solid));
+  const magSolid=fit.magazine==="mag";
+  Object.entries(solid).forEach(([i,n])=>{i=+i;n.visible=!((SIGHT.has(i)&&fit.optic)||(MUZZLE.has(i)&&fit.muzzle)||(MAG.has(i)&&!magSolid)||(STOCK.has(i)&&!fit.stock));});
+  ["optic","muzzle","under"].forEach(k=>{if(fit[k])g.add(partMesh(fit[k]));});
+  if(fit.magazine==="drum")g.add(partMesh("drum"));
+  if(fit.stock==="pad")g.add(partMesh("pad"));
+  if(ghosts){
+    g.add(mcModel(M,i=>ghostMat(STOCK.has(i)?"stock":"magazine"),gh));
+    Object.entries(gh).forEach(([i,n])=>{i=+i;n.visible=(STOCK.has(i)&&!fit.stock)||(MAG.has(i)&&!fit.magazine);});
+    const GP={optic:"reddot",muzzle:"suppressor",under:"grip"};
+    ["optic","muzzle","under"].forEach(k=>{if(!fit[k]){const p=partMesh(GP[k]);p.traverse(o=>{if(o.isMesh)o.material=ghostMat(k);});g.add(p);}});
+  }
+  return g;
+}
+
+/* ================= procedural item models (pixel space, about 16 units) ================= */
+function proc(kind){
+  const g=new THREE.Group();
+  const add=(...m)=>m.forEach(x=>g.add(x));
+  switch(kind){
+    case"beans":{const lab=new THREE.MeshLambertMaterial({map:canvasTex(16,16,(x)=>{x.fillStyle="#b4532a";x.fillRect(0,0,16,16);x.fillStyle="#e9dcc0";x.fillRect(0,5,16,6);x.fillStyle="#6b2a14";x.fillRect(3,6,10,1);x.fillRect(2,8,12,2);x.fillStyle="rgba(0,0,0,.25)";x.fillRect(0,0,16,1);x.fillRect(0,15,16,1);})});
+      add(vcyl(2,12,4,8,8,lab),vcyl(12,12.6,4.1,8,8,mat("#9aa0a2",10)),vcyl(1.4,2,4.1,8,8,mat("#7d8284",10)));break;}
+    case"water":add(vcyl(1,11,3.2,8,8,new THREE.MeshLambertMaterial({color:0x8fc4e8,transparent:true,opacity:.55})),vcyl(2,9,2.8,8,8,new THREE.MeshLambertMaterial({color:0x2f6fa8,transparent:true,opacity:.55})),box([6,5,4.7],[10,8,4.9],mat("#e9e3d4",6)),vcyl(11,12,1.6,8,8,mat("#cfd6dc",8)),vcyl(12,13.6,1.4,8,8,mat("#2b62a8",10)));break;
+    case"bandage":add(cyl(4,12,3.6,8,8,mat("#ebe5d6",14)),cyl(3.9,12.1,1.2,8,8,mat("#b8ae98",8)),box([10.5,4.5,6],[11.2,11.6,10],mat("#ebe5d6",14)),box([6.5,11.7,4],[9.5,11.8,12],mat("#c23a2a",4)));break;
+    case"pills":add(vcyl(2,10,2.8,8,8,new THREE.MeshLambertMaterial({color:0xd07a22,transparent:true,opacity:.85})),vcyl(10,12.4,3.1,8,8,mat("#efeae0",8)),box([5,4,10.6],[11,8,10.9],mat("#f2ede0",4)));break;
+    case"matches":add(box([3,4,5],[13,8,11],mat("#a7332a",18)),box([4,5,4.9],[12,7,5],mat("#e6d7ae",8)),box([3.5,7.9,5.5],[12.5,8.1,10.5],mat("#3a2b1f",14)));break;
+    case"chips":add(box([3,2,6],[13,14,10],mat("#d8b13a",22)),box([3,6,9.95],[13,10,10.1],mat("#b52b1d",14)),box([3,13,6.5],[13,14.6,9.5],mat("#c8a136",10)),box([3,1,6.5],[13,2.4,9.5],mat("#c8a136",10)));break;
+    case"nails":add(box([3,3,4],[13,8,12],mat("#8a6a42",20)),box([3.2,7.6,4.2],[12.8,8.2,11.8],mat("#6b4f2f",12)));for(let i=0;i<5;i++)add(box([4.5+i*1.6,8,7],[5,12,7.5],mat("#9ea3a6",8)));break;
+    case"rope":for(let i=0;i<4;i++)add(vcyl(3+i*1.6,4.6+i*1.6,5.2-i*.2,8,8,mat(i%2?"#a58a56":"#bfa36a",20)));add(vcyl(2.5,10,2.2,8,8,mat("#1e1a12",2)));break;
+    case"tarp":add(box([2,3,3],[14,9,13],mat("#2f5a8a",22)),box([2,8.8,3],[14,9.2,13],mat("#3d6ea2",16)),box([5,3,2.9],[11,9,3.1],mat("#c9a238",8)));break;
+    case"backpack":case"school":case"ruck":{const col=kind==="school"?"#2f4f78":"#4a5531",dk=kind==="school"?"#223b5c":"#363f24";const s=kind==="ruck"?1.15:kind==="school"?.85:1;
+      const p=new THREE.Group();p.add(box([3,1,4],[13,15,11],mat(col,24)),box([3.4,15,4.4],[12.6,16.4,10.6],mat(dk,18)),box([4.5,2.5,11],[11.5,8.5,13],mat(dk,20)),box([1.8,4,5],[3,12,10],mat(dk,18)),box([13,4,5],[14.2,12,10],mat(dk,18)),box([5,9.5,11],[11,10,11.4],mat("#1a1a1a",3)));
+      if(kind!=="school")p.add(box([2.6,15.8,5.5],[13.4,18,9.5],mat("#9b8a5f",18)));
+      if(kind==="ruck")p.add(box([3.2,10,11],[12.8,10.8,12],mat("#2a2f1c",6)),box([4,11,11],[7,14,12.5],mat(dk,18)),box([9,11,11],[12,14,12.5],mat(dk,18)));
+      p.scale.setScalar(s);p.position.set(8*(1-s),8*(1-s)-.5,8*(1-s));add(p);break;}
+    case"duffel":add(cyl(1,15,4.2,8,6,mat("#22406a",24)),box([3.5,6,.9],[12.5,6.6,15.1],mat("#111",2)),box([7,10,5],[9,12.6,6],mat("#111",2)),box([7,10,10],[9,12.6,11],mat("#111",2)),box([7,12,5],[9,12.6,11],mat("#111",2)));break;
+    case"fanny":add(box([3,5,6],[13,11,11],mat("#2a2f45",20)),box([0,7,8],[16,8.2,9],mat("#141414",3)),box([5,8,11],[11,9.6,11.5],mat("#5a5a5a",6)));break;
+    case"rig":add(box([3,2,6],[13,14,9],mat("#545c33",26)),box([3.5,14,6.2],[6,16,8.8],mat("#2e3320",8)),box([10,14,6.2],[12.5,16,8.8],mat("#2e3320",8)));[3.4,6.6,9.8].forEach(x=>add(box([x,3,9],[x+2.8,9,10.6],mat("#666f40",24)),box([x,8.6,9],[x+2.8,9.4,10.8],mat("#3f4527",10))));add(box([4,10,9],[12,12.5,9.8],mat("#666f40",24)));break;
+    case"shirt":add(box([4,2,6.5],[12,13,9.5],plaidMat),box([1,8,6.6],[4,13,9.4],plaidMat),box([12,8,6.6],[15,13,9.4],plaidMat),box([6.5,12,6.4],[9.5,13.4,9.6],mat("#3b1520",6)));break;
+    case"jeans":add(box([4,10,6.5],[12,14,9.5],denimMat),box([4,1,6.5],[7.8,10,9.5],denimMat),box([8.2,1,6.5],[12,10,9.5],denimMat),box([4,13.2,6.4],[12,13.8,9.6],mat("#3a2a1c",8)));break;
+    case"boots":add(box([2,1,4],[7,9,9],mat("#3b2a1b",16)),box([2,1,9],[7,4,12],mat("#3b2a1b",16)),box([9,1,4],[14,9,9],mat("#3b2a1b",16)),box([9,1,9],[14,4,12],mat("#3b2a1b",16)),box([1.9,0,3.9],[7.1,1,12.1],mat("#161210",4)),box([8.9,0,3.9],[14.1,1,12.1],mat("#161210",4)));break;
+    case"gloves":add(box([3,3,6],[8,11,9],mat("#4b3320",14)),box([3,11,6],[8,14,9],mat("#4b3320",14)),box([8,3,6],[13,11,9],mat("#56391f",14)),box([8,11,6],[13,14,9],mat("#56391f",14)));break;
+    case"cap":add(box([3,4,3],[13,9,13],mat("#4a5531",20)),box([3,4,13],[13,4.8,17],mat("#363f24",14)));break;
+    case"stockpart":add(box([3,4,6],[13,10,10],mat("#2a2c2e",14)),box([12,3,5.5],[14,11,10.5],mat("#1f2022",10)),box([2,6,7],[3,8,9],mat("#3c4043",10)));break;
+    default:{const p=partMesh(kind);const bb=new THREE.Box3().setFromObject(p);const c=bb.getCenter(new THREE.Vector3());p.position.set(-c.x+8,-c.y+8,-c.z+8);add(p);}
+  }
+  return g;
+}
+
+/* ================= item renderer: one offscreen WebGL, cached data URLs ================= */
+const ir=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});ir.setSize(128,128);ir.setClearColor(0,0);
+const iscene=new THREE.Scene();lights(iscene,1.45);
+const icam=new THREE.OrthographicCamera(-8,8,8,-8,-100,100);icam.position.set(0,0,50);icam.lookAt(0,0,0);
+const iconCache=new Map();
+const DEG=Math.PI/180;
+function renderIcon(key,build,gui,fitBox,tilt){
+  if(iconCache.has(key))return iconCache.get(key);
+  const top=new THREE.Group(),outer=new THREE.Group(),inner=build();inner.position.set(-8,-8,-8);outer.add(inner);top.add(outer);if(tilt)top.rotation.z=tilt*DEG;
+  if(gui){outer.scale.setScalar(gui.scale[0]);outer.rotation.set(gui.rotation[0]*DEG,gui.rotation[1]*DEG,gui.rotation[2]*DEG,"XYZ");outer.position.set(gui.translation[0],gui.translation[1],gui.translation[2]);}
+  else{outer.rotation.set(28*DEG,-40*DEG,0,"XYZ");}
+  iscene.add(top);
+  if(fitBox){for(let k=0;k<2;k++){top.updateMatrixWorld(true);const bb=new THREE.Box3().setFromObject(top),c=bb.getCenter(new THREE.Vector3()),sz=bb.getSize(new THREE.Vector3());const s=14/Math.max(sz.x,sz.y);top.scale.multiplyScalar(s);top.position.sub(c.multiplyScalar(s));}}
+  ir.render(iscene,icam);const url=ir.domElement.toDataURL();iscene.remove(top);
+  iconCache.set(key,url);return url;
+}
+const DIAG={rotation:[20.6,19.4,-48.6],translation:[0,0,0],scale:[1,1,1]};
+function iconFor(it){
+  if(it.kind==="rifle"){const f=fitState();const key="rifle:"+JSON.stringify(f);return renderIcon(key,()=>buildRifle(f,false),{rotation:[12,-90,0],translation:[0,0,0],scale:[1,1,1]},true,34);}
+  const M=A.models[it.model];
+  if(M)return renderIcon("m:"+it.model,()=>mcModel(M),M.gui||DIAG,!M.gui);
+  return renderIcon("p:"+it.kind,()=>proc(it.kind),null,true);
+}
+
+/* ================= data ================= */
+const BODY_MAX=8;
+const C={
+  pockets:{name:"Pockets",n:4,cap:2,red:0,mat:"canvas",body:true},
+  hotbar:{name:"Belt & hands",n:9,cap:99,red:0,mat:"canvas",body:true},
+  rig:{name:"Plate carrier",n:6,cap:5,red:.15,mat:"canvas",bag:"i_rig",cols:6},
+  pack:{name:"Hiking backpack",n:18,cap:18,red:.35,mat:"canvas",bag:"i_pack",cols:6},
+  school:{name:"School backpack",n:8,cap:7,red:.15,mat:"canvas",bag:"i_school",cols:4},
+  ruck:{name:"Military rucksack",n:24,cap:28,red:.45,mat:"canvas",bag:"i_ruck",cols:6},
+  duffel:{name:"Duffel bag",n:18,cap:24,red:.15,mat:"canvas",bag:"i_duffel",cols:6},
+  fanny:{name:"Fanny pack",n:3,cap:2,red:.1,mat:"canvas",bag:"i_fanny",cols:3},
+  floor:{name:"Floor",n:24,cap:999,red:0,mat:"concrete",loot:true,tape:"Wet concrete",tabKind:"boots"},
+  shelf:{name:"Gun shop shelf",n:18,cap:999,red:0,mat:"metal",loot:true,tape:"Gun shop",tabKind:"m:rifle_ammo"},
+  counter:{name:"Counter",n:12,cap:999,red:0,mat:"wood",loot:true,tape:"Gun shop",tabKind:"beans"},
+};
+const EQ=[
+  {k:"head",label:"Head",side:"L",ghost:"cap",accept:it=>it.kind==="cap"},
+  {k:"torso",label:"Torso",side:"L",ghost:"shirt",accept:it=>it.kind==="shirt"},
+  {k:"vest",label:"Vest",side:"L",ghost:"rig",accept:it=>it.kind==="rig"},
+  {k:"legs",label:"Legs",side:"L",ghost:"jeans",accept:it=>it.kind==="jeans"},
+  {k:"feet",label:"Feet",side:"L",ghost:"boots",accept:it=>it.kind==="boots"},
+  {k:"back",label:"Back",side:"R",ghost:"backpack",accept:it=>it.wear==="back"},
+  {k:"sling",label:"Sling",side:"R",ghost:"rifle",accept:it=>it.kind==="rifle"||it.twoH},
+  {k:"waist",label:"Waist",side:"R",ghost:"fanny",accept:it=>it.kind==="fanny"},
+  {k:"hands",label:"Hands",side:"R",ghost:"gloves",accept:it=>it.kind==="gloves"},
+  {k:"off",label:"Off hand",side:"R",ghost:"duffel",accept:it=>it.wear==="hand"||(it.weapon&&!it.twoH)},
+];
+EQ.forEach(e=>C["eq:"+e.k]={name:e.label,n:1,cap:999,red:0,body:true,eq:e});
+Object.values(C).forEach(c=>c.slots=new Array(c.n).fill(null));
+const items={};let uid=0;
+const K={ // item kinds
+  rifle:{name:"Assault rifle",cat:"Firearm",w:3.0,twoH:true,dur:1,desc:"5.56 rifle. Loud. Every zombie for 80 blocks will know."},
+  mag:{name:"30-rd magazine",cat:"Magazine",w:.5,model:"rifle_magazine",part:"magazine",desc:"Holds 30 rounds of 5.56."},
+  drum:{name:"50-rd drum",cat:"Magazine",w:1.1,part:"magazine",desc:"Heavy, but 50 rounds before you reload."},
+  ammo:{name:"5.56 rounds",cat:"Ammo",w:.012,model:"rifle_ammo",stack:120,desc:"Loose rounds. Load them into a magazine."},
+  bat:{name:"Baseball bat",cat:"Blunt",w:1.1,model:"baseball_bat",weapon:true,dur:1,desc:"Good reach, reliable knockdowns."},
+  spiked:{name:"Spiked bat",cat:"Blunt",w:1.3,model:"spiked_bat_worn",weapon:true,dur:1},
+  knife:{name:"Kitchen knife",cat:"Blade",w:.3,model:"kitchen_knife",weapon:true,dur:1,desc:"Fast and quiet. Breaks quickly."},
+  machete:{name:"Machete",cat:"Long blade",w:.8,model:"machete",weapon:true,dur:1},
+  hammer:{name:"Hammer",cat:"Tool",w:.7,model:"hammer",weapon:true,dur:1,desc:"Barricades, repairs, and a decent swing."},
+  crowbar:{name:"Crowbar",cat:"Blunt",w:1.5,model:"crowbar",weapon:true,dur:1},
+  axe:{name:"Fire axe",cat:"Axe",w:2.2,model:"fire_axe",weapon:true,twoH:true,dur:1},
+  pan:{name:"Frying pan",cat:"Blunt",w:1.2,model:"frying_pan",weapon:true,dur:1},
+  katana:{name:"Katana",cat:"Long blade",w:1.2,model:"katana",weapon:true,twoH:true,dur:1},
+  sledge:{name:"Sledgehammer",cat:"Heavy blunt",w:4.5,model:"sledgehammer",weapon:true,twoH:true,dur:1},
+  wrench:{name:"Pipe wrench",cat:"Blunt",w:1.4,model:"pipe_wrench",weapon:true,dur:1},
+  golf:{name:"Golf club",cat:"Blunt",w:.6,model:"golf_club",weapon:true,dur:1},
+  beans:{name:"Canned beans",cat:"Food",w:.4,stack:6,desc:"Needs a can opener. Or a knife and patience."},
+  water:{name:"Water bottle",cat:"Drink",w:.8,stack:4},
+  bandage:{name:"Bandage",cat:"Medical",w:.05,stack:8,desc:"Stops bleeding."},
+  pills:{name:"Painkillers",cat:"Medical",w:.1,stack:4},
+  matches:{name:"Matches",cat:"Tool",w:.05,stack:4},
+  chips:{name:"Chips",cat:"Food",w:.1,stack:6},
+  nails:{name:"Nails",cat:"Material",w:.01,stack:100},
+  rope:{name:"Rope",cat:"Material",w:.8},
+  tarp:{name:"Tarp",cat:"Material",w:1.4},
+  backpack:{name:"Hiking backpack",cat:"Backpack",w:1.2,wear:"back",bag:"pack"},
+  school:{name:"School backpack",cat:"Backpack",w:.5,wear:"back",bag:"school"},
+  ruck:{name:"Military rucksack",cat:"Backpack",w:2.2,wear:"back",bag:"ruck"},
+  duffel:{name:"Duffel bag",cat:"Carried bag",w:1,wear:"hand",bag:"duffel",desc:"Holds a lot, but it takes a hand."},
+  fanny:{name:"Fanny pack",cat:"Bag",w:.4,bag:"fanny"},
+  rig:{name:"Plate carrier",cat:"Vest",w:2.1,bag:"rig",desc:"Six magazine pouches. Some protection from bites."},
+  shirt:{name:"Flannel shirt",cat:"Clothing",w:.4},jeans:{name:"Work jeans",cat:"Clothing",w:.6},boots:{name:"Combat boots",cat:"Clothing",w:1},gloves:{name:"Leather gloves",cat:"Clothing",w:.2},cap:{name:"Field cap",cat:"Clothing",w:.1},
+  reddot:{name:"Red dot sight",cat:"Attachment",w:.25,part:"optic",desc:"Replaces the iron sights. Faster aim."},
+  scope:{name:"4x scope",cat:"Attachment",w:.45,part:"optic"},
+  suppressor:{name:"Suppressor",cat:"Attachment",w:.5,part:"muzzle",desc:"Cuts how far zombies hear your shots."},
+  oilfilter:{name:"Oil filter suppressor",cat:"Attachment",w:.35,part:"muzzle",dur:1,desc:"Homemade. Works for a while."},
+  comp:{name:"Compensator",cat:"Attachment",w:.15,part:"muzzle"},
+  grip:{name:"Vertical grip",cat:"Attachment",w:.15,part:"under"},
+  light:{name:"Weapon light",cat:"Attachment",w:.2,part:"under",desc:"Lights what you aim at. Also lights you up."},
+  stockpart:{name:"Standard stock",cat:"Attachment",w:.6,part:"stock"},
+  pad:{name:"Padded stock",cat:"Attachment",w:.75,part:"stock"},
+};
+function mk(kind,c,slot,extra={}){const id=extra.id||"i"+(uid++);const it={id,kind,...K[kind],qty:1,cond:1,...extra};items[id]=it;if(c){C[c].slots[slot]=id;}return it;}
+// worn
+mk("shirt","eq:torso",0);mk("rig","eq:vest",0,{id:"i_rig"});mk("jeans","eq:legs",0);mk("boots","eq:feet",0);
+mk("backpack","eq:back",0,{id:"i_pack"});mk("rifle","eq:sling",0,{id:"i_rifle",cond:.82});mk("gloves","eq:hands",0);
+// hotbar
+mk("bat","hotbar",0,{cond:.64});mk("knife","hotbar",1,{cond:.9});mk("bandage","hotbar",2,{qty:3});mk("water","hotbar",3);
+// pockets
+mk("matches","pockets",0);mk("pills","pockets",1,{qty:2});
+// rig
+mk("mag","rig",0);mk("mag","rig",1);mk("light","rig",2);
+// pack
+mk("ammo","pack",0,{qty:60});mk("beans","pack",1,{qty:2});mk("hammer","pack",2,{cond:.75});mk("nails","pack",3,{qty:40});mk("reddot","pack",6);mk("oilfilter","pack",7,{cond:.5});mk("rope","pack",8);mk("chips","pack",12);
+// floor
+mk("school","floor",0,{id:"i_school"});mk("duffel","floor",1,{id:"i_duffel"});mk("crowbar","floor",2,{cond:.7});mk("chips","floor",3);mk("fanny","floor",4,{id:"i_fanny"});mk("spiked","floor",7,{cond:.4});
+mk("tarp","duffel",0);mk("beans","duffel",1,{qty:3});mk("sledge","duffel",2,{cond:.85});mk("water","duffel",3,{qty:2});
+// shelf
+mk("scope","shelf",0);mk("suppressor","shelf",1);mk("comp","shelf",2);mk("grip","shelf",3);mk("drum","shelf",4);mk("pad","shelf",5);mk("ammo","shelf",6,{qty:120});mk("ammo","shelf",7,{qty:90});mk("ruck","shelf",8,{id:"i_ruck"});mk("machete","shelf",9,{cond:.95});mk("cap","shelf",10);mk("katana","shelf",11);
+// counter
+mk("water","counter",0,{qty:2});mk("pan","counter",1,{cond:.8});mk("wrench","counter",2,{cond:.6});mk("golf","counter",3,{cond:.3});mk("beans","counter",5);mk("axe","counter",6,{cond:.9});
+// gun fitted parts
+const gun={optic:null,muzzle:null,under:null,magazine:mk("mag",null,0,{id:"g_mag",qty:1}).id,stock:mk("stockpart",null,0,{id:"g_stock"}).id};
+function fitState(){const k=s=>gun[s]?items[gun[s]].kind:null;const m=k("magazine"),st=k("stock");return{optic:k("optic"),muzzle:k("muzzle"),under:k("under"),magazine:m?(m==="drum"?"drum":"mag"):null,stock:st?(st==="pad"?"pad":"std"):null};}
+
+/* ================= weights ================= */
+function where(id){for(const [c,v] of Object.entries(C)){const i=v.slots.indexOf(id);if(i>=0)return[c,i];}return[null,-1];}
+function bagOwner(c){return C[c].bag?where(C[c].bag)[0]:null;}
+function isCarried(c){if(C[c].body)return true;if(C[c].bag){const o=bagOwner(c);return !!o&&o.startsWith("eq:");}return false;}
+function contents(c){return C[c].slots.filter(Boolean).map(id=>items[id]);}
+function contentW(c){return contents(c).reduce((s,it)=>s+itemW(it),0);}
+function itemW(it){let w=it.w*it.qty;if(it.bag)w+=contentW(it.bag);if(it.kind==="rifle")Object.values(gun).forEach(id=>{if(id)w+=items[id].w;});return w;}
+function bodyLoad(){
+  let t=0;
+  Object.keys(C).forEach(c=>{if(!C[c].body)return;contents(c).forEach(it=>{let w=it.w*it.qty;if(it.kind==="rifle")Object.values(gun).forEach(id=>{if(id)w+=items[id].w;});if(it.cat==="Clothing")w*=.3;t+=w;if(it.bag)t+=contentW(it.bag)*(1-C[it.bag].red);});});
+  if(held)t+=itemW(items[held.id]);
+  return t;
+}
+const f1=w=>w<1?w.toFixed(2):w.toFixed(1);
+
+/* ================= state ================= */
+const st={ptab:"pack",ltab:"shelf",hot:0};
+let held=null; // {id, from:[c,i]}
+
+/* ================= render ================= */
+function slotEl(c,i,opts={}){
+  const d=document.createElement("div");d.className="slot";d.dataset.c=c;d.dataset.i=i;
+  const id=C[c].slots[i];
+  if(id){const it=items[id];const im=document.createElement("img");im.className="it";im.src=iconFor(it);im.alt=it.name;d.appendChild(im);
+    if(it.qty>1){const q=document.createElement("span");q.className="qty";q.textContent=it.qty;d.appendChild(q);}
+    if(it.dur&&it.cond<1){const b=document.createElement("span");b.className="dur";const f=document.createElement("i");f.style.width=it.cond*100+"%";f.style.background=`hsl(${it.cond*120},80%,45%)`;b.appendChild(f);d.appendChild(b);}
+  }else if(opts.ghost){const im=document.createElement("img");im.className="ghosticon";im.src=iconFor({kind:opts.ghost,model:K[opts.ghost]?.model});d.appendChild(im);}
+  if(opts.label){const l=document.createElement("span");l.className="lbl";l.textContent=opts.label;d.appendChild(l);}
+  if(opts.key){const k=document.createElement("span");k.className="k";k.textContent=opts.key;d.appendChild(k);}
+  if(opts.sel)d.classList.add("sel");
+  return d;
+}
+function gridEl(c,cols){const g=document.createElement("div");g.className="grid";g.style.setProperty("--cols",cols||C[c].cols||6);C[c].slots.forEach((_,i)=>g.appendChild(slotEl(c,i)));return g;}
+function capColor(p){return p>.9?"var(--blood)":p>.7?"var(--warn)":"var(--ok)";}
+function tabsFor(side){return Object.keys(C).filter(c=>{if(C[c].eq||c==="pockets"||c==="hotbar")return false;if(C[c].bag){const o=bagOwner(c);if(!o)return false;return side==="p"?o.startsWith("eq:"):!o.startsWith("eq:")&&C[o]?.loot;}return side==="l"&&C[c].loot;});}
+function tabIcon(c){if(C[c].bag)return iconFor(items[C[c].bag]);const k=C[c].tabKind;return k.startsWith("m:")?iconFor({model:k.slice(2)}):iconFor({kind:k});}
+function renderTabs(side){
+  const el=$(side==="p"?"#ptabs":"#ltabs"),key=side==="p"?"ptab":"ltab";el.innerHTML="";
+  const list=tabsFor(side);if(!list.includes(st[key]))st[key]=list[0]||null;
+  list.forEach(c=>{const b=document.createElement("button");b.className="tab";b.setAttribute("role","tab");b.setAttribute("aria-selected",st[key]===c);b.title=C[c].name;b.id="tab-"+c;
+    const im=document.createElement("img");im.src=tabIcon(c);im.alt="";b.appendChild(im);b.onclick=e=>{e.stopPropagation();st[key]=c;render();};el.appendChild(b);});
+  if(side==="p"){const r=gunItem();if(r){const b=document.createElement("button");b.className="tab benchtab";b.title="Open the weapon bench";b.id="tab-bench";const im=document.createElement("img");im.src=iconFor(r);im.alt="";b.append(im,"Bench");b.setAttribute("aria-label","Open the weapon bench");b.onclick=e=>{e.stopPropagation();openBench();};el.appendChild(b);}}
+}
+function render(){
+  // gear
+  ["L","R"].forEach(s=>{const el=$("#eq"+s);el.innerHTML="";EQ.filter(e=>e.side===s).forEach(e=>el.appendChild(slotEl("eq:"+e.k,0,{ghost:e.ghost,label:e.label})));});
+  // carried
+  renderTabs("p");renderTabs("l");
+  const pc=st.ptab;
+  if(pc){const c=C[pc],w=contentW(pc);$("#bagName").textContent=c.name;$("#bagTape").textContent=`${f1(w)} / ${c.cap} kg${c.red?"  −"+Math.round(c.red*100)+"%":""}`;$("#bagCap").style.width=Math.min(100,w/c.cap*100)+"%";$("#bagCap").style.background=capColor(w/c.cap);const g=$("#bagGrid");g.innerHTML="";g.appendChild(gridEl(pc));}
+  else{$("#bagName").textContent="No bag";$("#bagTape").textContent="—";$("#bagCap").style.width=0;$("#bagGrid").innerHTML='<div class="empty-bag">You aren\'t wearing a bag. Put one on your back or carry a duffel.</div>';}
+  $("#pocketW").textContent=`${f1(contentW("pockets"))} / 2 kg`;
+  const pk=$("#pockets");pk.innerHTML="";C.pockets.slots.forEach((_,i)=>pk.appendChild(slotEl("pockets",i)));
+  const hb=$("#hotbar");hb.innerHTML="";C.hotbar.slots.forEach((_,i)=>hb.appendChild(slotEl("hotbar",i,{key:i+1,sel:i===st.hot})));
+  // nearby
+  const lc=st.ltab,L=C[lc];
+  const nb=$("#nearby");nb.classList.remove("metal","wood","concrete","canvas");nb.classList.add(L?L.mat:"concrete");
+  if(L){$("#lootName").textContent=L.name;$("#lootTape").textContent=L.bag?`${f1(contentW(lc))} / ${L.cap} kg`:L.tape;const g=$("#lootGrid");g.innerHTML="";g.appendChild(gridEl(lc));}
+  // load
+  const t=bodyLoad(),p=t/BODY_MAX;$("#loadTxt").textContent=`${f1(t)} / ${BODY_MAX} kg`;const lb=$("#loadBar");lb.style.width=Math.min(100,p/2*100)+"%";lb.className=p>1.5?"bad":p>1?"warn":"";
+  const md=$("#moodles");md.innerHTML="";
+  if(p>1){const m=document.createElement("span");m.className="moodle"+(p>1.5?"":" y");m.textContent=p>1.5?"!!":"!";m.title="Heavy load";md.appendChild(m);const s=document.createElement("span");s.className="moodle-txt";s.textContent=p>1.5?"Very heavy load: slow, tires fast":"Heavy load: slower, more stamina per swing";md.appendChild(s);}
+  const off=items[C["eq:off"].slots[0]],hand=items[C.hotbar.slots[st.hot]];
+  if(off&&off.wear==="hand"&&hand&&hand.twoH){const m=document.createElement("span");m.className="moodle y";m.textContent="✋";m.title="Hands full";md.appendChild(m);const s=document.createElement("span");s.className="moodle-txt";s.textContent=`Can't raise the ${hand.name.toLowerCase()} while carrying the duffel`;md.appendChild(s);}
+  updateDoll();
+  if(!$("#bench").hidden)renderBench();
+}
+
+/* ================= picking up and placing ================= */
+const heldEl=document.createElement("div");heldEl.className="held";heldEl.hidden=true;document.body.appendChild(heldEl);
+function drawHeld(){if(!held){heldEl.hidden=true;return;}const it=items[held.id];heldEl.hidden=false;heldEl.innerHTML=`<img src="${iconFor(it)}" width="52" height="52" alt="">`+(it.qty>1?`<b>${it.qty}</b>`:"");}
+function toast(msg){$("#toastTxt").textContent=msg;const t=$("#toast");t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),2000);}
+function why(it,c){
+  const T=C[c];
+  if(T.eq&&!T.eq.accept(it))return`${it.name} doesn't go on ${T.eq.label.toLowerCase()}`;
+  if(it.bag&&!T.eq&&!T.loot)return"Bags can't go inside other bags";
+  if(it.bag===c)return"A bag can't go inside itself";
+  if(T.cap<999&&contentW(c)+itemW(it)>T.cap+1e-6)return`${T.name} is too full (${f1(T.cap-contentW(c))} kg free)`;
+  if(c==="eq:off"&&it.wear==="hand"){const h=items[C.hotbar.slots[st.hot]];if(h&&h.twoH)toast(`Two hands on the ${h.name.toLowerCase()}: lower it to use the duffel`);}
+  return null;
+}
+function flash(el){el.classList.remove("bad");void el.offsetWidth;el.classList.add("bad");}
+function clickSlot(el,shift){
+  const c=el.dataset.c,i=+el.dataset.i,T=C[c],id=T.slots[i];
+  if(!held){
+    if(!id)return;
+    if(shift){quickMove(c,i);return;}
+    T.slots[i]=null;held={id,from:[c,i]};drawHeld();render();return;
+  }
+  const it=items[held.id];
+  if(id&&items[id].kind===it.kind&&it.stack){const tgt=items[id],room=it.stack-tgt.qty,n=Math.min(room,it.qty);if(n<=0){flash(el);return;}tgt.qty+=n;it.qty-=n;if(it.qty===0){delete items[it.id];held=null;}drawHeld();render();return;}
+  const err=why(it,c);if(err){toast(err);flash(el);return;}
+  T.slots[i]=held.id;
+  if(id){held={id,from:[c,i]};}else held=null;
+  drawHeld();render();
+}
+function placeOne(el){
+  const c=el.dataset.c,i=+el.dataset.i,T=C[c],id=T.slots[i],it=items[held.id];
+  if(it.qty<2){clickSlot(el,false);return;}
+  if(id){const tgt=items[id];if(tgt.kind!==it.kind||tgt.qty>=it.stack){flash(el);return;}tgt.qty++;it.qty--;drawHeld();render();return;}
+  const one={...it,id:"i"+(uid++),qty:1};const err=why(one,c);if(err){toast(err);flash(el);return;}
+  items[one.id]=one;T.slots[i]=one.id;it.qty--;drawHeld();render();
+}
+function firstFree(c,it){const T=C[c];if(why(it,c))return -1;if(it.stack){const j=T.slots.findIndex(id=>id&&items[id].kind===it.kind&&items[id].qty<it.stack);if(j>=0)return j;}return T.slots.indexOf(null);}
+function put(it,c){const j=firstFree(c,it);if(j<0)return false;const id=C[c].slots[j];if(id&&items[id].kind===it.kind){const t=items[id],n=Math.min(it.stack-t.qty,it.qty);t.qty+=n;it.qty-=n;if(it.qty>0)return put(it,c);delete items[it.id];return true;}C[c].slots[j]=it.id;return true;}
+function quickMove(c,i){
+  const id=C[c].slots[i],it=items[id];C[c].slots[i]=null;
+  const order=isCarried(c)?[st.ltab]:[st.ptab,...tabsFor("p"),"pockets","hotbar"].filter(Boolean);
+  for(const t of order){if(t===c)continue;if(put(it,t)){render();return;}}
+  C[c].slots[i]=id;toast("No room for "+it.name);render();
+}
+function returnHeld(){if(!held)return;const it=items[held.id],[c,i]=held.from;if(!C[c].slots[i]&&!why(it,c))C[c].slots[i]=it.id;else if(!put(it,c)&&!put(it,"floor"))return;held=null;drawHeld();render();}
+
+/* ================= pointer handling ================= */
+const tip=document.createElement("div");tip.className="tip";tip.hidden=true;document.body.appendChild(tip);
+function showTip(el,x,y){
+  const id=C[el.dataset.c]?.slots[+el.dataset.i];if(!id||held||!$("#menu").hidden){tip.hidden=true;return;}
+  const it=items[id];let h=`<div class="t">${it.name}</div><div class="c">${it.cat}</div>`;
+  if(it.desc)h+=`<div class="d">${it.desc}</div>`;
+  h+=`<div class="r"><span>Weight</span><span>${f1(itemW(it))} kg</span></div>`;
+  if(it.dur)h+=`<div class="r"><span>Condition</span><span style="color:hsl(${it.cond*120},70%,60%)">${Math.round(it.cond*100)}%</span></div>`;
+  if(it.bag)h+=`<div class="r"><span>Holds</span><span>${C[it.bag].cap} kg · −${Math.round(C[it.bag].red*100)}%</span></div><div class="r"><span>Inside</span><span>${contents(it.bag).length} items</span></div>`;
+  if(it.kind==="rifle"){const f=fitState();h+=`<div class="r"><span>Sight</span><span>${f.optic?K[f.optic].name:"Irons"}</span></div><div class="r"><span>Magazine</span><span>${f.magazine?(f.magazine==="drum"?"50":"30")+" rds":"none"}</span></div>`;}
+  if(it.part)h+=`<div class="r"><span>Fits</span><span>Rifle · ${({optic:"optic",muzzle:"muzzle",under:"under-barrel",magazine:"magazine",stock:"stock"})[it.part]}</span></div>`;
+  h+=`<div class="h">Shift-click: move · Right-click: options</div>`;
+  tip.innerHTML=h;tip.hidden=false;const r=tip.getBoundingClientRect();tip.style.left=Math.min(x+16,innerWidth-r.width-8)+"px";tip.style.top=Math.min(y+14,innerHeight-r.height-8)+"px";
+}
+game.addEventListener("pointermove",e=>{
+  const r=game.getBoundingClientRect();game.style.setProperty("--mx",(e.clientX-r.left)+"px");game.style.setProperty("--my",(e.clientY-r.top)+"px");
+  if(!reduced){game.style.setProperty("--px",((e.clientX-r.left)/r.width-.5)*-14+"px");game.style.setProperty("--py",((e.clientY-r.top)/r.height-.5)*-10+"px");}
+  mouse.x=e.clientX;mouse.y=e.clientY;
+  heldEl.style.left=e.clientX+"px";heldEl.style.top=e.clientY+"px";
+  const s=e.target.closest(".slot");if(s)showTip(s,e.clientX,e.clientY);else tip.hidden=true;
+});
+document.addEventListener("pointermove",e=>{heldEl.style.left=e.clientX+"px";heldEl.style.top=e.clientY+"px";});
+game.addEventListener("pointerleave",()=>tip.hidden=true);
+game.addEventListener("click",e=>{
+  if(!$("#menu").hidden)return;
+  const s=e.target.closest(".slot");
+  if(s){clickSlot(s,e.shiftKey);tip.hidden=true;return;}
+  const sk=e.target.closest(".sock");if(sk){clickSocket(sk.dataset.sock);return;}
+});
+const menu=$("#menu");
+game.addEventListener("contextmenu",e=>{
+  const s=e.target.closest(".slot");if(!s)return;e.preventDefault();tip.hidden=true;
+  if(held){placeOne(s);return;}
+  const c=s.dataset.c,i=+s.dataset.i,id=C[c].slots[i];if(!id)return;const it=items[id];
+  const acts=[];
+  if(it.kind==="rifle")acts.push(["Open weapon bench",()=>openBench()]);
+  if(it.weapon||it.kind==="rifle")acts.push(["Equip in hand",()=>{C[c].slots[i]=null;const h=C.hotbar.slots[st.hot];if(h){C[c].slots[i]=h;}C.hotbar.slots[st.hot]=id;render();}]);
+  if(it.bag&&!C[c].eq)acts.push(["Open",()=>{const side=isCarried(it.bag)?"ptab":"ltab";st[side]=it.bag;render();}]);
+  if(it.bag&&C[c].loot&&it.wear)acts.push([it.wear==="back"?"Put on":"Pick up and carry",()=>{const slot=it.wear==="back"?"eq:back":"eq:off";const old=C[slot].slots[0];C[slot].slots[0]=id;C[c].slots[i]=old;st.ptab=it.bag;render();}]);
+  if(it.part)acts.push(["Fit to rifle",()=>{C[c].slots[i]=null;held={id,from:[c,i]};clickSocket(it.part);}]);
+  if(it.cat==="Food"||it.cat==="Drink"||it.cat==="Medical")acts.push([it.cat==="Food"?"Eat":it.cat==="Drink"?"Drink":"Use",()=>{it.qty--;if(!it.qty){C[c].slots[i]=null;delete items[id];}toast(it.cat==="Medical"?"Patched up":"That helped");render();}]);
+  if(it.qty>1)acts.push(["Split stack",()=>{const half=Math.floor(it.qty/2);const n={...it,id:"i"+(uid++),qty:half};it.qty-=half;items[n.id]=n;if(!put(n,c)){it.qty+=half;delete items[n.id];toast("No room to split");}render();}]);
+  acts.push(["—"]);
+  if(isCarried(c))acts.push(["Drop on floor",()=>{C[c].slots[i]=null;if(!put(it,"floor")){C[c].slots[i]=id;toast("The floor is full");}render();}]);
+  else acts.push(["Take",()=>quickMove(c,i)]);
+  menu.innerHTML=`<div class="mh">${it.name}</div>`;
+  acts.forEach(([l,f])=>{if(l==="—"){menu.appendChild(document.createElement("hr"));return;}const b=document.createElement("button");b.setAttribute("role","menuitem");b.textContent=l;b.onclick=ev=>{ev.stopPropagation();menu.hidden=true;f();};menu.appendChild(b);});
+  const g=game.getBoundingClientRect();menu.hidden=false;
+  menu.style.left=Math.min(e.clientX-g.left,g.width-190)+"px";menu.style.top=Math.min(e.clientY-g.top,g.height-menu.offsetHeight-8)+"px";menu.querySelector("button")?.focus();
+});
+document.addEventListener("pointerdown",e=>{if(!e.target.closest(".menu")&&!menu.hidden){menu.hidden=true;e.stopPropagation();}},true);
+document.addEventListener("keydown",e=>{
+  if(e.target.closest&&e.target.closest("input,textarea"))return;
+  if(e.key==="Escape"){menu.hidden=true;if(held)returnHeld();else if(!$("#bench").hidden)closeBench();}
+  if(/^[1-9]$/.test(e.key)&&game.matches(":hover")){st.hot=+e.key-1;render();}
+});
+$("#takeAll").onclick=e=>{e.stopPropagation();const lc=st.ltab;let n=0;C[lc].slots.forEach((id,i)=>{if(!id)return;const it=items[id];if(it.bag)return;C[lc].slots[i]=null;for(const t of[st.ptab,...tabsFor("p"),"pockets"].filter(Boolean)){if(put(it,t)){n++;return;}}C[lc].slots[i]=id;});toast(n?`Took ${n} stacks`:"No room");render();};
+$("#dropBag").onclick=e=>{e.stopPropagation();const pc=st.ptab;if(!pc)return;let n=0;C[pc].slots.forEach((id,i)=>{if(!id)return;C[pc].slots[i]=null;if(put(items[id],st.ltab))n++;else C[pc].slots[i]=id;});toast(n?`Emptied ${n} stacks into ${C[st.ltab].name.toLowerCase()}`:"No room there");render();};
+
+/* ================= rain on the lens ================= */
+(function rain(){
+  const cv=$("#rain"),x=cv.getContext("2d");let drops=[],streaks=[];
+  function size(){cv.width=cv.clientWidth;cv.height=cv.clientHeight;drops=Array.from({length:26},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,r:2+Math.random()*7,v:Math.random()<.3?.2+Math.random()*.6:0}));streaks=Array.from({length:90},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,l:10+Math.random()*24,v:9+Math.random()*7}));}
+  size();addEventListener("resize",size);
+  function f(){
+    x.clearRect(0,0,cv.width,cv.height);
+    x.strokeStyle="rgba(190,205,220,.22)";x.lineWidth=1;x.beginPath();
+    streaks.forEach(s=>{x.moveTo(s.x,s.y);x.lineTo(s.x-s.l*.18,s.y+s.l);if(!reduced){s.y+=s.v;s.x-=s.v*.18;if(s.y>cv.height){s.y=-30;s.x=Math.random()*cv.width*1.1;}}});x.stroke();
+    drops.forEach(d=>{const g=x.createRadialGradient(d.x-d.r*.3,d.y-d.r*.3,0,d.x,d.y,d.r);g.addColorStop(0,"rgba(255,255,255,.35)");g.addColorStop(.6,"rgba(200,215,230,.08)");g.addColorStop(1,"rgba(0,0,0,.25)");x.fillStyle=g;x.beginPath();x.ellipse(d.x,d.y,d.r*.85,d.r,0,0,7);x.fill();if(!reduced&&d.v){d.y+=d.v;if(d.y>cv.height+10){d.y=-10;d.x=Math.random()*cv.width;}}});
+    requestAnimationFrame(f);
+  }
+  f();
+})();
+
+/* ================= the character, who watches your cursor like Minecraft's ================= */
+const mouse={x:0,y:0};
+const dv=$("#doll");
+const dr=new THREE.WebGLRenderer({canvas:dv,antialias:false,alpha:true});dr.setPixelRatio(Math.min(2,devicePixelRatio));
+const ds=new THREE.Scene();lights(ds,1.15);
+const rim=new THREE.PointLight(0xffc98a,.9,90);rim.position.set(-20,30,25);ds.add(rim);
+const dcam=new THREE.PerspectiveCamera(26,1,.1,300);dcam.position.set(0,16,150);dcam.lookAt(0,14.5,0);
+const hero=new THREE.Group();ds.add(hero);const P={};
+(function buildHero(){
+  const skinM=new THREE.MeshLambertMaterial({map:canvasTex(8,8,(x)=>{x.fillStyle="#c39272";x.fillRect(0,0,8,8);x.fillStyle="#3a2a1c";x.fillRect(0,0,8,2);x.fillRect(0,2,1,2);x.fillRect(7,2,1,2);x.fillStyle="#f3efe6";x.fillRect(1,4,2,1);x.fillRect(5,4,2,1);x.fillStyle="#2a3a4a";x.fillRect(2,4,1,1);x.fillRect(5,4,1,1);x.fillStyle="#9b6a50";x.fillRect(3,5,2,1);x.fillStyle="#6a3a2a";x.fillRect(3,6,2,1);x.fillStyle="#4a3a2c";x.fillRect(1,7,6,1);})});
+  const skin=mat("#c39272",12),hair=mat("#3a2a1c",18),boot=mat("#3b2a1b",14),glove=mat("#4b3320",14);
+  hero.add(box([-4,0,-2],[0,3,2],boot),box([0,0,-2],[4,3,2],boot),box([-4,3,-2],[0,12,2],denimMat),box([0,3,-2],[4,12,2],denimMat));
+  const body=new THREE.Group();hero.add(body);P.body=body;
+  body.add(box([-4,12,-2],[4,24,2],plaidMat));
+  const la=new THREE.Group(),ra=new THREE.Group();la.add(box([-2,-12,-2],[2,0,2],plaidMat),box([-2.05,-12,-2.05],[2.05,-9,2.05],glove));ra.add(box([-2,-12,-2],[2,0,2],plaidMat),box([-2.05,-12,-2.05],[2.05,-9,2.05],glove));
+  la.position.set(-6,24,0);ra.position.set(6,24,0);la.rotation.z=-.08;ra.rotation.z=.08;body.add(la,ra);P.la=la;P.ra=ra;
+  const head=new THREE.Group();head.position.set(0,24,0);body.add(head);P.head=head;
+  const faceMats=[skin,skin,hair,skin,new THREE.MeshLambertMaterial({map:skinM.map}),hair];
+  const hm=new THREE.Mesh(new THREE.BoxGeometry(8,8,8),faceMats);hm.position.set(0,4,0);head.add(hm);
+  head.add(box([-4.15,6.2,-4.15],[4.15,8.25,4.15],hair));
+  const cap=new THREE.Group();cap.add(box([-4.3,6.5,-4.3],[4.3,9,4.3],mat("#4a5531",20)),box([-4.3,6.5,4.3],[4.3,7,7.2],mat("#363f24",14)));P.cap=cap;head.add(cap);
+  const rig=new THREE.Group();rig.add(box([-4.4,14,-2.6],[4.4,22.5,2.6],mat("#545c33",26)),box([-4.5,22.5,-2.5],[-2.2,24.2,2.5],mat("#2e3320",10)),box([2.2,22.5,-2.5],[4.5,24.2,2.5],mat("#2e3320",10)));[-3,-.9,1.2].forEach(x=>rig.add(box([x,14.4,2.6],[x+1.8,18.2,3.6],mat("#666f40",24))));rig.add(box([-4,19,2.6],[4,21.5,3.2],mat("#666f40",24)));P.rig=rig;body.add(rig);
+  P.pack=new THREE.Group();body.add(P.pack);
+  const fanny=new THREE.Group();fanny.add(box([-3,11,2],[3,13.4,3.6],mat("#2a2f45",20)),box([-4.2,11.8,-2.2],[4.2,12.6,2.2],mat("#141414",4)));P.fanny=fanny;hero.add(fanny);
+  P.sling=new THREE.Group();body.add(P.sling);P.hand=new THREE.Group();ra.add(P.hand);P.off=new THREE.Group();la.add(P.off);
+})();
+// an item model held or worn on the character: reuse the same models as the icons
+function itemModel(it,scale){const g=new THREE.Group();let m;if(it.kind==="rifle")m=buildRifle(fitState(),false);else if(it.model&&A.models[it.model])m=mcModel(A.models[it.model]);else m=proc(it.kind);m.position.set(-8,-8,-8);const s=new THREE.Group();s.add(m);s.scale.setScalar(scale);g.add(s);g.rotation.order="ZYX";return g;}
+function updateDoll(){
+  const eq=k=>items[C["eq:"+k].slots[0]];
+  P.rig.visible=!!eq("vest");P.cap.visible=!!eq("head");P.fanny.visible=!!eq("waist");
+  P.pack.clear();const bk=eq("back");if(bk){const m=itemModel(bk,.75);m.position.set(0,18,-7.2);m.rotation.y=Math.PI;P.pack.add(m);}
+  P.sling.clear();const sl=eq("sling");if(sl){const m=itemModel(sl,1.05);m.position.set(0,17,bk?-13.6:-3.4);m.rotation.set(0,Math.PI/2,.9);P.sling.add(m);}
+  P.hand.clear();const h=items[C.hotbar.slots[st.hot]];if(h){const twoH=h.kind==="rifle";const m=itemModel(h,h.kind==="rifle"?1.0:1.05);
+    if(twoH){m.rotation.set(0,Math.PI/2,0);m.position.set(-3,-11,6);}else{m.rotation.set(-.35,0,Math.PI);m.position.set(0,-17,2.5);}P.hand.add(m);}
+  P.ra.rotation.x=h?-.45:0;
+  P.off.clear();const o=eq("off");if(o){const m=itemModel(o,o.wear==="hand"?.8:1);if(o.wear==="hand"){m.position.set(0,-16,0);m.rotation.y=Math.PI/2;}else{m.rotation.set(-.35,0,Math.PI);m.position.set(0,-17,2.5);}P.off.add(m);}
+  P.la.rotation.z=o&&o.wear==="hand"?-.16:-.08;
+}
+function fit(r,cam,cv){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;const pr=r.getPixelRatio();if(cv.width!==Math.floor(w*pr)||cv.height!==Math.floor(h*pr)){r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();}}
+let t0=performance.now();
+function loopDoll(t){
+  fit(dr,dcam,dv);
+  const r=dv.getBoundingClientRect();const cx=r.left+r.width/2,cy=r.top+r.height*.28;
+  const yaw=Math.atan((mouse.x-cx)/180),pitch=Math.atan((mouse.y-cy)/220);
+  const by=THREE.MathUtils.clamp(yaw*.5,-.6,.6),hy=THREE.MathUtils.clamp(yaw,-1,1);
+  P.body.rotation.y+= (by-P.body.rotation.y)*.15;P.head.rotation.y+=((hy-by)-P.head.rotation.y)*.2;P.head.rotation.x+=(THREE.MathUtils.clamp(pitch,-.6,.6)-P.head.rotation.x)*.2;
+  if(!reduced){const b=Math.sin(t/900)*.25;P.body.position.y=b*.3;P.la.rotation.x=Math.sin(t/900)*.04;}
+  rim.position.x=-20+((mouse.x-cx)/r.width)*20;
+  dr.render(ds,dcam);requestAnimationFrame(loopDoll);
+}
+
+/* ================= weapon bench ================= */
+const SOCK=[{k:"optic",label:"Optic",at:[8,10.4,14.3],off:[0,-78]},{k:"muzzle",label:"Muzzle",at:[8,8.86,-2],off:[-20,-70]},{k:"under",label:"Under-barrel",at:[8,7.3,7.2],off:[0,80]},{k:"magazine",label:"Magazine",at:[8,4.2,12.2],off:[60,86]},{k:"stock",label:"Stock",at:[8,7.8,22],off:[30,-74]}];
+let gr,gs,gcam,gHolder,gInner,gModel,gOpts={idle:true},benchOn=false;
+function gunItem(){const h=items[C.hotbar.slots[st.hot]];if(h&&h.kind==="rifle")return h;const s=items[C["eq:sling"].slots[0]];if(s&&s.kind==="rifle")return s;return Object.values(items).find(i=>i.kind==="rifle"&&where(i.id)[0]);}
+function crosshair(at){const L=1.4,[x,y,z]=at,geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.Float32BufferAttribute([x-L,y,z,x+L,y,z,x,y-L,z,x,y+L,z,x,y,z-L,x,y,z+L],3));const l=new THREE.LineSegments(geo,new THREE.LineBasicMaterial({color:0x4dff6e,transparent:true,opacity:.9,depthTest:false}));l.renderOrder=5;return l;}
+function initBench(){
+  if(gr)return;
+  const cv=$("#gun");gr=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});gr.setPixelRatio(Math.min(2,devicePixelRatio));
+  gs=new THREE.Scene();lights(gs,1);const bl=new THREE.DirectionalLight(0x7aa0ff,.5);bl.position.set(-5,-3,6);gs.add(bl);
+  gcam=new THREE.PerspectiveCamera(26,1,.1,400);gcam.position.set(74,8,0);gcam.lookAt(0,0,0);
+  gHolder=new THREE.Group();gs.add(gHolder);gInner=new THREE.Group();gInner.position.set(-8,-6.4,-11.8);gHolder.add(gInner);
+  SOCK.forEach(s=>gInner.add(crosshair(s.at)));
+  gHolder.rotation.y=.4;
+  let down=null;
+  cv.addEventListener("pointerdown",e=>{down={x:e.clientX,y:e.clientY,ry:gHolder.rotation.y,rx:gHolder.rotation.x};cv.setPointerCapture(e.pointerId);gOpts.idle=false;});
+  cv.addEventListener("pointermove",e=>{if(!down)return;gHolder.rotation.y=down.ry+(e.clientX-down.x)*.012;gHolder.rotation.x=THREE.MathUtils.clamp(down.rx+(e.clientY-down.y)*.008,-.6,.6);});
+  const up=()=>{down=null;clearTimeout(gOpts.t);gOpts.t=setTimeout(()=>gOpts.idle=true,2500);};cv.addEventListener("pointerup",up);cv.addEventListener("pointercancel",up);
+}
+function openBench(){menu.hidden=true;tip.hidden=true;$("#bench").hidden=false;["#carried","#nearby"].forEach(s=>$(s).style.visibility="hidden");initBench();renderBench();if(!benchOn){benchOn=true;requestAnimationFrame(loopGun);}}
+function closeBench(){$("#bench").hidden=true;["#carried","#nearby"].forEach(s=>$(s).style.visibility="");benchOn=false;render();}
+$("#benchClose").onclick=e=>{e.stopPropagation();closeBench();};
+function renderBench(){
+  const r=gunItem();if(!r){closeBench();return;}
+  $("#gunCond").textContent="Condition "+Math.round(r.cond*100)+"%";
+  if(gModel)gInner.remove(gModel);gModel=buildRifle(fitState(),true);gInner.add(gModel);
+  const sk=$("#socks");sk.innerHTML="";
+  SOCK.forEach(s=>{const id=gun[s.k],d=document.createElement("div");d.className="sock"+(id?" full":"");d.dataset.sock=s.k;d.innerHTML=`<span class="tag">${s.label}<em>${id?items[id].name:"empty"}</em></span>`;d.title=id?"Click to take it off":"Hold a part and click to fit";sk.appendChild(d);});
+  // parts: carried first, then nearby
+  const pr=$("#parts");pr.innerHTML="";const list=[];
+  Object.keys(C).forEach(c=>{if(C[c].eq&&c!=="eq:off")return;C[c].slots.forEach((id,i)=>{if(id&&items[id].part&&(isCarried(c)||c===st.ltab||C[c].loot))list.push([c,i,isCarried(c)]);});});
+  list.sort((a,b)=>b[2]-a[2]);
+  list.forEach(([c,i])=>pr.appendChild(slotEl(c,i)));
+  for(let k=list.length;k<15;k++){const d=document.createElement("div");d.className="slot";d.style.opacity=.5;pr.appendChild(d);}
+  renderStats();highlight();
+}
+function clickSocket(k){
+  if(held){const it=items[held.id];
+    if(!it.part){toast("That isn't a gun part");return;}
+    if(it.part!==k){toast(`${it.name} goes on the ${SOCK.find(s=>s.k===it.part).label.toLowerCase()}`);return;}
+    const old=gun[k];gun[k]=held.id;held=old?{id:old,from:["pack",0]}:null;drawHeld();
+    toast(k==="optic"?`${it.name} fitted · iron sights off`:`${it.name} fitted`);
+  }else if(gun[k]){held={id:gun[k],from:[st.ptab||"pockets",0]};gun[k]=null;drawHeld();}
+  iconCache.forEach((v,key)=>{if(key.startsWith("rifle:"))iconCache.delete(key);});
+  render();
+}
+function highlight(){const p=held&&items[held.id]?.part;document.querySelectorAll(".sock").forEach(s=>{s.classList.toggle("fits",!!p&&s.dataset.sock===p);s.classList.toggle("nofit",!!p&&s.dataset.sock!==p);});Object.entries(GHOST).forEach(([k,m])=>m.opacity=p?(k===p?.55:.07):.2);}
+const BASE={acc:55,recoil:62,ergo:48,noise:80,ads:.32};
+const MODS={reddot:{acc:12,ads:.04},scope:{acc:28,ads:.12,ergo:-6},suppressor:{noise:-52,recoil:-6,ergo:-5},oilfilter:{noise:-38,recoil:-3,ergo:-8},comp:{recoil:-14,noise:6},grip:{recoil:-9,ergo:6},light:{ergo:-2},drum:{ergo:-10},pad:{recoil:-7,ergo:-2}};
+function renderStats(){
+  const cur={...BASE};let w=K.rifle.w;Object.values(gun).forEach(id=>{if(!id)return;const it=items[id];w+=it.w;const m=MODS[it.kind]||{};for(const k in m)cur[k]+=m[k];});
+  if(!gun.stock){cur.recoil+=24;cur.acc-=12;cur.ergo+=8;}
+  const f=fitState();
+  const rows=[["Accuracy","acc",100,1,""],["Recoil","recoil",100,0,""],["Ergonomics","ergo",100,1,""],["Noise","noise",100,0," bl"],["Aim time","ads",.6,0,"s"]];
+  let h="";rows.forEach(([l,k,max,good,u])=>{const v=cur[k],b=BASE[k],d=v-b,better=good?d>0:d<0,ch=Math.abs(d)>1e-6;
+    h+=`<div class="stat"><span>${l}</span><span class="sb"><i style="width:${Math.min(b,v)/max*100}%"></i>${ch?`<s class="${better?"":"neg"}" style="left:${Math.min(b,v)/max*100}%;width:${Math.abs(d)/max*100}%"></s>`:""}</span><span class="v ${ch?(better?"up":"dn"):""}">${k==="ads"?v.toFixed(2):Math.round(v)}${u}</span></div>`;});
+  h+=`<div class="stat"><span>Weight</span><span></span><span class="v">${w.toFixed(2)} kg</span></div><div class="stat"><span>Magazine</span><span></span><span class="v">${f.magazine?(f.magazine==="drum"?50:30)+" rds":"none"}</span></div><div class="stat"><span>Sight</span><span></span><span class="v">${f.optic?K[f.optic].name.replace(" sight",""):"Irons"}</span></div>`;
+  $("#stats").innerHTML=h;
+}
+const tv=new THREE.Vector3();
+function loopGun(t){
+  if(!benchOn)return;const cv=$("#gun");fit(gr,gcam,cv);
+  if(gOpts.idle&&!reduced)gHolder.rotation.y=.4+Math.sin(t/2600)*.45;
+  gr.render(gs,gcam);
+  const W=cv.clientWidth,H=cv.clientHeight;let svg="";gInner.updateMatrixWorld();
+  SOCK.forEach(s=>{tv.set(...s.at);gInner.localToWorld(tv);tv.project(gcam);const x=(tv.x+1)/2*W,y=(1-tv.y)/2*H;const el=document.querySelector(`.sock[data-sock="${s.k}"]`);if(!el)return;
+    const tx=Math.max(70,Math.min(W-70,x+s.off[0])),ty=Math.max(70,Math.min(H-50,y+s.off[1]));el.style.left=tx+"px";el.style.top=ty+"px";
+    const full=!!gun[s.k];svg+=`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="${full?"rgba(226,194,122,.5)":"rgba(77,255,110,.55)"}" stroke-width="1"/>`;});
+  $("#leads").setAttribute("viewBox",`0 0 ${W} ${H}`);$("#leads").innerHTML=svg;
+  requestAnimationFrame(loopGun);
+}
+
+/* ================= go ================= */
+// textures load async: re-render icons once they're in
+Promise.all(Object.values(A.models).map(m=>new Promise(r=>{const t=mcTex(m.tex);if(t.image&&t.image.complete)r();else{const i=new Image();i.onload=r;i.onerror=r;i.src=m.tex;}}))).then(()=>{setTimeout(()=>{iconCache.clear();render();},50);});
+render();requestAnimationFrame(loopDoll);
+</script>

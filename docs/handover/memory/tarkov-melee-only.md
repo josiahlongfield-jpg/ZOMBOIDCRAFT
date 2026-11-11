@@ -1,0 +1,14 @@
+---
+name: tarkov-melee-only
+description: Josiah's 2026-11-07 10:37 rule that only Tarkov melee weapons exist (all Minecraft/Zomboid melee goes); Tarkov melee list and the tool-role question
+metadata:
+  type: project
+  modified: 2026-11-07T10:41:36.148Z
+---
+RULE (Josiah 2026-11-07 10:37, relayed by coordinator, owned by the weapons thread "project-thread-5z3m2y"; LOOT does world loot): "We won't be able to use any minecraft or zomboid melee weapons, all of them will need to be tarkov ones". Start kit melee = Tarkov (Ka-Bar already, LocalHands starter flag).
+Our melee items: ModItems lines ~123-147 (hammer, kitchen_knife, frying_pan, crowbar, pipe_wrench, lead_pipe, golf_club, hockey_stick, baseball_bat, spiked_bat, shovel, machete, tomahawk, katana, fire_axe, sledgehammer, spears, stone axe/hammer/knife, plank/cudgel nails). Ka-Bar and Kukri use kitchen_knife/machete as anchors, so those types must stay registered (retire stacks without a LocalHands id, like Retired does for guns).
+Tarkov melee (SPT knife parent 5447e1d04bdc2dff2f8b4567, data /mnt/user-data/uploads/tarkov-pilot/spt on a session that staged it): Fulcrum bayonet, Kiba tomahawk, A-2607 x2, Antique axe, MPL-50 entrenching tool, 6Kh5, Miller M-2 sword, Crash axe, SP-8, Red Rebel, Camper axe, Freeman crowbar, Cultist knife, Taiga-1, DB 2020 dead blow hammer, scythe, Voodoo Hawk, PR-Taran, M48 Kukri, Gladius, Akula push dagger, Labrys (+Ka-Bar). Skip "Infectious strike" (zombie hands).
+DECIDED 10:49 (Josiah, card): tools with a Tarkov twin (crowbar, axes, shovel=MPL-50, sledge=DB 2020, knives) are replaced by the Tarkov item for both fighting and jobs; hammer, frying pan, pipe wrench stay as job-only tools that cannot hit; pure weapons (bats, golf club, hockey stick, katana, lead pipe, spears, nail clubs, stone weapons) go. 62 melee bundles staged 10:50 (/mnt/user-data/uploads/raw, copy into scratch raw1).
+BUILT 11:4x: 22 FP packs scratch /tmp/claude-0/tk/melee/pack (operator_tarkov_<g>.zsk), hands jsons tk/melee/local/hands (sounds "tarkov_kabar"), anchors: knives->kitchen_knife, sp8/taiga->machete, m2sword/gladius/scythe->katana, axes+labrys+rebel->fire_axe, kiba/voodoo->tomahawk, crowbar, mpl50->shovel, db2020->sledgehammer, taran->lead_pipe. db2020/scythe/labrys FP clips are blank stubs (Tarkov swings them with full-body SledgeHammer_* clips in character_animations); they use kiba's axe clips instead (heavy.py body->FP try parked). Preview https://claude.ai/artifact/TSFbioZPu27dYB4FXcspZW OK'd 11:39; all 22 zsk + hands jsons copied to profile npc/ + hands/ 11:4x (staged /mnt/project-files/zomboid-mod/tarkov/melee).
+LOOT 11:22: Retired.TWIN_TOOLS (kitchen_knife, crowbar, shovel, fire_axe, sledgehammer) stay as can't-hit tools until a Tarkov blade anchored on them is in hands/ (playtest 7cd145968). LOOT owns TarkovMelee loot + rarity.
+Related: [[tarkov-weapon-batch1]], [[tarkov-zomboid-scoping]].

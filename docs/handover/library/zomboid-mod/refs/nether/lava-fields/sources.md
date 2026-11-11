@@ -1,0 +1,16 @@
+# nether/lava-fields
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-p-hoehoe-lava-flow.jpg | [Pāhoehoe Lava flow.JPG](https://commons.wikimedia.org/wiki/File:P%C4%81hoehoe_Lava_flow.JPG) | Brocken Inaglory | CC BY-SA 3.0 | Pāhoehoe Lava flow at The Big Island of Hawaii. The lava flow is due to July 21 fissure eruption.  The picture was taken from a helicopter.  |
+| 02-lava-wildfire-at-hawaii.jpg | [Lava wildfire at hawaii.jpg](https://commons.wikimedia.org/wiki/File:Lava_wildfire_at_hawaii.jpg) | Brocken Inaglory | CC BY-SA 3.0 | Pāhoehoe Lava flow on the coastal plain of Kīlauea, The Big Island of Hawai generated wildfire. The new lava is moving across the old surfac |
+| 03-p-hoehoe-lava-meets-pacific.jpg | [Pāhoehoe lava meets Pacific.jpg](https://commons.wikimedia.org/wiki/File:P%C4%81hoehoe_lava_meets_Pacific.jpg) | Brocken Inaglory | CC BY-SA 3.0 | Pāhoehoe Lava is entering Pacific at The Big Island of Hawai,Hawaii Volcanoes National Park. |
+| 04-001-volcano-eruption-of-litli-hr-tur-in-iceland-in-2023-phot.jpg | [001 Volcano eruption of Litli-Hrútur in Iceland in 2023 Photo by Giles](https://commons.wikimedia.org/wiki/File:001_Volcano_eruption_of_Litli-Hr%C3%BAtur_in_Iceland_in_2023_Photo_by_Giles_Laurent.jpg) | Giles Laurent | CC BY-SA 4.0 | Volcano eruption at Fagradalsfjall next to Litli-Hrútur in Iceland in 2023 captured from up close with a drone. Such a shot was only made po |
+| 05-litli-hr-tur-volcanic-eruption-in-iceland-july-2023-53063284.jpg | [Litli-Hrútur - Volcanic Eruption in Iceland July 2023 (53063284354).jp](https://commons.wikimedia.org/wiki/File:Litli-Hr%C3%BAtur_-_Volcanic_Eruption_in_Iceland_July_2023_(53063284354).jpg) | Anthony Quintano from Mount Laurel, United States | CC BY 2.0 | Lava flow from Litli-Hrútur volcanic eruption in Iceland, July 2023. |
+| 06-litli-hr-tur-eruption-2023.jpg | [Litli-Hrútur eruption 2023.jpg](https://commons.wikimedia.org/wiki/File:Litli-Hr%C3%BAtur_eruption_2023.jpg) | DCheretovich | CC0 | Litli-Hrútur eruption 2023. View from an airplane |
+| 07-lava-field-at-el-malpais.jpg | [Lava field at El Malpais.jpg](https://commons.wikimedia.org/wiki/File:Lava_field_at_El_Malpais.jpg) | Garland3 | CC BY-SA 4.0 | Lava field near lava falls at El Malpais |
+| 08-view-of-gmundarhraun-lava-field-in-iceland-from-road-427.jpg | [View of Ögmundarhraun lava field in Iceland from Road 427.jpg](https://commons.wikimedia.org/wiki/File:View_of_%C3%96gmundarhraun_lava_field_in_Iceland_from_Road_427.jpg) | Alexander Grebenkov | CC BY 3.0 | View of Ögmundarhraun lava field in Iceland from Road 427 |
+| 09-lava-fields-at-ponta-do-queimado.jpg | [Lava fields at Ponta do Queimado.jpg](https://commons.wikimedia.org/wiki/File:Lava_fields_at_Ponta_do_Queimado.jpg) | Ymblanter | CC BY-SA 4.0 | Lava fields at Ponta do Queimado (view inland) |
+| 10-black-sand-beach-north-of-kaikoura-canterbury-new-zealand.jpg | [Black sand beach north of Kaikoura, Canterbury, New Zealand.jpg](https://commons.wikimedia.org/wiki/File:Black_sand_beach_north_of_Kaikoura,_Canterbury,_New_Zealand.jpg) | Michal Klajban | CC BY-SA 4.0 | Black sand beach north of Kaikoura, Canterbury, New Zealand |

@@ -1,0 +1,12 @@
+# town/shop-drugstore
+
+Reference photos from Wikimedia Commons (1024 px thumbnails). Free licences only; CC BY / CC BY-SA need credit if ever redistributed. Photos are reference only, not shipped in the mod.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-childs-drugstore-interior.jpg | [Childs Drugstore interior.jpg](https://commons.wikimedia.org/wiki/File:Childs_Drugstore_interior.jpg) | Hines Studio | Public domain | This image is part of the Hines Studio Collection. Original is held by Archives and Special Collections at Western Libraries. |
+| 02-el-drugstore-colonia-interior.jpg | [El Drugstore, Colonia - interior.jpg](https://commons.wikimedia.org/wiki/File:El_Drugstore,_Colonia_-_interior.jpg) | Mx. Granger | CC0 | Interior de El Drugstore, restaurante en Colonia del Sacramento, Uruguay. |
+| 03-interior-of-helmbold-s-drugstore-broadway-nypl-b11708064-g91.jpg | [Interior of Helmbold's Drugstore, Broadway (NYPL b11708064-G91F210 017](https://commons.wikimedia.org/wiki/File:Interior_of_Helmbold%27s_Drugstore,_Broadway_(NYPL_b11708064-G91F210_017F).tiff) | Scan by NYPL | Public domain | * Includes views by John S. Moulton, L. G. Strand, Anthony and other photographers and publishers. Robert Dennis Collection of Stereoscopic  |
+| 04-castellon-pharmacy-new-orleans-empty-shelves-where-tp-and-wi.jpg | [Castellon Pharmacy New Orleans Empty Shelves where TP and Wipes were.j](https://commons.wikimedia.org/wiki/File:Castellon_Pharmacy_New_Orleans_Empty_Shelves_where_TP_and_Wipes_were.jpg) | Infrogmation of New Orleans | CC BY-SA 4.0 | Carrollton Riverbend section of New Orleans, early days of the COVD-19 pandemic.  No wipes or toilet paper at the drugstore. |
+| 05-cvs-pharmacy-at-target-dadeland-miami-florida-2022.jpg | [CVS Pharmacy at Target, Dadeland Miami Florida 2022.jpg](https://commons.wikimedia.org/wiki/File:CVS_Pharmacy_at_Target,_Dadeland_Miami_Florida_2022.jpg) | Phillip Pessar | CC BY 2.0 | CVS Pharmacy at Target, Dadeland Miami Florida |
+| 06-savory-moore-ltd-london-the-interior-of-the-pharmacy-wo-well.jpg | [Savory & Moore Ltd, London; the interior of the pharmacy; wo Wellcome ](https://commons.wikimedia.org/wiki/File:Savory_%26_Moore_Ltd,_London;_the_interior_of_the_pharmacy;_wo_Wellcome_V0029731.jpg) |  | CC BY 4.0 | Savory & Moore Ltd, London: the interior of the pharmacy; wooden shelves with labelled bottles and jars holding drugs. Photograph.  Iconogra |

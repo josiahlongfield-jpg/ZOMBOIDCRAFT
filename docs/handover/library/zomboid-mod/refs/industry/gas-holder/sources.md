@@ -1,0 +1,14 @@
+# industry/gas-holder
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-dsc02326-vordernbergerstra-e-flare-and-gas-holder-voestalpin.jpg | [DSC02326 Vordernbergerstraße, Flare and Gas Holder, voestalpine, Leobe](https://commons.wikimedia.org/wiki/File:DSC02326_Vordernbergerstra%C3%9Fe,_Flare_and_Gas_Holder,_voestalpine,_Leoben,_2023-08.jpg) | Aciarium | CC BY 4.0 | The Leoben Vordernbergerstraße, passing by the voestalpine steelworks. The image shows converter-gas flares and a gas holder. The road on th |
+| 02-linz-st-peter-gasometer-der-voestalpine-1630.jpg | [Linz St. Peter Gasometer der voestalpine-1630.jpg](https://commons.wikimedia.org/wiki/File:Linz_St._Peter_Gasometer_der_voestalpine-1630.jpg) | Isiwal | CC BY-SA 4.0 | The Vöest-Alpine gasometer in Linz - St.Peter is an industrial building that can be seen from afar. It has a height of 102 m and the floor p |
+| 03-rth-schoeneberg-03-view-from-tower.jpg | [Rth Schoeneberg 03 view from tower.jpg](https://commons.wikimedia.org/wiki/File:Rth_Schoeneberg_03_view_from_tower.jpg) | A.Savin | CC BY-SA 3.0 | View from the tower of the Town Hall of Berlin-Schöneberg |
+| 04-flaring-of-blast-furnace-gas-at-night.jpg | [Flaring of Blast Furnace Gas at Night.jpg](https://commons.wikimedia.org/wiki/File:Flaring_of_Blast_Furnace_Gas_at_Night.jpg) | Aciarium | CC BY 4.0 | Blast furnace (BF) gas is flared at the voestalpine Stahl Donawitz steel mill in Donawitz, Leoben, Austria |
+| 05-blast-furnace-gas-flame.jpg | [Blast furnace gas flame.JPG](https://commons.wikimedia.org/wiki/File:Blast_furnace_gas_flame.JPG) | Borvan53 | CC BY-SA 3.0 | Flame from the combustion of blast furnace gas at a flare. This pale blue flame can only be seen at night. |
+| 06-blast-furnace-gas-cleaning-system.png | [Blast furnace gas cleaning system — Система газоочистки доменного газу](https://commons.wikimedia.org/wiki/File:Blast_furnace_gas_cleaning_system_%E2%80%94_%D0%A1%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_%D0%B3%D0%B0%D0%B7%D0%BE%D0%BE%D1%87%D0%B8%D1%81%D1%82%D0%BA%D0%B8_%D0%B4%D0%BE%D0%BC%D0%B5%D0%BD%D0%BD%D0%BE%D0%B3%D0%BE_%D0%B3%D0%B0%D0%B7%D1%83.png) | Blast furnace chip worker | CC BY-SA 3.0 | Blast furnace gas cleaning system. |
+| 07-gasometer-communications-tower-and-derelict-land-geograph-or.jpg | [Gasometer, communications tower and derelict land - geograph.org.uk - ](https://commons.wikimedia.org/wiki/File:Gasometer,_communications_tower_and_derelict_land_-_geograph.org.uk_-_4742579.jpg) | Jonathan Thacker | CC BY-SA 2.0 | Gasometer, communications tower and derelict land |
+| 08-dundee-gasometer-geograph-org-uk-7798634.jpg | [Dundee Gasometer - geograph.org.uk - 7798634.jpg](https://commons.wikimedia.org/wiki/File:Dundee_Gasometer_-_geograph.org.uk_-_7798634.jpg) | Scott Cormie | CC BY-SA 2.0 | Dundee Gasometer |

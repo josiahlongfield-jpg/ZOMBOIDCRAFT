@@ -1,0 +1,26 @@
+---
+name: zomboid-tarkov-gun-loot
+description: LOOT's job (Josiah 2026-11-07 10:20): every Tarkov gun into world loot via Arsenal-twin places in the local places.json; proposed mapping awaiting OK
+metadata:
+  type: project
+---
+
+Josiah 2026-11-07 10:14/10:20 (Tarkov thread, relayed to LOOT): found guns never come with a silencer; built-in cans (AS VAL, VSK-94) rarer; "I want them all placed into world loot". The gear thread owns gear and clothing; LOOT does guns, ammo and attachments.
+
+- Already built by WEAPONS on branch 5z3m2y (2d149203f, 363009c78): no can on found guns, GunLoot BUILT_IN_CAN 0.25, loose cans 1/8 in GunLoot.tarkovParts (parts roll automatically).
+- Places come from local-only <profile>/config/zomboidcraft/guns/loot/places.json, written ON HIS PC by /mnt/project-files/zomboid-mod/brita/loot/make_places.py (--arsenal <Arsenal mod dir> --guns <guns dir>). Arsenal's per-gun home/cross places are in pagedata.json. Plan: add the tarkov_* ids to make_places ALIAS (-> Arsenal twin) + RAR, then run it on his PC.
+- Proposed twins (sent 10:3x, awaiting OK): pm->Colt1903 S, glock17->G17 C, usp->HK_USP S, deagle->Automag R, mp5k->MP7 R, vector->MP7 P, ak102->AK47 S, m4a1->CAR15SMG R, mcx->G36C R, scarh->SCARH P, mdr762->SCARH P, val/vsk94/sr3m->AAC_Honey P, svds->SV_98 R, rsass->M40A3 R, sv98->SV_98 P, ak50->M82 P, m870->M870_CQB C, aa12->SPAS12_Fixed P, mp18->Ruger_No1_308 S.
+- Batch 2 gun files reach his PC only after he OKs the batch-2 previews; re-run make_places then.
+
+Related: [[zomboid-playtest-build]], [[tarkov-suppressors-irons]].
+
+**Brita out (Josiah 2026-11-07 10:32):** "All brita weapons and attachments need to be removed also". LOOT's share: places.json keeps only tarkov_* guns + their mags/ammo + Tarkov parts (RC run on his PC told 10:3x). Proposed to the Tarkov weapons thread (cmsg_...H9h8): it removes Brita gun files/markers/sounds/tools/code. Never re-add Brita guns or his pack sights/grips to loot.
+- DONE on his PC 2026-11-07 10:4x (RC): GUNS\loot\places.json is Tarkov-only (11 guns with files: ak102 S, glock17 C, m4a1 R, m870 C, mdr762 P, mp18 S, mp5k R, pm S, sv98 P, svds R, val P), 15 Brita guns + 35 mag/ammo extras + 63 old-pack part extras dropped. Script: additions\gunloot\tarkov_only.py (reruns make_places, keeps tarkov_ + guns\tarkov\parts.json parts). Backups places.json.bak (original), places.json.merged.bak. count = guns per container (Arsenal full set), picks weighted among ours (GunLoot.pick), so a gun shop still gives ~1 gun. 10 ids lack gun files yet (usp deagle vector mcx scarh vsk94 sr3m rsass ak50 aa12): rerun tarkov_only.py when they land. SWAT/ccw parse to count 0 (pre-existing).
+- MELEE TARKOV ONLY (Josiah 2026-11-07 10:37): loot/TarkovMelee (3ecc854ef, branch jd27hs, not in playtest): MODIFY_DROPS turns our weapon-only melee (bats, pipes, katana, machete, spears...) into a LocalHands Tarkov blade picked by RARITY (kabar C, kukri S), EMPTY if none. Tools that hit stay (Josiah picked "Weapons go, tools stay" 10:49). Weapons thread removes the items themselves.
+- 11:24 2f9cfa1ac (pushed to playtest): TarkovMelee.WEAPONS = Retired.MELEE (pipe_wrench is a tool); Retired.TWIN_TOOLS (knife, crowbar, shovel, fire_axe, sledgehammer) in loot become their Tarkov twin when one is in hands/; RARITY covers the 22 coming blades (weapons thread's letters).
+- 11:4x ALL 21 Tarkov guns in places.json on his PC (batch 2 files landed; rerun tarkov_only.py; backup places.json.pre_b2.bak). Per place: gunshop 5, pawn 5, police 12, army 9, security 15, hunting 5, surplus 5, storage 20, case_pistol 4, case_rifle 13, ccw 2, swat 0. mp18 only in rifle cases.
+- RULE (Josiah 2026-11-08 00:09): never save/back up to OneDrive folders; use C:\Dev\Zomboidcraft-Desktop\additions. The old gunloot scripts sit in the OneDrive additions\gunloot; next rerun, copy them to C:\Dev\Zomboidcraft-Desktop\additions\gunloot and run from there (backups of places.json stay next to it in the profile, not OneDrive).
+- Batch 3 (2026-11-08 01:2x, 9 guns, my twin picks, not yet OK'd by him): pl15->G17 S, m1911->Colt1911 C, rhino->SW_327 R, hk416->CAR15SMG R, m16->CAR15SMG R, adar->Bush_AR15_MOE S, aug->F2000 P, g36->G36C R, vepr->AK47 S. Added to project-files make_places.py; RC card to rerun from C:\Dev\Zomboidcraft-Desktop\additions\gunloot.
+- 2026-11-08 06:53 Josiah set C:\Dev\Zomboidcraft-Desktop\additions up as a served folder for Remote Control (use it as start_remote_control folder; list_devices first). Batch 3 run started on another served env before that.
+- 06:5x batch 3 DONE: 30 Tarkov guns in places.json (vepr anchor assault_rifle). Scripts now live in C:\Dev\Zomboidcraft-Desktop\additions\gunloot (OneDrive copy gone); backup places.pre_b3.json there. Per place: gunshop 10, pawn 10, police 19, army 13, security 23, hunting 7, surplus 8, storage 29, case_pistol 6, case_rifle 17, ccw 4. Loose Tarkov parts come from GunLoot.tarkovParts in code, not places.json extras (0 there, fine).
+- 2026-11-08 09:29 PURGE DIRECTION (zomboid-purge-direction.md, doc 92iDNQQ3vpJUMVT5gpcU8z): no world loot at all, no fixed armouries; Tarkov gun world loot retires, guns become pod/cache unlocks. LOOT paused on retired systems; remove nothing until the plan thread's removal step is agreed.

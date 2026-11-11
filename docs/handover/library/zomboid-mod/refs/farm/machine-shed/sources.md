@@ -1,0 +1,12 @@
+# farm/machine-shed
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-dairy-barn-and-machine-shed-hinchman-rickey-farm-vernon-town.jpg | [Dairy barn and machine shed, Hinchman-Rickey Farm, Vernon Township, NJ](https://commons.wikimedia.org/wiki/File:Dairy_barn_and_machine_shed,_Hinchman-Rickey_Farm,_Vernon_Township,_NJ.jpg) | Zeete | CC BY-SA 4.0 | The dairy barn and machine shed at the Hinchman-Rickey Farm in Vernon Township, New Jersey.       This is an image of a place or building th |
+| 02-bruentrup-heritage-farm-old-machine-shed.jpg | [Bruentrup Heritage Farm Old Machine Shed.jpg](https://commons.wikimedia.org/wiki/File:Bruentrup_Heritage_Farm_Old_Machine_Shed.jpg) | Myotus | CC BY-SA 4.0 | Bruentrup Heritage Farm-Old Machine Shed, 2170 County Rd D E, Maplewood, Minnesota, United States 55109. Operated by the Maplewood Area Hist |
+| 03-view-of-southwest-front-of-machine-shed-tyrrell-farm-machine.jpg | [VIEW OF SOUTHWEST FRONT OF MACHINE SHED - Tyrrell Farm, Machine Shed, ](https://commons.wikimedia.org/wiki/File:VIEW_OF_SOUTHWEST_FRONT_OF_MACHINE_SHED_-_Tyrrell_Farm,_Machine_Shed,_6245_Fannet_Road_(Highway_124),_Beaumont,_Jefferson_County,_TX_HABS_TEX,123-BEAU.V,1B-1.tif) |  | Public domain | Reyes, Louisa, transmitter |
+| 04-tin-shed-old-metal-nb-7-25-13c-10783983245.jpg | [Tin Shed, Old Metal, NB 7-25-13c (10783983245).jpg](https://commons.wikimedia.org/wiki/File:Tin_Shed,_Old_Metal,_NB_7-25-13c_(10783983245).jpg) | inkknife_2000 (7.5 million views +) | CC BY-SA 2.0 | (1 in a multiple picture set) This tin shed once kept the farmer's equipment out of the elements. |
+| 05-riley-s-farm-oak-glen-11-10-12-8200874232.jpg | [Riley's Farm, Oak Glen 11-10-12 (8200874232).jpg](https://commons.wikimedia.org/wiki/File:Riley%27s_Farm,_Oak_Glen_11-10-12_(8200874232).jpg) | inkknife_2000 (7.5 million views +) | CC BY-SA 2.0 | (1 in a multiple picture set) The folks at Riley's Farm have some heavy equipment ready in case they have to clear some land or make a road. |
+| 06-sezincote-stud-geograph-org-uk-1671662.jpg | [Sezincote Stud - geograph.org.uk - 1671662.jpg](https://commons.wikimedia.org/wiki/File:Sezincote_Stud_-_geograph.org.uk_-_1671662.jpg) | Michael Dibb | CC BY-SA 2.0 | Sezincote Stud Seen from the footpath through the stud farm is this equipment shed. |
