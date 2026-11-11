@@ -240,7 +240,7 @@ with open(os.path.join(OUT, 'DECLINED.md'), 'w') as f:
                 f.write(f'- {l[:600]}{" ..." if len(l) > 600 else ""}\n')
 
 # ---------------- common docs ----------------
-for n in ['ASSETS-METHOD.md', 'THREADS.md', 'BUILD-AND-SETUP.md']:
+for n in ['LATEST.md', 'ASSETS-METHOD.md', 'THREADS.md', 'BUILD-AND-SETUP.md']:
     shutil.copy2(os.path.join(S, 'common', n), os.path.join(OUT, n))
 shutil.copy2(os.path.join(S, PROJ, 'START-HERE.md'), os.path.join(OUT, 'START-HERE.md'))
 shutil.copy2(os.path.join(S, PROJ, 'FIRST-MESSAGE.md'), os.path.join(OUT, 'FIRST-MESSAGE.md'))
