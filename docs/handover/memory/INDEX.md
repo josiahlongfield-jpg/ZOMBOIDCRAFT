@@ -1,4 +1,4 @@
-# Memory notes for ZomboidCraft (all 367 notes, verbatim)
+# Memory notes for ZomboidCraft (all 368 notes, verbatim)
 
 Every memory note from the old project is copied here unchanged. Class:
 - **CORE**: this project's own work and decisions.
@@ -157,6 +157,7 @@ Every memory note from the old project is copied here unchanged. Class:
 | Note | What it holds |
 |---|---|
 | [endless-night-switch](endless-night-switch.md) | Josiah 2026-11-09 07:51 STRICT: all Reach/Halo/Tarkov/zombie work moves to Endless Night repo, file store and Modrinth instance |
+| [endless-night-unreal-graphics-rule](endless-night-unreal-graphics-rule.md) | Josiah 2026-11-11 22:57 (his clock): in Unreal, improve graphics wherever UE5 can, but never take away from Reach's aesthetic and detail |
 | [endless-night-voice-accents](endless-night-voice-accents.md) | Josiah's rule on AI voice accents for any voice samples or picks (never Indian accents) |
 | [full-detail-previews-rule](full-detail-previews-rule.md) | STRICT (Josiah 2026-11-10): every preview sent to him must be rendered in full detail, never quick flat-shaded check renders |
 | [josiah-preferences](josiah-preferences.md) | How Josiah likes to work on game/mod projects |

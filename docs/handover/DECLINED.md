@@ -153,7 +153,7 @@ An automatic appendix below lists every memory line with a decline/drop/never wo
 - - 09:33 2026-11-09 push hold LIFTED: ENDLESS-NIGHT repo ready (branch off main, merge into playtest; mod id endlessnight, com.endlessnight.*, config/endlessnight/, commands /en /enhud). County world, cars, loot, survival needs, skills, aircraft, trains, companions, Harvestman, command net removed.
 
 ### endless-night-unreal-move-scoping.md (BACKGROUND)
-- Recommendation: move to UE5 via phases with gates; skip MCC mod tools (perfect campaign but can't add Endless Night systems; MCC mods need Steam MCC, his is Xbox app version). Phase 0 = second NVMe drive (~200 GB needed, C: ~14 GB free), check RAM (unknown), install UE5 + VS. Phase 1 = 2-3 week trial importing m20 Tip of the Spear, gate = he plays it. Then whole world, core loop, multiplayer/bots/lobby, rest. Rough total 2-3 months to parity (revised from 6-9 after Josiah pointed out the project pace; slowdown vs Minecraft = builds/tests must run in the UE editor on his PC).
+- Recommendation: move to UE5 via phases with gates; skip MCC mod tools (perfect campaign but can't add Endless Night systems; MCC mods need Steam MCC, his is Xbox app version). Phase 0 = second NVMe drive (~200 GB needed, C: ~14 GB free), check RAM (unknown), install UE5 + VS. Phase 1 = 2-3 week trial importing m35 Tip of the Spear (m20 = ONI Sword Base, NOT Spear), gate = he plays it. Then whole world, core loop, multiplayer/bots/lobby, rest. Rough total 2-3 months to parity (revised from 6-9 after Josiah pointed out the project pace; slowdown vs Minecraft = builds/tests must run in the UE edi ...
 - - 2026-11-11 22:14 (his clock) Josiah: "start immediately" (Phase 0 begun). PC facts: 32 GB RAM (2x16 DDR4-3200, 2 slots free), ONE drive Kingston NV2 2 TB NVMe, C: 25.7 GB free; ASUS PRIME B550M-A WIFI II, 1 spare M.2 slot. UE 5.8 ALREADY installed (C:\Program Files\Epic Games\UE_5.8). No Visual Studio. additions\halo-reach 26 GB, halo-4 4.2 GB. Full-drive scans thrash his PC: measure gently. Trial can run without VS (Python editor scripting + Blueprints).
 
 ### endless-night-voice-accents.md (SHARED)
@@ -177,7 +177,7 @@ An automatic appendix below lists every memory line with a decline/drop/never wo
 - 2026-11-01 (FPS thread): changing Photon's Profile resets its quality options (shadows, AO, clouds); his look values (fog, colours, exposure) survived in shaderpacks/photon_v1.4.zip.txt. Still upsetting to him (it happened after I suggested Medium as a test). Never suggest changing the Profile; test single settings instead. Restore sheet: /mnt/project-files/zomboid-mod/perf/photon-custom-settings.md (Profile High, then the custom list). His latest shadows: 1536 / 6 chunks.
 
 ### project-split-handover.md (CORE)
-- Handover packs at docs/handover/ on branch claude/project-thread-l4rxug: ENDLESS-NIGHT PR #1, ZOMBOIDCRAFT PR #6 (to main; he must merge for a fresh clone to see them). They contain all 367 memory notes verbatim, RULES.md, ASSETS-METHOD.md, THREADS.md (48 threads), PREVIEWS.md (185 links), DECLINED.md, BUILD-AND-SETUP.md, PC-LAYOUT + PC-LISTING.tsv, library/ text files, LIBRARY-MANIFEST.tsv, CROSSCHECK.md, FIRST-MESSAGE.md. Builder: docs/handover/tools/build_pack.py.
+- Handover packs at docs/handover/ on branch claude/project-thread-l4rxug: ENDLESS-NIGHT PR #1, ZOMBOIDCRAFT PR #6 (both MERGED to main 2026-11-11 12:50; ZC PR also bumped main's Gradle wrapper to 9.9.0). They contain all 367 memory notes verbatim, RULES.md, ASSETS-METHOD.md, THREADS.md (48 threads), PREVIEWS.md (185 links), DECLINED.md, BUILD-AND-SETUP.md, PC-LAYOUT + PC-LISTING.tsv, library/ text files, LIBRARY-MANIFEST.tsv, CROSSCHECK.md, FIRST-MESSAGE.md. Builder: docs/handover/tools/build_pack.py.
 
 ### reach-bots-custom-games.md (BACKGROUND)
 - - 2026-11-11 10:43: thread "Make my Spartan and Reach weapons playable" (cmsg_01LvQiYGyHLhwyRNcM6wP1DpH9h8CTTSSSf2kybs3Rpr6r, branch claude/project-thread-5z3m2y) is building the animated in-game Spartan body (client/operator next to SpartanView), taking any armour+colour set. Bots MUST reuse it, never a second body. Asked it for: non-player entity input, cheap at 32 instances (LOD), nameplate hook, state-driven anims.
@@ -1241,6 +1241,9 @@ An automatic appendix below lists every memory line with a decline/drop/never wo
 
 ### zomboid-reach-mp-placement.md (BACKGROUND)
 - - RULES (Josiah 2026-11-09 20:03/20:05): every mission stays whole. Each MP/Firefight map is worked INTO the area it represents (overlap/merge allowed if it reads better), joined by terrain/roads/doors/bridges, never a separate island. Anniversary remakes stay hidden.
+
+### zomboid-reach-packed-build-tech.md (BACKGROUND)
+- too); sky_regions.zsk. flow.py: every mission drives to every other at <=45% grade (tight layout was cut off). Halo far peaks
 
 ### zomboid-reach-pipeline.md (BACKGROUND)
 - - Never write to OneDrive folders; ask before any >1 GB file.

@@ -1,6 +1,6 @@
 # Cross-check: is everything covered? (ZomboidCraft)
 
-## Memory notes: 367 of 367 copied verbatim into memory/
+## Memory notes: 368 of 368 copied verbatim into memory/
 
 | Note | Copied | Class | Also quoted in |
 |---|---|---|---|
@@ -23,6 +23,7 @@
 | endless-night-reach-weapons-ingame | yes | BACKGROUND |  |
 | endless-night-spartan-body | yes | BACKGROUND |  |
 | endless-night-switch | yes | SHARED | RULES.md |
+| endless-night-unreal-graphics-rule | yes | SHARED | RULES.md |
 | endless-night-unreal-move-scoping | yes | BACKGROUND | PREVIEWS.md |
 | endless-night-voice-accents | yes | SHARED | RULES.md |
 | full-detail-previews-rule | yes | SHARED | RULES.md |

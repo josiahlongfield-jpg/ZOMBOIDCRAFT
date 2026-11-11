@@ -16,6 +16,7 @@ He must not have to explain any of it again: read before you ask.
    first, match Project Zomboid, previews first, full-detail previews, no vanilla, save locations, personal use...).
 2. `ASSETS-METHOD.md` — how assets are pulled from the games he owns (PZ, Workshop mods, Tarkov, bought packs), where
    they live on his PC, and why that is fine.
+2b. `LATEST.md` — state at the moment the old threads were closed (newer than THREADS.md; read it first).
 3. `THREADS.md` — every old thread with its state; ZC-owned rows are this project's history and open items.
 4. `BUILD-AND-SETUP.md` — jar, CI, one-jar playtest rule (the real code is on `playtest`, not `main`), PC setup.
 5. `PREVIEWS.md` — every preview/plan page link and what it was for (county plan map, sound pickers, posing tool...).
