@@ -26,3 +26,10 @@ Per-mission vertical shifts alone don't fix it (fit leaves 150-300 m). Card aske
 B cliffs with ramp roads, C re-pack by height. Nothing installed. Tools: pack/sky/dyfit.py, cams.py; scene.py acc fix (fast).
 22:34 he picked A. Height-aware packer pack/h/hpack2.py (grade 1:3, profiles.json edge heights by bearing) -> hpack_0.33_0.001.json:
 ~13x11 km, dy m35 -506, m45 -99, m70 +44, m10 +19, sea missions (m20 m60 m50 m52) fixed. Map on layout page v4; awaiting his OK.
+Height build (cloud, /tmp/claude-0/pack/h): deltas_h.json [dx,dz,dy]; packland_h.py (adaptive seams up to 1.6 km, fillmod smooth
+fill) -> drawn2 ALL=1 ras/ -> fillhalo_h.py -> v5 -> overlap = land_h4.zrh md5 6c372379; reach_h.json; zrv/ (shiftzrv_h.py moves y
+too); sky_regions.zsk. flow.py: every mission drives to every other at <=45% grade (tight layout was cut off). Halo far peaks
+reach 3276 m (crust clamps at world top 1535; fine).
+23:00 his clock: he OK'd the height layout ('ok'). Install set staged at /mnt/project-files/endless-night/reach-world/transit/place6/
+(reach.json b810ed8b, world/land.zrh 6c372379, world/sky_regions.zsk f37f5647, 15 zrv). Card: install tonight vs cleaner previews.
+Known left: abrupt edges where our land meets Halo far land cliffs (also in old world); cloud renderer shows some far land white.

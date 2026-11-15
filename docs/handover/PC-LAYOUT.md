@@ -59,6 +59,7 @@ They stay readable in the old project. If a new project needs one, ask Josiah to
 - `C:\Dev\Zomboidcraft-Desktop\additions\tarkov-pilot\raw` — tarkov-assets-pipeline-tech, zomboid-pc-storage-rule
 - `C:\Dev\Zomboidcraft-Desktop\additions\tarkov-pilot\raw\EscapeFromTarkov_Data__StreamingAssets__Windows__assets__content__weapons__<dir>__` — tarkov-reload-sounds-tech
 - `C:\Dev\Zomboidcraft-Desktop\additions\tarkov-ui\hud\tarkov_operator_hud_pack.zip` — zomboid-endless-night-hud
+- `C:\Dev\Zomboidcraft-Desktop\additions\unreal\EndlessNight` — endless-night-unreal-move-scoping
 - `C:\Dev\zomboidcraft` — zomboid-blender-tutorial
 - `C:\Program` — endless-night-unreal-move-scoping, tarkov-zomboid-scoping, zomboid-brita-weapons, zomboid-pz-car-audio-tech, zomboid-pz-install-extract, zomboid-vehicle-mods
 - `C:\Users\josia\AppData\Roaming\ModrinthApp\profiles` — zomboid-pz-car-audio-tech, zomboid-warthog-tech
