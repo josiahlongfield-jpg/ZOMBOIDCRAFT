@@ -38,7 +38,7 @@ def _apply(ctx, blend):
     rng = _range(arm)
     if rng is None:
         return 'Pick a move in the Action Editor first.'
-    bones = [pb for pb in arm.pose.bones if pb.bone.select]
+    bones = [pb for pb in arm.pose.bones if getattr(pb, 'select', None) or getattr(pb.bone, 'select', False)]
     if not bones:
         return 'Select the bones you changed.'
     scn = ctx.scene
