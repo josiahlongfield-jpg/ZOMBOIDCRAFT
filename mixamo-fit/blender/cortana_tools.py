@@ -51,21 +51,42 @@ def _apply(ctx, blend):
         q1, l1 = new[pb.name]
         delta[pb.name] = (q0.inverted() @ q1, l1 - l0)
     lo, hi = rng
-    for f in range(lo, hi + 1):
-        w = 1.0
-        if blend is not None:
-            d = abs(f - here)
-            if d >= blend:
-                continue
-            t = 1 - d / blend
-            w = t * t * (3 - 2 * t)
-        scn.frame_set(f)
-        for pb in bones:
-            dq, dl = delta[pb.name]
-            pb.rotation_quaternion = pb.rotation_quaternion @ Quaternion().slerp(dq, w)
-            pb.location = pb.location + dl * w
-            pb.keyframe_insert('rotation_quaternion', frame=f, group=pb.name)
-            pb.keyframe_insert('location', frame=f, group=pb.name)
+    # straight on the curves, no frame_set per frame: that re-evaluated her whole subdivided body every frame and
+    # froze Blender on the new-body file (Josiah 18 Nov)
+    act = arm.animation_data.action
+    def curves(pb, prop, n):
+        path = f'pose.bones["{pb.name}"].{prop}'
+        out = []
+        for i in range(n):
+            fc = act.fcurves.find(path, index=i)
+            if fc is None:
+                fc = act.fcurves.new(path, index=i, action_group=pb.name)
+                fc.keyframe_points.insert(lo, getattr(pb, prop)[i])
+            out.append(fc)
+        return out
+    cv = {pb.name: (curves(pb, 'rotation_quaternion', 4), curves(pb, 'location', 3)) for pb in bones}
+    for pb in bones:
+        dq, dl = delta[pb.name]
+        qc, lc = cv[pb.name]
+        vals = []
+        for f in range(lo, hi + 1):
+            w = 1.0
+            if blend is not None:
+                d = abs(f - here)
+                if d >= blend:
+                    continue
+                t = 1 - d / blend
+                w = t * t * (3 - 2 * t)
+            q = Quaternion([c.evaluate(f) for c in qc]) @ Quaternion().slerp(dq, w)
+            l = [lc[i].evaluate(f) + dl[i] * w for i in range(3)]
+            vals.append((f, q, l))
+        for f, q, l in vals:
+            for i in range(4):
+                qc[i].keyframe_points.insert(f, q[i], options={'FAST'})
+            for i in range(3):
+                lc[i].keyframe_points.insert(f, l[i], options={'FAST'})
+        for c in qc + lc:
+            c.update()
     scn.frame_set(here)
     return None
 
