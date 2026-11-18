@@ -241,7 +241,12 @@ class Fit:
         delta = 0.0
         self._heel = self.heel_angle(p)
         if not heels:
-            delta = self.flatten(outq, outp, G)
+            delta = self.flatten(outq, outp, G, self._heel)
+        else:
+            # in heels every move stands on the same heel height: barefoot moves get it put in, the female walks'
+            # own lift (25 to 33 degrees) is evened to it (Josiah 18 Nov: "another for every one angled high heels")
+            self.flatten(outq, outp, G, self._heel - np.radians(HEEL_DEG))
+            delta = np.radians(HEEL_DEG)
         # ground: planted toes at their rest height
         ty = np.min(self.toe_pts(outq, outp)[:, :, 1], axis=1)
         planted = ty < np.percentile(ty, 30) + 0.02
@@ -298,17 +303,19 @@ class Fit:
             deltas.append(np.median(pitch[planted]) - p0)
         return float(np.clip(np.mean(deltas), 0, np.radians(35)))
 
-    def flatten(self, outq, outp, G):
-        """take the heel lift out: tip each foot back by the clip's planted heel angle; toes keep their own turn"""
+    def flatten(self, outq, outp, G, delta):
+        """tip each foot about the ankle by delta (+ toes up: takes a heel lift out; - toes down: puts one in); toes
+        keep their own turn, and the grounding after puts the balls of her feet back on the floor"""
         tp = self.toe_pts(outq, outp)
-        delta = self._heel
-        if delta < np.radians(2): return 0.0
+        if abs(delta) < np.radians(2): return 0.0
         for k, (ft, l) in enumerate(self.toe_local):
             v = tp[:, k] - outp[:, ft]
             lat = np.cross(v, [0, 1, 0]); lat /= np.linalg.norm(lat, axis=1, keepdims=True) + 1e-9
-            R = Rot.from_rotvec(lat * delta)  # turn about the ankle so the toes come up by delta
+            R = Rot.from_rotvec(lat * abs(delta))  # turn about the ankle so the toes come up by delta
             if np.mean(R.apply(v)[:, 1]) < np.mean(v[:, 1]):
                 R = Rot.from_rotvec(-lat * delta)
+            if delta < 0:
+                R = R.inv()
             outq[:, ft] = (R * G[ft] * self.rq[ft]).as_quat()
             for b in [b for b in self.order if self.below(b, ft) and b != ft]:
                 outp[:, b] = outp[:, ft] + R.apply(outp[:, b] - outp[:, ft])  # toes keep their own turn
@@ -334,6 +341,10 @@ class Fit:
 
 def slerp(Ra, Rb, w):
     return Ra * Rot.from_rotvec((Ra.inv() * Rb).as_rotvec() * w)
+
+
+# how high her heels lift her, for moves made barefoot (the Mixamo female walks lift 25 to 33 degrees)
+HEEL_DEG = 28
 
 
 # ----------------------------------------------------------------------------------------------- main
