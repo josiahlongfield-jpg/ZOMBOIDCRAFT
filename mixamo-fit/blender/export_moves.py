@@ -47,5 +47,36 @@ for c in clips:
              travel=bool(act.get('travel', c['travel'])))
     changed += 1
     print('exported', act.name, F, 'frames')
+# brand-new moves made in Blender: any action named "Name|flat" or "Name|heel" that isn't in her moves yet
+known = {f"{c['name']}|{c['tag']}" for c in clips}
+added = 0
+for act in sorted(bpy.data.actions, key=lambda a: a.name):
+    if '|' not in act.name or act.name in known:
+        continue
+    name, tag = act.name.rsplit('|', 1)
+    if tag not in ('flat', 'heel') or not name.strip():
+        print('skipped (name must end in |flat or |heel):', act.name)
+        continue
+    arm.animation_data.action = act
+    a, b_ = act.frame_range
+    F = int(round(b_ - a)) + 1
+    q = np.zeros((F, len(bones), 4)); p = np.zeros((F, len(bones), 3)); root = np.zeros((F, 3))
+    q[..., 3] = 1
+    for f in range(F):
+        scene.frame_set(int(a) + f)
+        for i, b in enumerate(bones):
+            pb = arm.pose.bones.get(b)
+            if pb is None or b not in K:
+                continue
+            G = CI @ pb.matrix @ K[b].inverted()
+            r = G.to_quaternion()
+            q[f, i] = (r.x, r.y, r.z, r.w); p[f, i] = tuple(G.translation)
+        root[f] = (arm.location.x, -arm.location.y, arm.rotation_euler.z)
+    travel = bool(act.get('travel', np.hypot(*(root[-1, :2] - root[0, :2])) > 0.2))
+    clips.append(dict(name=name.strip(), tag=tag, fps=float(act.get('fps', 30.0)), speed=float(act.get('speed', 0.0)),
+                      travel=travel, root=root, q=q, p=p))
+    added += 1
+    print('new move', act.name, F, 'frames')
+print(added, 'new moves added')
 write_moves(OUT, bones, clips)
 print('wrote', OUT, '(', changed, 'moves from Blender,', len(clips), 'in all )')
