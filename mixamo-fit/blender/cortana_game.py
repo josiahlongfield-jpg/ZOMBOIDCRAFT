@@ -472,7 +472,7 @@ if bpy is not None:
         S.cortana_backups = bpy.props.StringProperty(name='Backups', subtype='DIR_PATH',
                                                      default=ADD + r'\cortana-mixamo\zsk-backups' + '\\')
         S.cortana_subdiv = bpy.props.BoolProperty(
-            name='Include Subdivision', default=False,
+            name='Include Subdivision', default=True,
             description='Send her Subdivision smoothing too (about 4x the triangles on those parts, so heavier in game)')
         for c in CLASSES:
             bpy.utils.register_class(c)
