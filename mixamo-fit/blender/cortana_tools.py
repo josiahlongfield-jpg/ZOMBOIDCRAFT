@@ -54,13 +54,17 @@ def _apply(ctx, blend):
     # straight on the curves, no frame_set per frame: that re-evaluated her whole subdivided body every frame and
     # froze Blender on the new-body file (Josiah 18 Nov)
     act = arm.animation_data.action
+    fcs = getattr(act, 'fcurves', None)
+    if fcs is None:   # Blender 5: layered actions keep their curves in the slot's channelbag
+        from bpy_extras import anim_utils
+        fcs = anim_utils.action_ensure_channelbag_for_slot(act, arm.animation_data.action_slot).fcurves
     def curves(pb, prop, n):
         path = f'pose.bones["{pb.name}"].{prop}'
         out = []
         for i in range(n):
-            fc = act.fcurves.find(path, index=i)
+            fc = fcs.find(path, index=i)
             if fc is None:
-                fc = act.fcurves.new(path, index=i, action_group=pb.name)
+                fc = fcs.new(path, index=i, group_name=pb.name) if not hasattr(act, 'fcurves') else fcs.new(path, index=i, action_group=pb.name)
                 fc.keyframe_points.insert(lo, getattr(pb, prop)[i])
             out.append(fc)
         return out
