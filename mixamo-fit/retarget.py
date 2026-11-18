@@ -101,7 +101,7 @@ def build_map(H, M):
         mp[f'b_{s}_thigh'] = (f'{S}UpLeg', f'b_{s}_calf', f'{S}Leg')
         mp[f'b_{s}_calf'] = (f'{S}Leg', f'b_{s}_foot', f'{S}Foot')
         if f'b_{s}_toe' in H:
-            mp[f'b_{s}_foot'] = (f'{S}Foot', f'b_{s}_toe', f'{S}ToeBase')
+            mp[f'b_{s}_foot'] = (f'{S}Foot', None, None)  # both rest feet stand flat: no aim
             mp[f'b_{s}_toe'] = (f'{S}ToeBase', None, None)
         else:
             mp[f'b_{s}_foot'] = (f'{S}Foot', None, None)
@@ -193,7 +193,7 @@ class Fit:
         Y = gaussian_filter1d(yaw, 8, mode='nearest')
         net = np.linalg.norm(S[-1] - S[0])
         path = np.sum(np.linalg.norm(np.diff(S, axis=0), axis=1))
-        travel = net > 0.3 or abs(np.degrees(Y[-1] - Y[0])) > 30 or path > 1.2
+        travel = net > 0.4 or abs(np.degrees(Y[-1] - Y[0])) > 30
         feet = 0.5 * (p[0, M['LeftFoot']] + p[0, M['RightFoot']])
         if travel:
             rx, ry = S - S[0], Y  # undo the facing frame by frame
@@ -239,6 +239,7 @@ class Fit:
             outq[:, b] = (G[b] * self.rq[b]).as_quat()
         self.G = G
         delta = 0.0
+        self._heel = self.heel_angle(p)
         if not heels:
             delta = self.flatten(outq, outp, G)
         # ground: planted toes at their rest height
@@ -282,19 +283,25 @@ class Fit:
     def toe_pts(self, outq, outp):
         return np.stack([outp[:, ft] + Rot.from_quat(outq[:, ft]).apply(l) for ft, l in self.toe_local], 1)
 
+    def heel_angle(self, p):
+        """how far the Mixamo feet stand tipped up on their toes beyond their rest, over the planted frames"""
+        M = self.M; deltas = []
+        for S in ('Left', 'Right'):
+            v = p[:, M[f'{S}ToeBase']] - p[:, M[f'{S}Foot']]
+            pitch = np.arctan2(-v[:, 1], np.linalg.norm(v[:, [0, 2]], axis=1))
+            vr = self.mrp[M[f'{S}ToeBase']] - self.mrp[M[f'{S}Foot']]
+            p0 = np.arctan2(-vr[1], np.linalg.norm(vr[[0, 2]]))
+            toe = p[:, M[f'{S}ToeBase']]
+            sp = np.r_[0, np.linalg.norm(np.diff(toe[:, [0, 2]], axis=0), axis=1) * 30]
+            planted = (toe[:, 1] < toe[:, 1].min() + 0.01) & (sp < 0.2)
+            if planted.sum() < 2: planted = toe[:, 1] < toe[:, 1].min() + 0.01
+            deltas.append(np.median(pitch[planted]) - p0)
+        return float(np.clip(np.mean(deltas), 0, np.radians(35)))
+
     def flatten(self, outq, outp, G):
         """take the heel lift out: tip each foot back by the clip's planted heel angle; toes keep their own turn"""
         tp = self.toe_pts(outq, outp)
-        deltas = []
-        for k, (ft, l) in enumerate(self.toe_local):
-            v = tp[:, k] - outp[:, ft]
-            pitch = np.arctan2(-v[:, 1], np.linalg.norm(v[:, [0, 2]], axis=1))
-            vr = self.rq[ft].apply(l)
-            p0 = np.arctan2(-vr[1], np.linalg.norm(vr[[0, 2]]))
-            ty = tp[:, k, 1]
-            planted = ty < np.min(ty) + 0.03
-            deltas.append(np.median(pitch[planted]) - p0)
-        delta = float(np.clip(np.mean(deltas), 0, np.radians(40)))
+        delta = self._heel
         if delta < np.radians(2): return 0.0
         for k, (ft, l) in enumerate(self.toe_local):
             v = tp[:, k] - outp[:, ft]
