@@ -6,6 +6,8 @@ Adds a "Cortana" tab to the 3D view's side panel (press N), with:
   - Fix around here: the same, but fading out over the frames either side (Blend frames), for a fix at one moment.
   - Undo the pose change: puts the selected bones back to what the move has at this frame (before you press a fix).
   - Next / previous move: steps through the moves in the file.
+  - New move: makes a blank move named "Name|flat", the length you set, starting and ending in the pose she has right
+    now (or her rest pose), with every bone keyed on its first and last frame. Animate the middle.
 Nothing is uploaded; everything stays on this PC.
 """
 import bpy
@@ -156,6 +158,74 @@ class CORTANA_OT_step(bpy.types.Operator):
         return {'FINISHED'}
 
 
+FPS = 30
+
+
+class CORTANA_OT_new_move(bpy.types.Operator):
+    bl_idname = 'cortana.new_move'
+    bl_label = 'New move'
+    bl_description = ('Make a blank "Name|flat" move, starting and ending in the pose she has now (or her rest pose), '
+                      'every bone keyed on the first and last frame')
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, ctx):
+        scn = ctx.scene
+        arm = _arm(ctx)
+        if arm is None:
+            self.report({'WARNING'}, 'No armature in this file.')
+            return {'CANCELLED'}
+        name = scn.cortana_new_name.strip()
+        if not name or '|' in name:
+            self.report({'WARNING'}, 'Type a plain name for the move (no "|"), e.g. Lean On Rail.')
+            return {'CANCELLED'}
+        full = f'{name}|flat'
+        if any(a.name.lower() == full.lower() for a in bpy.data.actions):
+            self.report({'WARNING'}, f'"{full}" already exists. Pick another name.')
+            return {'CANCELLED'}
+        end = 1 + max(1, round(scn.cortana_new_seconds * FPS))
+        # the start pose: what she shows right now, read before the action is swapped
+        if scn.cortana_new_from == 'REST':
+            pose = {pb.name: (Quaternion(), Vector()) for pb in arm.pose.bones}
+        else:
+            pose = {}
+            for pb in arm.pose.bones:
+                if pb.rotation_mode == 'QUATERNION':
+                    q = pb.rotation_quaternion.copy()
+                else:
+                    q = pb.rotation_euler.to_quaternion() if pb.rotation_mode != 'AXIS_ANGLE' else \
+                        Quaternion(pb.rotation_axis_angle[1:], pb.rotation_axis_angle[0])
+                pose[pb.name] = (q, pb.location.copy())
+        arm.animation_data_create()
+        act = bpy.data.actions.new(full)
+        act.use_fake_user = True          # kept in the file even before it's saved anywhere else
+        act['fps'] = float(FPS)
+        arm.animation_data.action = act
+        for pb in arm.pose.bones:
+            q, l = pose[pb.name]
+            pb.rotation_mode = 'QUATERNION'
+            pb.rotation_quaternion = q
+            pb.location = l
+            pb.scale = (1, 1, 1)
+            for f in (1, end):
+                pb.keyframe_insert('location', frame=f, group=pb.name)
+                pb.keyframe_insert('rotation_quaternion', frame=f, group=pb.name)
+        # on the spot: her root (the armature object) stays at the centre facing forward
+        arm.rotation_mode = 'XYZ'
+        arm.location = (0, 0, 0)
+        arm.rotation_euler = (0, 0, 0)
+        for f in (1, end):
+            arm.keyframe_insert('location', frame=f)
+            arm.keyframe_insert('rotation_euler', frame=f)
+        # the move's length is fixed to what was asked (the export uses the action's own range)
+        act.use_frame_range = True
+        act.frame_start, act.frame_end = 1, end
+        scn.render.fps = FPS
+        scn.frame_start, scn.frame_end = 1, end
+        scn.frame_set(1)
+        self.report({'INFO'}, f'Made "{full}": {end} frames ({(end - 1) / FPS:.2f} s). Animate the middle frames.')
+        return {'FINISHED'}
+
+
 class CORTANA_PT_panel(bpy.types.Panel):
     bl_label = 'Cortana'
     bl_idname = 'CORTANA_PT_panel'
@@ -178,13 +248,26 @@ class CORTANA_PT_panel(bpy.types.Panel):
         col.operator('cortana.fix_here', icon='KEYFRAME')
         col.separator()
         col.operator('cortana.reset', icon='LOOP_BACK')
+        col.separator()
+        col.label(text='Make a new move:')
+        col.prop(ctx.scene, 'cortana_new_name')
+        col.prop(ctx.scene, 'cortana_new_seconds')
+        col.prop(ctx.scene, 'cortana_new_from', text='Start from')
+        col.operator('cortana.new_move', icon='ADD')
 
 
-CLASSES = (CORTANA_OT_fix_all, CORTANA_OT_fix_here, CORTANA_OT_reset, CORTANA_OT_step, CORTANA_PT_panel)
+CLASSES = (CORTANA_OT_new_move, CORTANA_OT_fix_all, CORTANA_OT_fix_here, CORTANA_OT_reset, CORTANA_OT_step, CORTANA_PT_panel)
 
 
 def register():
     bpy.types.Scene.cortana_blend = bpy.props.IntProperty(name='Blend frames', default=8, min=1, max=120)
+    bpy.types.Scene.cortana_new_name = bpy.props.StringProperty(name='Name', default='',
+                                                                description='Plain English: she reads it to know when to use the move')
+    bpy.types.Scene.cortana_new_seconds = bpy.props.FloatProperty(name='Seconds', default=2.0, min=0.2, max=60.0, step=10,
+                                                                  precision=1)
+    bpy.types.Scene.cortana_new_from = bpy.props.EnumProperty(name='Start from', items=[
+        ('NOW', 'Pose shown now', 'The pose she has at this frame of the move you are on'),
+        ('REST', 'Rest pose', "Her skeleton's rest pose")], default='NOW')
     for c in CLASSES:
         bpy.utils.register_class(c)
 
@@ -192,7 +275,9 @@ def register():
 def unregister():
     for c in reversed(CLASSES):
         bpy.utils.unregister_class(c)
-    del bpy.types.Scene.cortana_blend
+    for p in ('cortana_blend', 'cortana_new_name', 'cortana_new_seconds', 'cortana_new_from'):
+        if hasattr(bpy.types.Scene, p):
+            delattr(bpy.types.Scene, p)
 
 
 if __name__ == '__main__':
