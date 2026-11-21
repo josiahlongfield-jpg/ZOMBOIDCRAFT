@@ -51,7 +51,7 @@ def hexgrid(x0, y0, x1, y1, cell, wall, z0, h):
 
 # ---------------- key dimensions ----------------
 W, DECK_D, DECK_H = 250.0, 150.0, 75.0          # front deck
-TOW_X0, TOW_X1, TOW_Y1, TOW_H = 20.0, 230.0, 250.0, 200.0  # rear emitter tower
+TOW_X0, TOW_X1, TOW_Y1, TOW_H = 20.0, 230.0, 285.0, 200.0  # rear emitter tower
 CX, CY = 125.0, 62.0                              # mist slot / ring centre
 SLOT_L, SLOT_W, GUARD_W, GUARD_OFF = 130.0, 8.0, 5.0, 11.0
 CAP_Z0, CAP_Z1 = 380.0, 430.0
@@ -256,23 +256,23 @@ hollow = prism(chamfer_rect(TOW_X0 + SHELL, DECK_D + SHELL, TOW_X1 - SHELL, TOW_
 tower = tw_out - hollow
 # emitter window on the slope (120 x 46), with glass rebate
 ang = math.degrees(math.atan2(70, 55))
-win = box(-60, -23, -10, 60, 23, 10).rotate([ang, 0, 0]).translate([CX, 0, 0])
-mid_y, mid_z = DECK_D + 27.5, TOW_H - 35
+win = box(-60, -30, -10, 60, 30, 10).rotate([ang, 0, 0]).translate([CX, 0, 0])
+mid_y, mid_z = DECK_D + 27.5 + 3, TOW_H - 35 + 3.8
 tower = tower - win.translate([0, mid_y, mid_z])
 reb = box(CX - 64, -27, 0, CX + 64, 27, 1.6).rotate([ang - 90 + 0, 0, 0])
 tower = tower - box(CX - 64, -27, -0.2, CX + 64, 27, 1.8).rotate([-(90 - ang) + 90 - 90, 0, 0]).translate([0, 0, 0]).rotate([0, 0, 0]).translate([0, mid_y, mid_z]) if False else tower
-tower = tower - box(-63, -26, -0.9, 63, 26, 0.9).rotate([ang, 0, 0]).translate([CX, mid_y - 4.5 * (-70 / 89.0), mid_z - 4.5 * (55 / 89.0)])
+tower = tower - box(-63, -33, -0.9, 63, 33, 0.9).rotate([ang, 0, 0]).translate([CX, mid_y - 4.5 * (-70 / 89.0), mid_z - 4.5 * (55 / 89.0)])
 # louvre vents on both sides (projector cooling) and rear port panel opening
 for side in (TOW_X0 - 1, TOW_X1 - SHELL - 1):
     for i in range(9):
         z = 25 + i * 9
-        tower = tower - box(side, 175, z, side + SHELL + 2, 230, z + 4.5)
+        tower = tower - box(side, 200, z, side + SHELL + 2, 265, z + 4.5)
 tower = tower - box(70, TOW_Y1 - SHELL - 1, 12, 180, TOW_Y1 + 1, 52)
 # spine socket on top (rear centre)
-tower = tower - box(CX - 21, 213, TOW_H - 5, CX + 21, 243, TOW_H + 1)
-tower = tower + (box(CX - 25, 209, TOW_H - 30, CX + 25, 247, TOW_H - 4) - box(CX - 21, 213, TOW_H - 31, CX + 21, 243, TOW_H))
+tower = tower - box(CX - 21, 248, TOW_H - 5, CX + 21, 278, TOW_H + 1)
+tower = tower + (box(CX - 25, 244, TOW_H - 12, CX + 25, 282, TOW_H - 4) - box(CX - 21, 248, TOW_H - 13, CX + 21, 278, TOW_H))
 # drip tube + cable pass-through down to the deck
-tower = tower - cyl(4, 40, 160, 236, TOW_H - 40)
+tower = tower - cyl(4, 40, 210, 273, TOW_H - 40)
 # panel lines
 for zz in (60, 120):
     for (x0, x1, y0, y1) in [(TOW_X0 - 1, TOW_X0 + 1, 170, TOW_Y1 - 10), (TOW_X1 - 1, TOW_X1 + 1, 170, TOW_Y1 - 10)]:
@@ -284,48 +284,47 @@ add('tower', 'Rear emitter tower', tower, 'Matte black PLA', '#1b1f26', 'Shell',
     [0, 60, 0], 'Print upright. The slope needs no supports.')
 
 # ---------------- 10. projector cradle ----------------
-cr = box(CX - 60, 162, 5, CX + 60, 238, 9)  # sled base
-for xx in (CX - 60, CX + 54):
-    cr = cr + (box(xx, 162, 5, xx + 6, 238, 120) - box(xx - 1, 175, 30, xx + 7, 225, 110))  # side cheeks with strap windows
+cr = box(CX - 40, 164.5, 5, CX + 40, 281.5, 9)  # sled base
+for xx in (CX - 35, CX + 29):
+    cr = cr + (box(xx, 170, 5, xx + 6, 278, 112) - box(xx - 1, 182, 30, xx + 7, 266, 100))  # side cheeks with strap windows
+for (y0_, y1_) in ((164.5, 166.5), (279.5, 281.5)):
+    cr = cr + box(CX - 29, y0_, 5, CX + 29, y1_, 22)  # end stops (1.5 mm play)
 for k in range(6):  # adjustment slots
-    cr = cr - box(CX - 52 + k * 18, 170, 4, CX - 46 + k * 18, 230, 10)
-cr = cr - box(CX - 30, 190, 4, CX + 30, 210, 10)
-# rail feet
-cr = cr + box(CX - 60, 162, 2.5, CX - 52, 238, 5) + box(CX + 52, 162, 2.5, CX + 60, 238, 5)
+    cr = cr - box(CX - 22, 172 + k * 18, 4, CX + 22, 178 + k * 18, 10)
+cr = cr + box(CX - 40, 164.5, 2.5, CX - 32, 281.5, 5) + box(CX + 32, 164.5, 2.5, CX + 40, 281.5, 5)
 add('cradle', 'Projector cradle', cr, 'Matte black PLA', '#353b46', 'Optics',
-    'Adjustable sled for the projector, standing lens-up. Velcro straps through the side windows; the slots let it slide to centre the image. Its final size is locked once your projector is chosen.',
+    'Adjustable sled for the projector, standing lens-up. Velcro straps through the side windows; the slots let it slide to centre the image. Sized for the Optoma ML1050STi (112 x 123 x 57 mm) standing lens-up, turned sideways so her image comes out portrait, with end stops so it cannot slide.',
     [0, 80, 70], 'Print flat.')
 
 # ---------------- 11. tilt mirror mount ----------------
-mm_ = box(CX - 58, -3, -28, CX + 58, 3, 28)  # mirror backing plate (holds 110x50 front-surface mirror)
-mm_ = mm_ - box(CX - 55, -4, -25, CX + 55, -1.5, 25)
-mm_ = mm_ + box(CX - 62, -3, -4, CX - 58, 3, 4) + box(CX + 58, -3, -4, CX + 62, 3, 4)
-mm_ = mm_ + cylx(3, 6, CX - 68, 0, 0) + cylx(3, 6, CX + 62, 0, 0)  # trunnions
-arm = box(CX - 6, 3, -26, CX + 6, 14, -20)
-mm_ = mm_ + arm - cyly(1.7, 20, CX, 0, -23)  # tilt screw lug
-mm_ = mm_.rotate([45, 0, 0]).translate([0, 222, 162])
+mm_ = box(CX - 28, -3, -33, CX + 28, 3, 33)  # mirror backing plate (holds 110x50 front-surface mirror)
+mm_ = mm_ - box(CX - 25, -4, -30, CX + 25, -1.5, 30)
+mm_ = mm_ + box(CX - 32, -3, -4, CX - 28, 3, 4) + box(CX + 28, -3, -4, CX + 32, 3, 4)
+mm_ = mm_ + cylx(3, 6, CX - 38, 0, 0) + cylx(3, 6, CX + 32, 0, 0)  # trunnions
+arm = box(CX - 6, 3, -31, CX + 6, 14, -25)
+mm_ = mm_ + arm - cyly(1.7, 20, CX, 0, -28)  # tilt screw lug
+mm_ = mm_.rotate([45, 0, 0]).translate([0, 226, 158])
 yoke = []
-for xx in (CX - 74, CX + 66):
-    y = box(xx, 212, 125, xx + 8, 232, 175) - cylx(3.2, 10, xx - 1, 222, 162)
+for xx in (CX - 44, CX + 36):
+    y = box(xx, 214, 140, xx + 8, 256, 196) - cylx(3.2, 10, xx - 1, 226, 158) + box(xx - 4, 222, 192, xx + 12, 256, 196)
     yoke.append(y)
-mirror_mount = union([mm_] + yoke + [box(CX - 74, 212, 125, CX + 74, 232, 130)])
+mirror_mount = union([mm_] + yoke)
 add('mirror', 'Tilting mirror mount', mirror_mount, 'Matte black PLA', '#404857', 'Optics',
-    'Holds a front-surface mirror at 45 degrees with a thumb-screw for about plus or minus 10 degrees of tilt, so the image can be aimed up or down the mist sheet.',
+    'Holds a 60 x 50 mm front-surface mirror at 45 degrees with a thumb-screw for about plus or minus 10 degrees of tilt, so the image can be aimed up or down the mist sheet.',
     [0, 80, 120], 'Print flat.')
 
 # ---------------- 12. electronics tray ----------------
-et = box(30, 165, 4, 75, 240, 6.5)
-for (bx, by) in [(36, 172), (69, 172), (36, 232), (69, 232), (42, 200), (63, 200)]:
+et = box(25, 165, 4, 57, 275, 6.5)
+for (bx, by) in [(29, 172), (53, 172), (29, 233), (53, 233)]:
     et = et + (cyl(3, 6, bx, by, 6.5) - cyl(1.2, 8, bx, by, 6))
-et = et + box(30, 165, 6.5, 32, 240, 30) + box(73, 165, 6.5, 75, 240, 30)
-for xx in (175, 220):
-    pass
-et2 = box(178, 165, 4, 222, 240, 6.5)
-for (bx, by) in [(184, 172), (216, 172), (184, 232), (216, 232)]:
+et = et + box(25, 165, 6.5, 27, 240, 26)
+et2 = box(193, 165, 4, 225, 240, 6.5)
+for (bx, by) in [(197, 172), (221, 172), (197, 233), (221, 233)]:
     et2 = et2 + (cyl(3, 6, bx, by, 6.5) - cyl(1.2, 8, bx, by, 6))
+et2 = et2 + box(223, 165, 6.5, 225, 240, 26)
 et = et + et2
 add('etray', 'Electronics trays', et, 'Matte black PLA', '#4a5260', 'Electronics',
-    'Left tray: ESP32 (or Pico W) and the 4-channel MOSFET board. Right tray: 24 V to 12 V and 5 V step-down converters. Fan-cooled by the tower louvres.',
+    'Two slim trays either side of the projector. Left: ESP32 (or Pico W) and a compact 4-channel MOSFET board, one behind the other. Right: the 24 V to 12 V and 5 V step-down converters. Cooled through the tower louvres.',
     [0, 80, 40], 'Print flat.')
 
 # ---------------- 13. rear port panel ----------------
@@ -343,15 +342,15 @@ add('ports', 'Rear port panel', pp, 'Matte black PLA', '#2b2f38', 'Electronics',
 
 # ---------------- 14. spine + arm ----------------
 SZ0 = TOW_H - 4
-sp_shape = chamfer_rect(CX - 20.6, 213.4, CX + 20.6, 242.6, 7)
+sp_shape = chamfer_rect(CX - 20.6, 248.4, CX + 20.6, 277.6, 7)
 spine = prism(sp_shape, SZ0, CAP_Z1 - 10 - SZ0)
-spine = spine - prism(chamfer_rect(CX - 17, 217, CX + 17, 239, 5), SZ0 - 1, CAP_Z1 - 10 - SZ0 - 6)  # hollow (cables + drip tube)
+spine = spine - prism(chamfer_rect(CX - 17, 252, CX + 17, 274, 5), SZ0 - 1, CAP_Z1 - 10 - SZ0 - 6)  # hollow (cables + drip tube)
 # front groove line + glowing strip channel
-spine = spine - box(CX - 3, 212, SZ0 + 30, CX + 3, 215, CAP_Z1 - 40)
+spine = spine - box(CX - 3, 247, SZ0 + 30, CX + 3, 250, CAP_Z1 - 40)
 # arm reaching forward to the cap (tapered)
-arm_prof = [(242.6, CAP_Z1 - 10), (242.6, CAP_Z1 + 2), (150, CAP_Z1 + 2), (120, CAP_Z1 - 6), (120, CAP_Z1 - 18), (213.4, CAP_Z1 - 40), (213.4, CAP_Z1 - 10)]
+arm_prof = [(277.6, CAP_Z1 - 10), (277.6, CAP_Z1 + 2), (150, CAP_Z1 + 2), (120, CAP_Z1 - 6), (120, CAP_Z1 - 18), (248.4, CAP_Z1 - 40), (248.4, CAP_Z1 - 10)]
 armm = M.extrude(CS([arm_prof]), 34).rotate([90, 0, 90]).translate([CX - 17, 0, 0])
-armm = armm - M.extrude(CS([[(238, CAP_Z1 - 12), (238, CAP_Z1 - 2), (150, CAP_Z1 - 2), (128, CAP_Z1 - 8), (128, CAP_Z1 - 15), (217, CAP_Z1 - 34), (217, CAP_Z1 - 12)]]), 26).rotate([90, 0, 90]).translate([CX - 13, 0, 0])
+armm = armm - M.extrude(CS([[(273, CAP_Z1 - 12), (273, CAP_Z1 - 2), (150, CAP_Z1 - 2), (128, CAP_Z1 - 8), (128, CAP_Z1 - 15), (252, CAP_Z1 - 34), (252, CAP_Z1 - 12)]]), 26).rotate([90, 0, 90]).translate([CX - 13, 0, 0])
 spine = spine + armm
 spine = spine - cyl(2.2, 20, CX, 135, CAP_Z1 - 12)  # M4 into cap
 add('spine', 'Spine and cap arm', spine, 'Matte black PLA', '#1b1f26', 'Collector',
@@ -397,11 +396,11 @@ def buy(key, name, man, colour, note):
     bought[key] = man
     meta[key] = dict(name=name, material='Bought part', colour=colour, group='Bought parts (shown for fit)', note=note, explode=meta.get(key, {}).get('explode', [0, 0, 0]), print=None)
 
-proj = box(CX - 48, 172, 9, CX + 48, 228, 125) + cyl(14, 4, CX, 200, 125)
-buy('projector', 'Pico projector (placeholder size)', proj, '#7d8898', 'Shown as a 96 x 56 x 116 mm box standing lens-up. The cradle gets resized to the real one.')
+proj = box(CX - 28.5, 167, 9, CX + 28.5, 279, 132) + cyl(14, 4, CX, 223, 132)
+buy('projector', 'Optoma ML1050STi projector', proj, '#7d8898', '0.8 throw, 535 ANSI lumens, 112 x 123 x 57 mm, about 0.4 kg. Stands lens-up; the mirror turns its light forward through the window.')
 meta['projector']['explode'] = [0, 80, 70]
-mir = box(CX - 55, -1.5, -25, CX + 55, 0, 25).rotate([45, 0, 0]).translate([0, 222, 162])
-buy('mirrorglass', 'Front-surface mirror 110 x 50 mm', mir, '#d9e6f2', 'Avoids the double image a normal mirror gives.')
+mir = box(CX - 25, -1.5, -30, CX + 25, 0, 30).rotate([45, 0, 0]).translate([0, 226, 158])
+buy('mirrorglass', 'Front-surface mirror 60 x 50 mm', mir, '#d9e6f2', 'Avoids the double image a normal mirror gives.')
 meta['mirrorglass']['explode'] = [0, 80, 120]
 fan40 = []
 for xo in (6, W - 6 - 40):
@@ -417,8 +416,8 @@ plate = box(CX - 60, CY - 20, CAP_Z0 + 7, CX + 60, CY + 26, CAP_Z0 + 10) + box(C
 buy('collector_hw', '60 mm fan, Peltier and cold plate', fan60 + plate, '#9aa4b2', 'Collector hardware.')
 meta['collector_hw']['explode'] = [0, 0, 100]
 nrm = (-70 / 89.0, 55 / 89.0)
-glass = box(-62, -25, -0.75, 62, 25, 0.75).rotate([ang, 0, 0]).translate([CX, mid_y - 4.5 * nrm[0], mid_z - 4.5 * nrm[1]])
-buy('glass', 'Clear window, 124 x 50 mm', glass, '#a8d8ff', 'Keeps mist off the mirror and projector. 2 mm acrylic or glass.')
+glass = box(-62, -32, -0.75, 62, 32, 0.75).rotate([ang, 0, 0]).translate([CX, mid_y - 4.5 * nrm[0], mid_z - 4.5 * nrm[1]])
+buy('glass', 'Clear window, 124 x 64 mm', glass, '#a8d8ff', 'Keeps mist off the mirror and projector. 2 mm acrylic or glass.')
 meta['glass']['explode'] = [0, 60, 0]
 
 # her figure (placeholder silhouette made of simple shapes, NOT her model)
@@ -466,3 +465,10 @@ scene.export(f'{out}/pad.glb')
 json.dump(summary, open(f'{out}/parts.json', 'w'), indent=1)
 for s in summary:
     print(s['key'], s['dims'], s.get('grams'), s.get('fits'), s['tris'])
+
+# clash check
+allp = {**parts, **bought}
+for a, b in [('projector', 'cradle'), ('projector', 'tower'), ('projector', 'mirror'), ('projector', 'etray'), ('projector', 'ports'),
+             ('mirror', 'tower'), ('mirrorglass', 'tower'), ('cradle', 'tower'), ('cradle', 'etray'), ('mirror', 'glass')]:
+    v = (allp[a] ^ allp[b]).volume()
+    print('CLASH' if v > 1 else 'ok', a, b, round(v))

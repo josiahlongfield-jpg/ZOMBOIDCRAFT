@@ -220,7 +220,7 @@
   "printed": true,
   "dims": [
    210,
-   100,
+   135,
    200
   ],
   "tris": 1530,
@@ -235,7 +235,7 @@
    0
   ],
   "print": "Print upright. The slope needs no supports.",
-  "grams": 343,
+  "grams": 390,
   "fits": true,
   "genus": 24
  },
@@ -243,71 +243,71 @@
   "key": "cradle",
   "printed": true,
   "dims": [
-   120,
-   76,
-   118
+   80,
+   117,
+   110
   ],
-  "tris": 276,
+  "tris": 260,
   "name": "Projector cradle",
   "material": "Matte black PLA",
   "colour": "#353b46",
   "group": "Optics",
-  "note": "Adjustable sled for the projector, standing lens-up. Velcro straps through the side windows; the slots let it slide to centre the image. Its final size is locked once your projector is chosen.",
+  "note": "Adjustable sled for the projector, standing lens-up. Velcro straps through the side windows; the slots let it slide to centre the image. Sized for the Optoma ML1050STi (112 x 123 x 57 mm) standing lens-up, turned sideways so her image comes out portrait, with end stops so it cannot slide.",
   "explode": [
    0,
    80,
    70
   ],
   "print": "Print flat.",
-  "grams": 75,
+  "grams": 95,
   "fits": true,
-  "genus": 5
+  "genus": 8
  },
  {
   "key": "mirror",
   "printed": true,
   "dims": [
-   148,
-   50,
-   59
+   96,
+   57,
+   63
   ],
-  "tris": 1580,
+  "tris": 1600,
   "name": "Tilting mirror mount",
   "material": "Matte black PLA",
   "colour": "#404857",
   "group": "Optics",
-  "note": "Holds a front-surface mirror at 45 degrees with a thumb-screw for about plus or minus 10 degrees of tilt, so the image can be aimed up or down the mist sheet.",
+  "note": "Holds a 60 x 50 mm front-surface mirror at 45 degrees with a thumb-screw for about plus or minus 10 degrees of tilt, so the image can be aimed up or down the mist sheet.",
   "explode": [
    0,
    80,
    120
   ],
   "print": "Print flat.",
-  "grams": 57,
+  "grams": 54,
   "fits": true,
-  "genus": 1
+  "genus": 0
  },
  {
   "key": "etray",
   "printed": true,
   "dims": [
-   192,
-   75,
-   26
+   200,
+   110,
+   22
   ],
-  "tris": 5810,
+  "tris": 4386,
   "name": "Electronics trays",
   "material": "Matte black PLA",
   "colour": "#4a5260",
   "group": "Electronics",
-  "note": "Left tray: ESP32 (or Pico W) and the 4-channel MOSFET board. Right tray: 24 V to 12 V and 5 V step-down converters. Fan-cooled by the tower louvres.",
+  "note": "Two slim trays either side of the projector. Left: ESP32 (or Pico W) and a compact 4-channel MOSFET board, one behind the other. Right: the 24 V to 12 V and 5 V step-down converters. Cooled through the tower louvres.",
   "explode": [
    0,
    80,
    40
   ],
   "print": "Print flat.",
-  "grams": 23,
+  "grams": 20,
   "fits": true,
   "genus": -1
  },
@@ -340,7 +340,7 @@
   "printed": true,
   "dims": [
    41,
-   123,
+   158,
    236
   ],
   "tris": 432,
@@ -355,7 +355,7 @@
    60
   ],
   "print": "Print lying on its side. Optional 10 mm aluminium tube inside for stiffness.",
-  "grams": 138,
+  "grams": 153,
   "fits": true,
   "genus": 0
  },
@@ -411,16 +411,16 @@
   "key": "projector",
   "printed": false,
   "dims": [
-   96,
-   56,
-   120
+   57,
+   112,
+   127
   ],
   "tris": 300,
-  "name": "Pico projector (placeholder size)",
+  "name": "Optoma ML1050STi projector",
   "material": "Bought part",
   "colour": "#7d8898",
   "group": "Bought parts (shown for fit)",
-  "note": "Shown as a 96 x 56 x 116 mm box standing lens-up. The cradle gets resized to the real one.",
+  "note": "0.8 throw, 535 ANSI lumens, 112 x 123 x 57 mm, about 0.4 kg. Stands lens-up; the mirror turns its light forward through the window.",
   "explode": [
    0,
    80,
@@ -432,12 +432,12 @@
   "key": "mirrorglass",
   "printed": false,
   "dims": [
-   110,
-   36,
-   36
+   50,
+   43,
+   43
   ],
   "tris": 12,
-  "name": "Front-surface mirror 110 x 50 mm",
+  "name": "Front-surface mirror 60 x 50 mm",
   "material": "Bought part",
   "colour": "#d9e6f2",
   "group": "Bought parts (shown for fit)",
@@ -517,11 +517,11 @@
   "printed": false,
   "dims": [
    124,
-   32,
-   40
+   41,
+   51
   ],
   "tris": 12,
-  "name": "Clear window, 124 x 50 mm",
+  "name": "Clear window, 124 x 64 mm",
   "material": "Bought part",
   "colour": "#a8d8ff",
   "group": "Bought parts (shown for fit)",
