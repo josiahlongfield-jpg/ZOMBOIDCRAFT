@@ -1,0 +1,578 @@
+[
+ {
+  "key": "deck",
+  "printed": true,
+  "dims": [
+   250,
+   162,
+   75
+  ],
+  "tris": 4534,
+  "name": "Front deck shell",
+  "material": "Matte black PLA",
+  "colour": "#1b1f26",
+  "group": "Shell",
+  "note": "Main body. Holds the water tank, mist nozzle, guard fans and holo ring. Front window shows the water level.",
+  "explode": [
+   0,
+   -40,
+   0
+  ],
+  "print": "Print upside down (top face on the bed), no supports except the front window bridge.",
+  "grams": 219,
+  "fits": true,
+  "genus": 17
+ },
+ {
+  "key": "base",
+  "printed": true,
+  "dims": [
+   243,
+   146,
+   8
+  ],
+  "tris": 4456,
+  "name": "Bottom plate",
+  "material": "Matte black PLA",
+  "colour": "#23272f",
+  "group": "Shell",
+  "note": "Closes the deck. Screws in with five M3 screws; rubber feet sit in recesses. Lift it off to reach the tank drain.",
+  "explode": [
+   0,
+   -40,
+   -45
+  ],
+  "print": "Print flat.",
+  "grams": 97,
+  "fits": true,
+  "genus": 14
+ },
+ {
+  "key": "tank",
+  "printed": true,
+  "dims": [
+   176,
+   106,
+   58
+  ],
+  "tris": 672,
+  "name": "Water tank (about 1 litre)",
+  "material": "PETG (clear or translucent blue)",
+  "colour": "#4fa3e0",
+  "group": "Mist module",
+  "note": "Holds about 0.9 L of distilled water. The 24 V mister disc sits in the round cradle, the float switch cuts power if it runs low.",
+  "explode": [
+   0,
+   -110,
+   -30
+  ],
+  "print": "Print upright, 4 walls, 100% top and bottom for watertightness. Seal inside with a coat of food-safe epoxy if it weeps.",
+  "grams": 119,
+  "fits": true,
+  "genus": 1
+ },
+ {
+  "key": "lid",
+  "printed": true,
+  "dims": [
+   178,
+   108,
+   13
+  ],
+  "tris": 3780,
+  "name": "Tank lid and mist chamber",
+  "material": "PETG (black)",
+  "colour": "#2a3140",
+  "group": "Mist module",
+  "note": "Seals the tank. A 40 mm fan blows air into the tank so the fog rises out of the long outlet into the nozzle. Has the fill cap, drip return spigot and cable gland.",
+  "explode": [
+   0,
+   -110,
+   10
+  ],
+  "print": "Print flat, top up.",
+  "grams": 56,
+  "fits": true,
+  "genus": 5
+ },
+ {
+  "key": "nozzle",
+  "printed": true,
+  "dims": [
+   166,
+   42,
+   10
+  ],
+  "tris": 244,
+  "name": "Slot nozzle",
+  "material": "PETG (black)",
+  "colour": "#30394a",
+  "group": "Mist module",
+  "note": "Turns the fog into a thin flat sheet: a 130 x 8 mm mist slot with a 5 mm guard-air slot each side, which keep the sheet straight so her image stays sharp.",
+  "explode": [
+   0,
+   -60,
+   40
+  ],
+  "print": "Print upright. Fine 0.12 mm layers on the slot lips.",
+  "grams": 15,
+  "fits": true,
+  "genus": 5
+ },
+ {
+  "key": "honey",
+  "printed": true,
+  "dims": [
+   133,
+   32,
+   15
+  ],
+  "tris": 11162,
+  "name": "Honeycomb straightener",
+  "material": "PETG (black)",
+  "colour": "#3b4558",
+  "group": "Mist module",
+  "note": "Thousands of 3 mm hex tubes that calm the air so the mist leaves as a smooth sheet (it replaces the drinking straws). Drops into the top of the nozzle.",
+  "explode": [
+   0,
+   -60,
+   75
+  ],
+  "print": "Print upright, 0.12 mm layers.",
+  "grams": 27,
+  "fits": true,
+  "genus": 406
+ },
+ {
+  "key": "ducts",
+  "printed": true,
+  "dims": [
+   242,
+   45,
+   64
+  ],
+  "tris": 2556,
+  "name": "Guard fan housings and ducts (pair)",
+  "material": "Matte black PLA",
+  "colour": "#2b2f38",
+  "group": "Mist module",
+  "note": "Each holds a quiet 40 mm fan behind the side grille and channels its air into the nozzle's guard slots.",
+  "explode": [
+   0,
+   -60,
+   10
+  ],
+  "print": "Print as two mirrored pieces.",
+  "grams": 32,
+  "fits": true,
+  "genus": 5
+ },
+ {
+  "key": "diffuser",
+  "printed": true,
+  "dims": [
+   181,
+   181,
+   5
+  ],
+  "tris": 1152,
+  "name": "Holo ring diffuser",
+  "material": "Translucent / natural PETG",
+  "colour": "#5cc8ff",
+  "group": "Holo ring",
+  "note": "Glows from the LED strip (26 addressable LEDs) sitting in the channel underneath. It pulses with her voice and shifts colour with her mood.",
+  "explode": [
+   0,
+   0,
+   120
+  ],
+  "print": "Print flat.",
+  "grams": 30,
+  "fits": true,
+  "genus": 1
+ },
+ {
+  "key": "cover",
+  "printed": true,
+  "dims": [
+   188,
+   188,
+   4
+  ],
+  "tris": 1560,
+  "name": "Holo ring cover",
+  "material": "Matte black PLA",
+  "colour": "#15181e",
+  "group": "Holo ring",
+  "note": "Forge-style emitter ring she stands on: twelve light windows over the diffuser and raised outer lip, like a desk-size version of her in-game hologram pad.",
+  "explode": [
+   0,
+   0,
+   150
+  ],
+  "print": "Print flat.",
+  "grams": 36,
+  "fits": true,
+  "genus": 24
+ },
+ {
+  "key": "tower",
+  "printed": true,
+  "dims": [
+   210,
+   100,
+   200
+  ],
+  "tris": 1530,
+  "name": "Rear emitter tower",
+  "material": "Matte black PLA",
+  "colour": "#1b1f26",
+  "group": "Shell",
+  "note": "Holds the projector standing lens-up and the angled mirror behind a glass window. The light leaves the sloped front face and crosses the mist sheet from behind, so you never look into the lens.",
+  "explode": [
+   0,
+   60,
+   0
+  ],
+  "print": "Print upright. The slope needs no supports.",
+  "grams": 343,
+  "fits": true,
+  "genus": 24
+ },
+ {
+  "key": "cradle",
+  "printed": true,
+  "dims": [
+   120,
+   76,
+   118
+  ],
+  "tris": 276,
+  "name": "Projector cradle",
+  "material": "Matte black PLA",
+  "colour": "#353b46",
+  "group": "Optics",
+  "note": "Adjustable sled for the projector, standing lens-up. Velcro straps through the side windows; the slots let it slide to centre the image. Its final size is locked once your projector is chosen.",
+  "explode": [
+   0,
+   80,
+   70
+  ],
+  "print": "Print flat.",
+  "grams": 75,
+  "fits": true,
+  "genus": 5
+ },
+ {
+  "key": "mirror",
+  "printed": true,
+  "dims": [
+   148,
+   50,
+   59
+  ],
+  "tris": 1580,
+  "name": "Tilting mirror mount",
+  "material": "Matte black PLA",
+  "colour": "#404857",
+  "group": "Optics",
+  "note": "Holds a front-surface mirror at 45 degrees with a thumb-screw for about plus or minus 10 degrees of tilt, so the image can be aimed up or down the mist sheet.",
+  "explode": [
+   0,
+   80,
+   120
+  ],
+  "print": "Print flat.",
+  "grams": 57,
+  "fits": true,
+  "genus": 1
+ },
+ {
+  "key": "etray",
+  "printed": true,
+  "dims": [
+   192,
+   75,
+   26
+  ],
+  "tris": 5810,
+  "name": "Electronics trays",
+  "material": "Matte black PLA",
+  "colour": "#4a5260",
+  "group": "Electronics",
+  "note": "Left tray: ESP32 (or Pico W) and the 4-channel MOSFET board. Right tray: 24 V to 12 V and 5 V step-down converters. Fan-cooled by the tower louvres.",
+  "explode": [
+   0,
+   80,
+   40
+  ],
+  "print": "Print flat.",
+  "grams": 23,
+  "fits": true,
+  "genus": -1
+ },
+ {
+  "key": "ports",
+  "printed": true,
+  "dims": [
+   114,
+   5,
+   44
+  ],
+  "tris": 500,
+  "name": "Rear port panel",
+  "material": "Matte black PLA",
+  "colour": "#2b2f38",
+  "group": "Electronics",
+  "note": "HDMI in, USB-C (control link to her box), 24 V power socket and a rocker switch, plus vents.",
+  "explode": [
+   0,
+   110,
+   0
+  ],
+  "print": "Print flat.",
+  "grams": 17,
+  "fits": true,
+  "genus": 10
+ },
+ {
+  "key": "spine",
+  "printed": true,
+  "dims": [
+   41,
+   123,
+   236
+  ],
+  "tris": 432,
+  "name": "Spine and cap arm",
+  "material": "Matte black PLA",
+  "colour": "#1b1f26",
+  "group": "Collector",
+  "note": "Carries the collector cap over her head. Hollow inside for the drip-return tube and the cap's fan and Peltier wires; the front groove holds a thin LED line.",
+  "explode": [
+   0,
+   120,
+   60
+  ],
+  "print": "Print lying on its side. Optional 10 mm aluminium tube inside for stiffness.",
+  "grams": 138,
+  "fits": true,
+  "genus": 0
+ },
+ {
+  "key": "cap",
+  "printed": true,
+  "dims": [
+   200,
+   124,
+   50
+  ],
+  "tris": 4832,
+  "name": "Collector cap",
+  "material": "Matte black PLA",
+  "colour": "#1b1f26",
+  "group": "Collector",
+  "note": "Sits over her head and catches the rising mist. A 60 mm fan pulls it in over a Peltier-cooled plate; the condensed water drips into the tray and runs back down the spine to the tank.",
+  "explode": [
+   0,
+   0,
+   120
+  ],
+  "print": "Print upside down.",
+  "grams": 188,
+  "fits": true,
+  "genus": 60
+ },
+ {
+  "key": "tray",
+  "printed": true,
+  "dims": [
+   160,
+   76,
+   10
+  ],
+  "tris": 946,
+  "name": "Cold plate and drip tray",
+  "material": "PETG (black)",
+  "colour": "#30394a",
+  "group": "Collector",
+  "note": "Carries the aluminium cold plate (Peltier TEC1-12706 underneath, heatsink above). Its gutter collects the drips and feeds the return tube.",
+  "explode": [
+   0,
+   0,
+   70
+  ],
+  "print": "Print flat.",
+  "grams": 19,
+  "fits": true,
+  "genus": 14
+ },
+ {
+  "key": "projector",
+  "printed": false,
+  "dims": [
+   96,
+   56,
+   120
+  ],
+  "tris": 300,
+  "name": "Pico projector (placeholder size)",
+  "material": "Bought part",
+  "colour": "#7d8898",
+  "group": "Bought parts (shown for fit)",
+  "note": "Shown as a 96 x 56 x 116 mm box standing lens-up. The cradle gets resized to the real one.",
+  "explode": [
+   0,
+   80,
+   70
+  ],
+  "print": null
+ },
+ {
+  "key": "mirrorglass",
+  "printed": false,
+  "dims": [
+   110,
+   36,
+   36
+  ],
+  "tris": 12,
+  "name": "Front-surface mirror 110 x 50 mm",
+  "material": "Bought part",
+  "colour": "#d9e6f2",
+  "group": "Bought parts (shown for fit)",
+  "note": "Avoids the double image a normal mirror gives.",
+  "explode": [
+   0,
+   80,
+   120
+  ],
+  "print": null
+ },
+ {
+  "key": "fans",
+  "printed": false,
+  "dims": [
+   208,
+   73,
+   61
+  ],
+  "tris": 36,
+  "name": "40 mm fans (x3)",
+  "material": "Bought part",
+  "colour": "#8a6d3b",
+  "group": "Bought parts (shown for fit)",
+  "note": "Two guard fans plus the tank air fan. Quiet 12 V (Noctua NF-A4x10 class).",
+  "explode": [
+   0,
+   -60,
+   10
+  ],
+  "print": null
+ },
+ {
+  "key": "disc",
+  "printed": false,
+  "dims": [
+   52,
+   52,
+   10
+  ],
+  "tris": 284,
+  "name": "24 V ultrasonic mister",
+  "material": "Bought part",
+  "colour": "#c9ced6",
+  "group": "Bought parts (shown for fit)",
+  "note": "Sits in the tank cradle.",
+  "explode": [
+   0,
+   -110,
+   -30
+  ],
+  "print": null
+ },
+ {
+  "key": "collector_hw",
+  "printed": false,
+  "dims": [
+   120,
+   96,
+   40
+  ],
+  "tris": 332,
+  "name": "60 mm fan, Peltier and cold plate",
+  "material": "Bought part",
+  "colour": "#9aa4b2",
+  "group": "Bought parts (shown for fit)",
+  "note": "Collector hardware.",
+  "explode": [
+   0,
+   0,
+   100
+  ],
+  "print": null
+ },
+ {
+  "key": "glass",
+  "printed": false,
+  "dims": [
+   124,
+   32,
+   40
+  ],
+  "tris": 12,
+  "name": "Clear window, 124 x 50 mm",
+  "material": "Bought part",
+  "colour": "#a8d8ff",
+  "group": "Bought parts (shown for fit)",
+  "note": "Keeps mist off the mirror and projector. 2 mm acrylic or glass.",
+  "explode": [
+   0,
+   60,
+   0
+  ],
+  "print": null
+ },
+ {
+  "key": "figure",
+  "printed": false,
+  "dims": [
+   58,
+   8,
+   248
+  ],
+  "tris": 1918,
+  "name": "Her image on the mist sheet (25 cm)",
+  "material": "Bought part",
+  "colour": "#5cc8ff",
+  "group": "Bought parts (shown for fit)",
+  "note": "A flat stand-in silhouette showing where her projected image appears. Her real model never goes into these files.",
+  "explode": [
+   0,
+   0,
+   0
+  ],
+  "print": null
+ },
+ {
+  "key": "sheet",
+  "printed": false,
+  "dims": [
+   130,
+   3,
+   304
+  ],
+  "tris": 12,
+  "name": "Mist sheet",
+  "material": "Bought part",
+  "colour": "#bfe9ff",
+  "group": "Bought parts (shown for fit)",
+  "note": "The thin curtain of fog (shown as a pane).",
+  "explode": [
+   0,
+   0,
+   0
+  ],
+  "print": null
+ }
+]
