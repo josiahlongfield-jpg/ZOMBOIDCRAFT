@@ -1,0 +1,904 @@
+[
+ {
+  "key": "base_fl",
+  "printed": true,
+  "dims": [
+   150,
+   250,
+   140
+  ],
+  "tris": 2042,
+  "name": "Base, front left",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Base",
+  "note": "Front left quarter, with half of the speaker grille and the glowing light bar. The four quarters bolt together on internal ribs.",
+  "explode": [
+   -30,
+   -40,
+   -30
+  ],
+  "print": "Print upside down (top deck on the bed). No supports.",
+  "grams": 325,
+  "fits": true
+ },
+ {
+  "key": "base_fr",
+  "printed": true,
+  "dims": [
+   150,
+   250,
+   140
+  ],
+  "tris": 2050,
+  "name": "Base, front right",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Base",
+  "note": "One quarter of the base. The four quarters bolt together on internal ribs; the base holds the speaker, the light bar, the electronics and the power socket.",
+  "explode": [
+   30,
+   -40,
+   -30
+  ],
+  "print": "Print upside down (top deck on the bed). No supports.",
+  "grams": 325,
+  "fits": true
+ },
+ {
+  "key": "base_rl",
+  "printed": true,
+  "dims": [
+   150,
+   250,
+   140
+  ],
+  "tris": 1516,
+  "name": "Base, rear left",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Base",
+  "note": "One quarter of the base. The four quarters bolt together on internal ribs; the base holds the speaker, the light bar, the electronics and the power socket.",
+  "explode": [
+   -30,
+   40,
+   -30
+  ],
+  "print": "Print upside down (top deck on the bed). No supports.",
+  "grams": 280,
+  "fits": true
+ },
+ {
+  "key": "base_rr",
+  "printed": true,
+  "dims": [
+   150,
+   250,
+   140
+  ],
+  "tris": 1514,
+  "name": "Base, rear right",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Base",
+  "note": "One quarter of the base. The four quarters bolt together on internal ribs; the base holds the speaker, the light bar, the electronics and the power socket.",
+  "explode": [
+   30,
+   40,
+   -30
+  ],
+  "print": "Print upside down (top deck on the bed). No supports.",
+  "grams": 280,
+  "fits": true
+ },
+ {
+  "key": "plate_fl",
+  "printed": true,
+  "dims": [
+   146,
+   246,
+   3
+  ],
+  "tris": 1172,
+  "name": "Bottom plate, front left",
+  "material": "Matte black PLA",
+  "colour": "#252a33",
+  "group": "Base",
+  "note": "Closes the base. Screws into the bosses; rubber feet sit in the recesses. The rear plate has cooling vents under the electronics.",
+  "explode": [
+   -30,
+   -60,
+   -90
+  ],
+  "print": "Print flat.",
+  "grams": 100,
+  "fits": true
+ },
+ {
+  "key": "plate_fr",
+  "printed": true,
+  "dims": [
+   146,
+   246,
+   3
+  ],
+  "tris": 1172,
+  "name": "Bottom plate, front right",
+  "material": "Matte black PLA",
+  "colour": "#252a33",
+  "group": "Base",
+  "note": "Closes the base. Screws into the bosses; rubber feet sit in the recesses. The rear plate has cooling vents under the electronics.",
+  "explode": [
+   30,
+   -60,
+   -90
+  ],
+  "print": "Print flat.",
+  "grams": 100,
+  "fits": true
+ },
+ {
+  "key": "plate_rl",
+  "printed": true,
+  "dims": [
+   146,
+   246,
+   3
+  ],
+  "tris": 1276,
+  "name": "Bottom plate, rear left",
+  "material": "Matte black PLA",
+  "colour": "#252a33",
+  "group": "Base",
+  "note": "Closes the base. Screws into the bosses; rubber feet sit in the recesses. The rear plate has cooling vents under the electronics.",
+  "explode": [
+   -30,
+   60,
+   -90
+  ],
+  "print": "Print flat.",
+  "grams": 84,
+  "fits": true
+ },
+ {
+  "key": "plate_rr",
+  "printed": true,
+  "dims": [
+   146,
+   246,
+   3
+  ],
+  "tris": 1252,
+  "name": "Bottom plate, rear right",
+  "material": "Matte black PLA",
+  "colour": "#252a33",
+  "group": "Base",
+  "note": "Closes the base. Screws into the bosses; rubber feet sit in the recesses. The rear plate has cooling vents under the electronics.",
+  "explode": [
+   30,
+   60,
+   -90
+  ],
+  "print": "Print flat.",
+  "grams": 87,
+  "fits": true
+ },
+ {
+  "key": "pil_fl_lo",
+  "printed": true,
+  "dims": [
+   30,
+   30,
+   210
+  ],
+  "tris": 200,
+  "name": "Pillar, front left, lower",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Frame",
+  "note": "Corner pillar holding the smoked side panel with a glowing edge line on its front face. A 10 mm steel rod runs through all pillar sections for stiffness.",
+  "explode": [
+   -70,
+   -60,
+   0
+  ],
+  "print": "Print upright, no supports.",
+  "grams": 131,
+  "fits": true
+ },
+ {
+  "key": "pil_fl_hi",
+  "printed": true,
+  "dims": [
+   30,
+   30,
+   210
+  ],
+  "tris": 250,
+  "name": "Pillar, front left, upper",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Frame",
+  "note": "Upper section of the corner pillar; joins the lower section over the steel rod.",
+  "explode": [
+   -70,
+   -60,
+   60
+  ],
+  "print": "Print upright, no supports.",
+  "grams": 131,
+  "fits": true
+ },
+ {
+  "key": "pil_fr_lo",
+  "printed": true,
+  "dims": [
+   30,
+   30,
+   210
+  ],
+  "tris": 202,
+  "name": "Pillar, front right, lower",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Frame",
+  "note": "Corner pillar holding the smoked side panel with a glowing edge line on its front face. A 10 mm steel rod runs through all pillar sections for stiffness.",
+  "explode": [
+   70,
+   -60,
+   0
+  ],
+  "print": "Print upright, no supports.",
+  "grams": 131,
+  "fits": true
+ },
+ {
+  "key": "pil_fr_hi",
+  "printed": true,
+  "dims": [
+   30,
+   30,
+   210
+  ],
+  "tris": 250,
+  "name": "Pillar, front right, upper",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Frame",
+  "note": "Upper section of the corner pillar; joins the lower section over the steel rod.",
+  "explode": [
+   70,
+   -60,
+   60
+  ],
+  "print": "Print upright, no supports.",
+  "grams": 131,
+  "fits": true
+ },
+ {
+  "key": "pil_rl_lo",
+  "printed": true,
+  "dims": [
+   30,
+   30,
+   210
+  ],
+  "tris": 212,
+  "name": "Pillar, rear left, lower",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Frame",
+  "note": "Corner pillar holding the smoked side panel and the black back panel. A 10 mm steel rod runs through all pillar sections for stiffness.",
+  "explode": [
+   -70,
+   60,
+   0
+  ],
+  "print": "Print upright, no supports.",
+  "grams": 126,
+  "fits": true
+ },
+ {
+  "key": "pil_rl_hi",
+  "printed": true,
+  "dims": [
+   30,
+   30,
+   210
+  ],
+  "tris": 260,
+  "name": "Pillar, rear left, upper",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Frame",
+  "note": "Upper section of the corner pillar; joins the lower section over the steel rod.",
+  "explode": [
+   -70,
+   60,
+   60
+  ],
+  "print": "Print upright, no supports.",
+  "grams": 125,
+  "fits": true
+ },
+ {
+  "key": "pil_rr_lo",
+  "printed": true,
+  "dims": [
+   30,
+   30,
+   210
+  ],
+  "tris": 218,
+  "name": "Pillar, rear right, lower",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Frame",
+  "note": "Corner pillar holding the smoked side panel and the black back panel. A 10 mm steel rod runs through all pillar sections for stiffness.",
+  "explode": [
+   70,
+   60,
+   0
+  ],
+  "print": "Print upright, no supports.",
+  "grams": 126,
+  "fits": true
+ },
+ {
+  "key": "pil_rr_hi",
+  "printed": true,
+  "dims": [
+   30,
+   30,
+   210
+  ],
+  "tris": 268,
+  "name": "Pillar, rear right, upper",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Frame",
+  "note": "Upper section of the corner pillar; joins the lower section over the steel rod.",
+  "explode": [
+   70,
+   60,
+   60
+  ],
+  "print": "Print upright, no supports.",
+  "grams": 125,
+  "fits": true
+ },
+ {
+  "key": "railL_lo",
+  "printed": true,
+  "dims": [
+   20,
+   212,
+   205
+  ],
+  "tris": 650,
+  "name": "Reflector rail, left, lower",
+  "material": "Matte black PLA",
+  "colour": "#2b313c",
+  "group": "Optics",
+  "note": "Holds the edge of the beam-splitter glass at exactly 45 degrees. The lower piece has a foot that screws to the base deck.",
+  "explode": [
+   -45,
+   -20,
+   0
+  ],
+  "print": "Print lying on its side, no supports.",
+  "grams": 81,
+  "fits": true
+ },
+ {
+  "key": "railL_hi",
+  "printed": true,
+  "dims": [
+   20,
+   220,
+   195
+  ],
+  "tris": 652,
+  "name": "Reflector rail, left, upper",
+  "material": "Matte black PLA",
+  "colour": "#2b313c",
+  "group": "Optics",
+  "note": "Upper half of the 45-degree rail; its tab screws to the underside of the crown.",
+  "explode": [
+   -45,
+   -20,
+   40
+  ],
+  "print": "Print lying on its side, no supports.",
+  "grams": 78,
+  "fits": true
+ },
+ {
+  "key": "railR_lo",
+  "printed": true,
+  "dims": [
+   20,
+   212,
+   205
+  ],
+  "tris": 658,
+  "name": "Reflector rail, right, lower",
+  "material": "Matte black PLA",
+  "colour": "#2b313c",
+  "group": "Optics",
+  "note": "Holds the edge of the beam-splitter glass at exactly 45 degrees. The lower piece has a foot that screws to the base deck.",
+  "explode": [
+   45,
+   -20,
+   0
+  ],
+  "print": "Print lying on its side, no supports.",
+  "grams": 81,
+  "fits": true
+ },
+ {
+  "key": "railR_hi",
+  "printed": true,
+  "dims": [
+   20,
+   220,
+   195
+  ],
+  "tris": 646,
+  "name": "Reflector rail, right, upper",
+  "material": "Matte black PLA",
+  "colour": "#2b313c",
+  "group": "Optics",
+  "note": "Upper half of the 45-degree rail; its tab screws to the underside of the crown.",
+  "explode": [
+   45,
+   -20,
+   40
+  ],
+  "print": "Print lying on its side, no supports.",
+  "grams": 78,
+  "fits": true
+ },
+ {
+  "key": "pad_diff",
+  "printed": true,
+  "dims": [
+   203,
+   154,
+   3
+  ],
+  "tris": 428,
+  "name": "Holo pad diffuser",
+  "material": "Natural / translucent PETG",
+  "colour": "#5cc8ff",
+  "group": "Holo pad",
+  "note": "Glows from an LED ring underneath. It pulses when she speaks and changes colour with her mood.",
+  "explode": [
+   0,
+   0,
+   60
+  ],
+  "print": "Print flat.",
+  "grams": 39,
+  "fits": true
+ },
+ {
+  "key": "pad_cover",
+  "printed": true,
+  "dims": [
+   208,
+   156,
+   3
+  ],
+  "tris": 1060,
+  "name": "Holo pad cover",
+  "material": "Matte black PLA",
+  "colour": "#15181e",
+  "group": "Holo pad",
+  "note": "The emitter she stands on, at exactly the spot where her reflected image meets the floor, so her feet land on it. Sixteen light windows over the diffuser.",
+  "explode": [
+   0,
+   0,
+   90
+  ],
+  "print": "Print flat.",
+  "grams": 34,
+  "fits": true
+ },
+ {
+  "key": "crown_fl",
+  "printed": true,
+  "dims": [
+   150,
+   250,
+   80
+  ],
+  "tris": 364,
+  "name": "Crown, front left",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Crown",
+  "note": "Front quarter: holds the screen face-down above the reflector, with the camera window and a mic hole. The four quarters bolt together on centre ribs.",
+  "explode": [
+   -30,
+   -50,
+   120
+  ],
+  "print": "Print upside down (top on the bed).",
+  "grams": 272,
+  "fits": true
+ },
+ {
+  "key": "crown_fr",
+  "printed": true,
+  "dims": [
+   150,
+   250,
+   80
+  ],
+  "tris": 362,
+  "name": "Crown, front right",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Crown",
+  "note": "Front quarter: holds the screen face-down above the reflector, with the camera window and a mic hole. The four quarters bolt together on centre ribs.",
+  "explode": [
+   30,
+   -50,
+   120
+  ],
+  "print": "Print upside down (top on the bed).",
+  "grams": 272,
+  "fits": true
+ },
+ {
+  "key": "crown_rl",
+  "printed": true,
+  "dims": [
+   150,
+   250,
+   80
+  ],
+  "tris": 5522,
+  "name": "Crown, rear left",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Crown",
+  "note": "Rear quarter with half the exhaust grille and the cable exit. The four quarters bolt together on centre ribs.",
+  "explode": [
+   -30,
+   50,
+   120
+  ],
+  "print": "Print upside down (top on the bed).",
+  "grams": 285,
+  "fits": true
+ },
+ {
+  "key": "crown_rr",
+  "printed": true,
+  "dims": [
+   150,
+   250,
+   80
+  ],
+  "tris": 5518,
+  "name": "Crown, rear right",
+  "material": "Matte black PLA",
+  "colour": "#1c2028",
+  "group": "Crown",
+  "note": "Rear quarter with half the exhaust grille and the cable exit. The four quarters bolt together on centre ribs.",
+  "explode": [
+   30,
+   50,
+   120
+  ],
+  "print": "Print upside down (top on the bed).",
+  "grams": 285,
+  "fits": true
+ },
+ {
+  "key": "clips",
+  "printed": true,
+  "dims": [
+   259,
+   391,
+   7
+  ],
+  "tris": 1296,
+  "name": "Screen clips (set of 4)",
+  "material": "Black PETG",
+  "colour": "#30394a",
+  "group": "Crown",
+  "note": "Screw onto the top of the screen ledge and press the screen down so it cannot shift. Foam pads stop rattles.",
+  "explode": [
+   0,
+   0,
+   170
+  ],
+  "print": "Print flat, all four at once.",
+  "grams": 17,
+  "fits": true
+ },
+ {
+  "key": "cambracket",
+  "printed": true,
+  "dims": [
+   36,
+   19,
+   30
+  ],
+  "tris": 40,
+  "name": "Camera bracket",
+  "material": "Black PETG",
+  "colour": "#30394a",
+  "group": "Crown",
+  "note": "Holds a small USB camera board behind the front window so she can see and face you.",
+  "explode": [
+   0,
+   -80,
+   140
+  ],
+  "print": "Print flat.",
+  "grams": 5,
+  "fits": true
+ },
+ {
+  "key": "etray",
+  "printed": true,
+  "dims": [
+   250,
+   190,
+   8
+  ],
+  "tris": 4872,
+  "name": "Electronics tray",
+  "material": "Matte black PLA",
+  "colour": "#4a5260",
+  "group": "Base",
+  "note": "Mounts the ESP32, the amplifier board, the USB hub and the power board in the rear of the base.",
+  "explode": [
+   0,
+   60,
+   -60
+  ],
+  "print": "Print flat.",
+  "grams": 111,
+  "fits": true
+ },
+ {
+  "key": "baffle",
+  "printed": true,
+  "dims": [
+   132,
+   9,
+   84
+  ],
+  "tris": 1472,
+  "name": "Speaker baffle",
+  "material": "Matte black PLA",
+  "colour": "#353b46",
+  "group": "Base",
+  "note": "Holds a 3 inch full-range speaker behind the front grille.",
+  "explode": [
+   0,
+   -110,
+   -10
+  ],
+  "print": "Print flat.",
+  "grams": 55,
+  "fits": true
+ },
+ {
+  "key": "lightbar",
+  "printed": true,
+  "dims": [
+   216,
+   6,
+   10
+  ],
+  "tris": 28,
+  "name": "Light bar diffuser",
+  "material": "Natural / translucent PETG",
+  "colour": "#5cc8ff",
+  "group": "Base",
+  "note": "A glowing strip across the front of the base, lit by the same LEDs as the pad.",
+  "explode": [
+   0,
+   -120,
+   0
+  ],
+  "print": "Print flat.",
+  "grams": 8,
+  "fits": true
+ },
+ {
+  "key": "monitor",
+  "printed": false,
+  "dims": [
+   246,
+   400,
+   11
+  ],
+  "tris": 12,
+  "name": "17.3 inch portable monitor (portrait, face down)",
+  "material": "Bought part",
+  "colour": "#59616e",
+  "group": "Bought parts (shown for fit)",
+  "note": "Shows her on pure black. About 400 x 245 mm, USB-C or HDMI, as bright as possible (500 nits or more). Its long side runs front to back so her reflection stands tall.",
+  "explode": [
+   0,
+   0,
+   150
+  ],
+  "print": null
+ },
+ {
+  "key": "screenglow",
+  "printed": false,
+  "dims": [
+   232,
+   382,
+   0
+  ],
+  "tris": 12,
+  "name": "Screen picture area",
+  "material": "Bought part",
+  "colour": "#0b1220",
+  "group": "Bought parts (shown for fit)",
+  "note": "The 382 x 215 mm picture area.",
+  "explode": [
+   0,
+   0,
+   150
+  ],
+  "print": null
+ },
+ {
+  "key": "glass",
+  "printed": false,
+  "dims": [
+   243,
+   389,
+   389
+  ],
+  "tris": 12,
+  "name": "Beam-splitter glass, about 258 x 545 mm",
+  "material": "Bought part",
+  "colour": "#a8d8ff",
+  "group": "Bought parts (shown for fit)",
+  "note": "Teleprompter glass (about 70/30) at 45 degrees. It reflects the screen so she appears standing inside, while you still see through it.",
+  "explode": [
+   0,
+   -20,
+   0
+  ],
+  "print": null
+ },
+ {
+  "key": "sideL",
+  "printed": false,
+  "dims": [
+   3,
+   476,
+   400
+  ],
+  "tris": 12,
+  "name": "Smoked acrylic side panel left",
+  "material": "Bought part",
+  "colour": "#3a4556",
+  "group": "Bought parts (shown for fit)",
+  "note": "Dark tinted 3 mm acrylic, 476 x 400 mm. Keeps the inside dark so she looks bright, but you can still see into the capsule.",
+  "explode": [
+   -110,
+   0,
+   0
+  ],
+  "print": null
+ },
+ {
+  "key": "sideR",
+  "printed": false,
+  "dims": [
+   3,
+   476,
+   400
+  ],
+  "tris": 12,
+  "name": "Smoked acrylic side panel right",
+  "material": "Bought part",
+  "colour": "#3a4556",
+  "group": "Bought parts (shown for fit)",
+  "note": "Dark tinted 3 mm acrylic, 476 x 400 mm. Keeps the inside dark so she looks bright, but you can still see into the capsule.",
+  "explode": [
+   110,
+   0,
+   0
+  ],
+  "print": null
+ },
+ {
+  "key": "back",
+  "printed": false,
+  "dims": [
+   276,
+   4,
+   400
+  ],
+  "tris": 12,
+  "name": "Matte black back panel",
+  "material": "Bought part",
+  "colour": "#0c0f14",
+  "group": "Bought parts (shown for fit)",
+  "note": "Black 3 mm foam board or acrylic. The darker the background, the more solid she looks.",
+  "explode": [
+   0,
+   100,
+   0
+  ],
+  "print": null
+ },
+ {
+  "key": "speaker",
+  "printed": false,
+  "dims": [
+   76,
+   30,
+   76
+  ],
+  "tris": 284,
+  "name": "3 inch speaker + amplifier",
+  "material": "Bought part",
+  "colour": "#8a6d3b",
+  "group": "Bought parts (shown for fit)",
+  "note": "Full-range driver behind the grille.",
+  "explode": [
+   0,
+   -110,
+   -10
+  ],
+  "print": null
+ },
+ {
+  "key": "cam",
+  "printed": false,
+  "dims": [
+   20,
+   6,
+   20
+  ],
+  "tris": 12,
+  "name": "USB camera board",
+  "material": "Bought part",
+  "colour": "#9aa4b2",
+  "group": "Bought parts (shown for fit)",
+  "note": "Small 1080p USB camera.",
+  "explode": [
+   0,
+   -80,
+   140
+  ],
+  "print": null
+ },
+ {
+  "key": "figure",
+  "printed": false,
+  "dims": [
+   72,
+   8,
+   313
+  ],
+  "tris": 1590,
+  "name": "Where her image appears (about 38 cm)",
+  "material": "Bought part",
+  "colour": "#5cc8ff",
+  "group": "Bought parts (shown for fit)",
+  "note": "A flat stand-in shape marking where her reflected image stands, right above the holo pad. Her real model never goes into these files.",
+  "explode": [
+   0,
+   0,
+   0
+  ],
+  "print": null
+ }
+]
