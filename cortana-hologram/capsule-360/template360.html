@@ -1,0 +1,301 @@
+<title>Cortana 360 Capsule</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: big 3D workbench viewer up top, then the light path drawing, then the print sheet as a table, then the build stages. */
+:root{
+  --bg:#f3f6f9; --panel:#ffffff; --line:#d5dee8; --fg:#142033; --muted:#566a82;
+  --holo:#0a86c8; --holo-soft:#d9f0fc; --warn:#a15c00; --ok:#1d8a52; --stage:#e9eef4;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0a111b; --panel:#101a28; --line:#223349; --fg:#dce8f6; --muted:#8ea3bd;
+  --holo:#5cc8ff; --holo-soft:#123048; --warn:#f0b25a; --ok:#5fd39a; --stage:#0d1622; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0a111b; --panel:#101a28; --line:#223349; --fg:#dce8f6; --muted:#8ea3bd;
+  --holo:#5cc8ff; --holo-soft:#123048; --warn:#f0b25a; --ok:#5fd39a; --stage:#0d1622; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:36px}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;font-weight:600}
+h1{font-size:2rem;line-height:1.15}
+h2{font-size:1.35rem}
+h3{font-size:1rem}
+p{margin:0;max-width:68ch}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--holo)}
+header{display:flex;flex-direction:column;gap:10px}
+.facts{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+.facts b{color:var(--fg);font-weight:500}
+.bench{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}
+@media (max-width:820px){.bench{grid-template-columns:1fr}}
+.stage{position:relative;background:var(--stage);border:1px solid var(--line);border-radius:10px;overflow:hidden;aspect-ratio:4/3.4;max-width:100%}
+.stage canvas{display:block;width:100%;height:100%;touch-action:pan-y}
+@media (max-width:600px){.stage{aspect-ratio:3/4}}
+.zoom{position:absolute;right:10px;top:10px;right:calc(10px + env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:6px}
+.zoom button{width:38px;height:38px;padding:0;font-size:1.1rem;line-height:1}
+.hud{position:absolute;left:12px;bottom:10px;font-family:var(--mono);font-size:.72rem;color:var(--muted);pointer-events:none}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+.ctl{display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+.ctl label{display:flex;justify-content:space-between;gap:8px}
+input[type=range]{width:100%;accent-color:var(--holo)}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+button{font:inherit;font-size:.82rem;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:6px;padding:6px 10px;cursor:pointer}
+button[aria-pressed="true"]{border-color:var(--holo);background:var(--holo-soft)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--holo);outline-offset:2px}
+.info{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:170px}
+.info .mat{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.chk{display:flex;align-items:center;gap:8px;font-size:.88rem}
+.chk input{accent-color:var(--holo);width:16px;height:16px}
+section{display:flex;flex-direction:column;gap:14px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.two>*{min-width:0}
+svg.dia{width:100%;height:auto;display:block;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+svg.dia text{font-family:var(--mono);font-size:10px;fill:var(--muted)}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--display);font-weight:500;color:var(--muted);font-size:.8rem;letter-spacing:.03em}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr[data-key]{cursor:pointer}
+tr[data-key]:hover td{background:var(--holo-soft)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;border:1px solid var(--line)}
+.pill{font-family:var(--mono);font-size:.72rem;padding:1px 7px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.pill.ok{color:var(--ok)}
+tfoot td{font-weight:600}
+.stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:820px){.stages{grid-template-columns:1fr}}
+.st{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.st .n{font-family:var(--mono);font-size:.75rem;color:var(--holo)}
+.ask{border-left:3px solid var(--warn);padding:2px 0 2px 14px;display:flex;flex-direction:column;gap:8px}
+.foot{font-size:.82rem;color:var(--muted)}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">360 capsule · printed parts v1 · for your review</div>
+  <h1>Cortana 360 capsule</h1>
+  <p class="muted">The walk-around version. A square screen in the crown reflects into a four-sided glass pyramid, so she stands in the middle and you can see her from the front, back and both sides, each from its own angle. Every part is modelled at full size and checked against the P2S bed. Drag to turn it, pull the slider to take it apart, and tap a part to see what it does.</p>
+  <div class="facts"><span>Height <b>62 cm (24.4")</b></span><span>Footprint <b>62 × 62 cm</b></span><span>Her image <b>≈ 20 cm tall</b></span><span>Printed parts <b>__NPRINT__</b></span><span>Filament <b>≈ __GRAMS__ kg</b></span><span>Print time <b>≈ __HOURS__ h</b> (estimate)</span></div>
+</header>
+
+<section>
+<div class="bench">
+  <div class="stage" id="stage"><canvas id="cv" aria-label="3D model of the 360 capsule"></canvas><div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zfit" aria-label="Fit whole model" style="font-size:.7rem">Fit</button></div><div class="hud" id="hud">drag sideways to turn · + and − to zoom · Fit to see it all</div></div>
+  <div class="side">
+    <div class="ctl"><label for="explode"><span>Explode</span><span id="exv" class="muted">0%</span></label><input id="explode" type="range" min="0" max="100" value="0"></div>
+    <div class="ctl"><span>View</span><div class="btns" id="views">
+      <button data-v="front" aria-pressed="true">Front ¾</button><button data-v="side">Side</button><button data-v="back">Back ¾</button><button data-v="top">Top</button></div></div>
+    <label class="chk"><input type="checkbox" id="showBought" checked> Show bought parts (screen, glass, cameras)</label>
+    <label class="chk"><input type="checkbox" id="showFig" checked> Show where she appears</label>
+    <label class="chk"><input type="checkbox" id="xray"> See-through frame</label>
+    <div class="info" id="info"><h3>Tap a part</h3><p class="muted">Each part's job, material, size and how it prints shows here.</p></div>
+  </div>
+</div>
+</section>
+
+<section>
+  <h2>How you see her from every side</h2>
+  <div class="two">
+    <svg class="dia" viewBox="0 0 380 380" role="img" aria-label="Top view of the screen split into four views over the glass pyramid">
+      <rect x="0" y="0" width="380" height="380" fill="var(--panel)"/>
+      <rect x="40" y="40" width="300" height="300" fill="var(--stage)" stroke="var(--muted)"/>
+      <path d="M40 40 L340 340 M340 40 L40 340" stroke="var(--holo)" stroke-width="2"/>
+      <rect x="175" y="175" width="30" height="30" fill="var(--muted)" fill-opacity=".5"/>
+      <g fill="var(--holo)" fill-opacity=".55">
+        <path d="M182 300 h16 l4 -60 h-24z"/><circle cx="190" cy="314" r="9"/>
+        <path d="M182 80 h16 l4 60 h-24z"/><circle cx="190" cy="66" r="9"/>
+        <path d="M80 182 v16 l60 4 v-24z"/><circle cx="66" cy="190" r="9"/>
+        <path d="M300 182 v16 l-60 4 v-24z"/><circle cx="314" cy="190" r="9"/>
+      </g>
+      <text x="150" y="364">front view</text><text x="152" y="26">back view</text>
+      <text x="6" y="240" transform="rotate(-90 14 240)">left view</text>
+      <text x="368" y="150" transform="rotate(90 368 150)">right view</text>
+      <text x="210" y="196">apex</text>
+    </svg>
+    <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+      <p>Looking down at the screen, it is split into four triangles, one above each glass face. Each triangle shows her rendered from that side: front, back, left and right. Each face reflects its own triangle, and all four reflections meet on the pad in the middle, so whichever side you stand on, she is standing there seen from your side.</p>
+      <ul>
+        <li>She is still a live 3D model. Walk round and you see her back, her profile, then her face, and she can turn to follow you.</li>
+        <li>Each side has its own camera. The side you're looking through renders her from exactly where you stand, so the view stays smooth as you move along that face.</li>
+        <li>Where two faces meet there is a thin seam, and the view jumps by a quarter turn as you cross a corner. That is the limit of four faces. A smooth 360 would need a spinning or volumetric display.</li>
+        <li>Each view only gets a quarter of the screen, so she comes out about 20 cm tall, against 38 cm in the front-facing capsule. She is also less bright, so a dimmer room suits it.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>The two capsules side by side</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th></th><th>Front capsule</th><th>360 capsule</th></tr></thead>
+    <tbody>
+      <tr><td>Seen from</td><td>The front, about a 60 to 80° arc</td><td>All four sides, with seams at the corners</td></tr>
+      <tr><td>Her height</td><td>≈ 38 cm</td><td>≈ 20 cm</td></tr>
+      <tr><td>Footprint × height</td><td>30 × 50 × 62 cm</td><td>62 × 62 × 62 cm</td></tr>
+      <tr><td>Screen</td><td>17.3" portable monitor</td><td>LG DualUp 28" (near-square)</td></tr>
+      <tr><td>Room light</td><td>Normal room</td><td>Dimmer room is best</td></tr>
+      <tr><td>Printing</td><td>31 parts, ≈ 4.3 kg, ≈ 250 h</td><td>__NPRINT__ parts, ≈ __GRAMS__ kg, ≈ __HOURS__ h</td></tr>
+      <tr><td>Bought parts (estimate)</td><td>A$500–990</td><td>A$1,100–1,700</td></tr>
+      <tr><td>Best place</td><td>Your desk</td><td>A side table or the middle of a shelf you can walk round</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Print sheet</h2>
+  <p class="muted">Sizes come straight from the model. Filament and hours are estimates for standard 0.2 mm settings on a P2S; tap a row to find it in the viewer. The pedestal and crown are each split into nine tiles because the capsule is far bigger than the bed.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Part</th><th>Material</th><th>Size (mm)</th><th>Filament</th><th>Time</th><th>P2S bed</th><th>How it prints</th></tr></thead>
+    <tbody id="rows"></tbody>
+    <tfoot><tr><td colspan="3">Total, __NPRINT__ printed parts</td><td class="num">__GRAMSG__ g</td><td class="num">≈ __HOURS__ h</td><td colspan="2"></td></tr></tfoot>
+  </table></div>
+</section>
+
+<section>
+  <h2>Bought parts</h2>
+  <ul>
+    <li><b>LG DualUp 28MQ780</b> (481.5 × 549.5 × 45 mm without its stand, per LG). It lies face down in the crown.</li>
+    <li><b>Four beam-splitter glass triangles</b>, about 460 mm along the base, with the tips cut off so they meet under a printed apex cap.</li>
+    <li><b>Four USB camera boards</b>, <b>a 4" speaker and amplifier</b>, <b>eight small mics</b>, <b>ESP32 with LED ring and strips</b>, and four <b>10 mm steel rods</b>.</li>
+  </ul>
+  <p class="muted">Rough total: A$1,100 to A$1,700 (estimate). Most of it is the monitor (around A$700 to A$1,000) and the four glass panels.</p>
+</section>
+
+<p class="foot">The figure in the viewer is a plain stand-in shape. Her real model never goes into these files. The parts are original designs, and anything made from her game model stays on your PC only.</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const PARTS = __PARTS__;
+const GLB = "__GLB__";
+const byKey = Object.fromEntries(PARTS.map(p => [p.key, p]));
+const hours = g => Math.max(0.5, g / 18 + 0.4);
+// table
+const rows = document.getElementById('rows');
+PARTS.filter(p => p.printed).forEach(p => {
+  const tr = document.createElement('tr'); tr.dataset.key = p.key;
+  tr.innerHTML = `<td><span class="sw" style="background:${p.colour}"></span>${p.name}</td><td>${p.material}</td>
+  <td class="num">${p.dims.join(' × ')}</td><td class="num">${p.grams} g</td><td class="num">${hours(p.grams).toFixed(1)} h</td>
+  <td><span class="pill ok">fits</span></td><td>${p.print}</td>`;
+  tr.addEventListener('click', () => { select(p.key); document.getElementById('stage').scrollIntoView({behavior:'smooth', block:'center'}); });
+  rows.appendChild(tr);
+});
+
+const cv = document.getElementById('cv'), stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({canvas: cv, antialias: true, alpha: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+renderer.outputEncoding = THREE.sRGBEncoding;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 5, 5000);
+const controls = new THREE.OrbitControls(camera, cv);
+controls.enableDamping = true; controls.minDistance = 50; controls.maxDistance = 6000; controls.target.set(310, 320, -310);
+scene.add(new THREE.HemisphereLight(0xeef6ff, 0x3a4250, 0.9));
+const key = new THREE.DirectionalLight(0xffffff, 0.9); key.position.set(-300, 600, 500); scene.add(key);
+const rim = new THREE.DirectionalLight(0x9fdcff, 0.5); rim.position.set(500, 300, -500); scene.add(rim);
+const root = new THREE.Group(); root.rotation.x = -Math.PI / 2; scene.add(root);
+const ground = new THREE.Mesh(new THREE.CircleGeometry(900, 64), new THREE.MeshStandardMaterial({color: 0x8090a0, transparent: true, opacity: .12}));
+ground.rotation.x = -Math.PI / 2; ground.position.set(310, -0.5, -310); scene.add(ground);
+const meshes = {};
+let sel = null;
+
+function matFor(p) {
+  const c = new THREE.Color(p.colour);
+  if (p.key === 'figure') return new THREE.MeshBasicMaterial({color: c, transparent: true, opacity: .85});
+  if (p.key === 'sheet') return new THREE.MeshBasicMaterial({color: c, transparent: true, opacity: .12, depthWrite: false, side: THREE.DoubleSide});
+  if (p.key === 'pad_diff') return new THREE.MeshStandardMaterial({color: c, emissive: 0x2aa8ff, emissiveIntensity: .55, roughness: .5});
+  if (p.key === 'glass') return new THREE.MeshStandardMaterial({color: c, transparent: true, opacity: .22, roughness: .05, metalness: .3, depthWrite: false});
+  if (p.key === 'sideL' || p.key === 'sideR') return new THREE.MeshStandardMaterial({color: c, transparent: true, opacity: .55, roughness: .2, depthWrite: false});
+  if (p.key === 'pad_diff' || p.key === 'bars') return new THREE.MeshStandardMaterial({color: c, emissive: 0x2aa8ff, emissiveIntensity: .7, roughness: .5});
+  if (p.key === 'mirrorglass') return new THREE.MeshStandardMaterial({color: c, metalness: .9, roughness: .1});
+  return new THREE.MeshStandardMaterial({color: c, roughness: .78, metalness: .05});
+}
+const bin = Uint8Array.from(atob(GLB), ch => ch.charCodeAt(0)).buffer;
+new THREE.GLTFLoader().parse(bin, '', g => {
+  g.scene.traverse(o => {
+    if (!o.isMesh) return;
+    const k = o.name in byKey ? o.name : (o.parent && o.parent.name in byKey ? o.parent.name : null);
+    if (!k) return;
+    const p = byKey[k];
+    const m = new THREE.Mesh(o.geometry, matFor(p));
+    m.geometry.computeVertexNormals();
+    m.userData.key = k; m.userData.base = matFor(p);
+    meshes[k] = m; root.add(m);
+  });
+  applyVis(); setView('front'); draw();
+});
+
+function applyVis() {
+  const b = document.getElementById('showBought').checked, f = document.getElementById('showFig').checked, x = document.getElementById('xray').checked;
+  for (const [k, m] of Object.entries(meshes)) {
+    const p = byKey[k];
+    if (k === 'figure' || k === 'sheet') m.visible = f;
+    else if (!p.printed) m.visible = b;
+    const shell = /^(base_|crown_|pil_|plate_)/.test(k);
+    if (m.material.isMeshStandardMaterial && !['glass', 'sideL', 'sideR'].includes(k)) {
+      m.material.transparent = shell && x; m.material.opacity = shell && x ? .18 : 1; m.material.depthWrite = !(shell && x);
+    }
+  }
+  draw();
+}
+['showBought', 'showFig', 'xray'].forEach(id => document.getElementById(id).addEventListener('change', applyVis));
+const ex = document.getElementById('explode');
+ex.addEventListener('input', () => {
+  const t = ex.value / 100; document.getElementById('exv').textContent = ex.value + '%';
+  for (const [k, m] of Object.entries(meshes)) { const e = byKey[k].explode || [0, 0, 0]; m.position.set(e[0] * t * 1.25, e[1] * t * 1.25, e[2] * t * 1.25); }
+  draw();
+});
+const VIEWS = {front: [-700, 800, 1300], side: [-1500, 520, 0], back: [1100, 850, -1450], top: [0, 2000, 10]};
+let curView = 'front';
+function setView(v) {
+  curView = v;
+  const d = v === 'top' ? new THREE.Vector3(0.0001, 1, 0.12) : new THREE.Vector3(...VIEWS[v]);
+  const box = new THREE.Box3();
+  Object.values(meshes).forEach(m => { if (m.visible) box.expandByObject(m); });
+  if (box.isEmpty()) return;
+  const s = box.getBoundingSphere(new THREE.Sphere());
+  const vf = camera.fov * Math.PI / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * camera.aspect);
+  const dist = s.radius / Math.sin(Math.min(vf, hf) / 2) * 1.04;
+  camera.position.copy(s.center).add(d.normalize().multiplyScalar(dist));
+  camera.near = Math.max(1, dist / 200); camera.far = dist * 10; camera.updateProjectionMatrix();
+  controls.target.copy(s.center); controls.update();
+  document.querySelectorAll('#views button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === v));
+  draw();
+}
+function dolly(f) { camera.position.sub(controls.target).multiplyScalar(f).add(controls.target); controls.update(); draw(); }
+document.getElementById('zin').addEventListener('click', () => dolly(0.8));
+document.getElementById('zout').addEventListener('click', () => dolly(1.25));
+document.getElementById('zfit').addEventListener('click', () => setView(curView));
+ex.addEventListener('change', () => setView(curView));
+document.querySelectorAll('#views button').forEach(b => b.addEventListener('click', () => setView(b.dataset.v)));
+
+function select(k) {
+  if (sel && meshes[sel]) { meshes[sel].material.emissive && meshes[sel].material.emissive.setHex((sel === 'pad_diff' || sel === 'bars') ? 0x2aa8ff : 0); }
+  sel = k; const p = byKey[k]; const m = meshes[k];
+  if (m && m.material.emissive) { m.material.emissive.setHex(0x0a86c8); m.material.emissiveIntensity = .6; }
+  const info = document.getElementById('info');
+  info.innerHTML = `<h3>${p.name}</h3><div class="mat">${p.material} · ${p.dims.join(' × ')} mm${p.printed ? ' · ' + p.grams + ' g · ≈ ' + hours(p.grams).toFixed(1) + ' h' : ''}</div><p>${p.note}</p>${p.print ? `<p class="muted">${p.print}</p>` : ''}`;
+  draw();
+}
+const ray = new THREE.Raycaster(), ptr = new THREE.Vector2(); let down = null;
+cv.addEventListener('pointerdown', e => down = [e.clientX, e.clientY]);
+cv.addEventListener('pointerup', e => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+  const r = cv.getBoundingClientRect(); ptr.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+  ray.setFromCamera(ptr, camera);
+  const hits = ray.intersectObjects(Object.values(meshes).filter(m => m.visible && m.userData.key !== 'sheet'));
+  if (hits.length) select(hits[0].object.userData.key);
+});
+function resize() { const w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); setView(curView); }
+let pending = false;
+function draw() { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; renderer.render(scene, camera); }); }
+controls.addEventListener('change', draw);
+(function loop() { if (controls.update()) draw(); requestAnimationFrame(loop); })();
+new ResizeObserver(resize).observe(stage); resize();
+window.__ready = () => Object.keys(meshes).length > 0;
+window.__view = (v, e) => { setView(v); if (e !== undefined) { ex.value = e; ex.dispatchEvent(new Event('input')); } };
+</script>
