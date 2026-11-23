@@ -1,8 +1,10 @@
 """Writes Cortana's (edited) actions back out as her game moves file.
 
-Run inside Blender on the .blend with her armature and the 'Name|flat' / 'Name|heel' actions:
+Run inside Blender on the .blend with her armature and the 'Name|flat' / 'Name|mine' actions:
   blender her_moves.blend --background --python export_moves.py -- ORIGINAL.bin HER.glb OUT.bin
 Bones and settings come from ORIGINAL.bin; every action named like a move replaces it (others are kept as they were).
+"Name|mine" is Josiah's own redo of a move: it replaces "Name" (and wins over a "Name|flat" in the same file).
+Only barefoot moves are written (Josiah 23 Nov: all his moves are barefoot); the game makes each heels version itself.
 Install OUT.bin as config\\swordbase\\npc\\cortana\\moves.bin (game closed). Stays on this PC.
 """
 import os, sys
@@ -24,8 +26,9 @@ for b in bones:
         K[b] = R_g.inverted() @ CI @ bb.matrix_local
 scene = bpy.context.scene
 changed = 0
+clips = [c for c in clips if c['tag'] != 'heel']   # the game makes heels from the barefoot move
 for c in clips:
-    act = bpy.data.actions.get(f"{c['name']}|{c['tag']}")
+    act = bpy.data.actions.get(f"{c['name']}|mine") or bpy.data.actions.get(f"{c['name']}|{c['tag']}")
     if act is None:
         continue
     arm.animation_data.action = act
@@ -48,15 +51,21 @@ for c in clips:
     changed += 1
     print('exported', act.name, F, 'frames')
 # brand-new moves made in Blender: any action named "Name|flat" or "Name|heel" that isn't in her moves yet
-known = {f"{c['name']}|{c['tag']}" for c in clips}
+known = {c['name'].lower() for c in clips}
 added = 0
 for act in sorted(bpy.data.actions, key=lambda a: a.name):
-    if '|' not in act.name or act.name in known:
+    if '|' not in act.name:
         continue
     name, tag = act.name.rsplit('|', 1)
-    if tag not in ('flat', 'heel') or not name.strip():
-        print('skipped (name must end in |flat or |heel):', act.name)
+    if tag == 'heel':
+        continue   # heels versions are made by the game
+    if tag not in ('flat', 'mine') or not name.strip():
+        print('skipped (name must end in |flat or |mine):', act.name)
         continue
+    if name.strip().lower() in known:
+        continue
+    if tag == 'flat' and bpy.data.actions.get(f"{name}|mine"):
+        continue   # his own version of this new move wins
     arm.animation_data.action = act
     a, b_ = act.frame_range
     F = int(round(b_ - a)) + 1
@@ -73,7 +82,8 @@ for act in sorted(bpy.data.actions, key=lambda a: a.name):
             q[f, i] = (r.x, r.y, r.z, r.w); p[f, i] = tuple(G.translation)
         root[f] = (arm.location.x, -arm.location.y, arm.rotation_euler.z)
     travel = bool(act.get('travel', np.hypot(*(root[-1, :2] - root[0, :2])) > 0.2))
-    clips.append(dict(name=name.strip(), tag=tag, fps=float(act.get('fps', 30.0)), speed=float(act.get('speed', 0.0)),
+    known.add(name.strip().lower())
+    clips.append(dict(name=name.strip(), tag='flat', fps=float(act.get('fps', 30.0)), speed=float(act.get('speed', 0.0)),
                       travel=travel, root=root, q=q, p=p))
     added += 1
     print('new move', act.name, F, 'frames')

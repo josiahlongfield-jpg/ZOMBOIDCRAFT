@@ -6,7 +6,8 @@ Adds a "Cortana" tab to the 3D view's side panel (press N), with:
   - Fix around here: the same, but fading out over the frames either side (Blend frames), for a fix at one moment.
   - Undo the pose change: puts the selected bones back to what the move has at this frame (before you press a fix).
   - Next / previous move: steps through the moves in the file.
-  - New move: makes a blank move named "Name|flat", the length you set, starting and ending in the pose she has right
+  - New move: makes a blank move named "Name|flat" (or "Name|mine" if she already has that move: your redo, which
+    replaces hers when exported), the length you set, starting and ending in the pose she has right
     now (or her rest pose), with every bone keyed on its first and last frame. Animate the middle.
 Nothing is uploaded; everything stays on this PC.
 """
@@ -178,8 +179,12 @@ class CORTANA_OT_new_move(bpy.types.Operator):
         if not name or '|' in name:
             self.report({'WARNING'}, 'Type a plain name for the move (no "|"), e.g. Lean On Rail.')
             return {'CANCELLED'}
+        names = {a.name.lower() for a in bpy.data.actions}
         full = f'{name}|flat'
-        if any(a.name.lower() == full.lower() for a in bpy.data.actions):
+        if full.lower() in names:
+            # redoing one of her moves: his own version, which replaces it when exported
+            full = f'{name}|mine'
+        if full.lower() in names:
             self.report({'WARNING'}, f'"{full}" already exists. Pick another name.')
             return {'CANCELLED'}
         end = 1 + max(1, round(scn.cortana_new_seconds * FPS))
