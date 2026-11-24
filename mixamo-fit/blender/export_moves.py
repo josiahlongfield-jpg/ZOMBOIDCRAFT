@@ -30,6 +30,17 @@ for b in bones:
     if bb is not None:
         R_g = rest_game.get(b, CI @ bb.matrix_local)
         K[b] = R_g.inverted() @ CI @ bb.matrix_local
+def move_range(act):
+    """the move's frames: its Manual Frame Range, but never ending before its last key (Josiah 24 Nov: a range locked at
+    240 by New move cut his 810-frame Bashful to under a third)"""
+    a, b = act.frame_range
+    ka, kb = act.curve_frame_range
+    if kb > b + 0.5:
+        print(f'note: {act.name} has keys up to frame {kb:g} past its frame range end {b:g}; using {kb:g}')
+        b = kb
+    return a, b
+
+
 scene = bpy.context.scene
 
 # ---- her face (Josiah 24 Nov): the face_ shape keys he keys on head__default go out beside the moves, in
@@ -98,7 +109,7 @@ for c in clips:
     if act is None:
         continue
     arm.animation_data.action = act
-    a, b_ = act.frame_range
+    a, b_ = move_range(act)
     F = int(round(b_ - a)) + 1
     q = np.zeros((F, len(bones), 4)); p = np.zeros((F, len(bones), 3)); root = np.zeros((F, 3))
     q[..., 3] = 1
@@ -138,7 +149,7 @@ for act in sorted(bpy.data.actions, key=lambda a: a.name):
     if tag == 'flat' and bpy.data.actions.get(f"{name}|mine"):
         continue   # his own version of this new move wins
     arm.animation_data.action = act
-    a, b_ = act.frame_range
+    a, b_ = move_range(act)
     F = int(round(b_ - a)) + 1
     q = np.zeros((F, len(bones), 4)); p = np.zeros((F, len(bones), 3)); root = np.zeros((F, 3))
     q[..., 3] = 1
