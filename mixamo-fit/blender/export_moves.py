@@ -125,6 +125,7 @@ for act in sorted(bpy.data.actions, key=lambda a: a.name):
     if '|' not in act.name:
         continue
     name, tag = act.name.rsplit('|', 1)
+    tag = tag.strip().lower()   # '|Flat' and '|flat' are the same
     if tag == 'heel':
         continue   # heels versions are made by the game
     if tag not in ('flat', 'mine') or not name.strip():
