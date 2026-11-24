@@ -159,6 +159,10 @@ def body_roles(arm):
                 if names[n].parent is not None and names[n].parent.name == ch[-1]:
                     ch.append(n)
             # a metacarpal stays with the hand: non-thumb chains of 4+ joints drop the first
+            # a metacarpal (numbered 0, like her b_l_pinky0) stays with the hand
+            num = [x for x in tokens(ch[0])[1] if x.isdigit()]
+            if part[1] != 'thumb' and len(ch) >= 4 and num and int(num[0]) == 0:
+                ch = ch[1:]
             real = [n for n in ch if names[n].children or len(ch) <= 3]
             if part[1] != 'thumb' and len(real) >= 4:
                 real = real[1:]
