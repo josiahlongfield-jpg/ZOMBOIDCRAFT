@@ -30,6 +30,63 @@ for b in bones:
         R_g = rest_game.get(b, CI @ bb.matrix_local)
         K[b] = R_g.inverted() @ CI @ bb.matrix_local
 scene = bpy.context.scene
+
+# ---- her face (Josiah 24 Nov): the face_ shape keys he keys on head__default go out beside the moves, in
+# moves_face.json (moves.bin itself stays bones only: the game reads it). One track per dial he moved, a value per frame,
+# 0..1, the same numbers as her face dials. Where a move's face comes from, first found wins:
+#   1. the move's own action, if it also has a slot for her head's shape keys (Blender 4.4+ slotted actions)
+#   2. an action named "<Name>|face"
+#   3. with --only and a single move: whatever is playing on her head's shape keys now (what he was just keying)
+FACE_DIALS = ("smile", "frown", "browUL", "browUR", "browIn", "browDn", "wide", "round", "lipIn", "squint", "blinkL",
+              "blinkR", "upUp", "tuck", "press")
+head = next((o for o in bpy.data.objects if o.type == 'MESH' and o.name.split('.')[0].replace('__default', '') == 'head'
+             and o.data.shape_keys is not None), None)
+FACE = {}
+
+
+def face_track(act, name, a, F):
+    if head is None:
+        return
+    key = head.data.shape_keys
+    blocks = {d: key.key_blocks.get('face_' + d) for d in FACE_DIALS}
+    if not any(blocks.values()):
+        return
+    ad = key.animation_data or key.animation_data_create()
+    was_act = ad.action
+    was_slot = getattr(ad, 'action_slot', None)
+    src = None
+    for slot in getattr(act, 'slots', []):
+        if getattr(slot, 'target_id_type', '') == 'KEY':
+            src = (act, slot)
+            break
+    if src is None and bpy.data.actions.get(name + '|face') is not None:
+        src = (bpy.data.actions[name + '|face'], None)
+    if src is None and ONLY is not None and len(ONLY) == 1 and was_act is not None:
+        src = (was_act, was_slot)
+    if src is None:
+        return
+    try:
+        ad.action = src[0]
+        if src[1] is not None and hasattr(ad, 'action_slot'):
+            ad.action_slot = src[1]
+        vals = {d: [] for d, kb in blocks.items() if kb is not None}
+        for f in range(F):
+            scene.frame_set(int(a) + f)
+            for d in vals:
+                vals[d].append(round(float(blocks[d].value), 4))
+        used = {d: v for d, v in vals.items() if max(abs(x) for x in v) > 1e-4}
+        if used:
+            FACE[name.strip().lower()] = dict(name=name.strip(), frames=F, dials=used)
+            print('face for', name, 'from', src[0].name, ':', ', '.join(sorted(used)))
+    finally:
+        ad.action = was_act
+        if was_slot is not None and hasattr(ad, 'action_slot'):
+            try:
+                ad.action_slot = was_slot
+            except Exception:
+                pass
+
+
 changed = 0
 # the game makes heels from the barefoot move (with --only, the other moves' heel versions are kept as they were)
 clips = [c for c in clips if c['tag'] != 'heel' or (ONLY is not None and c['name'].lower() not in ONLY)]
@@ -55,8 +112,9 @@ for c in clips:
             q[f, i] = (r.x, r.y, r.z, r.w); p[f, i] = tuple(G.translation)
         root[f] = (arm.location.x, -arm.location.y, arm.rotation_euler.z)
     c.update(q=q, p=p, root=root, fps=float(act.get('fps', c['fps'])), speed=float(act.get('speed', c['speed'])),
-             travel=bool(act.get('travel', c['travel'])))
+             travel=bool(act.get('travel', c['travel'])), _from_blender=True)
     changed += 1
+    face_track(act, c['name'], a, F)
     print('exported', act.name, F, 'frames')
 # brand-new moves made in Blender: any action named "Name|flat" or "Name|heel" that isn't in her moves yet
 known = {c['name'].lower() for c in clips}
@@ -94,9 +152,31 @@ for act in sorted(bpy.data.actions, key=lambda a: a.name):
     travel = bool(act.get('travel', np.hypot(*(root[-1, :2] - root[0, :2])) > 0.2))
     known.add(name.strip().lower())
     clips.append(dict(name=name.strip(), tag='flat', fps=float(act.get('fps', 30.0)), speed=float(act.get('speed', 0.0)),
-                      travel=travel, root=root, q=q, p=p))
+                      travel=travel, root=root, q=q, p=p, _from_blender=True))
     added += 1
+    face_track(act, name.strip(), a, F)
     print('new move', act.name, F, 'frames')
 print(added, 'new moves added')
 write_moves(OUT, bones, clips)
 print('wrote', OUT, '(', changed, 'moves from Blender,', len(clips), 'in all )')
+# her face tracks: the ones already beside ORIGINAL.bin, with this export's on top; a move exported now without a face
+# loses its old one (he took it off)
+import json
+face_in = os.path.join(os.path.dirname(os.path.abspath(ORIG)), 'moves_face.json')
+face_out = os.path.join(os.path.dirname(os.path.abspath(OUT)), 'moves_face.json')
+old = {}
+if os.path.exists(face_in):
+    try:
+        old = {m['name'].strip().lower(): m for m in json.load(open(face_in, encoding='utf-8')).get('moves', [])}
+    except Exception as e:
+        print('old moves_face.json unreadable, starting fresh:', e)
+written = {c['name'].strip().lower() for c in clips if c.get('_from_blender')}
+for k in written:
+    old.pop(k, None)
+old.update(FACE)
+moves_out = []
+for m in old.values():
+    moves_out.append(dict(name=m['name'], frames=m['frames'], dials=[dict(dial=d, v=v) for d, v in m['dials'].items()]
+                          if isinstance(m['dials'], dict) else m['dials']))
+json.dump(dict(version=1, moves=moves_out), open(face_out, 'w', encoding='utf-8'))
+print('wrote', face_out, '(', len(moves_out), 'moves with a face:', ', '.join(m['name'] for m in moves_out), ')')
