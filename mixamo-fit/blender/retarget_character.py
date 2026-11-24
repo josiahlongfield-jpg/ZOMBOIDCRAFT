@@ -803,6 +803,11 @@ def main(argv):
     stand.matrix_world = Matrix.Translation(tgt.matrix_world.translation + side * a.beside) @ rt.G
     src.parent = stand
     src.animation_data.action = acts[0]
+    # play it at the move's own speed and length
+    sc = bpy.context.scene
+    if 'fps' in acts[0].keys():
+        sc.render.fps, sc.render.fps_base = int(round(float(acts[0]['fps']))), 1.0
+    sc.frame_start, sc.frame_end = int(acts[0].frame_range[0]), int(max(acts[0].frame_range[1], acts[0].curve_frame_range[1]))
     acts[0].use_fake_user = True
     tgt.animation_data.action = bpy.data.actions.get(f"{acts[0].name.split('|')[0]}|{a.character}")
     out = a.out or (os.path.splitext(bpy.data.filepath)[0] + '-moves.blend' if bpy.data.filepath else None)
