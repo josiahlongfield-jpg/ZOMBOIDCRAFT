@@ -44,7 +44,7 @@ head = next((o for o in bpy.data.objects if o.type == 'MESH' and o.name.split('.
 FACE = {}
 
 
-def face_track(act, name, a, F):
+def face_track(act, name, a, F, fps):
     if head is None:
         return
     key = head.data.shape_keys
@@ -76,7 +76,7 @@ def face_track(act, name, a, F):
                 vals[d].append(round(float(blocks[d].value), 4))
         used = {d: v for d, v in vals.items() if max(abs(x) for x in v) > 1e-4}
         if used:
-            FACE[name.strip().lower()] = dict(name=name.strip(), frames=F, dials=used)
+            FACE[name.strip().lower()] = dict(name=name.strip(), frames=F, fps=float(fps), dials=used)
             print('face for', name, 'from', src[0].name, ':', ', '.join(sorted(used)))
     finally:
         ad.action = was_act
@@ -114,7 +114,7 @@ for c in clips:
     c.update(q=q, p=p, root=root, fps=float(act.get('fps', c['fps'])), speed=float(act.get('speed', c['speed'])),
              travel=bool(act.get('travel', c['travel'])), _from_blender=True)
     changed += 1
-    face_track(act, c['name'], a, F)
+    face_track(act, c['name'], a, F, c['fps'])
     print('exported', act.name, F, 'frames')
 # brand-new moves made in Blender: any action named "Name|flat" or "Name|heel" that isn't in her moves yet
 known = {c['name'].lower() for c in clips}
@@ -154,7 +154,7 @@ for act in sorted(bpy.data.actions, key=lambda a: a.name):
     clips.append(dict(name=name.strip(), tag='flat', fps=float(act.get('fps', 30.0)), speed=float(act.get('speed', 0.0)),
                       travel=travel, root=root, q=q, p=p, _from_blender=True))
     added += 1
-    face_track(act, name.strip(), a, F)
+    face_track(act, name.strip(), a, F, clips[-1]['fps'])
     print('new move', act.name, F, 'frames')
 print(added, 'new moves added')
 write_moves(OUT, bones, clips)
@@ -176,7 +176,7 @@ for k in written:
 old.update(FACE)
 moves_out = []
 for m in old.values():
-    moves_out.append(dict(name=m['name'], frames=m['frames'], dials=[dict(dial=d, v=v) for d, v in m['dials'].items()]
+    moves_out.append(dict(name=m['name'], frames=m['frames'], fps=float(m.get('fps', 0.0)), dials=[dict(dial=d, v=v) for d, v in m['dials'].items()]
                           if isinstance(m['dials'], dict) else m['dials']))
 json.dump(dict(version=1, moves=moves_out), open(face_out, 'w', encoding='utf-8'))
 print('wrote', face_out, '(', len(moves_out), 'moves with a face:', ', '.join(m['name'] for m in moves_out), ')')
