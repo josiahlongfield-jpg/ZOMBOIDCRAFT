@@ -1,7 +1,7 @@
 """Writes Cortana's (edited) actions back out as her game moves file.
 
 Run inside Blender on the .blend with her armature and the 'Name|flat' / 'Name|mine' actions:
-  blender her_moves.blend --background --python export_moves.py -- ORIGINAL.bin HER.glb OUT.bin
+  blender her_moves.blend --background --python export_moves.py -- ORIGINAL.bin HER.glb OUT.bin [--only Idle,Wave]
 Bones and settings come from ORIGINAL.bin; every action named like a move replaces it (others are kept as they were).
 "Name|mine" is Josiah's own redo of a move: it replaces "Name" (and wins over a "Name|flat" in the same file).
 Only barefoot moves are written (Josiah 23 Nov: all his moves are barefoot); the game makes each heels version itself.
@@ -15,6 +15,11 @@ from moves_common import C, CI, read_moves, write_moves, glb_rest
 
 ARGS = sys.argv[sys.argv.index('--') + 1:]
 ORIG, GLB, OUT = ARGS[0], ARGS[1], ARGS[2]
+# optional: --only Idle,Wave  writes just those moves from Blender; every other move stays exactly as it is in ORIGINAL.bin
+ONLY = None
+if '--only' in ARGS:
+    ONLY = {n.strip().lower() for n in ARGS[ARGS.index('--only') + 1].split(',') if n.strip()}
+    print('only these moves from Blender:', sorted(ONLY))
 arm = next(o for o in bpy.data.objects if o.type == 'ARMATURE')
 bones, clips = read_moves(ORIG)
 rest_game = glb_rest(GLB)
@@ -26,8 +31,11 @@ for b in bones:
         K[b] = R_g.inverted() @ CI @ bb.matrix_local
 scene = bpy.context.scene
 changed = 0
-clips = [c for c in clips if c['tag'] != 'heel']   # the game makes heels from the barefoot move
+# the game makes heels from the barefoot move (with --only, the other moves' heel versions are kept as they were)
+clips = [c for c in clips if c['tag'] != 'heel' or (ONLY is not None and c['name'].lower() not in ONLY)]
 for c in clips:
+    if c['tag'] == 'heel' or (ONLY is not None and c['name'].lower() not in ONLY):
+        continue
     act = bpy.data.actions.get(f"{c['name']}|mine") or bpy.data.actions.get(f"{c['name']}|{c['tag']}")
     if act is None:
         continue
@@ -63,6 +71,8 @@ for act in sorted(bpy.data.actions, key=lambda a: a.name):
         print('skipped (name must end in |flat or |mine):', act.name)
         continue
     if name.strip().lower() in known:
+        continue
+    if ONLY is not None and name.strip().lower() not in ONLY:
         continue
     if tag == 'flat' and bpy.data.actions.get(f"{name}|mine"):
         continue   # his own version of this new move wins
