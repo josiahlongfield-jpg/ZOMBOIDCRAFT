@@ -66,7 +66,7 @@ def role_of(name):
     """('pelvis'|'spine'|'neck'|'head', None) or (part, side) or (('finger', f), side). None = not a body bone."""
     side, t = tokens(name)
     T = set(t)
-    if not t or T & SKIP:
+    if not t or T & SKIP or any('twist' in x or 'roll' in x for x in t):
         return None
     j = ''.join(x for x in t if not x.isdigit())
     for f in FINGERS:
@@ -179,8 +179,42 @@ def spread(src, tgt):
     return out
 
 
+def is_arp(arm):
+    b = arm.data.bones
+    return 'c_root_master.x' in b and 'c_arm_fk.l' in b and 'c_thigh_fk.l' in b
+
+
+def arp_roles(arm):
+    """Auto-Rig Pro: its body bones are driven by constraints from the controls, so the controls are what we animate
+    (with the arms and legs switched to FK)."""
+    b = arm.data.bones
+    has = lambda n: n in b
+    R = {('pelvis', None): 'c_root_master.x', ('head', None): 'c_head.x'}
+    R['spine'] = [n for n in ('c_spine_01.x', 'c_spine_02.x', 'c_spine_03.x', 'c_spine_04.x', 'c_spine_05.x') if has(n)]
+    R['neck'] = [n for n in ('c_subneck_1.x', 'c_neck.x') if has(n)]
+    for s in 'lr':
+        for part, n in (('clav', 'c_shoulder'), ('upperarm', 'c_arm_fk'), ('forearm', 'c_forearm_fk'), ('hand', 'c_hand_fk'),
+                        ('thigh', 'c_thigh_fk'), ('calf', 'c_leg_fk'), ('foot', 'c_foot_fk'), ('toe', 'c_toes_fk')):
+            if has(f'{n}.{s}'):
+                R[(part, s)] = f'{n}.{s}'
+        for f in FINGERS:
+            R[(('finger', f), s)] = [f'c_{f}{i}.{s}' for i in (1, 2, 3) if has(f'c_{f}{i}.{s}')]
+    return {k: v for k, v in R.items() if v and (isinstance(v, list) or has(v))}
+
+
+def arp_fk(arm):
+    """switch Auto-Rig Pro arms and legs to FK (ik_fk_switch 1 = FK), returns what it changed."""
+    done = []
+    for n in ('c_hand_ik.l', 'c_hand_ik.r', 'c_foot_ik.l', 'c_foot_ik.r'):
+        pb = arm.pose.bones.get(n)
+        if pb is not None and 'ik_fk_switch' in pb.keys():
+            pb['ik_fk_switch'] = 1.0
+            done.append(n)
+    return done
+
+
 def guess_map(src, tgt):
-    S, T = body_roles(src), body_roles(tgt)
+    S, T = body_roles(src), (arp_roles(tgt) if is_arp(tgt) else body_roles(tgt))
     mp = {}
     for k, tb in T.items():
         if k in ('spine', 'neck'):
@@ -191,8 +225,30 @@ def guess_map(src, tgt):
                 mp[a] = b
         elif k in S:
             mp[tb] = S[k]
-    left = [b.name for b in tgt.data.bones if b.name not in mp and (b.use_deform or len([x for x in tgt.data.bones if x.use_deform]) < 10)]
+    # one neck bone on the character, several on her: copy her middle one
+    if len(T.get('neck', [])) == 1 and len(S.get('neck', [])) > 1:
+        mp[T['neck'][0]] = S['neck'][len(S['neck']) // 2]
+    if is_arp(tgt):
+        left = [n for n in sorted(set(sum([v if isinstance(v, list) else [v] for v in T.values()], []))) if n not in mp]
+    else:
+        left = [b.name for b in tgt.data.bones if b.name not in mp and (b.use_deform or len([x for x in tgt.data.bones if x.use_deform]) < 10)]
     return mp, left
+
+
+def roles_from_map(mp, tgt):
+    """the character's roles, read from which of her bones each one copies."""
+    T = {}
+    tb = tgt.data.bones
+    for t in sorted(mp, key=lambda n: depth(tb[n])):
+        r = role_of(mp[t])
+        if r is None:
+            continue
+        part, side = r
+        if part in ('spine', 'neck') or isinstance(part, tuple):
+            T.setdefault((part, side) if isinstance(part, tuple) else part, []).append(t)
+        else:
+            T.setdefault((part, side), t)
+    return T
 
 
 # ------------------------------------------------------------------------------------------------- small maths
@@ -238,7 +294,8 @@ def two_bone(A, K, F, T, l1, l2):
 class Retarget:
     def __init__(self, src, tgt, mp, legs='ik', hands='auto'):
         self.src, self.tgt, self.mp, self.legs, self.hands = src, tgt, dict(mp), legs, hands
-        S, T = body_roles(src), body_roles(tgt)
+        S, T = body_roles(src), roles_from_map(mp, tgt)
+        self.trole = {t: role_of(s) for t, s in mp.items()}
         inv = {}
         for t, s in self.mp.items():
             inv.setdefault(s, t)
@@ -273,7 +330,7 @@ class Retarget:
     def _aim(self, t):
         """(target child joint, source child joint) to aim bone t with, or None."""
         s = self.mp[t]
-        r = role_of(t)
+        r = self.trole.get(t)
         part = r[0] if r else None
         if part in ('pelvis', 'head', 'foot', 'toe'):
             return None
@@ -294,10 +351,12 @@ class Retarget:
                 continue
             q.extend(c.children)
         if part == 'hand':
-            mids = [c for c in cands if role_of(c) and role_of(c)[0] == ('finger', 'middle')]
+            mids = [c for c in cands if self.trole.get(c) and self.trole[c][0] == ('finger', 'middle')]
+            if not mids:   # fingers hang off another bone (Auto-Rig Pro): aim at the middle finger anyway
+                mids = (self.T.get((('finger', 'middle'), r[1])) or [])[:1]
             cands = mids[:1]
         elif len(cands) > 1:
-            pref = [c for c in cands if role_of(c) and role_of(c)[0] in ('spine', 'neck', 'head')]
+            pref = [c for c in cands if self.trole.get(c) and self.trole[c][0] in ('spine', 'neck', 'head')]
             cands = pref[:1] if pref else []
         if len(cands) != 1:
             return None
@@ -312,7 +371,7 @@ class Retarget:
         for t in self.order:
             p = tb[t].parent
             inh = align[p.name] if p is not None else Quaternion()
-            r = role_of(t)
+            r = self.trole.get(t)
             if t in self.mp and r and r[0] in ('pelvis', 'head', 'foot'):
                 inh = Quaternion()  # these stand as the character's own rest does (feet flat, head level)
             cur = inh.copy()
@@ -325,7 +384,7 @@ class Retarget:
                     ds = self.src_rest_w[sc].translation - self.src_rest_w[self.mp[t]].translation
                     if dt.length > 1e-4 and ds.length > 1e-4:
                         cur = dt.rotation_difference(ds) @ inh
-                        r = role_of(t)
+                        r = self.trole.get(t)
                         if r and r[0] == 'hand':
                             cur = self._twist(t, cur, ds) or cur
             align[t] = cur
@@ -335,7 +394,7 @@ class Retarget:
         self.align = align
 
     def _twist(self, t, cur, axis):
-        side = role_of(t)[1]
+        side = self.trole[t][1]
         ti, tp = self.T.get((('finger', 'index'), side), []), self.T.get((('finger', 'pinky'), side), [])
         if not ti or not tp or ti[0] not in self.mp or tp[0] not in self.mp:
             return None
@@ -391,13 +450,16 @@ class Retarget:
                 M[t] = base
         return M
 
-    def frame(self, W):
+    def desired(self, W):
+        """the world turn every matched bone should have, and where the pelvis goes (before feet/hands)."""
         rw = {t: W[s].to_quaternion() @ self.off[t] for t, s in self.mp.items()}
         ppos = None
         if self.t_pelvis and self.s_pelvis:
             ppos = self.tgt_rest_w[self.t_pelvis].translation + self.k * (W[self.s_pelvis].translation - self.src_rest_w[self.s_pelvis].translation)
-        M = self.solve(rw, ppos)
-        wp = lambda n: self.Tb @ M[n].translation
+        return rw, ppos
+
+    def reach(self, rw, W, wp):
+        """turn legs (and hands, when theirs meet) so feet and hands land where they should. wp(bone) = joint now."""
         changed = False
         for side in ('l', 'r'):
             if self.legs == 'ik':
@@ -421,9 +483,67 @@ class Retarget:
                     if w > 1e-4:
                         self._ik(rw, c, goal, wp)
                         changed = True
-        if changed:
+        return changed
+
+    def frame(self, W):
+        rw, ppos = self.desired(W)
+        M = self.solve(rw, ppos)
+        if self.reach(rw, W, lambda n: self.Tb @ M[n].translation):
             M = self.solve(rw, ppos)
         return M
+
+    def bases(self, M):
+        out = {}
+        tb = self.tgt.data.bones
+        for t in self.order:
+            b = tb[t]
+            rel = self.rel[t] if b.parent else self.rest[t]
+            P = M[b.parent.name] if b.parent else Matrix()
+            out[t] = rel.inverted() @ P.inverted() @ M[t]
+        return out
+
+    def exact(self, W, B, iters=8):
+        """for rigs whose bones are moved by constraints/drivers (Auto-Rig Pro): pose the real rig, look where each
+        matched bone really ended up, and correct it, a few times. B = starting bases {bone: Matrix}; returns
+        (bases, worst miss in degrees)."""
+        tgt, P = self.tgt, self.tgt.pose.bones
+        vl = bpy.context.view_layer
+        mapped = sorted(self.mp, key=lambda n: depth(tgt.data.bones[n]))
+        rw0, ppos = self.desired(W)
+        rw = dict(rw0)
+        def put():
+            for t in mapped:
+                P[t].matrix_basis = B[t]
+            vl.update()
+        def fix():
+            worst = 0.0
+            for t in mapped:
+                A = tgt.matrix_world @ P[t].matrix
+                Aq = rot_w(A)
+                dq = Aq.inverted() @ rw[t]
+                a = math.degrees(dq.angle); worst = max(worst, min(a, 360 - a))
+                Bq = B[t].to_quaternion() @ dq
+                loc = B[t].translation.copy()
+                if t == self.t_pelvis and ppos is not None:
+                    PR = A @ B[t].inverted()   # parent and rest, as they really are now
+                    loc = loc + PR.to_3x3().inverted() @ (ppos - A.translation)
+                B[t] = Matrix.Translation(loc) @ Bq.normalized().to_matrix().to_4x4()
+            return worst
+        def settle():
+            w = 180.0
+            for _ in range(iters):
+                put()
+                w = fix()
+                if w < 0.02:
+                    break
+            put()
+            return w
+        settle()
+        wp = lambda n: (tgt.matrix_world @ P[n].matrix).translation
+        if self.reach(rw, W, wp):
+            settle()
+        worst = fix()   # how far off the pose is now (this last tiny correction is kept)
+        return B, worst
 
     def _near(self, W, side):
         """1 when her hands are together (or nearly), 0 when they are well apart, smooth in between."""
@@ -448,27 +568,58 @@ class Retarget:
         rw[c[1]] = R2 @ R1 @ rw[c[1]]
 
     # --- write the character's action
-    def bake(self, act_src, name, scene):
+    def needs_exact(self):
+        """True when the character's bones are moved by constraints or drivers (so our own maths alone can't place them)."""
+        if any(len(pb.constraints) for pb in self.tgt.pose.bones):
+            return True
+        ad = self.tgt.animation_data
+        return bool(ad and len(ad.drivers)) or bool(self.tgt.data.animation_data and len(self.tgt.data.animation_data.drivers))
+
+    def bake(self, act_src, name, scene, exact=None):
         frames, smp = self.sample(act_src, scene)
         tgt = self.tgt
         tb = tgt.data.bones
         n = len(frames)
-        vals = {t: ([], []) for t in self.order}
+        exact = self.needs_exact() if exact is None else exact
+        keyed = sorted(self.mp, key=lambda x: depth(tb[x])) if exact else self.order
+        vals = {t: ([], []) for t in keyed}
         prevq = {}
         root = []
-        for W, d, dyaw in smp:
-            M = self.frame(W)
-            for t in self.order:
-                b = tb[t]
-                rel = self.rel[t] if b.parent else self.rest[t]
-                P = M[b.parent.name] if b.parent else Matrix()
-                B = rel.inverted() @ P.inverted() @ M[t]
-                q = B.to_quaternion().normalized()
-                if t in prevq and q.dot(prevq[t]) < 0:
-                    q.negate()
-                prevq[t] = q
-                vals[t][0].append(q); vals[t][1].append(B.translation.copy())
-            root.append((d * self.k, dyaw))
+        self.worst = 0.0
+        hidden, ad0 = [], (tgt.animation_data.action if tgt.animation_data else None)
+        if exact:
+            # only the rigs need working out: switch everything else off while we do (turned back on below)
+            for o in bpy.data.objects:
+                if o.type != 'ARMATURE' and not o.hide_viewport:
+                    o.hide_viewport = True; hidden.append(o)
+            if tgt.animation_data:
+                tgt.animation_data.action = None
+        try:
+            Bprev = None
+            for W, d, dyaw in smp:
+                if exact:
+                    B0 = Bprev if Bprev is not None else self.bases(self.frame(W))
+                    Bs, miss = self.exact(W, {t: B0[t].copy() for t in keyed})
+                    self.worst = max(self.worst, miss)
+                    Bprev = Bs
+                else:
+                    Bs = self.bases(self.frame(W))
+                for t in keyed:
+                    B = Bs[t]
+                    q = B.to_quaternion().normalized()
+                    if t in prevq and q.dot(prevq[t]) < 0:
+                        q.negate()
+                    prevq[t] = q
+                    vals[t][0].append(q); vals[t][1].append(B.translation.copy())
+                root.append((d * self.k, dyaw))
+        finally:
+            for o in hidden:
+                o.hide_viewport = False
+            if exact:
+                for t in keyed:
+                    tgt.pose.bones[t].matrix_basis = Matrix()
+                if tgt.animation_data:
+                    tgt.animation_data.action = ad0
         act = bpy.data.actions.new(name)
         act.use_fake_user = True
         for k in ('fps', 'speed', 'travel'):
@@ -498,7 +649,7 @@ class Retarget:
             fc.keyframe_points.foreach_set('co', co)
             fc.keyframe_points.foreach_set('interpolation', [1] * n)  # linear: one key per frame
             fc.update()
-        for t in self.order:
+        for t in keyed:
             pb = tgt.pose.bones[t]
             qs, ls = vals[t]
             mode = pb.rotation_mode
@@ -519,6 +670,8 @@ class Retarget:
                 for i in range(3):
                     put(f'pose.bones["{t}"].rotation_euler', i, t, [e[i] for e in eu])
             if t == self.t_pelvis or not tb[t].use_connect:
+                if exact and t != self.t_pelvis and max(l.length for l in ls) < 1e-6:
+                    continue
                 for i in range(3):
                     put(f'pose.bones["{t}"].location', i, t, [l[i] for l in ls])
         if any(d.length > 1e-5 or abs(y) > 1e-5 for d, y in root):
@@ -552,15 +705,32 @@ def armatures():
     return [o for o in bpy.data.objects if o.type == 'ARMATURE']
 
 
-def append_cortana(path, moves):
+def append_cortana(path, moves, body=False):
+    """append her armature (and with body=True the meshes riding on it) and the named moves."""
     with bpy.data.libraries.load(path, link=False) as (src, dst):
-        dst.objects = [n for n in src.objects if n == 'Armature']
+        names = [n for n in src.objects] if body else [n for n in src.objects if n == 'Armature']
+        dst.objects = list(names)
         want = set(moves or [])
         dst.actions = [a for a in src.actions if a in want] if want else []
-    if not dst.objects or dst.objects[0] is None:
+    if 'Armature' not in names:
         raise SystemExit(f'no object named Armature in {path}')
-    obj = dst.objects[0]
-    bpy.context.scene.collection.objects.link(obj)
+    obj = dst.objects[names.index('Armature')]
+    objs = [o for o in dst.objects if o is not None]
+    if obj is None or obj.type != 'ARMATURE':
+        raise SystemExit(f'no object named Armature in {path}')
+    def rides(o):
+        while o is not None:
+            if o is obj:
+                return True
+            o = o.parent
+        return False
+    coll = bpy.data.collections.new('Cortana (for comparison)')
+    bpy.context.scene.collection.children.link(coll)
+    for o in objs:
+        if o is obj or (body and rides(o) and o.type in ('MESH', 'EMPTY', 'CURVE')):
+            coll.objects.link(o)
+        else:
+            bpy.data.objects.remove(o)
     return obj
 
 
@@ -576,11 +746,13 @@ def main(argv):
     ap.add_argument('--legs', default='ik', choices=('ik', 'fk'))
     ap.add_argument('--hands', default='auto', choices=('auto', 'fk', 'chest'))
     ap.add_argument('--out')
+    ap.add_argument('--no-body', dest='body', action='store_false', help="don't bring her body in for the side-by-side look")
+    ap.add_argument('--beside', type=float, default=0.9, help='metres to her side to stand Cortana for the side-by-side look')
     a = ap.parse_args(argv)
     moves = [m.strip() for m in a.moves.split(',')] if a.moves else []
     before = set(armatures())
     if a.src_file:
-        src = append_cortana(a.src_file, moves)
+        src = append_cortana(a.src_file, moves, body=a.body and not a.guess_map)
     else:
         src = bpy.data.objects[a.source or 'Armature']
     others = [o for o in armatures() if o is not src and (o in before or not a.src_file)]
@@ -608,15 +780,24 @@ def main(argv):
         print('wrote', a.guess_map)
         return
     acts = [bpy.data.actions[m] for m in moves] if moves else [src.animation_data.action]
+    if is_arp(tgt):
+        print('Auto-Rig Pro: arms and legs switched to FK in the saved copy:', ', '.join(arp_fk(tgt)) or 'no switches found')
     rt = Retarget(src, tgt, mp, legs=a.legs, hands=a.hands)
+    if rt.needs_exact():
+        print('this rig moves its bones with constraints/drivers: each frame is checked on the real rig and corrected')
     scene = bpy.context.scene
     for act in acts:
         base = act.name.split('|')[0]
         new, frames = rt.bake(act, f'{base}|{a.character}', scene)
-        print(f'made {new.name}: frames {frames[0]}-{frames[-1]}')
+        print(f'made {new.name}: frames {frames[0]}-{frames[-1]}' + (f'; worst bone off by {rt.worst:.2f} deg' if rt.worst else ''))
         for l in report(rt, new, scene, frames):
             print('  ' + l)
-    # leave both playing the first move, side by side, for a look
+    # leave both playing the first move, side by side, for a look (her rig stands to one side, turned to face their way)
+    stand = bpy.data.objects.new('Cortana stands here', None)
+    bpy.context.scene.collection.objects.link(stand)
+    side = (tgt.matrix_world.to_3x3() @ Vector((1, 0, 0))).normalized()
+    stand.matrix_world = Matrix.Translation(tgt.matrix_world.translation + side * a.beside) @ rt.G
+    src.parent = stand
     src.animation_data.action = acts[0]
     acts[0].use_fake_user = True
     tgt.animation_data.action = bpy.data.actions.get(f"{acts[0].name.split('|')[0]}|{a.character}")
