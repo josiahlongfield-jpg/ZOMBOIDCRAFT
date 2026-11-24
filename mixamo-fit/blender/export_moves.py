@@ -4,6 +4,7 @@ Run inside Blender on the .blend with her armature and the 'Name|flat' / 'Name|m
   blender her_moves.blend --background --python export_moves.py -- ORIGINAL.bin HER.glb OUT.bin [--only Idle,Wave]
 Bones and settings come from ORIGINAL.bin; every action named like a move replaces it (others are kept as they were).
 "Name|mine" is Josiah's own redo of a move: it replaces "Name" (and wins over a "Name|flat" in the same file).
+A move taken from a |mine action is written with tag 'mine' (the game knows it's his, e.g. his Idle over the old one).
 Only barefoot moves are written (Josiah 23 Nov: all his moves are barefoot); the game makes each heels version itself.
 Install OUT.bin as config\\swordbase\\npc\\cortana\\moves.bin (game closed). Stays on this PC.
 """
@@ -112,7 +113,8 @@ for c in clips:
             q[f, i] = (r.x, r.y, r.z, r.w); p[f, i] = tuple(G.translation)
         root[f] = (arm.location.x, -arm.location.y, arm.rotation_euler.z)
     c.update(q=q, p=p, root=root, fps=float(act.get('fps', c['fps'])), speed=float(act.get('speed', c['speed'])),
-             travel=bool(act.get('travel', c['travel'])), _from_blender=True)
+             travel=bool(act.get('travel', c['travel'])), _from_blender=True,
+             tag='mine' if act.name.endswith('|mine') else 'flat')   # the game tells his own redo from the old move
     changed += 1
     face_track(act, c['name'], a, F)
     print('exported', act.name, F, 'frames')
@@ -151,7 +153,7 @@ for act in sorted(bpy.data.actions, key=lambda a: a.name):
         root[f] = (arm.location.x, -arm.location.y, arm.rotation_euler.z)
     travel = bool(act.get('travel', np.hypot(*(root[-1, :2] - root[0, :2])) > 0.2))
     known.add(name.strip().lower())
-    clips.append(dict(name=name.strip(), tag='flat', fps=float(act.get('fps', 30.0)), speed=float(act.get('speed', 0.0)),
+    clips.append(dict(name=name.strip(), tag='mine' if tag == 'mine' else 'flat', fps=float(act.get('fps', 30.0)), speed=float(act.get('speed', 0.0)),
                       travel=travel, root=root, q=q, p=p, _from_blender=True))
     added += 1
     face_track(act, name.strip(), a, F)
